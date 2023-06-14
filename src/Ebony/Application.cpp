@@ -14,6 +14,7 @@ namespace Ebony {
 
 	void Application::Run() 
 	{
+
 		while (true);
 	}
 
