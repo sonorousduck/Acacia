@@ -4,6 +4,7 @@
 #include <memory>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/fmt/ostr.h"
 
 namespace Ebony {
 	class EBONY_API Log
@@ -23,5 +24,18 @@ namespace Ebony {
 	};
 
 }
+// Core log macros
+#define EB_CORE_TRACE(...)    ::Ebony::Log::GetCoreLogger()->trace(__VA_ARGS__)
+#define EB_CORE_INFO(...)     ::Ebony::Log::GetCoreLogger()->info(__VA_ARGS__)
+#define EB_CORE_WARN(...)     ::Ebony::Log::GetCoreLogger()->warn(__VA_ARGS__)
+#define EB_CORE_ERROR(...)    ::Ebony::Log::GetCoreLogger()->error(__VA_ARGS__)
+#define EB_CORE_FATAL(...)    ::Ebony::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+
+// Client log macros
+#define EB_TRACE(...)	      ::Ebony::Log::GetClientLogger()->trace(__VA_ARGS__)
+#define EB_INFO(...)	      ::Ebony::Log::GetClientLogger()->info(__VA_ARGS__)
+#define EB_WARN(...)	      ::Ebony::Log::GetClientLogger()->warn(__VA_ARGS__)
+#define EB_ERROR(...)	      ::Ebony::Log::GetClientLogger()->error(__VA_ARGS__)
+#define EB_FATAL(...)	      ::Ebony::Log::GetClientLogger()->fatal(__VA_ARGS__)
 
 
