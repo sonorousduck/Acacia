@@ -1,10 +1,10 @@
-#pragma once
+﻿#pragma once
 
 // This defines the imports from Ebony
 
-#include "Ebony/Application.hpp"
-#include "Ebony/Log.hpp"
+#include "src/Application.hpp"
+#include "src/Log.hpp"
 
 // --- Entry Point ----------------------------
-#include "Ebony/EntryPoint.hpp"
+#include "src/EntryPoint.hpp"
 // --------------------------------------------
