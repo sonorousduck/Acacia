@@ -33,11 +33,7 @@ endif()
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-
-#add_subdirectory(ThirdParty/spdlog)
-#include_directories(ThirdParty/spdlog/include)
-add_subdirectory(spdlog)
+add_subdirectory(ThirdParty/spdlog)
 target_link_libraries(Ebony spdlog)
-#target_include_directories (Ebony PRIVATE ThirdParty/spdlog)
 
 # TODO: Add tests and install targets if needed.

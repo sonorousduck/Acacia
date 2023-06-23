@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.hpp"
+#include <iostream>
 
 namespace Ebony {
 	class EBONY_API Application

@@ -15,7 +15,10 @@ namespace Ebony {
 	void Application::Run() 
 	{
 
-		while (true);
+		while (true)
+		{
+			std::cout << "WOOHOOO!" << std::endl;
+		}
 	}
 
 }
