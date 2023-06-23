@@ -1,0 +1,3 @@
+[submodule "Ebony/ThirdParty/rapidjson"]
+	path = Ebony/ThirdParty/rapidjson
+	url = https://github.com/Tencent/rapidjson.git

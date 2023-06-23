@@ -16,14 +16,26 @@ set(SOURCE_FILES
 	src/Log.cpp
 )
 
+set(HEADER_EVENTS
+	src/events/ApplicationEvent.hpp
+	src/events/Event.hpp
+	src/events/KeyEvent.hpp
+	src/events/MouseEvent.hpp
+)
+
+
+
 
 source_group("Main\\Header Files" FILES ${HEADER_FILES})
 source_group("Main\\Source Files" FILES ${SOURCE_FILES})
 
 
+source_group("Main\\Event Files" FILES ${HEADER_EVENTS})
+
+
 
 # Add source to this project's executable.
-add_library (Ebony ${HEADER_FILES} ${SOURCE_FILES})
+add_library (Ebony ${HEADER_FILES} ${SOURCE_FILES} ${HEADER_EVENTS})
 set_target_properties(Ebony PROPERTIES LINKER_LANGUAGE CXX)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
@@ -35,5 +47,21 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 add_subdirectory(ThirdParty/spdlog)
 target_link_libraries(Ebony spdlog)
+
+
+# Change all the options for rapidjson
+option(RAPIDJSON_BUILD_DOC "Build rapidjson documentation." OFF)
+option(RAPIDJSON_BUILD_EXAMPLES "Build rapidjson examples." OFF)
+option(RAPIDJSON_BUILD_TESTS "Build rapidjson perftests and unittests." OFF)
+option(RAPIDJSON_BUILD_THIRDPARTY_GTEST
+    "Use gtest installation in `thirdparty/gtest` by default if available" OFF)
+option(RAPIDJSON_BUILD_CXX11 "Build rapidjson with C++11" OFF)
+option(RAPIDJSON_BUILD_CXX17 "Build rapidjson with C++17" ON)
+option(RAPIDJSON_BUILD_ASAN "Build rapidjson with address sanitizer (gcc/clang)" OFF)
+option(RAPIDJSON_BUILD_UBSAN "Build rapidjson with undefined behavior sanitizer (gcc/clang)" OFF)
+option(RAPIDJSON_ENABLE_INSTRUMENTATION_OPT "Build rapidjson with -march or -mcpu options" OFF)
+
+add_subdirectory(ThirdParty/rapidjson)
+include_directories(ThirdParty/rapidjson/include)
 
 # TODO: Add tests and install targets if needed.
