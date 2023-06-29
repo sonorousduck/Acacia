@@ -37,3 +37,4 @@ project ("Ebony")
 # Include sub-projects.
 add_subdirectory ("Ebony")
 add_subdirectory ("Sandbox")
+add_subdirectory ("Graphics")
