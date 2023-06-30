@@ -8,6 +8,7 @@ add_library(stb_image INTERFACE)
 add_library(rapidjson INTERFACE)
 add_library(tiny_obj_loader STATIC)
 add_library(vk_mem_alloc INTERFACE)
+add_library(glm INTERFACE)
 
 add_library(lz4 STATIC)
 
@@ -29,12 +30,19 @@ target_sources(lz4 PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/lz4/lib/lz4.c"
 )
 
-target_include_directories(lz4 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lz4" )
+target_include_directories(lz4 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lz4/lib" )
 target_include_directories(vkbootstrap PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/vkbootstrap" )
 target_link_libraries(vkbootstrap PUBLIC Vulkan::Vulkan)
 
 #both vma and glm and header only libs so we only need the include path
 target_include_directories(vk_mem_alloc INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/vk_mem_alloc" )
+target_include_directories(glm INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/glm" )
+
+
+add_subdirectory(gltf)
+
+
+
 
 target_sources(vk_mem_alloc PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/vk_mem_alloc/vk_mem_alloc.h")
 
@@ -49,7 +57,7 @@ option(RAPIDJSON_BUILD_ASAN "Build rapidjson with address sanitizer (gcc/clang)"
 option(RAPIDJSON_BUILD_UBSAN "Build rapidjson with undefined behavior sanitizer (gcc/clang)" OFF)
 option(RAPIDJSON_ENABLE_INSTRUMENTATION_OPT "Build rapidjson with -march or -mcpu options" OFF)
 
-target_include_directories(rapidjson INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/rapidjson")
+target_include_directories(rapidjson INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/rapidjson/include")
 
 target_sources(tiny_obj_loader PRIVATE 
     "${CMAKE_CURRENT_SOURCE_DIR}/tiny_obj_loader/tiny_obj_loader.h"
@@ -80,6 +88,18 @@ target_include_directories(tiny_obj_loader PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/t
 # target_link_libraries(imgui PUBLIC Vulkan::Vulkan glfw)
 
 target_include_directories(stb_image INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/stb_image" )
+
+add_library(assimp INTERFACE)
+
+
+set(assimp_dir "${CMAKE_CURRENT_SOURCE_DIR}/assimp_build")
+set(assimp_dll "${CMAKE_CURRENT_SOURCE_DIR}/assimp_build/Release/assimp-vc143-mt.dll")
+set(assimp_lib "${CMAKE_CURRENT_SOURCE_DIR}/assimp_build/Release/assimp-vc143-mt.lib")
+
+
+target_include_directories(assimp INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/assimp/include")
+target_link_libraries(assimp INTERFACE "${assimp_lib}" )
+
 
 
 # set_target_properties(tiny_obj_loader PROPERTIES LINKER_LANGUAGE CXX)

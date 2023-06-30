@@ -1,10 +1,10 @@
 #include "texture_asset.hpp"
 #include <iostream>
 
-#include "include/rapidjson/document.h"
-#include "include/rapidjson//writer.h"
-#include "include/rapidjson/stringbuffer.h"
-#include "lib/lz4.h"
+#include "rapidjson/document.h"
+#include "rapidjson//writer.h"
+#include "rapidjson/stringbuffer.h"
+#include "lz4.h"
 
 assets::TextureFormat parse_format(const char* f)
 {

@@ -5,3 +5,12 @@
 [submodule "ThirdParty/spdlog"]
 	path = ThirdParty/spdlog
 	url = git@github.com:gabime/spdlog.git
+[submodule "ThirdParty/tinygltf"]
+	path = ThirdParty/tinygltf
+	url = git@github.com:syoyo/tinygltf.git
+[submodule "ThirdParty/assimp"]
+	path = ThirdParty/assimp
+	url = git@github.com:assimp/assimp.git
+[submodule "ThirdParty/glm"]
+	path = ThirdParty/glm
+	url = git@github.com:g-truc/glm.git
