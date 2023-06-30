@@ -1,0 +1,484 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F98C8FF2-7A4C-3C30-ACA8-892DAA470BC4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>EbonyGraphicsEngine</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EbonyGraphicsEngine.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EbonyGraphicsEngine</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Debug</LocalDebuggerWorkingDirectory>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">EbonyGraphicsEngine.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">EbonyGraphicsEngine</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Release</LocalDebuggerWorkingDirectory>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">EbonyGraphicsEngine.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">EbonyGraphicsEngine</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/MinSizeRel</LocalDebuggerWorkingDirectory>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">EbonyGraphicsEngine.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">EbonyGraphicsEngine</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/RelWithDebInfo</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/VulkanSDK/1.3.250.0/Include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/EbonyGraphicsEngine.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;EB_PLATFORM_WINDOWS;EB_BUILD_DLL;EBONY_BUILD_DLL;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;EB_PLATFORM_WINDOWS;EB_BUILD_DLL;EBONY_BUILD_DLL;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;C:\VulkanSDK\1.3.250.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;C:\VulkanSDK\1.3.250.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\ThirdParty\Debug\vkbootstrap.lib;..\ThirdParty\Debug\tiny_obj_loader.lib;C:\VulkanSDK\1.3.250.0\Lib\vulkan-1.lib;..\ThirdParty\glfw\src\Debug\glfw3.lib;..\AssetLib\Debug\assetlib.lib;..\ThirdParty\Debug\lz4.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/Debug/EbonyGraphicsEngine.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Debug/EbonyGraphicsEngine.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/VulkanSDK/1.3.250.0/Include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/EbonyGraphicsEngine.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;EB_PLATFORM_WINDOWS;EB_BUILD_DLL;EBONY_BUILD_DLL;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;EB_PLATFORM_WINDOWS;EB_BUILD_DLL;EBONY_BUILD_DLL;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;C:\VulkanSDK\1.3.250.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;C:\VulkanSDK\1.3.250.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\ThirdParty\Release\vkbootstrap.lib;..\ThirdParty\Release\tiny_obj_loader.lib;C:\VulkanSDK\1.3.250.0\Lib\vulkan-1.lib;..\ThirdParty\glfw\src\Release\glfw3.lib;..\AssetLib\Release\assetlib.lib;..\ThirdParty\Release\lz4.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/Release/EbonyGraphicsEngine.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Release/EbonyGraphicsEngine.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/VulkanSDK/1.3.250.0/Include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;EB_PLATFORM_WINDOWS;EB_BUILD_DLL;EBONY_BUILD_DLL;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;EB_PLATFORM_WINDOWS;EB_BUILD_DLL;EBONY_BUILD_DLL;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;C:\VulkanSDK\1.3.250.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;C:\VulkanSDK\1.3.250.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\ThirdParty\MinSizeRel\vkbootstrap.lib;..\ThirdParty\MinSizeRel\tiny_obj_loader.lib;C:\VulkanSDK\1.3.250.0\Lib\vulkan-1.lib;..\ThirdParty\glfw\src\MinSizeRel\glfw3.lib;..\AssetLib\MinSizeRel\assetlib.lib;..\ThirdParty\MinSizeRel\lz4.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/MinSizeRel/EbonyGraphicsEngine.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/MinSizeRel/EbonyGraphicsEngine.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/VulkanSDK/1.3.250.0/Include"</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;EB_PLATFORM_WINDOWS;EB_BUILD_DLL;EBONY_BUILD_DLL;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;EB_PLATFORM_WINDOWS;EB_BUILD_DLL;EBONY_BUILD_DLL;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;C:\VulkanSDK\1.3.250.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vkbootstrap;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\tiny_obj_loader;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\stb_image;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\glfw\include;C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib;C:\VulkanSDK\1.3.250.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>..\ThirdParty\RelWithDebInfo\vkbootstrap.lib;..\ThirdParty\RelWithDebInfo\tiny_obj_loader.lib;C:\VulkanSDK\1.3.250.0\Lib\vulkan-1.lib;..\ThirdParty\glfw\src\RelWithDebInfo\glfw3.lib;..\AssetLib\RelWithDebInfo\assetlib.lib;..\ThirdParty\RelWithDebInfo\lz4.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/RelWithDebInfo/EbonyGraphicsEngine.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/RelWithDebInfo/EbonyGraphicsEngine.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/Graphics/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/sonor/OneDrive/Desktop/Projects/Ebony -BC:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build --check-stamp-file C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Graphics\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/Graphics/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/sonor/OneDrive/Desktop/Projects/Ebony -BC:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build --check-stamp-file C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Graphics\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/Graphics/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/sonor/OneDrive/Desktop/Projects/Ebony -BC:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build --check-stamp-file C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Graphics\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/Graphics/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/sonor/OneDrive/Desktop/Projects/Ebony -BC:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build --check-stamp-file C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Graphics\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Graphics\CMakeFiles\EbonyGraphicsEngine.dir\cmake_pch.cxx">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/EbonyGraphicsEngine.dir/Debug/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/EbonyGraphicsEngine.dir/Release/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.pch</PrecompiledHeaderOutputFile>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <ClInclude Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\src\vk_engine.hpp" />
+    <ClInclude Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\src\vk_initializers.hpp" />
+    <ClInclude Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\src\vk_types.hpp" />
+    <ClInclude Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\src\vk_mesh.hpp" />
+    <ClInclude Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\src\vk_textures.hpp" />
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\src\vk_engine.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\src\vk_initializers.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\src\vk_mesh.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\src\vk_textures.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui\imgui.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui\imgui_draw.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui\imgui_tables.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui\imgui_widgets.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui\backends\imgui_impl_glfw.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui\backends\imgui_impl_vulkan.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\external\imgui\imgui_demo.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\Graphics\src\main.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/build/Graphics/CMakeFiles/EbonyGraphicsEngine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <ClInclude Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Graphics\CMakeFiles\EbonyGraphicsEngine.dir\Debug\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Graphics\CMakeFiles\EbonyGraphicsEngine.dir\Release\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Graphics\CMakeFiles\EbonyGraphicsEngine.dir\MinSizeRel\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Graphics\CMakeFiles\EbonyGraphicsEngine.dir\RelWithDebInfo\cmake_pch.hxx" />
+    <ClInclude Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\ThirdParty\vk_mem_alloc\vk_mem_alloc.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\ZERO_CHECK.vcxproj">
+      <Project>{884C90D7-859B-3085-ADBA-36A3A1BAFD4A}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\AssetLib\assetlib.vcxproj">
+      <Project>{8BE0BC29-3595-37D7-AE8F-1F15C6016ADD}</Project>
+      <Name>assetlib</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\Graphics\copy_assets.vcxproj">
+      <Project>{25618DC0-2BD3-3E56-BC28-F8CC23FA964A}</Project>
+      <Name>copy_assets</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\ThirdParty\glfw\src\glfw.vcxproj">
+      <Project>{2B58B5B9-511C-3EE1-8CF8-9B85AFEBE08F}</Project>
+      <Name>glfw</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\ThirdParty\lz4.vcxproj">
+      <Project>{3D156DF7-067B-352E-8719-7D2517A57748}</Project>
+      <Name>lz4</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\ThirdParty\tiny_obj_loader.vcxproj">
+      <Project>{25D58621-4AE3-3A27-8E4B-2C261C79E632}</Project>
+      <Name>tiny_obj_loader</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\ThirdParty\vk_mem_alloc.vcxproj">
+      <Project>{30C6A064-2975-3631-9333-114B786EA44F}</Project>
+      <Name>vk_mem_alloc</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\ThirdParty\vkbootstrap.vcxproj">
+      <Project>{22C8702B-686A-3DCA-B132-C1139F147863}</Project>
+      <Name>vkbootstrap</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

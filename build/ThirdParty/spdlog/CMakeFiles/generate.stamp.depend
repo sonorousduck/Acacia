@@ -1,0 +1,11 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.25/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.25/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.25/Modules/CheckLibraryExists.cmake
+C:/Program Files/CMake/share/cmake-3.25/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.25/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.25/Modules/FindThreads.cmake
+C:/Program Files/CMake/share/cmake-3.25/Modules/GNUInstallDirs.cmake
+C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/ThirdParty/spdlog/CMakeLists.txt
+C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/ThirdParty/spdlog/cmake/ide.cmake
+C:/Users/sonor/OneDrive/Desktop/Projects/Ebony/ThirdParty/spdlog/cmake/utils.cmake

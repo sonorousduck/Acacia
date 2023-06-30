@@ -1,0 +1,6 @@
+﻿  texture_asset.cpp
+C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib\texture_asset.cpp(47,46): warning C4244: 'argument': conversion from 'uint64_t' to 'int', possible loss of data
+C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib\texture_asset.cpp(53,96): warning C4244: 'argument': conversion from 'uint64_t' to 'int', possible loss of data
+C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib\texture_asset.cpp(99,66): warning C4244: 'argument': conversion from 'uint64_t' to 'int', possible loss of data
+C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\AssetLib\texture_asset.cpp(99,79): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  assetlib.vcxproj -> C:\Users\sonor\OneDrive\Desktop\Projects\Ebony\build\AssetLib\Debug\assetlib.lib

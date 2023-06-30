@@ -14,9 +14,6 @@ add_library (assetlib STATIC
     "asset_loader.cpp"
 )
 
-target_include_directories(assetlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" ThirdParty/)
+target_include_directories(assetlib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
-target_link_libraries(assetlib PRIVATE lz4)
-
-add_subdirectory(ThirdParty/rapidjson)
-include_directories(ThirdParty/rapidjson/include)
+target_link_libraries(assetlib PRIVATE rapidjson lz4)

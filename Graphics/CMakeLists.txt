@@ -43,17 +43,15 @@ set(src_files_imgui
 source_group("ImGui" FILES ${src_files_imgui})
 
 
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
-add_subdirectory(external/glfw)
-add_subdirectory(external/vk-bootstrap)
-add_subdirectory(external)
+# set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+# set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+# set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 #
 # This is the main target
 #
 add_executable(EbonyGraphicsEngine ${HEADER_FILES} ${SOURCE_FILES} ${src_files_imgui} src/main.cpp)
+# add_executable(EbonyGraphicsEngine ${HEADER_FILES} ${SOURCE_FILES} src/main.cpp)
+
 target_include_directories(EbonyGraphicsEngine PRIVATE external/imgui)
 
 #
@@ -64,51 +62,40 @@ set_property(TARGET EbonyGraphicsEngine PROPERTY CXX_STANDARD 20)
 #
 # Enable a lot of warnings for both compilers, forcing the developer to write better code
 #
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-	target_compile_options(EbonyGraphicsEngine PRIVATE /W4 /permissive-)  #/WX will treat warnings as errors
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	target_compile_options(EbonyGraphicsEngine PRIVATE -Wall -Wextra -pedantic -O3) # -Wconversion -Wsign-conversion
-endif()
+# if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+# 	target_compile_options(EbonyGraphicsEngine PRIVATE /W4 /permissive-)  #/WX will treat warnings as errors
+# elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+# 	target_compile_options(EbonyGraphicsEngine PRIVATE -Wall -Wextra -pedantic -O3) # -Wconversion -Wsign-conversion
+# endif()
 
-target_link_libraries(EbonyGraphicsEngine glfw)
-target_link_libraries(EbonyGraphicsEngine vk-bootstrap)
+# target_link_libraries(EbonyGraphicsEngine glfw)
+# target_link_libraries(EbonyGraphicsEngine vk-bootstrap)
 
-target_include_directories(EbonyGraphicsEngine PRIVATE external/tiny_obj_loader)
-target_include_directories(EbonyGraphicsEngine PRIVATE external/stb_image)
-target_include_directories(EbonyGraphicsEngine PRIVATE external/vk_mem_alloc)
+# target_include_directories(EbonyGraphicsEngine PUBLIC external/tiny_obj_loader)
+# target_include_directories(EbonyGraphicsEngine PUBLIC external/stb_image)
+# target_include_directories(EbonyGraphicsEngine PRIVATE external/vk_mem_alloc)
 target_include_directories(EbonyGraphicsEngine PRIVATE external/imgui)
 
 
-find_package(Vulkan REQUIRED)
-target_link_libraries(EbonyGraphicsEngine Vulkan::Vulkan)
+# find_package(Vulkan REQUIRED)
+# target_link_libraries(EbonyGraphicsEngine Vulkan::Vulkan)
 
-
-
-
-file(GLOB_RECURSE GLSL_SOURCE_FILES
-    "${PROJECT_SOURCE_DIR}/shaders/*.frag"
-    "${PROJECT_SOURCE_DIR}/shaders/*.vert"
-    "${PROJECT_SOURCE_DIR}/shaders/*.comp"
-    )
-
-foreach(GLSL ${GLSL_SOURCE_FILES})
-  message(STATUS "BUILDING SHADER")
-  get_filename_component(FILE_NAME ${GLSL} NAME)
-  set(SPIRV "${PROJECT_SOURCE_DIR}/shaders/${FILE_NAME}.spv")
-  message(STATUS ${GLSL})
-  add_custom_command(
-    OUTPUT ${SPIRV}
-    COMMAND ${GLSL_VALIDATOR} -V ${GLSL} -o ${SPIRV}
-    DEPENDS ${GLSL})
-  list(APPEND SPIRV_BINARY_FILES ${SPIRV})
-endforeach(GLSL)
-
-add_custom_target(
-    Shaders 
-    DEPENDS ${SPIRV_BINARY_FILES}
-    )
 
 add_custom_target(copy_assets
 COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy-assets.cmake
 )
 add_dependencies(EbonyGraphicsEngine copy_assets)
+
+# target_precompile_headers(EbonyGraphicsEngine PUBLIC "src/vk_types.hpp" "<unordered_map>" "<vector>" "<iostream>" "<fstream>" "<string>")
+# target_link_libraries(EbonyGraphicsEngine tiny_obj_loader stb_image)
+
+
+
+set_property(TARGET EbonyGraphicsEngine PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:EbonyGraphicsEngine>")
+
+target_include_directories(EbonyGraphicsEngine PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_precompile_headers(EbonyGraphicsEngine PUBLIC "src/vk_types.hpp" "<unordered_map>" "<vector>" "<iostream>" "<fstream>" "<string>" )
+target_link_libraries(EbonyGraphicsEngine vkbootstrap vk_mem_alloc tiny_obj_loader stb_image)
+target_link_libraries(EbonyGraphicsEngine Vulkan::Vulkan glfw assetlib)
+
+

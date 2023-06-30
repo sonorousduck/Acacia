@@ -731,24 +731,24 @@ void VulkanEngine::init_pipelines()
 	VkShaderModule colorMeshShader{};
 	VkShaderModule texturedMeshShader{};
 
-	if (!load_shader_module("shaders/textured_lit.frag.spv", &texturedMeshShader))
+	if (!load_shader_module("../Graphics/shaders/textured_lit.frag.spv", &texturedMeshShader))
 	{
 		std::cout << "Error when building the textured lit fragment shader module" << std::endl;
 	}
 	
 
-	if (!load_shader_module("shaders/colored_triangle.frag.spv", &triangleFragShader))
+	if (!load_shader_module("../Graphics/shaders/colored_triangle.frag.spv", &triangleFragShader))
 	{
 		std::cout << "Error when building the triangle fragment shader module" << std::endl;
 	}
 	
 
-	if (!load_shader_module("shaders/tri_mesh.vert.spv", &triMeshVertShader))
+	if (!load_shader_module("../Graphics/shaders/tri_mesh.vert.spv", &triMeshVertShader))
 	{
 		std::cout << "Error when building the triangle fragment shader module" << std::endl;
 	}
 	
-	if (!load_shader_module("shaders/default_lit.frag.spv", &colorMeshShader))
+	if (!load_shader_module("../Graphics/shaders/default_lit.frag.spv", &colorMeshShader))
 	{
 		std::cout << "Error when building the triangle fragment shader module" << std::endl;
 	}
@@ -876,7 +876,7 @@ void VulkanEngine::init_pipelines()
 		});
 
 }
-
+#include <filesystem>
 bool VulkanEngine::load_shader_module(const char* filepath, VkShaderModule* outShaderModule)
 {
 	std::ifstream file(filepath, std::ios::ate | std::ios::binary); // ate means cursor at the end (this tells us the size of the file)
@@ -1000,10 +1000,10 @@ void VulkanEngine::load_meshes()
 	Mesh monkeyMesh{};
 
 	// Load the monkey
-	monkeyMesh.load_from_obj("models/monkey_smooth.obj");
+	monkeyMesh.load_from_obj("../Graphics/models/monkey_smooth.obj");
 
 	Mesh lostEmpire{};
-	lostEmpire.load_from_obj("models/lost_empire.obj");
+	lostEmpire.load_from_obj("../Graphics/models/lost_empire.obj");
 
 
 
@@ -1304,7 +1304,7 @@ void VulkanEngine::load_images()
 {
 	Texture lostEmpire;
 
-	vkutil::load_image_from_file(*this, "textures/lost_empire-RGBA.png", lostEmpire.image);
+	vkutil::load_image_from_file(*this, "../Graphics/textures/lost_empire-RGBA.png", lostEmpire.image);
 
 	VkImageViewCreateInfo imageinfo = vkinit::imageview_create_info(VK_FORMAT_R8G8B8A8_SRGB, lostEmpire.image._image, VK_IMAGE_ASPECT_COLOR_BIT);
 	vkCreateImageView(_device, &imageinfo, nullptr, &lostEmpire.imageView);
