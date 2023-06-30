@@ -53,7 +53,7 @@ bool convert_image(const std::filesystem::path& input, const std::filesystem::pa
 
 	stbi_image_free(pixels);
 
-	//assets::save_binaryfile(output.string().c_str(), newImage);
+	assets::save_binaryfile(output.string().c_str(), newImage);
 	
 	return true;
 }
