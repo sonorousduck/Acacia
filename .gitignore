@@ -5,3 +5,4 @@ build/
 *.vcxproj.*
 *.sln
 out
+*.vcxproj
