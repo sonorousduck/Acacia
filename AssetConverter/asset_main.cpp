@@ -19,14 +19,12 @@
 #include "rapidjson/document.h"
 
 #define TINYGLTF_IMPLEMENTATION
-#define TINYGLTF_USE_RAPIDJSON
-#define TINYGLTF_NO_INCLUDE_RAPIDJSON
 #include "tiny_gltf.h"
 
 
-#include "assimp/Importer.hpp"
-#include "assimp/scene.h"
-#include "assimp/postprocess.h"
+//#include "assimp/Importer.hpp"
+//#include "assimp/scene.h"
+//#include "assimp/postprocess.h"
 
 
 
@@ -50,11 +48,24 @@ bool convert_image(const std::filesystem::path& input, const std::filesystem::pa
 	texInfo.pixelSize[1] = texHeight;
 	texInfo.textureFormat = assets::TextureFormat::RGBA8;
 	texInfo.originalFile = input.string();
+	texInfo.compressionMode = assets::CompressionMode::LZ4;
 	assets::AssetFile newImage = assets::pack_texture(&texInfo, pixels);
 
 	stbi_image_free(pixels);
 
-	assets::save_binaryfile(output.string().c_str(), newImage);
-
+	//assets::save_binaryfile(output.string().c_str(), newImage);
+	
 	return true;
+}
+
+int main(int argc, char* argv[])
+{
+	//if (argc < 2)
+	//{
+	//	std::cout << "You need to put the path to the info file";
+	//	return -1;
+	//}
+
+
+	return 0;
 }

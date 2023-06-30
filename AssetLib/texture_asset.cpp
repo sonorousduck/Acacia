@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "rapidjson/document.h"
-#include "rapidjson//writer.h"
+#include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
 #include "lz4.h"
 
@@ -43,13 +43,13 @@ assets::AssetFile assets::pack_texture(assets::TextureInfo* info, void* pixelDat
 
 	// Compress buffer into blob
 	// Find the maximum data needed for the compression
-	int compressStaging = LZ4_compressBound(info->textureSize);
+	int compressStaging = LZ4_compressBound(static_cast<int>(info->textureSize));
 
 	// Make sure the blob storage has enough size for the maximum
 	file.binaryBlob.resize(compressStaging);
 
 	// This is like a memcpy, except it compresses the data and returns the compressed size
-	int compressedSize = LZ4_compress_default((const char*)pixelData, file.binaryBlob.data(), info->textureSize, compressStaging);
+	int compressedSize = LZ4_compress_default((const char*)pixelData, file.binaryBlob.data(), static_cast<int>(info->textureSize), compressStaging);
 
 	// We can now resize the blob down to the final compressed size.
 	file.binaryBlob.resize(compressedSize);
@@ -95,7 +95,7 @@ void assets::unpack_texture(TextureInfo* info, const char* sourceBuffer, size_t 
 {
 	if (info->compressionMode == CompressionMode::LZ4)
 	{
-		LZ4_decompress_safe(sourceBuffer, destination, sourceSize, info->textureSize);
+		LZ4_decompress_safe(sourceBuffer, destination, static_cast<int>(sourceSize), static_cast<int>(info->textureSize));
 	}
 	else 
 	{
