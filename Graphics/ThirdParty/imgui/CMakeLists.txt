@@ -18,17 +18,15 @@ set(src_files_imgui
   ThirdParty/imgui/imgui_impl_glfw.cpp
   ThirdParty/imgui/imgui_impl_opengl3.cpp
   ThirdParty/imgui/imgui_demo.cpp
-  ThirdParty/imgui/imgui_impl_opengl3_loader.h
 )
 
 source_group("ImGui" FILES ${src_files_imgui})
 
 
-add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} ${src_files_imgui} src/main.cpp )
-# add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} src/main.cpp )
+add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} ${src_files_imgui} src/main.cpp)
 
 
-target_include_directories(Graphics PRIVATE ThirdParty/imgui)
+target_include_directories(Graphics PRIVATE external/imgui)
 
 target_precompile_headers(Graphics PUBLIC "<unordered_map>" "<vector>" "<iostream>" "<fstream>" "<string>" )
 target_link_libraries(Graphics glfw)
