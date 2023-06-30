@@ -12,16 +12,17 @@
 
 #include "asset_load.hpp"
 #include "texture_asset.hpp"
-
-#define TINYGLTF_IMPLEMENTATION
-#define TINYGLTF_USE_RAPIDJSON
-#define TINYGLTF_NO_INCLUDE_RAPIDJSON
-#include "tiny_gltf.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/document.h"
+
+#define TINYGLTF_IMPLEMENTATION
+#define TINYGLTF_USE_RAPIDJSON
+#define TINYGLTF_NO_INCLUDE_RAPIDJSON
+#include "tiny_gltf.h"
+
 
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
