@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(CrowEngine)
+project(EbonyGraphicsEngine)
 
 
 
@@ -53,34 +53,34 @@ add_subdirectory(external)
 #
 # This is the main target
 #
-add_executable(CrowEngine ${HEADER_FILES} ${SOURCE_FILES} ${src_files_imgui} src/main.cpp)
-target_include_directories(CrowEngine PRIVATE external/imgui)
+add_executable(EbonyGraphicsEngine ${HEADER_FILES} ${SOURCE_FILES} ${src_files_imgui} src/main.cpp)
+target_include_directories(EbonyGraphicsEngine PRIVATE external/imgui)
 
 #
 # We want the C++ 20 standard for our project
 #
-set_property(TARGET CrowEngine PROPERTY CXX_STANDARD 20)
+set_property(TARGET EbonyGraphicsEngine PROPERTY CXX_STANDARD 20)
 
 #
 # Enable a lot of warnings for both compilers, forcing the developer to write better code
 #
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-	target_compile_options(CrowEngine PRIVATE /W4 /permissive-)  #/WX will treat warnings as errors
+	target_compile_options(EbonyGraphicsEngine PRIVATE /W4 /permissive-)  #/WX will treat warnings as errors
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	target_compile_options(CrowEngine PRIVATE -Wall -Wextra -pedantic -O3) # -Wconversion -Wsign-conversion
+	target_compile_options(EbonyGraphicsEngine PRIVATE -Wall -Wextra -pedantic -O3) # -Wconversion -Wsign-conversion
 endif()
 
-target_link_libraries(CrowEngine glfw)
-target_link_libraries(CrowEngine vk-bootstrap)
+target_link_libraries(EbonyGraphicsEngine glfw)
+target_link_libraries(EbonyGraphicsEngine vk-bootstrap)
 
-target_include_directories(CrowEngine PRIVATE external/tiny_obj_loader)
-target_include_directories(CrowEngine PRIVATE external/stb_image)
-target_include_directories(CrowEngine PRIVATE external/vk_mem_alloc)
-target_include_directories(CrowEngine PRIVATE external/imgui)
+target_include_directories(EbonyGraphicsEngine PRIVATE external/tiny_obj_loader)
+target_include_directories(EbonyGraphicsEngine PRIVATE external/stb_image)
+target_include_directories(EbonyGraphicsEngine PRIVATE external/vk_mem_alloc)
+target_include_directories(EbonyGraphicsEngine PRIVATE external/imgui)
 
 
 find_package(Vulkan REQUIRED)
-target_link_libraries(CrowEngine Vulkan::Vulkan)
+target_link_libraries(EbonyGraphicsEngine Vulkan::Vulkan)
 
 
 
@@ -111,15 +111,4 @@ add_custom_target(
 add_custom_target(copy_assets
 COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy-assets.cmake
 )
-add_dependencies(CrowEngine copy_assets)
-
-
-# target_sources(imgui PRIVATE 
-#   external/imgui/imgui.cpp  
-#   external/imgui/imgui_draw.cpp
-#   external/imgui/imgui_tables.cpp
-#   external/imgui/imgui_widgets.cpp
-#   external/imgui/imgui_impl_glfw.cpp
-#   external/imgui/imgui_impl_vulkan.cpp
-#   external/imgui/imgui_demo.cpp
-# )
+add_dependencies(EbonyGraphicsEngine copy_assets)

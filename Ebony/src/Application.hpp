@@ -8,7 +8,7 @@
 #include <iostream>
 
 namespace Ebony {
-	class EBONY_API Application
+	class Application
 	{
 	public:
 		Application();

@@ -1,15 +1,12 @@
 #pragma once
 
 
-#ifdef EB_PLATFORM_WINDOWS
-	#ifdef EB_BUILD_DLL
-		#define EBONY_API __declspec(dllexport)
-	#else
-		#define EBONY_API __declspec(dllimport)
-	#endif
+#ifdef EB_BUILD_DLL
+	#define EBONY_API __declspec(dllexport)
 #else
-	#error Ebony only supports Windows for now
+	#define EBONY_API __declspec(dllimport)
 #endif
+
 
 #define BIT(x) (1 << x)
 

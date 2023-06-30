@@ -1,7 +1,6 @@
 #pragma once
 
 
-#ifdef EB_PLATFORM_WINDOWS
 
 extern Ebony::Application* Ebony::CreateApplication();
 
@@ -14,5 +13,3 @@ int main(int argc, char** argv)
 	app->Run();
 	delete app;
 }
-
-#endif

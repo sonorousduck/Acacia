@@ -61,7 +61,7 @@ option(RAPIDJSON_BUILD_ASAN "Build rapidjson with address sanitizer (gcc/clang)"
 option(RAPIDJSON_BUILD_UBSAN "Build rapidjson with undefined behavior sanitizer (gcc/clang)" OFF)
 option(RAPIDJSON_ENABLE_INSTRUMENTATION_OPT "Build rapidjson with -march or -mcpu options" OFF)
 
-add_subdirectory(ThirdParty/rapidjson)
-include_directories(ThirdParty/rapidjson/include)
+# add_subdirectory(ThirdParty/rapidjson)
+# include_directories(ThirdParty/rapidjson/include)
 
 # TODO: Add tests and install targets if needed.
