@@ -5,6 +5,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#include <asset_load.hpp>
+#include <texture_asset.hpp>
 
 bool vkutil::load_image_from_file(VulkanEngine& engine, const char* file, AllocatedImage& outImage)
 {
@@ -110,4 +112,54 @@ bool vkutil::load_image_from_file(VulkanEngine& engine, const char* file, Alloca
 
 	outImage = newImage;
 	return true;
+}
+
+bool vkutil::load_image_from_asset(VulkanEngine& engine, const char* filename, AllocatedImage& outImage)
+{
+	assets::AssetFile file{};
+
+	bool loaded = assets::load_binaryfile(filename, file);
+
+	if (!loaded)
+	{
+		std::cout << "Error when loading image" << std::endl;
+		return false;
+	}
+
+	assets::TextureInfo textureInfo = assets::read_texture_info(&file);
+
+	VkDeviceSize imageSize = textureInfo.textureSize;
+	VkFormat image_format{};
+
+	switch (textureInfo.textureFormat) 
+	{
+		case assets::TextureFormat::RGBA8:
+			image_format = VK_FORMAT_R8G8B8A8_UNORM;
+			break;
+		default:
+			return false;
+	}
+
+	AllocatedBuffer stagingBuffer = engine.create_buffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VMA_MEMORY_USAGE_CPU_ONLY);
+
+	// Copy data to buffer
+	void* data;
+	vmaMapMemory(engine._allocator, stagingBuffer._allocation, &data);
+
+	assets::unpack_texture(&textureInfo, file.binaryBlob.data(), file.binaryBlob.size(), (char*)data);
+
+	vmaUnmapMemory(engine._allocator, stagingBuffer._allocation);
+
+
+
+	vmaDestroyBuffer(engine._allocator, stagingBuffer._buffer, stagingBuffer._allocation);
+	return true;
+}
+
+AllocatedImage vkutil::upload_image(int texWidth, int texHeight, VkFormat image_format, VulkanEngine& engine, AllocatedBuffer& stagingBuffer)
+{
+	VkExtent3D imageExtent{};
+
+
+
 }
