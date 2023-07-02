@@ -1,13 +1,13 @@
-find_package(Vulkan REQUIRED)
+# find_package(Vulkan REQUIRED)
 project(ThirdParty)
 
-add_library(vkbootstrap STATIC)
+# add_library(vkbootstrap STATIC)
 
 
 add_library(stb_image INTERFACE)
 add_library(rapidjson INTERFACE)
 add_library(tiny_obj_loader STATIC)
-add_library(vk_mem_alloc INTERFACE)
+# add_library(vk_mem_alloc INTERFACE)
 add_library(glm INTERFACE)
 
 add_library(lz4 STATIC)
@@ -19,10 +19,10 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(glfw)
 add_subdirectory(spdlog)
 
-target_sources(vkbootstrap PRIVATE 
-    "${CMAKE_CURRENT_SOURCE_DIR}/vkbootstrap/VkBootstrap.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/vkbootstrap/VkBootstrap.cpp"
-)
+# target_sources(vkbootstrap PRIVATE 
+#     "${CMAKE_CURRENT_SOURCE_DIR}/vkbootstrap/VkBootstrap.h"
+#     "${CMAKE_CURRENT_SOURCE_DIR}/vkbootstrap/VkBootstrap.cpp"
+# )
 
 
 target_sources(lz4 PRIVATE 
@@ -31,11 +31,11 @@ target_sources(lz4 PRIVATE
 )
 
 target_include_directories(lz4 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lz4/lib" )
-target_include_directories(vkbootstrap PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/vkbootstrap" )
-target_link_libraries(vkbootstrap PUBLIC Vulkan::Vulkan)
+# target_include_directories(vkbootstrap PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/vkbootstrap" )
+# target_link_libraries(vkbootstrap PUBLIC Vulkan::Vulkan)
 
 #both vma and glm and header only libs so we only need the include path
-target_include_directories(vk_mem_alloc INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/vk_mem_alloc" )
+# target_include_directories(vk_mem_alloc INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/vk_mem_alloc" )
 target_include_directories(glm INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/glm" )
 
 
@@ -44,7 +44,7 @@ add_subdirectory(gltf)
 
 
 
-target_sources(vk_mem_alloc PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/vk_mem_alloc/vk_mem_alloc.h")
+# target_sources(vk_mem_alloc PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/vk_mem_alloc/vk_mem_alloc.h")
 
 option(RAPIDJSON_BUILD_DOC "Build rapidjson documentation." OFF)
 option(RAPIDJSON_BUILD_EXAMPLES "Build rapidjson examples." OFF)
@@ -67,24 +67,6 @@ target_sources(tiny_obj_loader PRIVATE
 
 target_include_directories(tiny_obj_loader PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/tiny_obj_loader" )
 
-# add_library(imgui STATIC)
-# target_include_directories(imgui PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/imgui")
-
-# target_sources(imgui PUBLIC 
-# "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.h"
-# "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui.cpp"
-
-# "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_stdlib.h"
-# "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_stdlib.cpp"
-
-# "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_demo.cpp"
-# "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_draw.cpp"
-# "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_widgets.cpp"
-
-# "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_impl_vulkan.cpp"
-# "${CMAKE_CURRENT_SOURCE_DIR}/imgui/imgui_impl_glfw.cpp"
-# )
-
 # target_link_libraries(imgui PUBLIC Vulkan::Vulkan glfw)
 
 target_include_directories(stb_image INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/stb_image" )
@@ -99,37 +81,3 @@ set(assimp_lib "${CMAKE_CURRENT_SOURCE_DIR}/assimp_build/Release/assimp-vc143-mt
 
 target_include_directories(assimp INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/assimp/include")
 target_link_libraries(assimp INTERFACE "${assimp_lib}" )
-
-
-
-# set_target_properties(tiny_obj_loader PROPERTIES LINKER_LANGUAGE CXX)
-
-
-
-# target_include_directories(lz4 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lz4" )
-# target_include_directories(stb_image INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/stb_image" )
-
-
-# Change all the options for rapidjson
-# option(RAPIDJSON_BUILD_DOC "Build rapidjson documentation." OFF)
-# option(RAPIDJSON_BUILD_EXAMPLES "Build rapidjson examples." OFF)
-# option(RAPIDJSON_BUILD_TESTS "Build rapidjson perftests and unittests." OFF)
-# option(RAPIDJSON_BUILD_THIRDPARTY_GTEST
-#     "Use gtest installation in `thirdparty/gtest` by default if available" OFF)
-# option(RAPIDJSON_BUILD_CXX11 "Build rapidjson with C++11" OFF)
-# option(RAPIDJSON_BUILD_CXX17 "Build rapidjson with C++17" ON)
-# option(RAPIDJSON_BUILD_ASAN "Build rapidjson with address sanitizer (gcc/clang)" OFF)
-# option(RAPIDJSON_BUILD_UBSAN "Build rapidjson with undefined behavior sanitizer (gcc/clang)" OFF)
-# option(RAPIDJSON_ENABLE_INSTRUMENTATION_OPT "Build rapidjson with -march or -mcpu options" OFF)
-
-# add_subdirectory(rapidjson)
-# include_directories(rapidjson/include)
-
-
-# target_sources(tiny_obj_loader PRIVATE 
-#     "${CMAKE_CURRENT_SOURCE_DIR}/tiny_obj_loader/tiny_obj_loader.h"
-# )
-
-# target_include_directories(tiny_obj_loader PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/tiny_obj_loader" )
-
-
