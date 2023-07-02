@@ -2,13 +2,21 @@ cmake_minimum_required(VERSION 3.12)
 project(Graphics)
 
 
-set(HEADER_FILES
-
+# Add header files
+file(GLOB_RECURSE HEADER_FILES
+  ${CMAKE_SOURCE_DIR}/src/*.h
+  ${CMAKE_SOURCE_DIR}/src/*.hpp
 )
 
-set(SOURCE_FILES
 
+# Add source files
+file(GLOB_RECURSE SOURCE_FILES
+  ${CMAKE_SOURCE_DIR}/src/*.c
+  ${CMAKE_SOURCE_DIR}/src/*.cpp
 )
+
+# OpenGL
+find_package(OpenGL REQUIRED)
 
 set(src_files_imgui
   ThirdParty/imgui/imgui.cpp  
@@ -23,13 +31,35 @@ set(src_files_imgui
 
 source_group("ImGui" FILES ${src_files_imgui})
 
+add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} ${src_files_imgui} "thirdparty/glad.c" src/main.cpp)
 
-add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} ${src_files_imgui} src/main.cpp )
-# add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} src/main.cpp )
+# Define the include DIRs
+target_include_directories(Graphics PRIVATE include/)
 
 
 target_include_directories(Graphics PRIVATE ThirdParty/imgui)
 
-target_precompile_headers(Graphics PUBLIC "<unordered_map>" "<vector>" "<iostream>" "<fstream>" "<string>" )
+#target_precompile_headers(Graphics PUBLIC "<iostream>")
 target_link_libraries(Graphics glfw)
 set_property(TARGET Graphics PROPERTY CXX_STANDARD 20)
+
+
+if(MSVC_IDE)
+	# Macro to preserve source files hierarchy in the IDE
+	macro(GroupSources curdir)
+		file(GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir} ${PROJECT_SOURCE_DIR}/${curdir}/*)
+
+		foreach(child ${children})
+			if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${curdir}/${child})
+				GroupSources(${curdir}/${child})
+			else()
+				string(REPLACE "/" "\\" groupname ${curdir})
+				string(REPLACE "src" "Sources" groupname ${groupname})
+				source_group(${groupname} FILES ${PROJECT_SOURCE_DIR}/${curdir}/${child})
+			endif()
+		endforeach()
+	endmacro()
+
+	# Run macro
+	GroupSources(src)
+endif()
