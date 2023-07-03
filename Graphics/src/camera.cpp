@@ -1,5 +1,6 @@
 #include "camera.hpp"
 #include <algorithm>
+#include <iostream>
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) :
 	Front(glm::vec3(0.0f, 0.0f, -1.0f)),
@@ -65,13 +66,13 @@ void Camera::ProcessMouseMovement(float xOffset, float yOffset, GLboolean constr
 	Yaw += xOffset;
 	Pitch += yOffset;
 
-	// Make sure that when pitch is out of bounds, screen doesn't get flipped
+	// make sure that when pitch is out of bounds, screen doesn't get flipped
 	if (constrainPitch)
 	{
 		Pitch = std::clamp(Pitch, -89.0f, 89.0f);
 	}
 
-	// Update Front, Right, and Up vectors using the updated Euler angles
+	// update Front, Right and Up Vectors using the updated Euler angles
 	updateCameraVectors();
 }
 
@@ -86,10 +87,10 @@ void Camera::updateCameraVectors()
 	// Calculate the new Front vector
 	glm::vec3 front{};
 	front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	front.y = -sin(glm::radians(Pitch));
+	front.y = sin(glm::radians(Pitch));
 	front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
 	Front = glm::normalize(front);
 
-	Right = glm::normalize(glm::cross(Front, WorldUp));
+	Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	Up = glm::normalize(glm::cross(Right, Front));
 }

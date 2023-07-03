@@ -15,21 +15,14 @@
 
 const unsigned int WIDTH = 800;
 const unsigned int HEIGHT = 600;
-// camera
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX = WIDTH / 2;
-float lastY = HEIGHT / 2;
+float lastX = WIDTH / 2.0f;
+float lastY = HEIGHT / 2.0f;
 
-float fov = 45.0;
-
-const float cameraSensitivity = 0.25f;
 bool firstMouse = true;
 
 
@@ -82,7 +75,7 @@ void mouse_callback(GLFWwindow* window, double xPosIn, double yPosIn)
 
 
     float xOffset = xPos - lastX;
-    float yOffset = yPos - lastY;
+    float yOffset = lastY - yPos;
     lastX = xPos;
 
     camera.ProcessMouseMovement(xOffset, yOffset);
@@ -121,14 +114,14 @@ int main()
     // Capture the cursor and hide it
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
-
     glfwSetScrollCallback(window, scroll_callback);
+
+    // This sets the callback to change the viewport. This is also how you would record input from glfw as well
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    // This sets the callback to change the viewport. This is also how you would record input from glfw as well
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
