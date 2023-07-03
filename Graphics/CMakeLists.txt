@@ -4,12 +4,13 @@ project(Graphics)
 
 set(HEADER_FILES 
   ${CMAKE_SOURCE_DIR}/Graphics/src/shader.hpp
+  src/camera.hpp
 )
 
 set(SOURCE_FILES
   ${CMAKE_SOURCE_DIR}/Graphics/src/main.cpp
   src/shader.cpp
-
+  src/camera.cpp
 )
 
 set(SHADERS
@@ -35,10 +36,12 @@ set(SHADERS
 # 	${CMAKE_SOURCE_DIR}/Graphics/shaders/*.frag
 # )
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 
 # OpenGL
 find_package(OpenGL REQUIRED)
+
 
 set(src_files_imgui
   ThirdParty/imgui/imgui.cpp  
@@ -60,16 +63,22 @@ source_group("Main\\Shaders" FILES ${SHADERS})
 add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
 
 # Define the include DIRs
-target_include_directories(Graphics PRIVATE include/)
+target_include_directories(Graphics PRIVATE include/ include/glm)
+
 
 
 target_include_directories(Graphics PRIVATE ThirdParty/imgui)
 
 #target_precompile_headers(Graphics PUBLIC "<iostream>")
-target_link_libraries(Graphics glfw)
+target_link_libraries(Graphics glfw stb_image)
 set_property(TARGET Graphics PROPERTY CXX_STANDARD 20)
 
 
+add_custom_target(copy_assets
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy-assets.cmake
+)
+
+add_dependencies(Graphics copy_assets)
 # Create virtual folders to make it look nicer in VS
 #if(MSVC_IDE)
 	# Macro to preserve source files hierarchy in the IDE

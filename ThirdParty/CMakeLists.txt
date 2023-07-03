@@ -43,7 +43,6 @@ add_subdirectory(gltf)
 
 
 
-
 # target_sources(vk_mem_alloc PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/vk_mem_alloc/vk_mem_alloc.h")
 
 option(RAPIDJSON_BUILD_DOC "Build rapidjson documentation." OFF)
