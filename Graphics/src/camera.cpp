@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <iostream>
 
+// https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
+// https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/7.4.camera_class/camera_class.cpp
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) :
 	Front(glm::vec3(0.0f, 0.0f, -1.0f)),
 	MovementSpeed(SPEED),
