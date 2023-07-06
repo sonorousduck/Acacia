@@ -13,7 +13,7 @@ bool assets::save_binaryfile(const char* path, const assets::AssetFile& file)
 		return false;
 	}
 
-	outFile.write(file.type, 4); // Will either be TEXI or MESH (Texture or mesh)
+	outFile.write(file.type, sizeof(char) * 4); // Will either be TEXI or MESH (Texture or mesh)
 	uint32_t version = file.version; // Versioning is super helpful to give an error if you changed the version of your file formats
 
 	// Version
@@ -21,9 +21,10 @@ bool assets::save_binaryfile(const char* path, const assets::AssetFile& file)
 
 	// Json length
 	uint32_t length = static_cast<uint32_t>(file.json.size());
+	outFile.write((const char*)&length, sizeof(uint32_t));
 
 	// Blob length
-	uint32_t blobLength = static_cast<uint32_t>(file.binaryBlob.size());
+	uint32_t blobLength = file.binaryBlob.size();
 	outFile.write((const char*)&blobLength, sizeof(uint32_t));
 
 	// Json stream
@@ -47,9 +48,9 @@ bool assets::load_binaryfile(const char* path, assets::AssetFile& outputFile)
 	// Move file cursor to the beginning
 	inFile.seekg(0);
 
-	inFile.read(outputFile.type, 4);
+	inFile.read(outputFile.type, sizeof(char) * 4);
 	inFile.read((char*)&outputFile.version, sizeof(uint32_t)); // In the future, do a versioning check after reading this
-
+	
 	uint32_t jsonLen = 0;
 	inFile.read((char*)&jsonLen, sizeof(uint32_t));
 

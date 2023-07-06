@@ -45,6 +45,7 @@ if (POLICY CMP0141)
 endif()
 
 
+
 # Include sub-projects.
 add_subdirectory ("Ebony")
 add_subdirectory ("Sandbox")
@@ -52,3 +53,9 @@ add_subdirectory ("Graphics")
 add_subdirectory ("AssetLib")
 add_subdirectory ("AssetConverter")
 add_subdirectory ("ThirdParty")
+
+add_custom_target(copy_assets_dll
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy-assets.cmake
+)
+
+add_dependencies(assimp copy_assets_dll)

@@ -5,17 +5,27 @@ project(Graphics)
 set(HEADER_FILES 
   ${CMAKE_SOURCE_DIR}/Graphics/src/shader.hpp
   src/camera.hpp
+  src/mesh.hpp
+  src/model.hpp
+
 )
 
 set(SOURCE_FILES
   ${CMAKE_SOURCE_DIR}/Graphics/src/main.cpp
   src/shader.cpp
   src/camera.cpp
+  src/mesh.cpp
+  src/model.cpp
 )
 
 set(SHADERS
-	${CMAKE_SOURCE_DIR}/Graphics/shaders/triangle.vert
-	${CMAKE_SOURCE_DIR}/Graphics/shaders/triangle.frag
+	shaders/lighting.vert
+	shaders/lighting.frag
+	shaders/lightcube.vert
+	shaders/lightcube.vert
+	shaders/lightingTexture.vert
+	shaders/lightingTexture.vert
+
 )
 
 #Add source files
@@ -59,8 +69,9 @@ source_group("Main\\Headers" FILES ${HEADER_FILES})
 source_group("Main\\Source Files" FILES ${SOURCE_FILES})
 source_group("Main\\Shaders" FILES ${SHADERS})
 
-
+#add_library (Graphics STATIC ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
 add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
+
 
 # Define the include DIRs
 target_include_directories(Graphics PRIVATE include/ include/glm)
@@ -70,7 +81,7 @@ target_include_directories(Graphics PRIVATE include/ include/glm)
 target_include_directories(Graphics PRIVATE ThirdParty/imgui)
 
 #target_precompile_headers(Graphics PUBLIC "<iostream>")
-target_link_libraries(Graphics glfw stb_image)
+target_link_libraries(Graphics glfw stb_image assetlib assimp)
 set_property(TARGET Graphics PROPERTY CXX_STANDARD 20)
 
 
@@ -79,6 +90,8 @@ add_custom_target(copy_assets
 )
 
 add_dependencies(Graphics copy_assets)
+
+
 # Create virtual folders to make it look nicer in VS
 #if(MSVC_IDE)
 	# Macro to preserve source files hierarchy in the IDE

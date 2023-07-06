@@ -7,7 +7,7 @@
 #include "spdlog/fmt/ostr.h"
 
 namespace Ebony {
-	class EBONY_API Log
+	class Log
 	{
 	
 	public: 

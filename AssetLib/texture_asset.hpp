@@ -14,7 +14,7 @@ namespace assets
 	struct TextureInfo
 	{
 		uint64_t textureSize;
-		TextureFormat textureFormat;
+		unsigned int textureFormat;
 		CompressionMode compressionMode;
 
 		uint32_t pixelSize[3];

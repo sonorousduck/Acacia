@@ -1,6 +1,6 @@
 #include "texture_asset.hpp"
 #include <iostream>
-
+#define RAPIDJSON_HAS_STDSTRING 1
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
@@ -26,12 +26,11 @@ assets::AssetFile assets::pack_texture(assets::TextureInfo* info, void* pixelDat
 	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
 	size_t sz = allocator.Size();
-
-	document.AddMember("format", "RGBA8", allocator);
+	document.AddMember("format", 4, allocator);
 	document.AddMember("width", info->pixelSize[0], allocator);
 	document.AddMember("height", info->pixelSize[1], allocator);
 	document.AddMember("buffer_size", info->textureSize, allocator);
-	document.AddMember("original_file", *(info->originalFile).data(), allocator);
+	document.AddMember("original_file", info->originalFile, allocator);
 
 	// Core file header
 	AssetFile file;
@@ -43,13 +42,16 @@ assets::AssetFile assets::pack_texture(assets::TextureInfo* info, void* pixelDat
 
 	// Compress buffer into blob
 	// Find the maximum data needed for the compression
-	int compressStaging = LZ4_compressBound(static_cast<int>(info->textureSize));
+	//int compressStaging = LZ4_compressBound(static_cast<int>(info->textureSize));
 
-	// Make sure the blob storage has enough size for the maximum
-	file.binaryBlob.resize(compressStaging);
+	//// Make sure the blob storage has enough size for the maximum
+	file.binaryBlob.resize(static_cast<int>(info->textureSize));
 
 	// This is like a memcpy, except it compresses the data and returns the compressed size
-	int compressedSize = LZ4_compress_default((const char*)pixelData, file.binaryBlob.data(), static_cast<int>(info->textureSize), compressStaging);
+	std::cout << info->textureSize << std::endl;
+	int compressedSize = LZ4_compress((const char*)pixelData, file.binaryBlob.data(), static_cast<int>(info->textureSize));
+
+
 
 	// We can now resize the blob down to the final compressed size.
 	file.binaryBlob.resize(compressedSize);
@@ -60,7 +62,7 @@ assets::AssetFile assets::pack_texture(assets::TextureInfo* info, void* pixelDat
 	rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 	document.Accept(writer);
 
-	file.json = buffer.GetString();;
+	file.json = buffer.GetString();
 
 	return file;
 }
@@ -71,11 +73,11 @@ assets::TextureInfo assets::read_texture_info(AssetFile* file)
 {
 	TextureInfo info{};
 	rapidjson::Document document;
+	document.Parse(file->json);
+	std::cout << document.HasParseError() << std::endl;
 
-	document.Parse(file->json.data());
-
-	std::string formatString = document["format"].GetString();
-	info.textureFormat = parse_format(formatString.c_str());
+	int formatInt = document["format"].GetUint();
+	info.textureFormat = formatInt;
 
 	std::string compressionString = document["compression"].GetString();
 	info.compressionMode = parse_compression(compressionString.c_str());
@@ -95,7 +97,7 @@ void assets::unpack_texture(TextureInfo* info, const char* sourceBuffer, size_t 
 {
 	if (info->compressionMode == CompressionMode::LZ4)
 	{
-		LZ4_decompress_safe(sourceBuffer, destination, static_cast<int>(sourceSize), static_cast<int>(info->textureSize));
+		LZ4_decompress_safe(sourceBuffer, destination, sourceSize, info->textureSize);
 	}
 	else 
 	{

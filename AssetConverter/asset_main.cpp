@@ -46,7 +46,7 @@ bool convert_image(const std::filesystem::path& input, const std::filesystem::pa
 	texInfo.textureSize = texture_size;
 	texInfo.pixelSize[0] = texWidth;
 	texInfo.pixelSize[1] = texHeight;
-	texInfo.textureFormat = assets::TextureFormat::RGBA8;
+	texInfo.textureFormat = 4;
 	texInfo.originalFile = input.string();
 	texInfo.compressionMode = assets::CompressionMode::LZ4;
 	assets::AssetFile newImage = assets::pack_texture(&texInfo, pixels);
@@ -65,6 +65,43 @@ int main(int argc, char* argv[])
 	//	std::cout << "You need to put the path to the info file";
 	//	return -1;
 	//}
+	std::filesystem::path directoryTextures = "../../../Graphics/textures";
+	std::filesystem::path directoryModels = "../../../Graphics/models";
+
+	std::filesystem::path cwd = std::filesystem::current_path();
+	std::cout << cwd << std::endl;
+
+	std::cout << "Loading asset directory at " << directoryTextures << std::endl;
+
+	for (auto& p : std::filesystem::recursive_directory_iterator(directoryTextures))
+	{
+		std::cout << "File: " << p << std::endl;
+
+		if (p.path().extension() == ".png" || p.path().extension() == ".jpg")
+		{
+			std::cout << "Found a texture" << std::endl;
+
+			auto newpath = p.path();
+			newpath.replace_extension(".tx");
+			convert_image(p.path(), newpath);
+		}
+	}
+
+	std::cout << "Loading asset directory at " << directoryModels << std::endl;
+
+	for (auto& p : std::filesystem::recursive_directory_iterator(directoryModels))
+	{
+		std::cout << "File: " << p << std::endl;
+
+		if (p.path().extension() == ".obj")
+		{
+			std::cout << "Found a model" << std::endl;
+
+			//auto newpath = p.path();
+			//newpath.replace_extension(".mesh");
+			//convert_image(p.path(), newpath);
+		}
+	}
 
 
 	return 0;

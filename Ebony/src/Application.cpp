@@ -1,6 +1,7 @@
 #include "Application.hpp"
 #include "events/ApplicationEvent.hpp"
 #include <sstream>
+#include <iostream>
 
 namespace Ebony {
 	Application::Application()
@@ -19,7 +20,7 @@ namespace Ebony {
 
 
 
-		//std::cout << ss.str() << std::endl;
+		std::cout << "Beep" << std::endl;
 		EB_TRACE(e);
 
 
