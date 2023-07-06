@@ -23,3 +23,6 @@
 [submodule "ThirdParty/minimp3"]
 	path = Audio/ThirdParty/minimp3
 	url = git@github.com:lieff/minimp3.git
+[submodule "ThirdParty/ctti"]
+	path = ThirdParty/ctti
+	url = git@github.com:Manu343726/ctti.git

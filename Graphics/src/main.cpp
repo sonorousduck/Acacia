@@ -16,8 +16,8 @@
 #include "model.hpp"
 
 
-const unsigned int WIDTH = 800;
-const unsigned int HEIGHT = 600;
+unsigned int WIDTH = 800;
+unsigned int HEIGHT = 600;
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -33,6 +33,9 @@ bool firstMouse = true;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+    WIDTH = width;
+    HEIGHT = height;
+    std::cout << WIDTH << std::endl;
 }
 
 void processInput(GLFWwindow* window)

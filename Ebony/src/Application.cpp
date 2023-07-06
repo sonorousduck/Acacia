@@ -14,6 +14,21 @@ namespace Ebony {
 
 	}
 
+	void Application::Update()
+	{
+
+	}
+
+	void Application::Draw()
+	{
+
+	}
+
+	void Application::ProcessInput()
+	{
+
+	}
+
 	void Application::Run() 
 	{
 		WindowResizeEvent e(1280, 720);
@@ -23,9 +38,13 @@ namespace Ebony {
 		std::cout << "Beep" << std::endl;
 		EB_TRACE(e);
 
+		std::cout << test << std::endl;
 
 		while (true)
 		{
+			ProcessInput();
+			Update();
+			Draw();
 		}
 	}
 

@@ -11,9 +11,13 @@ namespace Ebony {
 	class Application
 	{
 	public:
+		int test;
 		Application();
 		virtual ~Application();
 		void Run();
+		virtual void Update();
+		virtual void Draw();
+		virtual void ProcessInput();
 	};
 
 	// To be defined in a client

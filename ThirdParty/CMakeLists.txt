@@ -41,7 +41,8 @@ target_include_directories(glm INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/glm")
 add_subdirectory(gltf)
 add_subdirectory(openal-soft)
 
-
+add_subdirectory(ctti)
+include_directories(ctti/include)
 
 # target_sources(vk_mem_alloc PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/vk_mem_alloc/vk_mem_alloc.h")
 

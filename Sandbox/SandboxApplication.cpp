@@ -5,15 +5,34 @@
 class Sandbox : public Ebony::Application
 {
 public:
+	int test = 0;
 	Sandbox()
 	{
-
+		
 	}
 
 	~Sandbox() 
 	{
 
 	}
+
+	void Update()
+	{
+		//std::cout << "Updating!" << std::endl;
+	}
+
+	void ProcessInput()
+	{
+		//std::cout << "Processing!" << std::endl;
+
+	}
+
+	void Draw()
+	{
+		//std::cout << "Drawing!" << std::endl;
+
+	}
+
 };
 
 

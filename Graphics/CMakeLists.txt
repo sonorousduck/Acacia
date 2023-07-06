@@ -69,8 +69,8 @@ source_group("Main\\Headers" FILES ${HEADER_FILES})
 source_group("Main\\Source Files" FILES ${SOURCE_FILES})
 source_group("Main\\Shaders" FILES ${SHADERS})
 
-add_library (Graphics STATIC ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
-#add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
+#add_library (Graphics STATIC ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
+add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
 
 
 # Define the include DIRs
@@ -81,7 +81,7 @@ target_include_directories(Graphics PRIVATE include/ include/glm)
 target_include_directories(Graphics PRIVATE ThirdParty/imgui)
 
 #target_precompile_headers(Graphics PUBLIC "<iostream>")
-target_link_libraries(Graphics glfw stb_image assetlib assimp)
+target_link_libraries(Graphics glfw stb_image assetlib assimp ctti)
 set_property(TARGET Graphics PROPERTY CXX_STANDARD 20)
 
 
