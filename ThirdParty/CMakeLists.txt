@@ -36,8 +36,7 @@ target_include_directories(lz4 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lz4/lib" )
 
 #both vma and glm and header only libs so we only need the include path
 # target_include_directories(vk_mem_alloc INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/vk_mem_alloc" )
-target_include_directories(glm INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/glm" )
-
+target_include_directories(glm INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/glm")
 
 add_subdirectory(gltf)
 add_subdirectory(openal-soft)

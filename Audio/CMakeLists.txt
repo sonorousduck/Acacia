@@ -6,7 +6,10 @@ set(HEADER_FILES
     src/SoundDevice.hpp
     src/SoundBuffer.hpp
     src/SoundSource.hpp
-    src/MusicBuffer.hpp
+    src/MusicSource.hpp
+    ThirdParty/minimp3/minimp3.h
+    ThirdParty/minimp3/minimp3_ex.h
+    src/alhelpers.hpp
 )
 
 set(SOURCE_FILES
@@ -14,7 +17,8 @@ set(SOURCE_FILES
     src/SoundDevice.cpp
     src/SoundBuffer.cpp
     src/SoundSource.cpp
-    src/MusicBuffer.cpp
+    src/MusicSource.cpp
+    src/alhelpers.cpp
 )
 
 source_group("Main\\Headers" FILES ${HEADER_FILES})
@@ -24,6 +28,11 @@ source_group("Main\\Source Files" FILES ${SOURCE_FILES})
 
 add_executable(Audio ${HEADER_FILES} ${SOURCE_FILES})
 target_link_libraries(Audio OpenAL sndfile)
+
+
+
+
+set_property(TARGET Audio PROPERTY CXX_STANDARD 20)
 
 
 add_custom_target(copy_assets_sound

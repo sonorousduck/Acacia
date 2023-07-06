@@ -20,3 +20,6 @@
 [submodule "ThirdParty/libsndfile"]
 	path = ThirdParty/libsndfile
 	url = git@github.com:libsndfile/libsndfile.git
+[submodule "ThirdParty/minimp3"]
+	path = Audio/ThirdParty/minimp3
+	url = git@github.com:lieff/minimp3.git
