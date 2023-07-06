@@ -235,7 +235,7 @@ int main()
 
     Shader lightingShader("shaders/lighting.vert", "shaders/lighting.frag");
     Shader lightcubeShader("shaders/lightcube.vert", "shaders/lightcube.frag");
-    Shader ourShader("shaders/modelLoading.vert", "shaders/modelLoading.frag");
+    //Shader ourShader("shaders/modelLoading.vert", "shaders/modelLoading.frag");
 
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -387,7 +387,7 @@ int main()
     unsigned int diffuseMap = loadTexture("textures/box.tx");
     unsigned int specularMap = loadTexture("textures/box_specular.tx");
     
-    Model ourModel("models/backpack.obj");
+    //Model ourModel("models/backpack.obj");
 
 
 
@@ -558,12 +558,12 @@ int main()
         }
 
 
-        ourShader.use();
+        //ourShader.use();
 
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-        ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
+        //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        //model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+        //ourShader.setMat4("model", model);
+        //ourModel.Draw(ourShader);
 
 
         /*float timeValue = glfwGetTime();

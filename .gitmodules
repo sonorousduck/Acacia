@@ -14,3 +14,6 @@
 [submodule "ThirdParty/glm"]
 	path = ThirdParty/glm
 	url = git@github.com:g-truc/glm.git
+[submodule "ThirdParty/openal-soft"]
+	path = ThirdParty/openal-soft
+	url = git@github.com:kcat/openal-soft.git
