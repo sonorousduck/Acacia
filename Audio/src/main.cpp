@@ -47,10 +47,8 @@ int main()
 
 	while (true)
 	{
-        if (source1.fileFormat == EbonyAudio::AudioFileFormat::OTHER)
-        {
-            source1.UpdateBufferStream();
-        }
+        source.UpdateBufferStream();
+        source1.UpdateBufferStream();
 	}
 
 

@@ -186,6 +186,7 @@ void EbonyAudio::Music::Play(const EbonyAudio::MusicSource& musicSource)
 		{
 			throw("Error starting playback");
 		}
+
 	}
 	else if (musicSource.fileFormat == AudioFileFormat::MP3)
 	{
@@ -269,62 +270,66 @@ EbonyAudio::MusicSource EbonyAudio::MusicSource::LoadFromFile(const std::string&
 
 void EbonyAudio::MusicSource::UpdateBufferStream()
 {
-	ALint processed = 0, state = 0;
-
-	// Clear errors
-	alGetError();
-
-	// Get relevant source info
-	alGetSourcei(source, AL_SOURCE_STATE, &state);
-	alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
-
-	if (alGetError() != AL_NO_ERROR)
+	if (fileFormat == AudioFileFormat::OTHER)
 	{
-		throw("error checking music source state");
-	}
 
-	// Unqueue and handle each processed buffer
-	while (processed > 0)
-	{
-		ALuint bufid = 0;
-		sf_count_t slen = 0;
 
-		alSourceUnqueueBuffers(source, 1, &bufid);
-		processed--;
+		ALint processed = 0, state = 0;
 
-		/* Read the next chunk of data, refill the buffer, and queue it
-		 * back on the source */
-		slen = sf_readf_short(sndFile, memBuf, BUFFER_SAMPLES);
-		if (slen > 0)
-		{
-			slen *= sfInfo.channels * (sf_count_t)sizeof(short);
-			alBufferData(bufid, format, memBuf, (ALsizei)slen,
-				sfInfo.samplerate);
-			alSourceQueueBuffers(source, 1, &bufid);
-		}
+		// Clear errors
+		alGetError();
+
+		// Get relevant source info
+		alGetSourcei(source, AL_SOURCE_STATE, &state);
+		alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
+
 		if (alGetError() != AL_NO_ERROR)
 		{
-			throw("error buffering music data");
+			throw("error checking music source state");
 		}
-	}
 
-	/* Make sure the source hasn't underrun */
-	if (state != AL_PLAYING && state != AL_PAUSED)
-	{
-		ALint queued;
-
-		/* If no buffers are queued, playback is finished */
-		alGetSourcei(source, AL_BUFFERS_QUEUED, &queued);
-		if (queued == 0)
-			return;
-
-		alSourcePlay(source);
-		if (alGetError() != AL_NO_ERROR)
+		// Unqueue and handle each processed buffer
+		while (processed > 0)
 		{
-			throw("error restarting music playback");
+			ALuint bufid = 0;
+			sf_count_t slen = 0;
+
+			alSourceUnqueueBuffers(source, 1, &bufid);
+			processed--;
+
+			/* Read the next chunk of data, refill the buffer, and queue it
+			 * back on the source */
+			slen = sf_readf_short(sndFile, memBuf, BUFFER_SAMPLES);
+			if (slen > 0)
+			{
+				slen *= sfInfo.channels * (sf_count_t)sizeof(short);
+				alBufferData(bufid, format, memBuf, (ALsizei)slen,
+					sfInfo.samplerate);
+				alSourceQueueBuffers(source, 1, &bufid);
+			}
+			if (alGetError() != AL_NO_ERROR)
+			{
+				throw("error buffering music data");
+			}
+		}
+
+		/* Make sure the source hasn't underrun */
+		if (state != AL_PLAYING && state != AL_PAUSED)
+		{
+			ALint queued;
+
+			/* If no buffers are queued, playback is finished */
+			alGetSourcei(source, AL_BUFFERS_QUEUED, &queued);
+			if (queued == 0)
+				return;
+
+			alSourcePlay(source);
+			if (alGetError() != AL_NO_ERROR)
+			{
+				throw("error restarting music playback");
+			}
 		}
 	}
-
 }
 
 

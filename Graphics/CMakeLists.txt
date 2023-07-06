@@ -69,8 +69,8 @@ source_group("Main\\Headers" FILES ${HEADER_FILES})
 source_group("Main\\Source Files" FILES ${SOURCE_FILES})
 source_group("Main\\Shaders" FILES ${SHADERS})
 
-#add_library (Graphics STATIC ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
-add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
+add_library (Graphics STATIC ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
+#add_executable(Graphics ${HEADER_FILES} ${SOURCE_FILES} ${SHADERS} ${src_files_imgui} "thirdparty/glad.c")
 
 
 # Define the include DIRs
