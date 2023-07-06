@@ -17,3 +17,6 @@
 [submodule "ThirdParty/openal-soft"]
 	path = ThirdParty/openal-soft
 	url = git@github.com:kcat/openal-soft.git
+[submodule "ThirdParty/libsndfile"]
+	path = ThirdParty/libsndfile
+	url = git@github.com:libsndfile/libsndfile.git

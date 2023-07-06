@@ -40,6 +40,7 @@ target_include_directories(glm INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/glm" )
 
 
 add_subdirectory(gltf)
+add_subdirectory(openal-soft)
 
 
 
@@ -79,5 +80,10 @@ set(assimp_lib "${CMAKE_CURRENT_SOURCE_DIR}/assimp_build/Release/assimp-vc143-mt
 target_include_directories(assimp INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/assimp/include")
 target_link_libraries(assimp INTERFACE ${assimp_lib} )
 
+# add_library(sndfile INTERFACE)
+# target_include_directories(sndfile INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/libsndfile/include")
 
+# list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+# find_package(SndFile REQUIRED)
 
+add_subdirectory(libsndfile)

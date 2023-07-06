@@ -1,0 +1,30 @@
+#pragma once
+#include <AL/al.h>
+#include <sndfile.h>
+
+class MusicBuffer
+{
+public:
+	void Play();
+	//void Pause();
+	//void Stop();
+
+	void UpdateBufferStream();
+
+	ALint getSource();
+
+	MusicBuffer(const char* filename);
+	~MusicBuffer();
+
+private:
+	ALuint source;
+	static const int BUFFER_SAMPLES = 8192;
+	static const int NUM_BUFFERS = 4;
+	ALuint buffers[NUM_BUFFERS];
+	SNDFILE* sndFile;
+	SF_INFO sfInfo;
+	short* memBuf;
+	ALenum format;
+
+	MusicBuffer() = delete;
+};
