@@ -1,7 +1,7 @@
 #include "MusicSource.hpp"
 #include <cstddef>
 #include <alext.h>
-#include <malloc.h>
+#include <stdio.h>
 #include <string>
 #include <iostream>
 
