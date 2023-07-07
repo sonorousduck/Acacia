@@ -81,7 +81,7 @@ target_include_directories(Graphics PRIVATE include/ include/glm)
 target_include_directories(Graphics PRIVATE ThirdParty/imgui)
 
 #target_precompile_headers(Graphics PUBLIC "<iostream>")
-target_link_libraries(Graphics glfw stb_image assetlib assimp ctti)
+target_link_libraries(Graphics glfw stb_image assetlib assimp ctti freetype)
 set_property(TARGET Graphics PROPERTY CXX_STANDARD 20)
 
 
@@ -90,7 +90,7 @@ add_custom_target(copy_assets
 )
 
 add_dependencies(Graphics copy_assets)
-
+   
 
 # Create virtual folders to make it look nicer in VS
 #if(MSVC_IDE)

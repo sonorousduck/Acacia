@@ -9,6 +9,7 @@ add_library(rapidjson INTERFACE)
 add_library(tiny_obj_loader STATIC)
 # add_library(vk_mem_alloc INTERFACE)
 add_library(glm INTERFACE)
+add_library(freetype INTERFACE)
 
 add_library(lz4 STATIC)
 
@@ -87,3 +88,7 @@ target_link_libraries(assimp INTERFACE ${assimp_lib} )
 # find_package(SndFile REQUIRED)
 
 add_subdirectory(libsndfile)
+set(freetype_lib "${CMAKE_CURRENT_SOURCE_DIR}/freetype/build/Release/freetype.lib")
+
+target_include_directories(freetype INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/freetype/include")
+target_link_libraries(freetype INTERFACE ${freetype_lib})

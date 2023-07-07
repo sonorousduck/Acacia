@@ -26,3 +26,6 @@
 [submodule "ThirdParty/ctti"]
 	path = ThirdParty/ctti
 	url = git@github.com:Manu343726/ctti.git
+[submodule "ThirdParty/freetype"]
+	path = ThirdParty/freetype
+	url = https://gitlab.freedesktop.org/freetype/freetype.git
