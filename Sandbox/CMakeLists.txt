@@ -46,6 +46,6 @@ include_directories("${PROJECT_SOURCE_DIR}/Graphics/src")
 target_include_directories(Sandbox PRIVATE ../Graphics/include/ ../Graphics/include/glm)
 
 
-target_link_libraries(Sandbox Ebony Graphics glm Audio)
+target_link_libraries(Sandbox Ebony Graphics glm)
 
 # TODO: Add tests and install targets if needed.

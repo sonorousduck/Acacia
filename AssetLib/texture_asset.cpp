@@ -74,7 +74,6 @@ assets::TextureInfo assets::read_texture_info(AssetFile* file)
 	TextureInfo info{};
 	rapidjson::Document document;
 	document.Parse(file->json);
-	std::cout << document.HasParseError() << std::endl;
 
 	int formatInt = document["format"].GetUint();
 	info.textureFormat = formatInt;
