@@ -468,194 +468,194 @@ std::string calculate_gltf_material_name(tinygltf::Model& model, int materialInd
 	return matname;
 }
 
-void extract_gltf_nodes(tinygltf::Model& model, const std::filesystem::path& input, const std::filesystem::path& outputFolder, const ConverterState& convState)
-{
-	assets::PrefabInfo prefab;
-
-	std::vector<uint64_t> meshnodes;
-	for (int i = 0; i < model.nodes.size(); i++)
-	{
-		auto& node = model.nodes[i];
-
-		std::string nodename = node.name;
-
-		prefab.node_names[i] = nodename;
-
-		std::array<float, 16> matrix;
-
-		//node has a matrix
-		if (node.matrix.size() > 0)
-		{
-			for (int n = 0; n < 16; n++) {
-				matrix[n] = node.matrix[n];
-			}
-
-			//glm::mat4 flip = glm::mat4{ 1.0 };
-			//flip[1][1] = -1;
-
-			glm::mat4 mat;
-
-			memcpy(&mat, &matrix, sizeof(glm::mat4));
-
-			mat = mat;// * flip;
-
-			memcpy(matrix.data(), &mat, sizeof(glm::mat4));
-		}
-		//separate transform
-		else
-		{
-
-			glm::mat4 translation{ 1.f };
-			if (node.translation.size() > 0)
-			{
-				translation = glm::translate(glm::vec3{ node.translation[0],node.translation[1] ,node.translation[2] });
-			}
-
-			glm::mat4 rotation{ 1.f };
-
-			if (node.rotation.size() > 0)
-			{
-				glm::quat rot(node.rotation[3], node.rotation[0], node.rotation[1], node.rotation[2]);
-				rotation = glm::mat4{ rot };
-			}
-
-			glm::mat4 scale{ 1.f };
-			if (node.scale.size() > 0)
-			{
-				scale = glm::scale(glm::vec3{ node.scale[0],node.scale[1] ,node.scale[2] });
-			}
-			//glm::mat4 flip = glm::mat4{ 1.0 };
-			//flip[1][1] = -1;
-
-			glm::mat4 transformMatrix = (translation * rotation * scale);// * flip;
-
-			memcpy(matrix.data(), &transformMatrix, sizeof(glm::mat4));
-		}
-
-		prefab.node_matrices[i] = prefab.matrices.size();
-		prefab.matrices.push_back(matrix);
-
-		if (node.mesh >= 0)
-		{
-			auto mesh = model.meshes[node.mesh];
-
-			if (mesh.primitives.size() > 1) {
-				meshnodes.push_back(i);
-			}
-			else {
-				auto primitive = mesh.primitives[0];
-				std::string meshname = calculate_gltf_mesh_name(model, node.mesh, 0);
-
-				std::filesystem::path meshpath = outputFolder / (meshname + ".mesh");
-
-				int material = primitive.material;
-
-				std::string matname = calculate_gltf_material_name(model, material);
-
-				std::filesystem::path materialpath = outputFolder / (matname + ".mat");
-
-				assets::PrefabInfo::NodeMesh nmesh;
-				nmesh.mesh_path = convState.convert_to_export_relative(meshpath).string();
-				nmesh.material_path = convState.convert_to_export_relative(materialpath).string();
-
-				prefab.node_meshes[i] = nmesh;
-			}
-		}
-	}
-
-	//calculate parent hierarchies
-	//gltf stores children, but we want parent
-	for (int i = 0; i < model.nodes.size(); i++)
-	{
-		for (auto c : model.nodes[i].children)
-		{
-			prefab.node_parents[c] = i;
-		}
-	}
-
-	//for every gltf node that is a root node (no parents), apply the coordinate fixup
-
-	glm::mat4 flip = glm::mat4{ 1.0 };
-	flip[1][1] = -1;
-
-
-	glm::mat4 rotation = glm::mat4{ 1.0 };
-	//flip[1][1] = -1;
-	rotation = glm::rotate(glm::radians(-180.f), glm::vec3{ 1,0,0 });
-
-
-	//flip[2][2] = -1;
-	for (int i = 0; i < model.nodes.size(); i++)
-	{
-
-		auto it = prefab.node_parents.find(i);
-		if (it == prefab.node_parents.end())
-		{
-			auto matrix = prefab.matrices[prefab.node_matrices[i]];
-			//no parent, root node
-			glm::mat4 mat;
-
-			memcpy(&mat, &matrix, sizeof(glm::mat4));
-
-			mat = rotation * (flip * mat);
-
-			memcpy(&matrix, &mat, sizeof(glm::mat4));
-
-			prefab.matrices[prefab.node_matrices[i]] = matrix;
-
-		}
-	}
-
-
-	int nodeindex = model.nodes.size();
-	//iterate nodes with mesh, convert each submesh into a node
-	for (int i = 0; i < meshnodes.size(); i++)
-	{
-		auto& node = model.nodes[i];
-
-		if (node.mesh < 0) break;
-
-		auto mesh = model.meshes[node.mesh];
-
-
-		for (int primindex = 0; primindex < mesh.primitives.size(); primindex++)
-		{
-			auto primitive = mesh.primitives[primindex];
-			int newnode = nodeindex++;
-
-			char buffer[50];
-
-			itoa(primindex, buffer, 10);
-
-			prefab.node_names[newnode] = prefab.node_names[i] + "_PRIM_" + &buffer[0];
-
-			int material = primitive.material;
-			auto mat = model.materials[material];
-			std::string matname = calculate_gltf_material_name(model, material);
-			std::string meshname = calculate_gltf_mesh_name(model, node.mesh, primindex);
-
-			std::filesystem::path materialpath = outputFolder / (matname + ".mat");
-			std::filesystem::path meshpath = outputFolder / (meshname + ".mesh");
-
-			assets::PrefabInfo::NodeMesh nmesh;
-			nmesh.mesh_path = convState.convert_to_export_relative(meshpath).string();
-			nmesh.material_path = convState.convert_to_export_relative(materialpath).string();
-
-			prefab.node_meshes[newnode] = nmesh;
-		}
-
-	}
-
-
-	assets::AssetFile newFile = assets::pack_prefab(prefab);
-
-	std::filesystem::path scenefilepath = (outputFolder.parent_path()) / input.stem();
-
-	scenefilepath.replace_extension(".pfb");
-
-	//save to disk
-	save_binaryfile(scenefilepath.string().c_str(), newFile);
-}
+//void extract_gltf_nodes(tinygltf::Model& model, const std::filesystem::path& input, const std::filesystem::path& outputFolder, const ConverterState& convState)
+//{
+//	assets::PrefabInfo prefab;
+//
+//	std::vector<uint64_t> meshnodes;
+//	for (int i = 0; i < model.nodes.size(); i++)
+//	{
+//		auto& node = model.nodes[i];
+//
+//		std::string nodename = node.name;
+//
+//		prefab.node_names[i] = nodename;
+//
+//		std::array<float, 16> matrix;
+//
+//		//node has a matrix
+//		if (node.matrix.size() > 0)
+//		{
+//			for (int n = 0; n < 16; n++) {
+//				matrix[n] = node.matrix[n];
+//			}
+//
+//			//glm::mat4 flip = glm::mat4{ 1.0 };
+//			//flip[1][1] = -1;
+//
+//			glm::mat4 mat;
+//
+//			memcpy(&mat, &matrix, sizeof(glm::mat4));
+//
+//			mat = mat;// * flip;
+//
+//			memcpy(matrix.data(), &mat, sizeof(glm::mat4));
+//		}
+//		//separate transform
+//		else
+//		{
+//
+//			glm::mat4 translation{ 1.f };
+//			if (node.translation.size() > 0)
+//			{
+//				translation = glm::translate(glm::vec3{ node.translation[0],node.translation[1] ,node.translation[2] });
+//			}
+//
+//			glm::mat4 rotation{ 1.f };
+//
+//			if (node.rotation.size() > 0)
+//			{
+//				glm::quat rot(node.rotation[3], node.rotation[0], node.rotation[1], node.rotation[2]);
+//				rotation = glm::mat4{ rot };
+//			}
+//
+//			glm::mat4 scale{ 1.f };
+//			if (node.scale.size() > 0)
+//			{
+//				scale = glm::scale(glm::vec3{ node.scale[0],node.scale[1] ,node.scale[2] });
+//			}
+//			//glm::mat4 flip = glm::mat4{ 1.0 };
+//			//flip[1][1] = -1;
+//
+//			glm::mat4 transformMatrix = (translation * rotation * scale);// * flip;
+//
+//			memcpy(matrix.data(), &transformMatrix, sizeof(glm::mat4));
+//		}
+//
+//		prefab.node_matrices[i] = prefab.matrices.size();
+//		prefab.matrices.push_back(matrix);
+//
+//		if (node.mesh >= 0)
+//		{
+//			auto mesh = model.meshes[node.mesh];
+//
+//			if (mesh.primitives.size() > 1) {
+//				meshnodes.push_back(i);
+//			}
+//			else {
+//				auto primitive = mesh.primitives[0];
+//				std::string meshname = calculate_gltf_mesh_name(model, node.mesh, 0);
+//
+//				std::filesystem::path meshpath = outputFolder / (meshname + ".mesh");
+//
+//				int material = primitive.material;
+//
+//				std::string matname = calculate_gltf_material_name(model, material);
+//
+//				std::filesystem::path materialpath = outputFolder / (matname + ".mat");
+//
+//				assets::PrefabInfo::NodeMesh nmesh;
+//				nmesh.mesh_path = convState.convert_to_export_relative(meshpath).string();
+//				nmesh.material_path = convState.convert_to_export_relative(materialpath).string();
+//
+//				prefab.node_meshes[i] = nmesh;
+//			}
+//		}
+//	}
+//
+//	//calculate parent hierarchies
+//	//gltf stores children, but we want parent
+//	for (int i = 0; i < model.nodes.size(); i++)
+//	{
+//		for (auto c : model.nodes[i].children)
+//		{
+//			prefab.node_parents[c] = i;
+//		}
+//	}
+//
+//	//for every gltf node that is a root node (no parents), apply the coordinate fixup
+//
+//	glm::mat4 flip = glm::mat4{ 1.0 };
+//	flip[1][1] = -1;
+//
+//
+//	glm::mat4 rotation = glm::mat4{ 1.0 };
+//	//flip[1][1] = -1;
+//	rotation = glm::rotate(glm::radians(-180.f), glm::vec3{ 1,0,0 });
+//
+//
+//	//flip[2][2] = -1;
+//	for (int i = 0; i < model.nodes.size(); i++)
+//	{
+//
+//		auto it = prefab.node_parents.find(i);
+//		if (it == prefab.node_parents.end())
+//		{
+//			auto matrix = prefab.matrices[prefab.node_matrices[i]];
+//			//no parent, root node
+//			glm::mat4 mat;
+//
+//			memcpy(&mat, &matrix, sizeof(glm::mat4));
+//
+//			mat = rotation * (flip * mat);
+//
+//			memcpy(&matrix, &mat, sizeof(glm::mat4));
+//
+//			prefab.matrices[prefab.node_matrices[i]] = matrix;
+//
+//		}
+//	}
+//
+//
+//	int nodeindex = model.nodes.size();
+//	//iterate nodes with mesh, convert each submesh into a node
+//	for (int i = 0; i < meshnodes.size(); i++)
+//	{
+//		auto& node = model.nodes[i];
+//
+//		if (node.mesh < 0) break;
+//
+//		auto mesh = model.meshes[node.mesh];
+//
+//
+//		for (int primindex = 0; primindex < mesh.primitives.size(); primindex++)
+//		{
+//			auto primitive = mesh.primitives[primindex];
+//			int newnode = nodeindex++;
+//
+//			char buffer[50];
+//
+//			itoa(primindex, buffer, 10);
+//
+//			prefab.node_names[newnode] = prefab.node_names[i] + "_PRIM_" + &buffer[0];
+//
+//			int material = primitive.material;
+//			auto mat = model.materials[material];
+//			std::string matname = calculate_gltf_material_name(model, material);
+//			std::string meshname = calculate_gltf_mesh_name(model, node.mesh, primindex);
+//
+//			std::filesystem::path materialpath = outputFolder / (matname + ".mat");
+//			std::filesystem::path meshpath = outputFolder / (meshname + ".mesh");
+//
+//			assets::PrefabInfo::NodeMesh nmesh;
+//			nmesh.mesh_path = convState.convert_to_export_relative(meshpath).string();
+//			nmesh.material_path = convState.convert_to_export_relative(materialpath).string();
+//
+//			prefab.node_meshes[newnode] = nmesh;
+//		}
+//
+//	}
+//
+//
+//	assets::AssetFile newFile = assets::pack_prefab(prefab);
+//
+//	std::filesystem::path scenefilepath = (outputFolder.parent_path()) / input.stem();
+//
+//	scenefilepath.replace_extension(".pfb");
+//
+//	//save to disk
+//	save_binaryfile(scenefilepath.string().c_str(), newFile);
+//}
 
 
 

@@ -17,11 +17,13 @@
 #include <map>
 #include "model.hpp"
 
+#include "particleGenerator.hpp"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-unsigned int WIDTH = 1600;
-unsigned int HEIGHT = 1200;
+unsigned int WIDTH = 800;
+unsigned int HEIGHT = 600;
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -46,12 +48,12 @@ struct Character
 std::map<char, Character> Characters{};
 
 
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
     WIDTH = width;
     HEIGHT = height;
-    std::cout << WIDTH << std::endl;
 }
 
 void processInput(GLFWwindow* window)
@@ -109,6 +111,56 @@ void scroll_callback(GLFWwindow* window, double xOffset, double yOffset)
     camera.ProcessMouseScroll(static_cast<float>(yOffset));
 }
 
+unsigned int loadTextureNew(char const* path)
+{
+    unsigned int textureID = 0;
+    glGenTextures(1, &textureID);
+
+
+    assets::AssetFile file{};
+    bool loaded = assets::load_binaryfile(path, file);
+
+    if (!loaded)
+    {
+        std::cout << "Error when loading image: " << path << std::endl;
+        return -1;
+    }
+
+    assets::TextureInfo textureInfo = assets::read_texture_info(&file);
+
+    int nrComponents = textureInfo.textureFormat;
+    int width = textureInfo.pixelSize[0];
+    int height = textureInfo.pixelSize[1];
+
+    if (file.binaryBlob.data())
+    {
+        GLenum format{};
+
+        switch (nrComponents)
+        {
+        case 1:
+            format = GL_RED;
+            break;
+        case 3:
+            format = GL_RGB;
+            break;
+        case 4:
+            format = GL_RGBA;
+            break;
+        default:
+            break;
+        }
+
+        std::vector<char> data(textureInfo.textureSize);
+
+        assets::unpack_texture(&textureInfo, file.binaryBlob.data(), file.binaryBlob.size(), data.data());
+    }
+
+    return textureID;
+}
+
+
+
 unsigned int loadTexture(char const* path)
 {
     unsigned int textureID = 0;
@@ -161,48 +213,7 @@ unsigned int loadTexture(char const* path)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
     }
-
-
-    /*int width = 0, height = 0, nrComponents = 0;
-    unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
-
-    if (data)
-    {
-        GLenum format{};
-        
-        switch (nrComponents)
-        {
-        case 1:
-            format = GL_RED;
-            break;
-        case 3:
-            format = GL_RGB;
-            break;
-        case 4:
-            format = GL_RGBA;
-            break;
-        default:
-            break;
-        }
-
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
-    }
-    else 
-    {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
-        stbi_image_free(data);
-    }*/
 
     return textureID;
 }
@@ -555,6 +566,14 @@ int main()
     glBindVertexArray(0);
 
 
+    Shader particleShader("shaders/particle.vert", "shaders/particle.frag");
+    unsigned int particle = loadTextureNew("textures/particle.tx");
+    Texture2D texture = Texture2D(particle);
+
+    // Create particle effects
+    // ================================================================================================================
+    auto Particles = new ParticleGenerator(particleShader, texture, 500);
+
 
     glEnable(GL_DEPTH_TEST);
     /* Loop until the user closes the window */
@@ -564,7 +583,10 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+
         processInput(window);
+
+        Particles->Update(deltaTime, 2);
 
         /* Render here */
        
@@ -615,6 +637,12 @@ int main()
         RenderText(textShader, fps, 25.0f, 25.0f, 1.0f, glm::vec3(0.5f, 0.8f, 0.2f));
         RenderText(textShader, "Beep beep!", 25.0f, 100.0f, 1.0f, glm::vec3(0.5f, 0.8f, 0.2f));
 
+        particleShader.use();
+        particleShader.setMat4("projection", projection);
+        particleShader.setMat4("view", view);
+
+
+        Particles->Draw();
 
         //ourShader.use();
 

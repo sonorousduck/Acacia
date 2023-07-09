@@ -14,6 +14,11 @@ namespace Ebony {
 
 	}
 
+	void Application::Init()
+	{
+
+	}
+
 	void Application::Update()
 	{
 
@@ -37,8 +42,6 @@ namespace Ebony {
 
 		std::cout << "Beep" << std::endl;
 		EB_TRACE(e);
-
-		std::cout << test << std::endl;
 
 		while (true)
 		{

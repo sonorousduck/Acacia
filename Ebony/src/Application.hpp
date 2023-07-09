@@ -11,10 +11,10 @@ namespace Ebony {
 	class Application
 	{
 	public:
-		int test;
 		Application();
 		virtual ~Application();
 		void Run();
+		virtual void Init();
 		virtual void Update();
 		virtual void Draw();
 		virtual void ProcessInput();

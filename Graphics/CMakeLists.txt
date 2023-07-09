@@ -8,6 +8,8 @@ set(HEADER_FILES
   src/mesh.hpp
   src/model.hpp
   src/spriteRenderer.hpp
+  src/particleGenerator.hpp
+  src/texture.hpp
 )
 
 set(SOURCE_FILES
@@ -18,6 +20,8 @@ set(SOURCE_FILES
   src/model.cpp   
   src/spriteRenderer.cpp
   src/framebuffermain.cpp
+  src/particleGenerator.cpp
+  src/texture.cpp
 )
 
 set(SHADERS
