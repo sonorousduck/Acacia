@@ -105,9 +105,11 @@ void pack_vertex(assets::Vertex_P32N8C8V16& new_vert, tinyobj::real_t vx, tinyob
 template<typename V>
 void extract_mesh_from_obj(std::vector<tinyobj::shape_t>& shapes, tinyobj::attrib_t& attrib, std::vector<uint32_t>& _indices, std::vector<V>& _vertices)
 {
+
 	// Loop over shapes
-	for (size_t s = 0; s < shapes.size(); i++)
+	for (size_t s = 0; s < shapes.size(); s++)
 	{
+		size_t index_offset = 0;
 		// Loop over the faces
 		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
 		{

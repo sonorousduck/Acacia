@@ -7,7 +7,7 @@ set(HEADER_FILES
   src/camera.hpp
   src/mesh.hpp
   src/model.hpp
-
+  src/spriteRenderer.hpp
 )
 
 set(SOURCE_FILES
@@ -15,7 +15,9 @@ set(SOURCE_FILES
   src/shader.cpp
   src/camera.cpp
   src/mesh.cpp
-  src/model.cpp
+  src/model.cpp   
+  src/spriteRenderer.cpp
+  src/framebuffermain.cpp
 )
 
 set(SHADERS
