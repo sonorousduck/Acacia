@@ -10,6 +10,7 @@ set(HEADER_FILES
   src/spriteRenderer.hpp
   src/particleGenerator.hpp
   src/texture.hpp
+  src/graphics2d.hpp
 )
 
 set(SOURCE_FILES
@@ -22,6 +23,7 @@ set(SOURCE_FILES
   src/framebuffermain.cpp
   src/particleGenerator.cpp
   src/texture.cpp
+  src/graphics2d.cpp
 )
 
 set(SHADERS

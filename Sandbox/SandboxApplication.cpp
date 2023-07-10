@@ -19,6 +19,7 @@ public:
 	void Update()
 	{
 		//std::cout << "Updating!" << std::endl;
+
 	}
 
 	void ProcessInput()

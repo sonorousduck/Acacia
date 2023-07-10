@@ -33,11 +33,11 @@ void main()
     );
 
     // Sharpen Kernel
-    //  float kernel[9] = float[](
-    //     -1, -1, -1,
-    //     -1, 9, -1,
-    //     -1, -1, -1
-    //  );
+     float kernel[9] = float[](
+        -1, -1, -1,
+        -1, 9, -1,
+        -1, -1, -1
+     );
 
     // Blur kernel
     //  float kernel[9] = float[](
@@ -47,11 +47,11 @@ void main()
     //  );
 
     // Edge Detection
-    float kernel[9] = float[](
-        1, 1, 1,
-        1, -8, 1,
-        1, 1, 1
-     );
+    // float kernel[9] = float[](
+    //     1, 1, 1,
+    //     1, -8, 1,
+    //     1, 1, 1
+    //  );
 
      vec3 sampleUv[9];
      for (int i = 0; i < 9; i++)

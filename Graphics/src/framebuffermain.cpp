@@ -111,10 +111,9 @@ void scroll_callback(GLFWwindow* window, double xOffset, double yOffset)
     camera.ProcessMouseScroll(static_cast<float>(yOffset));
 }
 
-unsigned int loadTextureNew(char const* path)
+Texture2D loadTextureNew(char const* path)
 {
-    unsigned int textureID = 0;
-    glGenTextures(1, &textureID);
+    Texture2D texture = Texture2D();
 
 
     assets::AssetFile file{};
@@ -154,9 +153,13 @@ unsigned int loadTextureNew(char const* path)
         std::vector<char> data(textureInfo.textureSize);
 
         assets::unpack_texture(&textureInfo, file.binaryBlob.data(), file.binaryBlob.size(), data.data());
+
+        texture.Generate(width, height, data.data());
+
+        return texture;
     }
 
-    return textureID;
+    return texture;
 }
 
 
@@ -406,18 +409,18 @@ int main()
 
     
     // Plane VAO
-    unsigned int planeVBO = 0;
-    unsigned int planeVAO = 0;
+    //unsigned int planeVBO = 0;
+    //unsigned int planeVAO = 0;
 
-    glGenVertexArrays(1, &planeVAO);
-    glGenBuffers(1, &planeVBO);
-    glBindVertexArray(planeVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    //glGenVertexArrays(1, &planeVAO);
+    //glGenBuffers(1, &planeVBO);
+    //glBindVertexArray(planeVAO);
+    //glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
+    //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    //glEnableVertexAttribArray(1);
 
     // Quad VAO
     unsigned int quadVBO = 0;
@@ -567,12 +570,11 @@ int main()
 
 
     Shader particleShader("shaders/particle.vert", "shaders/particle.frag");
-    unsigned int particle = loadTextureNew("textures/particle.tx");
-    Texture2D texture = Texture2D(particle);
+    Texture2D particle = loadTextureNew("textures/particle.tx");
 
     // Create particle effects
     // ================================================================================================================
-    auto Particles = new ParticleGenerator(particleShader, texture, 500);
+    auto Particles = new ParticleGenerator(particleShader, particle, 500);
 
 
     glEnable(GL_DEPTH_TEST);
@@ -612,6 +614,7 @@ int main()
         model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
         shader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+        
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
         shader.setMat4("model", model);
@@ -628,7 +631,7 @@ int main()
         screenShader.use();
         glBindVertexArray(quadVAO);
         glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
 
         std::string fps = std::to_string(static_cast<int>(std::round(1000 / deltaTime))) + " fps";
@@ -639,7 +642,6 @@ int main()
 
         particleShader.use();
         particleShader.setMat4("projection", projection);
-        particleShader.setMat4("view", view);
 
 
         Particles->Draw();
@@ -669,11 +671,11 @@ int main()
     }
 
     glDeleteVertexArrays(1, &cubeVAO);
-    glDeleteVertexArrays(1, &planeVAO);
+    //glDeleteVertexArrays(1, &planeVAO);
     glDeleteVertexArrays(1, &quadVAO);
     glDeleteBuffers(1, &cubeVBO);
     glDeleteFramebuffers(1, &quadVBO);
-    glDeleteFramebuffers(1, &planeVBO);
+    //glDeleteFramebuffers(1, &planeVBO);
     glDeleteRenderbuffers(1, &rbo);
     glDeleteFramebuffers(1, &framebuffer);
 

@@ -34,13 +34,12 @@ void ParticleGenerator::Draw()
 	// Use additive blending to give it a 'glow' effect
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	this->shader.use();
-	for (Particle particle : this->particles)
+	for (const Particle& particle : this->particles)
 	{
 		if (particle.Life > 0.0f)
 		{
 			this->shader.setVec2("offset", particle.Position);
 			this->shader.setVec4("color", particle.Color);
-
 			this->texture.Bind();
 			glBindVertexArray(this->VAO);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -64,14 +63,13 @@ void ParticleGenerator::init()
 		1.0f, 1.0f, 1.0f, 1.0f,
 		1.0f, 0.0f, 1.0f, 0.0f
 	};
-
 	glGenVertexArrays(1, &this->VAO);
 	glGenBuffers(1, &VBO);
 	glBindVertexArray(this->VAO);
-
+	// fill mesh buffer
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(particle_quad), particle_quad, GL_STATIC_DRAW);
-
+	// set mesh attributes
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 	glBindVertexArray(0);
@@ -84,11 +82,11 @@ void ParticleGenerator::init()
 	}
 }
 
-unsigned int lastUsedParticle = 0;;
+unsigned int lastUsedParticle = 0;
 unsigned int ParticleGenerator::firstUnusedParticle()
 {
 	// First search from last used particle
-	for (unsigned int i = lastUsedParticle; i < this->amount; i++)
+	for (unsigned int i = lastUsedParticle; i < this->amount; ++i)
 	{
 		if (this->particles[i].Life <= 0.0f)
 		{
@@ -117,8 +115,8 @@ void ParticleGenerator::respawnParticle(Particle& particle, glm::vec2 offset)
 	float random = ((rand() % 100) - 50) / 10.0f;
 	float rColor = 0.5f + ((rand() % 100) / 100.0f);
 
-	particle.Position = random + offset + glm::vec2(20.0, 20.0); // This should have some sort of object position added to it (so you can specify where the generator should be at)
+	particle.Position = random + offset + glm::vec2(100.0f, 100.0f); // This should have some sort of object position added to it (so you can specify where the generator should be at)
 	particle.Color = glm::vec4(rColor, rColor, rColor, 1.0f);
 	particle.Life = 1.0f;
-	particle.Velocity = glm::vec2(1.0f, 1.0f) * 0.1f; // This should also have the object velocity
+	particle.Velocity = glm::vec2(0.5f, 0.5f) * 0.1f; // This should also have the object velocity
 }
