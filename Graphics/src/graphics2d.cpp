@@ -16,28 +16,17 @@ namespace Ebony
 		versionMajor = 3;
 		versionMinor = 3;
 
+		input = new Input();
+
 		Window glfwWindow{};
 		window = glfwWindow.createWindow(this);
+		input->setupJoystickInputs();
 		Initialize();
 	}
 
 	void Graphics2d::onCursorPos(double xPosIn, double yPosIn)
 	{
-		float x = static_cast<float>(xPosIn);
-		float y = static_cast<float>(yPosIn);
-
-		if (firstMouse)
-		{
-			lastMosX = x;
-			lastMosY = y;
-			firstMouse = false;
-		}
-
-
-		float xOffset = x - lastMosX;
-		float yOffset = lastMosY - y;
-		lastMosX = x;
-		lastMosY = y;
+		this->input->onCursorPos(xPosIn, yPosIn);
 	}
 
 	void Graphics2d::onFramebufferSizeChange(int width, int height)
@@ -49,26 +38,20 @@ namespace Ebony
 
 	void Graphics2d::onScroll(double xOffset, double yOffset)
 	{
-		std::cout << "Scrolling" << std::endl;
+		this->input->onScroll(xOffset, yOffset);
 	}
 
 	void Graphics2d::onMouseButton(int button, int action, int mods)
 	{
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-		{
-			std::cout << "Pressed" << std::endl;
-		}
-		std::cout << button << ", " << action << ", " << mods << std::endl;
+		this->input->onMouseButton(button, action, mods);
 	}
 
 	void Graphics2d::onKeyInput(int button, int scancode, int action, int mods)
 	{
-		if (button == GLFW_KEY_E && action == GLFW_PRESS)
-		{
-			std::cout << "E PRESSED!" << std::endl;
-		}
-
+		this->input->onKeyInput(button, scancode, action, mods);
 	}
+
+
 
 	//void Graphics2d::onInput(int input)
 	//{
@@ -81,7 +64,7 @@ namespace Ebony
 		{
 			camera.ProcessKeyboard(FORWARD, deltaTime);
 		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		//if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
 			camera.ProcessKeyboard(BACKWARD, deltaTime);
 		}

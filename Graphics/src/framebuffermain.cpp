@@ -21,6 +21,7 @@
 #include "particleGenerator.hpp"
 
 #include <ft2build.h>
+#include "input.hpp"
 #include FT_FREETYPE_H
 
 unsigned int WIDTH = 800;
@@ -59,10 +60,14 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void processInput(GLFWwindow* window)
 {
-    float cameraSpeed = 2.50f;
+
+    // Handle controller input here
 
 
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+
+
+
+   /*if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, true);
     }
@@ -82,7 +87,7 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {
         camera.ProcessKeyboard(RIGHT, deltaTime);
-    }
+    }*/
 }
 
 void mouse_callback(GLFWwindow* window, double xPosIn, double yPosIn)
@@ -277,6 +282,9 @@ int main()
 {
 
     Ebony::Graphics2d graphics{};
+    Ebony::Input input{};
+
+
     graphics.Initialize("Ebony", 800, 600);
 //    GLFWwindow* window{};
 //
@@ -582,8 +590,7 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-
-        processInput(graphics.window);
+        graphics.input->ProcessInput(graphics.window, camera, deltaTime);
 
         Particles->Update(deltaTime, 2);
 

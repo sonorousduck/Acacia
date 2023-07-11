@@ -28,7 +28,6 @@ namespace Ebony
 		}
 
 
-		glfwSetWindowUserPointer(window, graphics);
 
 		auto mouse_callback = [](GLFWwindow* window, double xPosIn, double yPosIn)
 		{
@@ -37,7 +36,7 @@ namespace Ebony
 
 		auto scroll_callback = [](GLFWwindow* window, double x, double y)
 		{
-			static_cast<Graphics2d*>(glfwGetWindowUserPointer(window))->onScroll(x, y);
+			static_cast<Input*>(glfwGetWindowUserPointer(window))->onScroll(x, y);
 		};
 
 		auto framebuffer_callback = [](GLFWwindow* window, int width, int height)
@@ -55,38 +54,16 @@ namespace Ebony
 			static_cast<Graphics2d*>(glfwGetWindowUserPointer(window))->onKeyInput(key, scancode, action, mods);
 		};
 
-		 //This has to move probably since it can't call the window
-		auto joystick_connection = [](int jid, int event)
-		{
-			if (event == GLFW_CONNECTED)
-			{
-				std::cout << "Connected!" << std::endl;
-			}
-			else if (event == GLFW_DISCONNECTED)
-			{
-				std::cout << "Disconnected!" << std::endl;
-			}
-		};
 
-		if (glfwJoystickIsGamepad(GLFW_JOYSTICK_1))
-		{
-			// Use as gamepad
-			std::cout << "This is a gamepad" << std::endl;
-			const char* name = glfwGetGamepadName(GLFW_JOYSTICK_1);
-			std::cout << "It has the name: " << name << std::endl;
-		}
+		glfwSetWindowUserPointer(window, graphics);
+		glfwSetFramebufferSizeCallback(window, framebuffer_callback);
 
-		// Joysticks sadly operate slightly differently, as they don't take window* as a pointer. This means that I will need to set up the callbacks inside of graphics2d instead... Though in 
-		// all reality, I feel like all of this should be in a different class from graphics. It probably should be in Input
-
-
+		//glfwSetWindowUserPointer(window, graphics->input);
 
 		glfwSetCursorPosCallback(window, mouse_callback);
-		glfwSetFramebufferSizeCallback(window, framebuffer_callback);
 		glfwSetScrollCallback(window, scroll_callback);
 		glfwSetMouseButtonCallback(window, mouse_button_callback);
 		glfwSetKeyCallback(window, key_callback);
-		glfwSetJoystickCallback(joystick_connection);
 
 
 		glfwMakeContextCurrent(window);

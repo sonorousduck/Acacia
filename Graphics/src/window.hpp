@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics2d.hpp"
+#include "input.hpp"
 
 
 namespace Ebony 

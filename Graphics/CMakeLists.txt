@@ -13,6 +13,7 @@ set(HEADER_FILES
   src/graphics2d.hpp
   src/renderTarget2d.hpp
   src/window.hpp
+  src/input.hpp
 )
 
 set(SOURCE_FILES
@@ -28,6 +29,7 @@ set(SOURCE_FILES
   src/graphics2d.cpp
   src/renderTarget2d.cpp
   src/window.cpp
+  src/input.cpp
 )
 
 set(SHADERS

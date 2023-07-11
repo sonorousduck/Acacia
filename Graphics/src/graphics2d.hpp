@@ -22,6 +22,7 @@
 #include "asset_load.hpp"
 #include "texture_asset.hpp"
 #include "texture.hpp"
+#include "input.hpp"
 
 namespace Ebony
 {
@@ -114,6 +115,7 @@ namespace Ebony
 		void onKeyInput(int key, int scancode, int action, int mods);
 
 		GLFWwindow* window{};
+		Input* input;
 		int screenWidth;
 		int screenHeight;
 		bool firstMouse = true;
