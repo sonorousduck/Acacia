@@ -11,6 +11,8 @@ set(HEADER_FILES
   src/particleGenerator.hpp
   src/texture.hpp
   src/graphics2d.hpp
+  src/renderTarget2d.hpp
+  src/window.hpp
 )
 
 set(SOURCE_FILES
@@ -24,6 +26,8 @@ set(SOURCE_FILES
   src/particleGenerator.cpp
   src/texture.cpp
   src/graphics2d.cpp
+  src/renderTarget2d.cpp
+  src/window.cpp
 )
 
 set(SHADERS

@@ -16,6 +16,7 @@
 #include <chrono>
 #include <map>
 #include "model.hpp"
+#include "graphics2d.hpp"
 
 #include "particleGenerator.hpp"
 
@@ -274,47 +275,46 @@ void RenderText(Shader& s, std::string text, float x, float y, float scale, glm:
 
 int main()
 {
-    GLFWwindow* window{};
 
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
+    Ebony::Graphics2d graphics{};
+    graphics.Initialize("Ebony", 800, 600);
+//    GLFWwindow* window{};
+//
+//    /* Initialize the library */
+//    if (!glfwInit())
+//        return -1;
+//
+//    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//
+//#ifdef __APPLE__
+//    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE)
+//#endif
+//
+//        /* Create a windowed mode window and its OpenGL context */
+//    window = glfwCreateWindow(WIDTH, HEIGHT, "Ebony", NULL, NULL);
+//    if (!window)
+//    {
+//        std::cout << "Failed to create GLFW window" << std::endl;
+//        glfwTerminate();
+//        return -1;
+//    }
+//
+//    // Capture the cursor and hide it
+//    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//    glfwSetCursorPosCallback(window, mouse_callback);
+//    glfwSetScrollCallback(window, scroll_callback);
+//
+//    // This sets the callback to change the viewport. This is also how you would record input from glfw as well
+//    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+//
+//    /* Make the window's context current */
+//    glfwMakeContextCurrent(window);
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE)
-#endif
-
-        /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(WIDTH, HEIGHT, "Ebony", NULL, NULL);
-    if (!window)
-    {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-
-    // Capture the cursor and hide it
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
-
-    // This sets the callback to change the viewport. This is also how you would record input from glfw as well
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
 
 
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
+    
 
     glEnable(GL_DEPTH_TEST);
 
@@ -435,9 +435,6 @@ int main()
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-
-
-
 
 
     unsigned int diffuseMap = loadTexture("textures/box.tx");
@@ -579,14 +576,14 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(graphics.window))
     {
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
 
-        processInput(window);
+        processInput(graphics.window);
 
         Particles->Update(deltaTime, 2);
 
@@ -664,7 +661,7 @@ int main()
         // Unbind from vertex array at the end
 
         /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(graphics.window);
 
         /* Poll for and process events */
         glfwPollEvents();
