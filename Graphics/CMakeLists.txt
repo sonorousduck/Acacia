@@ -32,6 +32,7 @@ set(SOURCE_FILES
   src/window.cpp
   src/input.cpp
   src/colors.cpp
+  src/testmain.cpp
 )
 
 set(SHADERS

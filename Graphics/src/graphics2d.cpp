@@ -7,6 +7,7 @@ namespace Ebony
 {
 	Graphics2d::Graphics2d()
 	{
+
 	}
 
 	void Graphics2d::Initialize(const char* windowName, int width, int height) {
@@ -16,12 +17,18 @@ namespace Ebony
 		versionMajor = 3;
 		versionMinor = 3;
 
+
 		input = Input();
 
 		Window glfwWindow{};
 		window = glfwWindow.createWindow(this);
 		input.setupJoystickInputs();
 		Initialize();
+
+		projection = glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f, -1.0f, 1.0f);
+		initRenderData();
+		defaultShader.LoadShader("shaders/sprite.vert", "shaders/sprite.frag");
+
 	}
 
 	void Graphics2d::Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion)
@@ -84,12 +91,160 @@ namespace Ebony
 		}
 	}
 
-
-	void Graphics2d::BeginDraw()
+	void Graphics2d::initRenderData()
 	{
-		
+		// Since all sprites share the same vertex data, you only need one of these
+		float vertices[] = {
+			// pos      // tex
+			0.0f, 1.0f, 0.0f, 1.0f,
+			1.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 0.0f,
+
+			0.0f, 1.0f, 0.0f, 1.0f,
+			1.0f, 1.0f, 1.0f, 1.0f,
+			1.0f, 0.0f, 1.0f, 0.0f
+		};
+
+		glGenVertexArrays(1, &this->quadVAO);
+		glGenBuffers(1, &quadVBO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		glBindVertexArray(this->quadVAO);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 	}
 
 
+	void Graphics2d::BeginDraw(Color clearColor)
+	{
+		glClearColor(clearColor.r(), clearColor.g(), clearColor.b(), clearColor.a());
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	void Graphics2d::EndDraw()
+	{
+		glfwSwapBuffers(window);
+	}
+
+
+	void Graphics2d::Draw(Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
+	{
+		// This one will use a default shader that will already be loaded into graphics
+		defaultShader.use();
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(position, 0.0f));
+
+		// This transforms the center so you can rotate by the center then transforms back
+		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
+		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
+
+		model = glm::scale(model, glm::vec3(size, 1.0f));
+
+		defaultShader.setMat4("model", model);
+
+		if (hasCamera)
+		{
+			defaultShader.setMat4("view", mainCamera.GetViewMatrix());
+		}
+		else
+		{
+			defaultShader.setMat4("view", glm::mat4(1.0f));
+		}
+
+		defaultShader.setVec3("spriteColor", color.GetRGB());
+
+		glActiveTexture(GL_TEXTURE0);
+		texture.Bind();
+
+		glBindVertexArray(this->quadVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+
+
+
+
+	}
+
+	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
+	{
+		/*s.use();
+		glm::mat4 projection = glm::perspective(glm::radians(mainCamera.Zoom), static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.1f, 100.0f);
+		glm::mat4 view = mainCamera.GetViewMatrix();
+		glm::mat4 model = glm::mat4(1.0f);
+
+		s.setMat4("projection", projection);
+		s.setMat4("view", view);*/
+
+
+	}
+
+	Texture2D Graphics2d::loadTexture(char const* path)
+	{
+		Texture2D texture = Texture2D();
+
+
+		assets::AssetFile file{};
+		bool loaded = assets::load_binaryfile(path, file);
+
+		if (!loaded)
+		{
+			std::cout << "Error when loading image: " << path << std::endl;
+			return -1;
+		}
+
+		assets::TextureInfo textureInfo = assets::read_texture_info(&file);
+
+		int nrComponents = textureInfo.textureFormat;
+		int width = textureInfo.pixelSize[0];
+		int height = textureInfo.pixelSize[1];
+
+		if (file.binaryBlob.data())
+		{
+			GLenum format{};
+
+			switch (nrComponents)
+			{
+			case 1:
+				format = GL_RED;
+				break;
+			case 3:
+				format = GL_RGB;
+				break;
+			case 4:
+				format = GL_RGBA;
+				break;
+			default:
+				break;
+			}
+
+			std::vector<char> data(textureInfo.textureSize);
+
+			assets::unpack_texture(&textureInfo, file.binaryBlob.data(), file.binaryBlob.size(), data.data());
+
+			texture.Generate(width, height, data.data());
+
+			return texture;
+		}
+
+		return texture;
+	}
+
+	void Graphics2d::Cleanup()
+	{
+		glDeleteVertexArrays(1, &quadVAO);
+		glDeleteFramebuffers(1, &quadVBO);
+
+	}
+
+	void Graphics2d::SetMainCamera(Camera& camera)
+	{
+		mainCamera = camera;
+		hasCamera = true;
+	}
 
 }

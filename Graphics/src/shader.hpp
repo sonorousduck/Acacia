@@ -16,7 +16,10 @@ public:
 	unsigned int ID = 0;
 
 	// Constructor reads and builds the shader
+	Shader();
 	Shader(const char* vertexPath, const char* fragmentPath);
+
+	void LoadShader(const char* vertexPath, const char* fragmentPath);
 
 	// Use/Activate the shader
 	void use();

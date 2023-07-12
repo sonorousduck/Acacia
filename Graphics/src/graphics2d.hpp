@@ -23,6 +23,7 @@
 #include "texture_asset.hpp"
 #include "texture.hpp"
 #include "input.hpp"
+#include "colors.hpp"
 
 namespace Ebony
 {
@@ -35,7 +36,8 @@ namespace Ebony
 		void Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion);
 
 
-		//Texture2D loadTexture(char const* path);
+
+		Texture2D loadTexture(char const* path);
 		//Shader loadShader(char const* path, bool extensionIncluded = false); // Just a wrapper. Assumes .vert and .frag extensions and that the path didn't contain an extension and the vert and frag shaders are named the same
 		//Shader loadShader(char const* vertPath, char const* fragPath, bool extensionIncluded = false); // Just a wrapper. Assumes .vert and .frag extensions and that the path didn't contain an extension
 
@@ -45,11 +47,15 @@ namespace Ebony
 		//void DrawText(Shader& s, std::string text, float x, float y, float scale, glm::vec3 color);
 		//void DrawText(std::string text, float x, float y, float scale, glm::vec3 color);
 
-		void BeginDraw();
+		void SetMainCamera(Camera& camera);
+
+		void BeginDraw(Color clearColor);
 		void EndDraw();
 
-		//void Draw();
-		//void Draw(Shader& s);
+		void Draw(Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color);
+		void Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color);
+
+		void Cleanup();
 
 		//void InstancedDraw();
 		//void InstancedDraw(Shader& s);
@@ -75,8 +81,18 @@ namespace Ebony
 		unsigned int versionMajor;
 		unsigned int versionMinor;
 		const char* windowName;
+
+		glm::mat4 projection;
+		Shader defaultShader;
+
 	private:
 		void Initialize();
+		void initRenderData();
+
+		unsigned int quadVAO = 0;
+		unsigned int quadVBO = 0;
+		bool hasCamera = false;
+
 
 	};
 
