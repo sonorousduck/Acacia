@@ -244,12 +244,12 @@ int main()
     glBindVertexArray(0);
 
 
-    Texture2D testTexture = graphics.loadTexture("textures/awesomeface.tx");
+    Texture2D testTexture = graphics.loadTexture("textures/box.tx");
 
     Shader particleShader("shaders/particle.vert", "shaders/particle.frag");
 
 
-    Ebony::Color clearColor = Ebony::Colors::Black;
+    Ebony::Color clearColor = Ebony::Color::Color(0.1, 0.1, 0.1, 1.0);
     glEnable(GL_DEPTH_TEST);
 
     graphics.defaultShader.use();
