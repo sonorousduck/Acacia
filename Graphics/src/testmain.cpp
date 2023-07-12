@@ -17,6 +17,7 @@
 #include <map>
 #include "model.hpp"
 #include "graphics2d.hpp"
+#include "resourceManager.hpp"
 
 #include "particleGenerator.hpp"
 #include "colors.hpp"
@@ -31,7 +32,9 @@ unsigned int HEIGHT = 600;
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
-Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
+float fpsUpdateDeltaTime = 0.0f;
+std::string fps = "";
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 float lastX = WIDTH / 2.0f;
 float lastY = HEIGHT / 2.0f;
 
@@ -106,58 +109,57 @@ int main()
 {
 
     Ebony::Graphics2d graphics{};
-    Ebony::Input input{};
 
 
     graphics.Initialize("Ebony", 800, 600);
-    
+    graphics.SetMainCamera(camera);
 
     glEnable(GL_DEPTH_TEST);
 
 
     Shader textShader("shaders/font.vert", "shaders/font.frag");
-    Shader shader("shaders/framebuffers.vert", "shaders/framebuffers.frag");
-    Shader screenShader("shaders/screenTexture.vert", "shaders/screenTexture.frag");
+    //Shader shader("shaders/framebuffers.vert", "shaders/framebuffers.frag");
+    //Shader screenShader("shaders/screenTexture.vert", "shaders/screenTexture.frag");
 
-    
-    shader.use();
-    shader.setInt("texture1", 0);
+    //
+    //shader.use();
+    //shader.setInt("texture1", 0);
 
-    screenShader.use();
-    screenShader.setInt("screenTexture", 0);
+    //screenShader.use();
+    //screenShader.setInt("screenTexture", 0);
 
 
     // Create a framebuffer object
 // ============================================================================================
-    unsigned int framebuffer = 0;
+    //unsigned int framebuffer = 0;
 
-    glGenFramebuffers(1, &framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    //glGenFramebuffers(1, &framebuffer);
+    //glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
 
-    // Create texture attachment
-    unsigned int textureColorBuffer = 0;
-    glGenTextures(1, &textureColorBuffer);
-    glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    //// Create texture attachment
+    //unsigned int textureColorBuffer = 0;
+    //glGenTextures(1, &textureColorBuffer);
+    //glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //glBindTexture(GL_TEXTURE_2D, 0);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
+    //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
 
-    // Not going to be reading from the depth or stencil, so we can use an RBO (Render buffer object) which doesn't support reading
-    unsigned int rbo = 0;
-    glGenRenderbuffers(1, &rbo);
-    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    //// Not going to be reading from the depth or stencil, so we can use an RBO (Render buffer object) which doesn't support reading
+    //unsigned int rbo = 0;
+    //glGenRenderbuffers(1, &rbo);
+    //glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
+    //glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // This attaches the rbo to the fbo
+    //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // This attaches the rbo to the fbo
 
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    //    std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Load font
     // =============================================================================================
@@ -243,10 +245,10 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    Ebony::ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
+    Texture2D testTexture = graphics.loadTexture("textures/awesomeface.tx");
 
-    Texture2D testTexture = graphics.loadTexture("textures/box.tx");
-
-    Shader particleShader("shaders/particle.vert", "shaders/particle.frag");
+    //Shader particleShader("shaders/particle.vert", "shaders/particle.frag");
 
 
     Ebony::Color clearColor = Ebony::Color::Color(0.1, 0.1, 0.1, 1.0);
@@ -263,8 +265,9 @@ int main()
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        fpsUpdateDeltaTime -= deltaTime;
 
-        graphics.input.ProcessInput(graphics.window, camera, deltaTime);
+        graphics.input.ProcessInput(graphics.window, graphics.mainCamera, deltaTime);
 
         /* Render here */
        
@@ -277,14 +280,18 @@ int main()
         graphics.BeginDraw(clearColor);
 
 
-        graphics.Draw(testTexture, glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+        graphics.Draw(testTexture, glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, Ebony::Colors::Red);
 
 
 
-        std::string fps = std::to_string(static_cast<int>(std::round(1000 / deltaTime))) + " fps";
+        if (fpsUpdateDeltaTime <= 0.0f) 
+        {
+            fps = std::to_string(static_cast<int>(std::round(1000 / deltaTime))) + " fps";
+            fpsUpdateDeltaTime += 1.0f;
+            // Draw fonts
+        }
 
-        // Draw fonts
-        RenderText(textShader, fps, 25.0f, 25.0f, 1.0f, glm::vec3(0.5f, 0.8f, 0.2f));
+        RenderText(textShader, fps, 25.0f, 25.0f, 1.0f, Ebony::Colors::Green.GetRGB());
         RenderText(textShader, "Beep beep!", 25.0f, 100.0f, 1.0f, glm::vec3(0.5f, 0.8f, 0.2f));
 
        
@@ -304,8 +311,8 @@ int main()
     //glDeleteFramebuffers(1, &quadVBO);
     //glDeleteFramebuffers(1, &planeVBO);
     graphics.Cleanup();
-    glDeleteRenderbuffers(1, &rbo);
-    glDeleteFramebuffers(1, &framebuffer);
+    //glDeleteRenderbuffers(1, &rbo);
+    //glDeleteFramebuffers(1, &framebuffer);
 
     glfwTerminate();
     return 0;

@@ -15,6 +15,7 @@ set(HEADER_FILES
   src/window.hpp
   src/input.hpp
   src/colors.hpp
+  src/resourceManager.hpp
 )
 
 set(SOURCE_FILES
@@ -33,6 +34,7 @@ set(SOURCE_FILES
   src/input.cpp
   src/colors.cpp
   src/testmain.cpp
+  src/resourceManager.cpp
 )
 
 set(SHADERS

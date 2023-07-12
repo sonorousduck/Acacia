@@ -29,7 +29,7 @@ namespace Ebony
 
 	glm::vec3 Color::GetRGB()
 	{
-		return glm::vec3(rgba);
+		return glm::vec3(rgba.r, rgba.g, rgba.b);
 	}
 
 	glm::vec4 Color::GetRGBA()

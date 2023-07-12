@@ -94,6 +94,7 @@ namespace Ebony
 	void Graphics2d::initRenderData()
 	{
 		// Since all sprites share the same vertex data, you only need one of these
+		unsigned int VBO;
 		float vertices[] = {
 			// pos      // tex
 			0.0f, 1.0f, 0.0f, 1.0f,
@@ -106,9 +107,9 @@ namespace Ebony
 		};
 
 		glGenVertexArrays(1, &this->quadVAO);
-		glGenBuffers(1, &quadVBO);
+		glGenBuffers(1, &VBO);
 
-		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 		glBindVertexArray(this->quadVAO);
@@ -145,8 +146,6 @@ namespace Ebony
 
 		model = glm::scale(model, glm::vec3(size, 1.0f));
 
-		defaultShader.setMat4("model", model);
-
 		if (hasCamera)
 		{
 			defaultShader.setMat4("view", mainCamera.GetViewMatrix());
@@ -156,6 +155,7 @@ namespace Ebony
 			defaultShader.setMat4("view", glm::mat4(1.0f));
 		}
 
+		defaultShader.setMat4("model", model);
 		defaultShader.setVec3("spriteColor", color.GetRGB());
 
 		glActiveTexture(GL_TEXTURE0);
@@ -164,10 +164,6 @@ namespace Ebony
 		glBindVertexArray(this->quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
-
-
-
-
 	}
 
 	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
@@ -183,56 +179,7 @@ namespace Ebony
 
 	}
 
-	Texture2D Graphics2d::loadTexture(char const* path)
-	{
-		Texture2D texture = Texture2D();
-
-
-		assets::AssetFile file{};
-		bool loaded = assets::load_binaryfile(path, file);
-
-		if (!loaded)
-		{
-			std::cout << "Error when loading image: " << path << std::endl;
-			return -1;
-		}
-
-		assets::TextureInfo textureInfo = assets::read_texture_info(&file);
-
-		int nrComponents = textureInfo.textureFormat;
-		int width = textureInfo.pixelSize[0];
-		int height = textureInfo.pixelSize[1];
-
-		if (file.binaryBlob.data())
-		{
-			GLenum format{};
-
-			switch (nrComponents)
-			{
-			case 1:
-				format = GL_RED;
-				break;
-			case 3:
-				format = GL_RGB;
-				break;
-			case 4:
-				format = GL_RGBA;
-				break;
-			default:
-				break;
-			}
-
-			std::vector<char> data(textureInfo.textureSize);
-
-			assets::unpack_texture(&textureInfo, file.binaryBlob.data(), file.binaryBlob.size(), data.data());
-
-			texture.Generate(width, height, data.data());
-
-			return texture;
-		}
-
-		return texture;
-	}
+	
 
 	void Graphics2d::Cleanup()
 	{
