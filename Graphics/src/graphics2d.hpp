@@ -32,49 +32,7 @@ namespace Ebony
 		Graphics2d();
 
 		void Initialize(const char* windowName, int width, int height);
-		//
-		//void Initialize(
-		//	const char* windowName, 
-		//	unsigned int width, 
-		//	unsigned int height, 
-		//	std::function<void(GLFWwindow*)> input_callback,
-		//	std::function<void(GLFWwindow*, double, double)> mouse_callback,
-		//	std::function<void(GLFWwindow*, double, double)> scroll_callback
-		//);
-
-		//void Initialize(
-		//	const char* windowName,
-		//	unsigned int width,
-		//	unsigned int height,
-		//	std::function<void(GLFWwindow*)> input_callback
-		//);
-		//
-		//void Initialize(
-		//	const char* windowName,
-		//	unsigned int width,
-		//	unsigned int height,
-		//	std::function<void(GLFWwindow*, double, double)> mouse_callback
-		//);
-
-
-		//void Initialize(
-		//	const char* windowName,
-		//	unsigned int width,
-		//	unsigned int height,
-		//	std::function<void(GLFWwindow*)> input_callback,
-		//	std::function<void(GLFWwindow*, double, double)> mouse_callback
-		//);
-
-
-		//void Initialize(
-		//	const char* windowName,
-		//	unsigned int width,
-		//	unsigned int height,
-		//	std::function<void(GLFWwindow*, double, double)> mouse_callback,
-		//	std::function<void(GLFWwindow*, double, double)> scroll_callback
-		//);
-
-		//void Initialize(char* windowName, unsigned int width, unsigned int height, unsigned int majorVersion, unsigned int minorVersion);
+		void Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion);
 
 
 		//Texture2D loadTexture(char const* path);
@@ -87,8 +45,8 @@ namespace Ebony
 		//void DrawText(Shader& s, std::string text, float x, float y, float scale, glm::vec3 color);
 		//void DrawText(std::string text, float x, float y, float scale, glm::vec3 color);
 
-		//void BeginDraw();
-		//void EndDraw();
+		void BeginDraw();
+		void EndDraw();
 
 		//void Draw();
 		//void Draw(Shader& s);
@@ -98,16 +56,6 @@ namespace Ebony
 
 		//void SetRenderTarget();
 
-
-
-		//void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-
-		//void input_callback(GLFWwindow* window);
-
-		//void mouse_callback(GLFWwindow* window, double xPosIn, double yPosIn);
-
-		//void scroll_callback(GLFWwindow* window, double xOffset, double yOffset);
-
 		void onCursorPos(double x, double y);
 		void onFramebufferSizeChange(int width, int height);
 		void onScroll(double xOffset, double yOffset);
@@ -115,7 +63,7 @@ namespace Ebony
 		void onKeyInput(int key, int scancode, int action, int mods);
 
 		GLFWwindow* window{};
-		Input* input;
+		Input input;
 		int screenWidth;
 		int screenHeight;
 		bool firstMouse = true;

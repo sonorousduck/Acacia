@@ -14,6 +14,7 @@ set(HEADER_FILES
   src/renderTarget2d.hpp
   src/window.hpp
   src/input.hpp
+  src/colors.hpp
 )
 
 set(SOURCE_FILES
@@ -30,6 +31,7 @@ set(SOURCE_FILES
   src/renderTarget2d.cpp
   src/window.cpp
   src/input.cpp
+  src/colors.cpp
 )
 
 set(SHADERS

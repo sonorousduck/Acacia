@@ -19,6 +19,7 @@
 #include "graphics2d.hpp"
 
 #include "particleGenerator.hpp"
+#include "colors.hpp"
 
 #include <ft2build.h>
 #include "input.hpp"
@@ -590,7 +591,7 @@ int main()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        graphics.input->ProcessInput(graphics.window, camera, deltaTime);
+        graphics.input.ProcessInput(graphics.window, camera, deltaTime);
 
         Particles->Update(deltaTime, 2);
 
@@ -600,7 +601,9 @@ int main()
         glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
         glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
 
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        //Ebony::Color clearColor = Ebony::Color(0.1f, 0.1f, 0.1f, 1.0f);
+        Ebony::Color clearColor = Ebony::Colors::Black;
+        glClearColor(clearColor.r(), clearColor.g(), clearColor.b(), clearColor.a());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.use();

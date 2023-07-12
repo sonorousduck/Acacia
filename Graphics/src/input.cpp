@@ -1,9 +1,8 @@
 #include "input.hpp"
+#include <any>
 
 namespace Ebony
 {
-
-
 	Input::Input()
 	{
 	}
@@ -45,7 +44,14 @@ namespace Ebony
 		}
 
 		keyPressed[button].previous = keyPressed[button].current;
-		keyPressed[button].current = action;
+		if (action == GLFW_PRESS)
+		{
+			keyPressed[button].current = PressedState::PRESSED;
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			keyPressed[button].current = PressedState::NONE;
+		}
 	}
 
 	void Input::onScroll(double xOffset, double yOffset)
@@ -69,9 +75,30 @@ namespace Ebony
 		
 		for (auto i = keyPressed.begin(); i != keyPressed.end(); i++)
 		{
-			if (i->second.current != i->second.previous)
+
+			if (i->second.current != i->second.previous && i->second.previous == PressedState::NONE)
 			{
-				std::cout << i->first << " was pressed" << std::endl;
+				// Calling onPress callback
+				std::cout << "Pressed " << i->first << std::endl;
+				i->second.previous = i->second.current;
+				pressedKeys[i->first] = true;
+			}
+			else if (i->second.current == PressedState::NONE && i->second.previous == PressedState::HELD)
+			{
+				// Calling onRelease
+				std::cout << "Released " << i->first << std::endl;
+				i->second.previous = PressedState::NONE;
+				i->second.current = PressedState::NONE;
+				releasedKeys[i->first] = true;
+
+			}
+			else if (i->second.current == PressedState::PRESSED && i->second.previous == PressedState::PRESSED)
+			{
+				// Calling onHeld
+				std::cout << "Held " << i->first << std::endl;
+				i->second.current = PressedState::HELD;
+				i->second.previous = PressedState::HELD;
+				heldKeys[i->first] = true;
 			}
 		}
 
@@ -126,9 +153,19 @@ namespace Ebony
 		}
 	}
 
-	void Input::AddBinding(int key, const std::function<void()> func)
-	{
-		callbacks[key].push_back(func);
-	}
+	//void Input::AddOnPressCallback(int key, const std::function<void()> func)
+	//{
+	//	onPressCallbacks[key].push_back(func);
+	//}
+
+	//void Input::AddOnReleaseCallback(int key, const std::function<void()> func)
+	//{
+	//	onReleaseCallbacks[key].push_back(func);
+	//}
+
+	//void Input::AddOnHeldCallback(int key, const std::function<void()> func)
+	//{
+	//	onHeldCallbacks[key].push_back(func);
+	//}
 
 }

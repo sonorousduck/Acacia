@@ -11,11 +11,20 @@
 
 namespace Ebony
 {
+	enum class PressedState
+	{
+		NONE,
+		PRESSED,
+		HELD,
+		RELEASED
+	};
+
 	struct Press
 	{
-		bool current;
-		bool previous;
+		PressedState current;
+		PressedState previous;
 	};
+
 
 	class Input
 	{
@@ -31,7 +40,9 @@ namespace Ebony
 		void setupJoystickInputs();
 		void ProcessInput(GLFWwindow* window, Camera& camera, float deltaTime);
 
-		void AddBinding(int key, std::function<void()> func);
+		//void AddOnPressCallback(int key, std::function<void()> func);
+		//void AddOnReleaseCallback(int key, std::function<void()> func);
+		//void AddOnHeldCallback(int key, std::function<void()> func);
 
 
 		float lastMosX = 0.0f;
@@ -46,9 +57,8 @@ namespace Ebony
 
 
 		std::unordered_map<int, Press> keyPressed;
-		std::unordered_map<int, std::vector<std::function<void()>>> callbacks;
+		std::unordered_map<int, bool> pressedKeys;
+		std::unordered_map<int, bool> releasedKeys;
+		std::unordered_map<int, bool> heldKeys;
 	};
-
-
-
 }
