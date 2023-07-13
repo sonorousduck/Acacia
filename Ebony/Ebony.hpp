@@ -5,6 +5,7 @@
 #include "src/Application.hpp"
 #include "src/Log.hpp"
 
+
 // --- Entry Point ----------------------------
 #include "src/EntryPoint.hpp"
 // --------------------------------------------

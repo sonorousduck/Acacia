@@ -1,7 +1,5 @@
 #include "texture.hpp"
 
-#include <iostream>
-
 Texture2D::Texture2D()
 	: Width(0), Height(0), Internal_Format(GL_RGB), Image_Format(GL_RGB), Wrap_S(GL_REPEAT), Wrap_T(GL_REPEAT), Filter_Min(GL_LINEAR), Filter_Max(GL_LINEAR)
 {
@@ -13,7 +11,7 @@ Texture2D::Texture2D(unsigned int ID)
 {
 }
 
-void Texture2D::Generate(unsigned int width, unsigned int height, char* data)
+void Texture2D::Generate(int width, int height, char* data)
 {
 	this->Width = width;
 	this->Height = height;

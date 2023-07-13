@@ -152,20 +152,4 @@ namespace Ebony
 			}
 		}
 	}
-
-	//void Input::AddOnPressCallback(int key, const std::function<void()> func)
-	//{
-	//	onPressCallbacks[key].push_back(func);
-	//}
-
-	//void Input::AddOnReleaseCallback(int key, const std::function<void()> func)
-	//{
-	//	onReleaseCallbacks[key].push_back(func);
-	//}
-
-	//void Input::AddOnHeldCallback(int key, const std::function<void()> func)
-	//{
-	//	onHeldCallbacks[key].push_back(func);
-	//}
-
 }

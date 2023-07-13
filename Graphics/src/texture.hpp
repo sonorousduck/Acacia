@@ -6,7 +6,7 @@ class Texture2D
 {
 public:
 	unsigned int ID;
-	unsigned int Width, Height;
+	int Width, Height;
 	unsigned int Internal_Format;
 	unsigned int Image_Format;
 
@@ -18,7 +18,7 @@ public:
 	Texture2D();
 	Texture2D(unsigned int ID);
 
-	void Generate(unsigned int width, unsigned int height, char* data);
+	void Generate(int width, int height, char* data);
 
 	void Bind() const;
 };

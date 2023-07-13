@@ -12,44 +12,45 @@ namespace Ebony
 	std::unordered_map<std::string, Texture2D> ResourceManager::Textures;
 	std::unordered_map<std::string, Shader> ResourceManager::Shaders;
 
-	Shader ResourceManager::LoadShader(const char* vShaderFile, const char* fShaderFile, std::string& name)
+	Shader& ResourceManager::LoadShader(const char* vShaderFile, const char* fShaderFile, const char* name)
 	{
 		Shaders[name] = Shader(vShaderFile, fShaderFile);
 		return Shaders[name];
 	}
 
-	Shader ResourceManager::GetShader(std::string& name)
+	Shader& ResourceManager::GetShader(const char* name)
 	{
 		return Shaders[name];
 	}
 
-	void ResourceManager::UnloadShader(std::string& name)
+	void ResourceManager::UnloadShader(const char* name)
 	{
 		Shaders.erase(name);
 	}
 
 
-	Texture2D ResourceManager::LoadTexture(const char* file, std::string& name)
+	Texture2D& ResourceManager::LoadTexture(const char* file, const char* name)
 	{
 		Textures[name] = loadTextureFromFile(file);
 		return Textures[name];
 	}
 
-	Texture2D ResourceManager::GetTexture(std::string& name)
+	Texture2D& ResourceManager::GetTexture(const char* name)
 	{
 		return Textures[name];
 	}
 
-	void ResourceManager::UnloadTexture(std::string& name)
+	void ResourceManager::UnloadTexture(const char* name)
 	{
 		Textures.erase(name);
 	}
 
 	Texture2D ResourceManager::loadTextureFromFile(char const* path)
 	{
+		unsigned int textureID = 0;
+		glGenTextures(1, &textureID);
 
-		Texture2D texture = Texture2D();
-
+		Texture2D texture = Texture2D(textureID);
 
 		assets::AssetFile file{};
 		bool loaded = assets::load_binaryfile(path, file);
@@ -57,7 +58,7 @@ namespace Ebony
 		if (!loaded)
 		{
 			std::cout << "Error when loading image: " << path << std::endl;
-			return -1;
+			exit(0);
 		}
 
 		assets::TextureInfo textureInfo = assets::read_texture_info(&file);
@@ -88,7 +89,8 @@ namespace Ebony
 			std::vector<char> data(textureInfo.textureSize);
 
 			assets::unpack_texture(&textureInfo, file.binaryBlob.data(), file.binaryBlob.size(), data.data());
-
+			texture.Internal_Format = format;
+			texture.Image_Format = format;
 			texture.Generate(width, height, data.data());
 
 			return texture;
@@ -99,12 +101,12 @@ namespace Ebony
 
 	void ResourceManager::Clear()
 	{
-		for (auto iter : Shaders)
+		for (auto& iter : Shaders)
 		{
 			glDeleteProgram(iter.second.ID);
 		}
 
-		for (auto iter : Textures)
+		for (auto& iter : Textures)
 		{
 			glDeleteTextures(1, &iter.second.ID);
 		}

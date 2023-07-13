@@ -2,7 +2,6 @@
 
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -34,13 +33,6 @@ namespace Ebony
 
 		void Initialize(const char* windowName, int width, int height);
 		void Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion);
-
-
-
-		Texture2D loadTexture(char const* path);
-		//Shader loadShader(char const* path, bool extensionIncluded = false); // Just a wrapper. Assumes .vert and .frag extensions and that the path didn't contain an extension and the vert and frag shaders are named the same
-		//Shader loadShader(char const* vertPath, char const* fragPath, bool extensionIncluded = false); // Just a wrapper. Assumes .vert and .frag extensions and that the path didn't contain an extension
-
 
 		//// Need to load fonts as well
 
@@ -83,14 +75,12 @@ namespace Ebony
 		const char* windowName;
 
 		glm::mat4 projection;
-		Shader defaultShader;
 
 	private:
 		void Initialize();
 		void initRenderData();
 
 		unsigned int quadVAO = 0;
-		unsigned int quadVBO = 0;
 		bool hasCamera = false;
 
 

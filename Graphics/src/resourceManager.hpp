@@ -20,14 +20,14 @@ namespace Ebony
 		static std::unordered_map<std::string, Shader> Shaders;
 		static std::unordered_map<std::string, Texture2D> Textures;
 
-		static Shader LoadShader(const char* vShaderFile, const char* fShaderFile, std::string& name);
-		static Shader GetShader(std::string& name);
-		static void UnloadShader(std::string& name);
+		static Shader& LoadShader(const char* vShaderFile, const char* fShaderFile, const char* name);
+		static Shader& GetShader(const char* name);
+		static void UnloadShader(const char* name);
 
 
-		static Texture2D LoadTexture(const char* file, std::string& name);
-		static Texture2D GetTexture(std::string& name);
-		static void UnloadTexture(std::string& name);
+		static Texture2D& LoadTexture(const char* file, const char* name);
+		static Texture2D& GetTexture(const char* name);
+		static void UnloadTexture(const char* name);
 
 
 		// Unallocates all resources
@@ -37,7 +37,7 @@ namespace Ebony
 		// private constructor, that is we do not want any actual resource manager objects. Its members and functions should be publicly available (static).
 		ResourceManager() {}
 
-		static Shader loadShaderFromFile();
+		//static Shader& loadShaderFromFile();
 
 		static Texture2D loadTextureFromFile(char const* path);
 

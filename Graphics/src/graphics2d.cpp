@@ -1,5 +1,6 @@
 #include "graphics2d.hpp"
 #include "window.hpp"
+#include "resourceManager.hpp"
 
 
 // https://www.glfw.org/docs/3.3/input_guide.html
@@ -27,8 +28,6 @@ namespace Ebony
 
 		projection = glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f, -1.0f, 1.0f);
 		initRenderData();
-		defaultShader.LoadShader("shaders/sprite.vert", "shaders/sprite.frag");
-
 	}
 
 	void Graphics2d::Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion)
@@ -54,13 +53,13 @@ namespace Ebony
 
 	void Graphics2d::onFramebufferSizeChange(int width, int height)
 	{
-		glViewport(0, 0, width, height);
 		screenWidth = width;
 		screenHeight = height;
 	}
 
 	void Graphics2d::onScroll(double xOffset, double yOffset)
 	{
+		std::cout << "WENT THROUGH THIS" << std::endl;
 		this->input.onScroll(xOffset, yOffset);
 	}
 
@@ -135,28 +134,28 @@ namespace Ebony
 	void Graphics2d::Draw(Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
 	{
 		// This one will use a default shader that will already be loaded into graphics
-		defaultShader.use();
+		Shader& s = ResourceManager::GetShader("default");
+
+		s.use();
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(position, 0.0f));
+		model = glm::translate(model, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
-		// This transforms the center so you can rotate by the center then transforms back
-		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f));
-		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f));
-
-		model = glm::scale(model, glm::vec3(size, 1.0f));
+		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
+		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
+		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
+		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 
 		if (hasCamera)
 		{
-			defaultShader.setMat4("view", mainCamera.GetViewMatrix());
+			s.setMat4("view", mainCamera.GetViewMatrix());
 		}
 		else
 		{
-			defaultShader.setMat4("view", glm::mat4(1.0f));
+			s.setMat4("view", glm::mat4(1.0f));
 		}
 
-		defaultShader.setMat4("model", model);
-		defaultShader.setVec3("spriteColor", color.GetRGB());
+		s.setMat4("model", model);
+		s.setVec3("spriteColor", Colors::White.GetRGB());
 
 		glActiveTexture(GL_TEXTURE0);
 		texture.Bind();
@@ -184,7 +183,7 @@ namespace Ebony
 	void Graphics2d::Cleanup()
 	{
 		glDeleteVertexArrays(1, &quadVAO);
-		glDeleteFramebuffers(1, &quadVBO);
+		//glDeleteFramebuffers(1, &quadVBO);
 
 	}
 

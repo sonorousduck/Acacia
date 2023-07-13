@@ -19,9 +19,9 @@ namespace Ebony {
 
 	}
 
-	void Application::Update()
+	void Application::Update() 
 	{
-
+		
 	}
 
 	void Application::Draw()

@@ -1,10 +1,9 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
-#include <iostream>
 #include "shader.hpp"
 #include <cmath>
-
+#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -57,7 +56,7 @@ std::map<char, Character> Characters{};
 void RenderText(Shader& s, std::string text, float x, float y, float scale, glm::vec3 color)
 {
     s.use();
-    glUniform3f(glGetUniformLocation(s.ID, "textColor"), color.x, color.y, color.z);
+    s.setVec3("textColor", color);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(textVAO);
 
@@ -103,8 +102,6 @@ void RenderText(Shader& s, std::string text, float x, float y, float scale, glm:
 
 
 
-
-
 int main()
 {
 
@@ -117,49 +114,8 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
 
-    Shader textShader("shaders/font.vert", "shaders/font.frag");
-    //Shader shader("shaders/framebuffers.vert", "shaders/framebuffers.frag");
-    //Shader screenShader("shaders/screenTexture.vert", "shaders/screenTexture.frag");
-
-    //
-    //shader.use();
-    //shader.setInt("texture1", 0);
-
-    //screenShader.use();
-    //screenShader.setInt("screenTexture", 0);
-
-
-    // Create a framebuffer object
-// ============================================================================================
-    //unsigned int framebuffer = 0;
-
-    //glGenFramebuffers(1, &framebuffer);
-    //glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-
-    //// Create texture attachment
-    //unsigned int textureColorBuffer = 0;
-    //glGenTextures(1, &textureColorBuffer);
-    //glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    //glBindTexture(GL_TEXTURE_2D, 0);
-
-    //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);
-
-    //// Not going to be reading from the depth or stencil, so we can use an RBO (Render buffer object) which doesn't support reading
-    //unsigned int rbo = 0;
-    //glGenRenderbuffers(1, &rbo);
-    //glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
-    //glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-    //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // This attaches the rbo to the fbo
-
-    //if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    //    std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    Shader& textShader = Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
+    
 
     // Load font
     // =============================================================================================
@@ -217,7 +173,7 @@ int main()
             texture,
             glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-            face->glyph->advance.x
+            static_cast<unsigned int>(face->glyph->advance.x)
         };
         Characters.insert(std::pair<char, Character>(c, character));
     }
@@ -231,7 +187,7 @@ int main()
 
     glm::mat4 textProjection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
     textShader.use();
-    glUniformMatrix4fv(glGetUniformLocation(textShader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(textProjection));
+    textShader.setMat4("projection", textProjection);
 
     glGenVertexArrays(1, &textVAO);
     glGenBuffers(1, &textVBO);
@@ -245,18 +201,20 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    Ebony::ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
-    Texture2D testTexture = graphics.loadTexture("textures/awesomeface.tx");
+    Texture2D& faceTexture = Ebony::ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
+    Shader& s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
+
+    //Texture2D testTexture = graphics.loadTexture("textures/awesomeface.tx");
 
     //Shader particleShader("shaders/particle.vert", "shaders/particle.frag");
 
 
-    Ebony::Color clearColor = Ebony::Color::Color(0.1, 0.1, 0.1, 1.0);
+    Ebony::Color clearColor = Ebony::Color::Color(0.1f, 0.1f, 0.1f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
-    graphics.defaultShader.use();
-    graphics.defaultShader.setInt("image", 0);
-    graphics.defaultShader.setMat4("projection", graphics.projection);
+    s.use();
+    s.setInt("image", 0);
+    s.setMat4("projection", graphics.projection);
 
 
     /* Loop until the user closes the window */
@@ -269,18 +227,10 @@ int main()
 
         graphics.input.ProcessInput(graphics.window, graphics.mainCamera, deltaTime);
 
-        /* Render here */
-       
-            // bind to framebuffer and draw scene as we normally would to color texture 
-        //glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-       // glEnable(GL_DEPTH_TEST); // enable depth testing (is disabled for rendering screen-space quad)
-
-        //Ebony::Color clearColor = Ebony::Color(0.1f, 0.1f, 0.1f, 1.0f);
-        
         graphics.BeginDraw(clearColor);
 
 
-        graphics.Draw(testTexture, glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, Ebony::Colors::Red);
+        graphics.Draw(faceTexture, glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Ebony::Colors::Red);
 
 
 

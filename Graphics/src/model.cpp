@@ -164,6 +164,7 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 
 		return textureID;
 	}
+	return -1;
 }
 
 

@@ -11,25 +11,28 @@ public:
 		
 	}
 
-	~Sandbox() 
+	~Sandbox()
 	{
 
 	}
 
-	void Update()
+	void Update() override
 	{
-		//std::cout << "Updating!" << std::endl;
+		Ebony::Application::Update();
+		
 
 	}
 
-	void ProcessInput()
+	void ProcessInput() override
 	{
+		Ebony::Application::ProcessInput();
 		//std::cout << "Processing!" << std::endl;
 
 	}
 
-	void Draw()
+	void Draw() override
 	{
+		Ebony::Application::Draw();
 		//std::cout << "Drawing!" << std::endl;
 
 	}

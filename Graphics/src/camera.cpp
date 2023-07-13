@@ -1,6 +1,5 @@
 #include "camera.hpp"
 #include <algorithm>
-#include <iostream>
 
 // https://learnopengl.com/code_viewer_gh.php?code=includes/learnopengl/camera.h
 // https://learnopengl.com/code_viewer_gh.php?code=src/1.getting_started/7.4.camera_class/camera_class.cpp

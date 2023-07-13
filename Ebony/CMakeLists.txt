@@ -8,12 +8,14 @@ set(HEADER_FILES
 	src/Core.hpp
 	src/EntryPoint.hpp
 	src/Log.hpp
+	src/animation2d.hpp
 	Ebony.hpp
 )
 
 set(SOURCE_FILES
 	src/Application.cpp
 	src/Log.cpp
+	src/animation2d.cpp
 )
 
 set(HEADER_EVENTS

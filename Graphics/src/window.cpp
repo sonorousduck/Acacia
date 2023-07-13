@@ -41,12 +41,13 @@ namespace Ebony
 
 		auto framebuffer_callback = [](GLFWwindow* window, int width, int height)
 		{
+			glViewport(0, 0, width, height);
 			static_cast<Graphics2d*>(glfwGetWindowUserPointer(window))->onFramebufferSizeChange(width, height);
 		};
 
 		auto mouse_button_callback = [](GLFWwindow* window, int button, int action, int mods)
 		{
-			static_cast<Graphics2d*>(glfwGetWindowUserPointer(window))->onMouseButton(button, action, mods);
+			static_cast<Input*>(glfwGetWindowUserPointer(window))->onMouseButton(button, action, mods);
 		};
 
 		auto key_callback = [](GLFWwindow* window, int key, int scancode, int action, int mods)
