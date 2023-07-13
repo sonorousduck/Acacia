@@ -3,6 +3,131 @@
 
 namespace Ebony
 {
+
+	std::vector<KeyInput*> KeyInput::_instances;
+
+	KeyInput::KeyInput(std::vector<int> keysToMonitor) : m_isEnabled(true)
+	{
+		for (int i = 0; i < keysToMonitor.size(); i++)
+		{
+			m_keys[keysToMonitor[i]] = PressedState::NONE;
+		}
+
+		KeyInput::_instances.push_back(this);
+	}
+
+	KeyInput::~KeyInput()
+	{
+		_instances.erase(std::remove(_instances.begin(), _instances.end(), this), _instances.end());
+	}
+
+	PressedState KeyInput::getIsKeyDown(int key)
+	{
+		PressedState result = PressedState::NONE;
+
+		if (m_isEnabled)
+		{
+			std::unordered_map<int, PressedState>::iterator it = m_keys.find(key);
+
+			if (it != m_keys.end())
+			{
+				result = m_keys[key];
+
+				if (result == PressedState::RELEASED)
+				{
+					m_keys[key] = PressedState::NONE;
+				}
+			}
+		}
+		return result;
+	}
+
+	bool KeyInput::getKeyPressedOrHeld(int key)
+	{
+
+		if (m_isEnabled)
+		{
+			std::unordered_map<int, PressedState>::iterator it = m_keys.find(key);
+
+			if (it != m_keys.end())
+			{
+				PressedState state = m_keys[key];
+
+				if (state == PressedState::PRESSED || state == PressedState::HELD)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	void KeyInput::setIsKeyDown(int key, PressedState isDown)
+	{
+		std::unordered_map<int, PressedState>::iterator it = m_keys.find(key);
+		if (it != m_keys.end())
+		{
+			PressedState state = m_keys[key];
+			
+			if (isDown == PressedState::PRESSED && state == PressedState::PRESSED)
+			{
+				isDown = PressedState::HELD;
+			}
+			else if (isDown == PressedState::PRESSED && state == PressedState::HELD)
+			{
+				isDown = PressedState::HELD;
+			}
+			else if (isDown == PressedState::RELEASED && state == PressedState::RELEASED)
+			{
+				isDown = PressedState::NONE;
+			}
+
+
+			m_keys[key] = isDown;
+		}
+	}
+
+	void KeyInput::setupKeyInputs(Window& window)
+	{
+		glfwSetKeyCallback(window.getWindow(), KeyInput::callback);
+	}
+
+	void KeyInput::callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		for (KeyInput* keyInput : _instances)
+		{
+			PressedState state = PressedState::NONE;
+			if (action == GLFW_PRESS)
+			{
+				state = PressedState::PRESSED;
+			}
+			else if (action == GLFW_REPEAT)
+			{
+				state = PressedState::HELD;
+			}
+			else if (action == GLFW_RELEASE)
+			{
+				state = PressedState::RELEASED;
+			}
+
+			keyInput->setIsKeyDown(key, state);
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	Input::Input()
 	{
 	}

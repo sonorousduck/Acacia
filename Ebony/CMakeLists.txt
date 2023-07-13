@@ -8,14 +8,14 @@ set(HEADER_FILES
 	src/Core.hpp
 	src/EntryPoint.hpp
 	src/Log.hpp
-	src/animation2d.hpp
-	Ebony.hpp
+	src/Ebony.hpp
+	src/animation.hpp
 )
 
 set(SOURCE_FILES
 	src/Application.cpp
 	src/Log.cpp
-	src/animation2d.cpp
+	src/animation.cpp
 )
 
 set(HEADER_EVENTS
@@ -25,20 +25,58 @@ set(HEADER_EVENTS
 	src/events/MouseEvent.hpp
 )
 
+set(ComponentHeaders
+	src/component.hpp
+	src/animationControllerComponent.hpp
+)
+
+set(ComponentSources
+
+)
+
+set(SystemHeaders
+	src/animation2d.hpp
+	src/system.hpp
+
+)
+
+set(SystemSources
+	src/animation2d.cpp
+
+)
+
 
 
 
 source_group("Main\\Header Files" FILES ${HEADER_FILES})
 source_group("Main\\Source Files" FILES ${SOURCE_FILES})
+source_group("Components\\Header Files" FILES ${ComponentHeaders})
+source_group("Components\\Source Files" FILES ${ComponentSources})
+source_group("Systems\\Header Files" FILES ${SystemHeaders})
+source_group("Systems\\Source Files" FILES ${SystemSources})
 
 
 source_group("Main\\Event Files" FILES ${HEADER_EVENTS})
 
 
+set(CODE_FILES
+	${HEADER_FILES}
+	${SOURCE_FILES}
+	${ComponentHeaders}
+	${ComponentSources}
+	${SystemHeaders}
+	${SystemSources}
+	${HEADER_EVENTS}
+)
+
 
 # Add source to this project's executable.
-add_library (Ebony ${HEADER_FILES} ${SOURCE_FILES} ${HEADER_EVENTS})
+add_library (Ebony ${CODE_FILES})
+#add_executable (Ebony ${CODE_FILES})
+
 set_target_properties(Ebony PROPERTIES LINKER_LANGUAGE CXX)
+target_include_directories(Ebony PRIVATE ../Graphics/include/ ../Graphics/include/glm)
+target_include_directories(Ebony PRIVATE ../Graphics/src)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Ebony PROPERTY CXX_STANDARD 20)
@@ -47,7 +85,7 @@ endif()
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-target_link_libraries(Ebony spdlog)
+target_link_libraries(Ebony spdlog Graphics)
 
 
 # add_subdirectory(ThirdParty/rapidjson)

@@ -23,6 +23,7 @@
 #include "texture.hpp"
 #include "input.hpp"
 #include "colors.hpp"
+#include "window.hpp"
 
 namespace Ebony
 {
@@ -49,19 +50,20 @@ namespace Ebony
 
 		void Cleanup();
 
+
 		//void InstancedDraw();
 		//void InstancedDraw(Shader& s);
 
 		//void SetRenderTarget();
 
-		void onCursorPos(double x, double y);
+		//void onCursorPos(double x, double y);
 		void onFramebufferSizeChange(int width, int height);
-		void onScroll(double xOffset, double yOffset);
-		void onMouseButton(int button, int action, int mods);
-		void onKeyInput(int key, int scancode, int action, int mods);
+		//void onScroll(double xOffset, double yOffset);
+		//void onMouseButton(int button, int action, int mods);
+		//void onKeyInput(int key, int scancode, int action, int mods);
 
-		GLFWwindow* window{};
-		Input input;
+		Window window;
+		//Input input;
 		int screenWidth;
 		int screenHeight;
 		bool firstMouse = true;
@@ -79,6 +81,7 @@ namespace Ebony
 	private:
 		void Initialize();
 		void initRenderData();
+		void SetupCallback();
 
 		unsigned int quadVAO = 0;
 		bool hasCamera = false;

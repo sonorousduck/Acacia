@@ -20,6 +20,7 @@
 
 #include "particleGenerator.hpp"
 #include "colors.hpp"
+#include "input.hpp"
 
 #include <ft2build.h>
 #include "input.hpp"
@@ -110,6 +111,10 @@ int main()
 
     graphics.Initialize("Ebony", 800, 600);
     graphics.SetMainCamera(camera);
+    Ebony::KeyInput::setupKeyInputs(graphics.window);
+
+    std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE };
+    Ebony::KeyInput keyInput = Ebony::KeyInput(keys);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -218,14 +223,35 @@ int main()
 
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(graphics.window))
+    while (!glfwWindowShouldClose(graphics.window.getWindow()))
     {
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         fpsUpdateDeltaTime -= deltaTime;
 
-        graphics.input.ProcessInput(graphics.window, graphics.mainCamera, deltaTime);
+
+        Ebony::PressedState keyState = keyInput.getIsKeyDown(GLFW_KEY_E);
+
+        if (keyState == Ebony::PressedState::HELD)
+        {
+            std::cout << "Held" << std::endl;
+        }
+        else if (keyState == Ebony::PressedState::PRESSED)
+        {
+            std::cout << "Pressed" << std::endl;
+        }
+        else if (keyState == Ebony::PressedState::RELEASED)
+        {
+            std::cout << "Released" << std::endl;
+        }
+
+        if (keyInput.getKeyPressedOrHeld(GLFW_KEY_ESCAPE))
+        {
+            glfwSetWindowShouldClose(graphics.window.getWindow(), true);
+        }
+
+        //input.ProcessInput(graphics.window, graphics.mainCamera, deltaTime);
 
         graphics.BeginDraw(clearColor);
 

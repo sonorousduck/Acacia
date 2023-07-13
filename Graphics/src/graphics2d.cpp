@@ -19,12 +19,12 @@ namespace Ebony
 		versionMinor = 3;
 
 
-		input = Input();
-
-		Window glfwWindow{};
-		window = glfwWindow.createWindow(this);
-		input.setupJoystickInputs();
+		//input = Input();
+		window = Window();
+		window.createWindow(versionMajor, versionMinor);
+		//input.setupJoystickInputs();
 		Initialize();
+		SetupCallback();
 
 		projection = glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f, -1.0f, 1.0f);
 		initRenderData();
@@ -38,26 +38,40 @@ namespace Ebony
 		versionMajor = majorVersion;
 		versionMinor = minorVersion;
 
-		input = Input();
+		//input = Input();
 
-		Window glfwWindow{};
-		window = glfwWindow.createWindow(this);
-		input.setupJoystickInputs();
+		window = Window();
+		window.createWindow(versionMajor, versionMinor);
+		SetupCallback();
+		//input.setupJoystickInputs();
 		Initialize();
 	}
 
-	void Graphics2d::onCursorPos(double xPosIn, double yPosIn)
+	void Graphics2d::SetupCallback()
+	{
+		auto framebuffer_callback = [](GLFWwindow* window, int width, int height)
+		{
+			std::cout << "Called" << std::endl;
+			glViewport(0, 0, width, height);
+			static_cast<Graphics2d*>(glfwGetWindowUserPointer(window))->onFramebufferSizeChange(width, height);
+		};
+		
+		glfwSetFramebufferSizeCallback(window.getWindow(), framebuffer_callback);
+	}
+
+	/*void Graphics2d::onCursorPos(double xPosIn, double yPosIn)
 	{
 		this->input.onCursorPos(xPosIn, yPosIn);
-	}
+	}*/
 
 	void Graphics2d::onFramebufferSizeChange(int width, int height)
 	{
+		std::cout << "HERE TOO!" << std::endl;
 		screenWidth = width;
 		screenHeight = height;
 	}
 
-	void Graphics2d::onScroll(double xOffset, double yOffset)
+	/*void Graphics2d::onScroll(double xOffset, double yOffset)
 	{
 		std::cout << "WENT THROUGH THIS" << std::endl;
 		this->input.onScroll(xOffset, yOffset);
@@ -71,7 +85,7 @@ namespace Ebony
 	void Graphics2d::onKeyInput(int button, int scancode, int action, int mods)
 	{
 		this->input.onKeyInput(button, scancode, action, mods);
-	}
+	}*/
 
 	void Graphics2d::Initialize()
 	{
@@ -79,9 +93,9 @@ namespace Ebony
 		lastMosY = screenHeight / 2.0f;
 
 
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(window.getWindow());
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
@@ -127,7 +141,7 @@ namespace Ebony
 
 	void Graphics2d::EndDraw()
 	{
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(window.getWindow());
 	}
 
 

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "glad/glad.h"
-#include <GLFW/glfw3.h>
 #include <vector>
 #include <iostream>
 #include "camera.hpp"
 #include <unordered_map>
 #include <functional>
+#include "window.hpp"
+
 
 namespace Ebony
 {
@@ -23,6 +23,44 @@ namespace Ebony
 		PressedState current;
 		PressedState previous;
 	};
+
+	// Credit to https://stackoverflow.com/questions/55573238/how-do-i-do-a-proper-input-class-in-glfw-for-a-game-engine
+	class KeyInput
+	{
+	public:
+		KeyInput(std::vector<int> keysToMonitor);
+		~KeyInput();
+
+
+		// If KeyInput is enabled (i.e. you can disable UI keyboard in gameplay) and the key is pressed down, return the pressed state
+		PressedState getIsKeyDown(int key);
+		bool getKeyPressedOrHeld(int key);
+		bool getIsEnabled() { return m_isEnabled; }
+		void setIsEnabled(bool value) { m_isEnabled = value; };
+
+
+	private:
+		void setIsKeyDown(int key, PressedState isDown);
+
+		std::unordered_map<int, PressedState> m_keys;
+		bool m_isEnabled;
+
+
+	public:
+		static void setupKeyInputs(Window& window);
+
+	private:
+		static void callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+		static std::vector<KeyInput*> _instances;
+	};
+
+
+
+
+
+
+
 
 
 	class Input

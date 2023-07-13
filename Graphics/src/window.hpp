@@ -1,15 +1,19 @@
 #pragma once
-
-#include "graphics2d.hpp"
-#include "input.hpp"
-
+#include "glad/glad.h"
+#include <GLFW/glfw3.h>
 
 namespace Ebony 
 {
 	class Window
 	{
 	public:
-		static GLFWwindow* createWindow(Graphics2d* graphics);
+		Window() {};
+		void createWindow(int versionMajor, int versionMinor);
+
+		GLFWwindow* getWindow();
+
+	private:
+		GLFWwindow* window;
 	};
 
 }

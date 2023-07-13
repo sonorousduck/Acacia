@@ -2,10 +2,10 @@
 
 // This defines the imports from Ebony
 
-#include "src/Application.hpp"
-#include "src/Log.hpp"
+#include "Application.hpp"
+#include "Log.hpp"
 
 
 // --- Entry Point ----------------------------
-#include "src/EntryPoint.hpp"
+#include "EntryPoint.hpp"
 // --------------------------------------------
