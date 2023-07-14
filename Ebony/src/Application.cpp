@@ -19,17 +19,17 @@ namespace Ebony {
 
 	}
 
-	void Application::Update() 
+	void Application::Update(std::chrono::microseconds elapsedTime)
 	{
 		
 	}
 
-	void Application::Draw()
+	void Application::Draw(std::chrono::microseconds elapsedTime)
 	{
 
 	}
 
-	void Application::ProcessInput()
+	void Application::ProcessInput(std::chrono::microseconds elapsedTime)
 	{
 		
 	}

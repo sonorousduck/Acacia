@@ -4,7 +4,7 @@
 #include "events/Event.hpp"
 #include "events/ApplicationEvent.hpp"
 #include "Log.hpp"
-
+#include <chrono>
 #include <iostream>
 #include <graphics2d.hpp>
 
@@ -16,9 +16,9 @@ namespace Ebony {
 		virtual ~Application();
 		virtual void Run();
 		virtual void Init();
-		virtual void Update();
-		virtual void Draw();
-		virtual void ProcessInput();
+		virtual void Update(std::chrono::microseconds elapsedTime);
+		virtual void Draw(std::chrono::microseconds elapsedTime);
+		virtual void ProcessInput(std::chrono::microseconds elapsedTime);
 	};
 
 	// To be defined in a client

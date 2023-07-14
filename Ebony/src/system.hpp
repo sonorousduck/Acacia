@@ -63,12 +63,12 @@ namespace systems
 		{}
 		virtual ~System() {};
 
-		virtual void clear() { m_Entities.clear(); }
-		virtual bool addEntity(entities::EntityPtr entity);
-		virtual void removeEntity(entities::Entity::IdType entityId);
-		virtual void updateEntity(entities::EntityPtr entity);
-		virtual void update([[maybe_unused]] std::chrono::microseconds elapsedTime) {}
-		virtual void shutdown() {}
+		virtual void Clear() { m_Entities.clear(); }
+		virtual bool AddEntity(entities::EntityPtr entity);
+		virtual void RemoveEntity(entities::Entity::IdType entityId);
+		virtual void UpdateEntity(entities::EntityPtr entity);
+		virtual void Update([[maybe_unused]] std::chrono::microseconds elapsedTime) {}
+		virtual void Shutdown() {}
 
 	protected:
 		entities::EntityMap m_Entities;

@@ -4,7 +4,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <utility>
-
+#include <chrono>
 
 class SpriteSheet
 {
@@ -21,7 +21,7 @@ public:
 
 	Texture2D spritesheet;
 	std::uint8_t numDivisions;
-	std::vector<float> timings;
+	std::vector<std::chrono::microseconds> timings;
 	// Use emplace_back(x, y) to automatically create the std::pair
 	std::vector<std::pair<glm::vec2, glm::vec2>> divisions;
 

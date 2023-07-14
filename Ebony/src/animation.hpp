@@ -5,6 +5,7 @@
 #include <chrono>
 #include "colors.hpp"
 #include <iostream>
+#include <optional>
 
 namespace Ebony
 {
@@ -25,7 +26,7 @@ namespace Ebony
 		}
 
 
-		void IncremenetSprite() { m_CurrentSprite = (m_CurrentSprite + 1) % m_Spritesheet.numDivisions; }
+		void IncrementSprite() { m_CurrentSprite = (m_CurrentSprite + 1) % m_Spritesheet.numDivisions; }
 		void ResetAnimation()
 		{
 			m_CurrentSprite = 0;
@@ -35,31 +36,42 @@ namespace Ebony
 		auto getElapsedTime() { return m_ElapsedTime; }
 		void updateElapsedTime(std::chrono::microseconds time) { m_ElapsedTime += time; }
 
+		void AddOnAnimationStart()
+		{
+
+		}
+
+		void AddOnAnimationEnd()
+		{
+
+		}
+
+		void StartAnimation()
+		{
+			m_Started = true;
+		}
+
+
 		bool operator==(Animation& rhs)
 		{
 			return (m_Spritesheet == rhs.m_Spritesheet
-				&& m_ShouldRepeat == rhs.m_ShouldRepeat
 				&& m_NumRepeatTimes == rhs.m_NumRepeatTimes
 				&& GetSpriteTime() == rhs.GetSpriteTime()
 				&& m_SpriteColor == rhs.m_SpriteColor);
 		}
 
-
-
-		std::function<void*> onAnimationStart;
-		std::function<void*> onAnimationUpdate;
-		std::function<void*> onAnimationEnd;
-
-
+		std::vector<std::pair<int, std::function<void()>>> onAnimationFrame; // <Frame number, function>
 
 	private:
 		SpriteSheet m_Spritesheet;
 
 		std::uint8_t m_CurrentSprite{ 0 };
 		std::uint8_t m_NumRepeatTimes{ 0 };
-		bool m_ShouldRepeat{ false };
 		bool m_ShouldRepeatForever{ false };
 		bool m_Started{ false };
+
+
+
 
 		std::chrono::microseconds m_ElapsedTime{ 0 };
 		Color m_SpriteColor{ Colors::White };

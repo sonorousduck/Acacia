@@ -72,22 +72,22 @@ namespace entities
 		return static_cast<T*>(m_Components[ctti::unnamed_type_id<T>()].get());
 	}
 
-	EntityPtr Entity::clone()
-	{
-		auto clone = std::make_shared<Entity>();
+	//EntityPtr Entity::clone()
+	//{
+	//	auto clone = std::make_shared<Entity>();
 
-		// This needs the exact same id. Don't mix this with the live entities or will cause
-		// game breaking bugs that make no sense
-		clone->m_Id = m_Id;
+	//	// This needs the exact same id. Don't mix this with the live entities or will cause
+	//	// game breaking bugs that make no sense
+	//	clone->m_Id = m_Id;
 
-		for (auto&& [id, component] : m_Components)
-		{
-			auto&& [typeId, ptr] = component->clone();
-			clone->m_Components[typeId] = std::move(ptr);
-		}
+	//	for (auto&& [id, component] : m_Components)
+	//	{
+	//		auto&& [typeId, ptr] = component->clone();
+	//		clone->m_Components[typeId] = std::move(ptr);
+	//	}
 
-		return clone;
-	}
+	//	return clone;
+	//}
 
 	bool Entity::operator==(const Entity& rhs)
 	{

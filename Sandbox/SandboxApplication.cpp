@@ -53,7 +53,7 @@ namespace Ebony {
 		}
 
 
-		void ProcessInput() override
+		void ProcessInput(std::chrono::microseconds elapsedTime) override
 		{
 			Ebony::PressedState keyState = keyInput.getIsKeyDown(GLFW_KEY_E);
 
@@ -78,7 +78,7 @@ namespace Ebony {
 		}
 
 
-		void Update() override
+		void Update(std::chrono::microseconds elapsedTime) override
 		{
 			float currentFrame = static_cast<float>(glfwGetTime());
 			deltaTime = currentFrame - lastFrame;
@@ -86,15 +86,15 @@ namespace Ebony {
 			fpsUpdateDeltaTime -= deltaTime;
 
 
-			if (fpsUpdateDeltaTime <= 0.0f)
+			if (fpsUpdateDeltaTime <= 1.0f)
 			{
-				fps = std::to_string(static_cast<int>(std::round(1000 / deltaTime))) + " fps";
+				fps = std::to_string(static_cast<int>(std::round(1 / deltaTime))) + " fps";
 				fpsUpdateDeltaTime += 1.0f;
 			}
 		}
 
 
-		void Draw() override
+		void Draw(std::chrono::microseconds elapsedTime) override
 		{
 			
 			//std::cout << "Drawing!" << std::endl;
@@ -120,12 +120,18 @@ namespace Ebony {
 			graphics.InitializeTextDrawing(ResourceManager::GetShader("text"));
 			spriteFont.LoadFont("../Graphics/fonts/super-indie-font/SuperIndie.ttf");
 
+			auto previousTime = std::chrono::system_clock::now();
+
+
 
 			while (!glfwWindowShouldClose(graphics.window.getWindow()))
 			{
-				ProcessInput();
-				Update();
-				Draw();
+				auto currentTime = std::chrono::system_clock::now();
+				auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
+
+				ProcessInput(elapsedTime);
+				Update(elapsedTime);
+				Draw(elapsedTime);
 				glfwPollEvents();
 			}
 
@@ -138,6 +144,7 @@ namespace Ebony {
 		KeyInput keyInput;
 		Color clearColor;
 		SpriteFont spriteFont;
+		
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;
 		float fpsUpdateDeltaTime = 0.0f;

@@ -31,7 +31,7 @@ Thanks to Dean Mathias for usage for his code for the base system
 namespace systems
 {
 
-	bool System::addEntity(entities::EntityPtr entity)
+	bool System::AddEntity(entities::EntityPtr entity)
 	{
 		if (isInterested(entity))
 		{
@@ -41,12 +41,12 @@ namespace systems
 		return false;
 	}
 
-	void System::removeEntity(entities::Entity::IdType entityId)
+	void System::RemoveEntity(entities::Entity::IdType entityId)
 	{
 		m_Entities.erase(entityId);
 	}
 
-	void System::updateEntity(entities::EntityPtr entity)
+	void System::UpdateEntity(entities::EntityPtr entity)
 	{
 		if (m_Entities.contains(entity->getId()))
 		{
