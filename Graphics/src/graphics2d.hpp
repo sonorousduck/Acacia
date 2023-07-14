@@ -49,7 +49,7 @@ namespace Ebony
 		void BeginDraw(Color clearColor);
 		void EndDraw();
 
-		void Draw(Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color);
+		void Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color);
 		void Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color);
 
 

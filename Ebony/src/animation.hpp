@@ -6,6 +6,7 @@
 #include "colors.hpp"
 #include <iostream>
 #include <optional>
+#include <map>
 
 namespace Ebony
 {
@@ -14,11 +15,12 @@ namespace Ebony
 	public:
 		Animation(SpriteSheet spritesheet) : m_Spritesheet(spritesheet) {};
 
-		auto GetSprite() { return m_Spritesheet; }
+		const auto& GetSprite() { return m_Spritesheet; }
 		auto GetSpriteCount() { return m_Spritesheet.numDivisions; }
 		auto GetSpriteTime() { return m_Spritesheet.timings[m_CurrentSprite]; }
 		auto GetSpriteColor() { return m_SpriteColor; }
-		auto GetCurrentSprite() { return m_CurrentSprite; }
+		auto GetCurrentSpriteFrame() { return m_CurrentSprite; }
+		//auto GetCurrentFrame() { return m_FrameNumber; }
 		auto GetCurrentSpriteRect()
 		{
 			std::cout << "Needs to be implemented" << std::endl;
@@ -27,9 +29,11 @@ namespace Ebony
 
 
 		void IncrementSprite() { m_CurrentSprite = (m_CurrentSprite + 1) % m_Spritesheet.numDivisions; }
+		//void IncrementFrameNumber() { m_FrameNumber = (m_FrameNumber + 1); }
 		void ResetAnimation()
 		{
 			m_CurrentSprite = 0;
+			m_FrameNumber = 0;
 			m_ElapsedTime = std::chrono::microseconds::zero();
 		}
 
@@ -60,13 +64,14 @@ namespace Ebony
 				&& m_SpriteColor == rhs.m_SpriteColor);
 		}
 
-		std::vector<std::pair<int, std::function<void()>>> onAnimationFrame; // <Frame number, function>
+		std::map<std::uint16_t, std::vector<std::function<void()>>> onAnimationFrame; // <Frame number, function>
 
 	private:
 		SpriteSheet m_Spritesheet;
 
 		std::uint8_t m_CurrentSprite{ 0 };
 		std::uint8_t m_NumRepeatTimes{ 0 };
+		std::uint8_t m_FrameNumber{ 0 };
 		bool m_ShouldRepeatForever{ false };
 		bool m_Started{ false };
 

@@ -13,11 +13,21 @@ namespace systems
 		{
 			auto sprite = entity->getComponent<components::AnimationController>();
 
+			// This updates the current node's animations. Also will call any callbacks registered to the sprite frames for the animations
 			for (auto& animation : sprite->animations.at(sprite->currentNode))
 			{
 				animation.updateElapsedTime(elapsedTime);
+				
+				if (auto keyframeAnimation = animation.onAnimationFrame.find(animation.GetCurrentSpriteFrame()); keyframeAnimation != animation.onAnimationFrame.end())
+				{
+					for (const auto& callback : keyframeAnimation->second)
+					{
+						callback();
+					}
+				}
 			}
 
+			// This defines how it should move to different animation nodes
 			for (const auto& link : sprite->animationTree.at(sprite->currentNode).links)
 			{
 				if (link.shouldTraverse())
@@ -30,33 +40,6 @@ namespace systems
 					break;
 				}
 			}
-
-
-
-				//for (const auto& function : animation.onAnimationUpdate)
-				//{
-				//	function();
-				//}
-
-				//if (animation.getElapsedTime() > animation.GetSpriteTime())
-				//{
-				//	// If we are on the last sprite, we need to make 2 checks
-				//	// 1. If the numRepeat > 0, decrement and then increment sprite
-				//	// 2. If the bool repeatForever, increment sprite
-				//	// 3. 
-
-				//	if (animation.GetCurrentSprite() == animation.GetSprite().numDivisions)
-				//	{
-				//		if (animation.)
-
-
-				//	}
-
-
-				//	animation.IncrementSprite();
-
-					// Do a check if it is on the end
-
 		}
 	}
 

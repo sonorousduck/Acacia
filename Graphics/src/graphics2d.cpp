@@ -117,7 +117,7 @@ namespace Ebony
 	}
 
 
-	void Graphics2d::Draw(Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
+	void Graphics2d::Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
 	{
 		// This one will use a default shader that will already be loaded into graphics
 		Shader& s = ResourceManager::GetShader("default");

@@ -48,7 +48,7 @@ Thanks to Dean Mathias for usage for his code for the base system
 #include <initializer_list>
 #include <unordered_set>
 
-#include "entity.hpp"
+#include "../entity.hpp"
 
 namespace systems
 {

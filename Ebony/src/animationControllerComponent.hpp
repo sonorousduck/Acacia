@@ -1,11 +1,11 @@
 #pragma once
 
 #include "component.hpp"
-#include"animation.hpp"
 #include <chrono>
 #include <cstdint>
 #include <memory>
 #include <vector>
+#include "animation.hpp"
 
 
 namespace components
@@ -24,24 +24,32 @@ namespace components
 	class AnimationController : public PolymorphicComparable<Component, AnimationController>
 	{
 	public:
-		AnimationController() : animations(std::vector<Ebony::Animation>()) { };
-		AnimationController(std::vector<Ebony::Animation> animations) : animations(animations) {};
+		AnimationController() : animations(std::vector<std::vector<Ebony::Animation>>()), animationTree(std::vector<Node>()) { };
+		AnimationController(std::vector<Node> animationTree, std::vector<std::vector<Ebony::Animation>> animations) : animationTree(animationTree), animations(animations) {};
+
+		std::vector<Ebony::Animation> GetSprite()
+		{
+			return animations.at(currentNode);
+		}
 
 		// Add animation will both add a node and an animation
 		// Create a file format for loading/saving animation trees
 		// Potentially just dump the animation controller to binary
-		void AddAnimation(Ebony::Animation animation) { animations.emplace_back(animation); }
+		//void AddAnimation(std::vector<Ebony::Animation> animation) 
+		//{ 
+		//	animations.emplace_back(animation); 
+		//}
 
-		void AddNode(Node node)
-		{
-			animationTree.emplace_back(node);
-		}
+		//void AddNode(Node node)
+		//{
+		//	animationTree.emplace_back(node);
+		//}
 
-		void AddAnimationAndNode(Ebony::Animation animation, Node node)
-		{
-			animations.emplace_back(animation);
-			animationTree.emplace_back(node);
-		}
+		//void AddAnimationAndNode(Ebony::Animation animation, Node node)
+		//{
+		//	animations.emplace_back(animation);
+		//	animationTree.emplace_back(node);
+		//}
 
 
 		bool operator==(AnimationController& rhs)
@@ -50,7 +58,7 @@ namespace components
 			{
 				for (unsigned int i = 0; i < animations.size(); i++)
 				{
-					if (animations[i] != rhs.animations[i])
+					if (animations[i].size() != rhs.animations[i].size())
 					{
 						return false;
 					}
@@ -62,7 +70,7 @@ namespace components
 		}
 
 
-
+		// Vector of nodes containing animations
 		std::vector<std::vector<Ebony::Animation>> animations;
 		std::vector<Node> animationTree;
 		size_t currentNode{ 0 };

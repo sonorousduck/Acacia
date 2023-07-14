@@ -35,14 +35,20 @@ set(ComponentSources
 )
 
 set(SystemHeaders
-	src/animation2d.hpp
-	src/system.hpp
+	src/systems/animation2d.hpp
+	src/systems/system.hpp
+	src/systems/animationRenderer.hpp
+	src/systems/particleRenderer.hpp
+	src/systems/staticRenderer.hpp
 
 )
 
 set(SystemSources
-	src/animation2d.cpp
-	src/system.cpp
+	src/systems/animation2d.cpp
+	src/systems/system.cpp
+	src/systems/animationRenderer.cpp
+	src/systems/particleRenderer.cpp
+	src/systems/staticRenderer.cpp
 
 )
 
