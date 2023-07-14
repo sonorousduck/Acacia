@@ -16,6 +16,11 @@ namespace Ebony
 		Color(float r, float b, float g);
 		Color(float r, float b, float g, float a);
 
+		bool operator==(Color& rhs)
+		{
+			return (GetRGBA() == rhs.GetRGBA());
+		}
+
 
 		
 

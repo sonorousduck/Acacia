@@ -69,7 +69,7 @@ namespace entities
 	{
 		assert(hasComponent<T>());
 
-		return static_cast<T*>(m_components[ctti::unnamed_type_id<T>()].get());
+		return static_cast<T*>(m_Components[ctti::unnamed_type_id<T>()].get());
 	}
 
 	EntityPtr Entity::clone()
