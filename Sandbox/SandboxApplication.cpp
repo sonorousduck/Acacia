@@ -83,7 +83,14 @@ namespace Ebony {
 			float currentFrame = static_cast<float>(glfwGetTime());
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
+			fpsUpdateDeltaTime -= deltaTime;
 
+
+			if (fpsUpdateDeltaTime <= 0.0f)
+			{
+				fps = std::to_string(static_cast<int>(std::round(1000 / deltaTime))) + " fps";
+				fpsUpdateDeltaTime += 1.0f;
+			}
 		}
 
 
@@ -95,7 +102,7 @@ namespace Ebony {
 
 
 			graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
-			graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, "Test", 25.0f, 100.0f, 1.0f, Colors::Red);
+			graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red);
 
 
 			graphics.EndDraw();
@@ -133,6 +140,8 @@ namespace Ebony {
 		SpriteFont spriteFont;
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;
+		float fpsUpdateDeltaTime = 0.0f;
+		std::string fps = "";
 	
 	};
 

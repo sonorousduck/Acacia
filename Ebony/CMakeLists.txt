@@ -42,6 +42,7 @@ set(SystemHeaders
 
 set(SystemSources
 	src/animation2d.cpp
+	src/system.cpp
 
 )
 
