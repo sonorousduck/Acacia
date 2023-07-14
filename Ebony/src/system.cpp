@@ -26,3 +26,50 @@ Thanks to Dean Mathias for usage for his code for the base system
 
 
 #include "system.hpp"
+#include <algorithm>
+
+namespace systems
+{
+
+	bool System::addEntity(entities::EntityPtr entity)
+	{
+		if (isInterested(entity))
+		{
+			m_Entities[entity->getId()] = entity;
+			return true;
+		}
+		return false;
+	}
+
+	void System::removeEntity(entities::Entity::IdType entityId)
+	{
+		m_Entities.erase(entityId);
+	}
+
+	void System::updateEntity(entities::EntityPtr entity)
+	{
+		if (m_Entities.contains(entity->getId()))
+		{
+			if (!isInterested(entity))
+			{
+				m_Entities.erase(entity->getId());
+			}
+		}
+		else if (isInterested(entity))
+		{
+			m_Entities[entity->getId()] = entity;
+		}
+	}
+
+	bool System::isInterested(const entities::EntityPtr& entity)
+	{
+		bool doICare = std::all_of(
+			m_Interests.begin(), m_Interests.end(),
+			[&entity](auto interest)
+			{
+				return entity->getComponents().contains(interest);
+			});
+
+		return doICare;
+	}
+}

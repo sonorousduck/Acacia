@@ -48,6 +48,8 @@ Thanks to Dean Mathias for usage for his code for the base system
 #include <initializer_list>
 #include <unordered_set>
 
+#include "entity.hpp"
+
 namespace systems
 {
 	class System
@@ -59,12 +61,19 @@ namespace systems
 
 		System(const std::initializer_list<ctti::unnamed_type_id_t>& list) : m_Interests(list)
 		{}
+		virtual ~System() {};
 
-
+		virtual void clear() { m_Entities.clear(); }
+		virtual bool addEntity(entities::EntityPtr entity);
+		virtual void removeEntity(entities::Entity::IdType entityId);
+		virtual void updateEntity(entities::EntityPtr entity);
+		virtual void update([[maybe_unused]] std::chrono::microseconds elapsedTime) {}
+		virtual void shutdown() {}
 
 	protected:
+		entities::EntityMap m_Entities;
 
-		virtual bool isInterested();
+		virtual bool isInterested(const entities::EntityPtr& entity);
 
 	private:
 		std::unordered_set<ctti::unnamed_type_id_t> m_Interests;
