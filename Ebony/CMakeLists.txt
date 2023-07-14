@@ -46,6 +46,14 @@ set(SystemSources
 
 )
 
+set(EntityHeaders
+	src/entity.hpp
+
+)
+
+set(EntitySources
+	src/entity.cpp
+)
 
 
 
@@ -55,7 +63,8 @@ source_group("Components\\Header Files" FILES ${ComponentHeaders})
 source_group("Components\\Source Files" FILES ${ComponentSources})
 source_group("Systems\\Header Files" FILES ${SystemHeaders})
 source_group("Systems\\Source Files" FILES ${SystemSources})
-
+source_group("Entities\\Header Files" FILES ${EntityHeaders})
+source_group("Entities\\Source Files" FILES ${EntitySources})
 
 source_group("Main\\Event Files" FILES ${HEADER_EVENTS})
 
@@ -68,6 +77,8 @@ set(CODE_FILES
 	${SystemHeaders}
 	${SystemSources}
 	${HEADER_EVENTS}
+	${EntityHeaders}
+	${EntitySources}
 )
 
 
