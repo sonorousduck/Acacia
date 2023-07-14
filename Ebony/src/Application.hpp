@@ -6,6 +6,7 @@
 #include "Log.hpp"
 
 #include <iostream>
+#include <graphics2d.hpp>
 
 namespace Ebony {
 	class Application
@@ -13,7 +14,7 @@ namespace Ebony {
 	public:
 		Application();
 		virtual ~Application();
-		void Run();
+		virtual void Run();
 		virtual void Init();
 		virtual void Update();
 		virtual void Draw();

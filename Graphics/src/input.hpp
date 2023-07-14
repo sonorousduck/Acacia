@@ -28,6 +28,7 @@ namespace Ebony
 	class KeyInput
 	{
 	public:
+		KeyInput() { m_isEnabled = true;};
 		KeyInput(std::vector<int> keysToMonitor);
 		~KeyInput();
 
@@ -38,6 +39,7 @@ namespace Ebony
 		bool getIsEnabled() { return m_isEnabled; }
 		void setIsEnabled(bool value) { m_isEnabled = value; };
 
+		void setKeysToMonitorInit(std::vector<int> keysToMonitor);
 
 	private:
 		void setIsKeyDown(int key, PressedState isDown);

@@ -16,5 +16,4 @@ class Animation
 	std::function<void*> onAnimationStart;
 	std::function<void*> onAnimationUpdate;
 	std::function<void*> onAnimationEnd;
-
 };

@@ -41,8 +41,8 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Sandbox PROPERTY CXX_STANDARD 20)
 endif()
 
-include_directories("${PROJECT_SOURCE_DIR}/Ebony/src")
-include_directories("${PROJECT_SOURCE_DIR}/Graphics/src")
+include_directories("../Ebony/src")
+include_directories("../Graphics/src")
 target_include_directories(Sandbox PRIVATE ../Graphics/include/ ../Graphics/include/glm)
 
 

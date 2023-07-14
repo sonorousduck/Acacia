@@ -1,6 +1,7 @@
 #include "graphics2d.hpp"
 #include "window.hpp"
 #include "resourceManager.hpp"
+#include "spritefont.hpp"
 
 
 // https://www.glfw.org/docs/3.3/input_guide.html
@@ -18,11 +19,8 @@ namespace Ebony
 		versionMajor = 3;
 		versionMinor = 3;
 
-
-		//input = Input();
 		window = Window();
-		window.createWindow(versionMajor, versionMinor);
-		//input.setupJoystickInputs();
+		window.createWindow(windowName, versionMajor, versionMinor);
 		Initialize();
 		SetupCallback();
 
@@ -38,12 +36,9 @@ namespace Ebony
 		versionMajor = majorVersion;
 		versionMinor = minorVersion;
 
-		//input = Input();
-
 		window = Window();
 		window.createWindow(versionMajor, versionMinor);
 		SetupCallback();
-		//input.setupJoystickInputs();
 		Initialize();
 	}
 
@@ -51,7 +46,6 @@ namespace Ebony
 	{
 		auto framebuffer_callback = [](GLFWwindow* window, int width, int height)
 		{
-			std::cout << "Called" << std::endl;
 			glViewport(0, 0, width, height);
 			static_cast<Graphics2d*>(glfwGetWindowUserPointer(window))->onFramebufferSizeChange(width, height);
 		};
@@ -59,33 +53,11 @@ namespace Ebony
 		glfwSetFramebufferSizeCallback(window.getWindow(), framebuffer_callback);
 	}
 
-	/*void Graphics2d::onCursorPos(double xPosIn, double yPosIn)
-	{
-		this->input.onCursorPos(xPosIn, yPosIn);
-	}*/
-
 	void Graphics2d::onFramebufferSizeChange(int width, int height)
 	{
-		std::cout << "HERE TOO!" << std::endl;
 		screenWidth = width;
 		screenHeight = height;
 	}
-
-	/*void Graphics2d::onScroll(double xOffset, double yOffset)
-	{
-		std::cout << "WENT THROUGH THIS" << std::endl;
-		this->input.onScroll(xOffset, yOffset);
-	}
-
-	void Graphics2d::onMouseButton(int button, int action, int mods)
-	{
-		this->input.onMouseButton(button, action, mods);
-	}
-
-	void Graphics2d::onKeyInput(int button, int scancode, int action, int mods)
-	{
-		this->input.onKeyInput(button, scancode, action, mods);
-	}*/
 
 	void Graphics2d::Initialize()
 	{
@@ -189,16 +161,92 @@ namespace Ebony
 		s.setMat4("projection", projection);
 		s.setMat4("view", view);*/
 
+	}
+
+	void Graphics2d::DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color)
+	{
+		s.use();
+		s.setVec3("textColor", color.GetRGB());
+		glActiveTexture(GL_TEXTURE0);
+		glBindVertexArray(textVAO);
+
+		// Iterate through all characters
+		std::string::const_iterator c;
+		for (c = text.begin(); c != text.end(); c++)
+		{
+			Character ch = spriteFont.characters[*c];
+
+			float xpos = x + ch.Bearing.x * scale;
+			float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+
+			float w = ch.Size.x * scale;
+			float h = ch.Size.y * scale;
+
+			// Update VBO for each character
+			float vertices[6][4] = {
+				{ xpos,         ypos + h,   0.0f, 0.0f  },
+				{ xpos,         ypos,       0.0f, 1.0f  },
+				{ xpos + w,     ypos,       1.0f, 1.0f  },
+				{ xpos,         ypos + h,   0.0f, 0.0f  },
+				{ xpos + w,     ypos,       1.0f, 1.0f  },
+				{ xpos + w,     ypos + h,   1.0f, 0.0f  }
+			};
+
+			// Render glyph texture over quad
+			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+			// Update content of VBO memory
+			glBindBuffer(GL_ARRAY_BUFFER, textVBO);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			// Render Quad
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			// Now advance cursors for next glyph (Note that advance number is 1/64 pixels)
+			x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+		}
+
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
 
 	}
 
+	//void Graphics2d::DrawString(SpriteFont& spriteFont, std::string text, float x, float y, float scale, glm::vec3 color)
+	//{
+
+
+
+	//}
+
+
+
+	void Graphics2d::InitializeTextDrawing(Shader& textShader)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glm::mat4 textProjection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+		textShader.use();
+		textShader.setMat4("projection", textProjection);
+
+		glGenVertexArrays(1, &textVAO);
+		glGenBuffers(1, &textVBO);
+		glBindVertexArray(textVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, textVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW); // It needs 6 vertices of 4 floats each, so 6 * 4 floats of memory (x, y, u, v)
+
+		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+		glEnableVertexAttribArray(0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
 	
 
 	void Graphics2d::Cleanup()
 	{
 		glDeleteVertexArrays(1, &quadVAO);
-		//glDeleteFramebuffers(1, &quadVBO);
-
 	}
 
 	void Graphics2d::SetMainCamera(Camera& camera)

@@ -24,21 +24,25 @@
 #include "input.hpp"
 #include "colors.hpp"
 #include "window.hpp"
+#include "graphics.hpp"
+#include "spritefont.hpp"
+#include "colors.hpp"
 
 namespace Ebony
 {
-	class Graphics2d
+	class Graphics2d : Graphics
 	{
 	public:
 		Graphics2d();
 
 		void Initialize(const char* windowName, int width, int height);
 		void Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion);
+		void InitializeTextDrawing(Shader& textShader);
 
 		//// Need to load fonts as well
 
-		//void DrawText(Shader& s, std::string text, float x, float y, float scale, glm::vec3 color);
-		//void DrawText(std::string text, float x, float y, float scale, glm::vec3 color);
+		void DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color);
+		//void DrawString(SpriteFont& spriteFont, std::string text, float x, float y, float scale, glm::vec3 color);
 
 		void SetMainCamera(Camera& camera);
 
@@ -48,6 +52,7 @@ namespace Ebony
 		void Draw(Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color);
 		void Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color);
 
+
 		void Cleanup();
 
 
@@ -56,14 +61,9 @@ namespace Ebony
 
 		//void SetRenderTarget();
 
-		//void onCursorPos(double x, double y);
 		void onFramebufferSizeChange(int width, int height);
-		//void onScroll(double xOffset, double yOffset);
-		//void onMouseButton(int button, int action, int mods);
-		//void onKeyInput(int key, int scancode, int action, int mods);
 
 		Window window;
-		//Input input;
 		int screenWidth;
 		int screenHeight;
 		bool firstMouse = true;
@@ -75,6 +75,9 @@ namespace Ebony
 		unsigned int versionMajor;
 		unsigned int versionMinor;
 		const char* windowName;
+
+		unsigned int textVAO = 0, textVBO = 0;
+
 
 		glm::mat4 projection;
 

@@ -9,11 +9,12 @@ namespace Ebony
 	public:
 		Window() {};
 		void createWindow(int versionMajor, int versionMinor);
+		void createWindow(const char* windowName, int versionMajor, int versionMinor);
 
 		GLFWwindow* getWindow();
 
 	private:
-		GLFWwindow* window;
+		GLFWwindow* window{};
 	};
 
 }
