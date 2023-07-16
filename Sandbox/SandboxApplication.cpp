@@ -39,17 +39,15 @@ namespace Ebony {
             Shader& s = ResourceManager::LoadShader("../Graphics/shaders/sprite.vert", "../Graphics/shaders/sprite.frag", "default");
 			ResourceManager::LoadShader("../Graphics/shaders/font.vert", "../Graphics/shaders/font.frag", "text");
             
-			Color clearColor = Color::Color(0.1f, 0.1f, 0.1f, 1.0f);
-
             s.use();
             s.setInt("image", 0);
             s.setMat4("projection", graphics.projection);
-			clearColor = Color::Color(0.1f, 0.1f, 0.1f, 1.0f);
+			clearColor = Colors::CornflowerBlue;
 
 			s.use();
 			s.setInt("image", 0);
 			s.setMat4("projection", graphics.projection);
-			glEnable(GL_DEPTH_TEST);
+			//glEnable(GL_DEPTH_TEST);
 		}
 
 
@@ -100,8 +98,8 @@ namespace Ebony {
 			//std::cout << "Drawing!" << std::endl;
 			graphics.BeginDraw(clearColor);
 
-
 			graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
+			graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 100.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
 			graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red);
 
 
@@ -112,8 +110,6 @@ namespace Ebony {
 		void Run() override
 		{
 			WindowResizeEvent e(1280, 720);
-
-			std::cout << "Beep" << std::endl;
 			EB_TRACE(e);
 
 			Init();
