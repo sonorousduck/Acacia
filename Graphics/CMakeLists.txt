@@ -19,6 +19,7 @@ set(HEADER_FILES
   src/spritesheet.hpp
   src/graphics.hpp
   src/spritefont.hpp
+  src/subtexture2d.hpp
 
 )
 
@@ -40,6 +41,8 @@ set(SOURCE_FILES
   src/resourceManager.cpp
   src/spritesheet.cpp
   src/spritefont.cpp
+  src/subtexture2d.cpp
+
 )
 
 set(SHADERS

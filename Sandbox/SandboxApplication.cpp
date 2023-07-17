@@ -7,6 +7,8 @@
 #include <filesystem>
 #include <spritefont.hpp>
 
+
+
 namespace Ebony {
 
 	class Sandbox : public Application
@@ -98,8 +100,10 @@ namespace Ebony {
 			//std::cout << "Drawing!" << std::endl;
 			graphics.BeginDraw(clearColor);
 
-			graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
-			graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 100.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
+			//graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
+			//graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 100.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
+			graphics.Draw(ResourceManager::GetTexture("sampleSpritesheet"), glm::vec2(200.0f, 100.0f), glm::vec2(200.0f, 50.0f), 0.0f, Colors::Red);
+			
 			graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red);
 
 
@@ -115,11 +119,11 @@ namespace Ebony {
 			Init();
 			graphics.InitializeTextDrawing(ResourceManager::GetShader("text"));
 			spriteFont.LoadFont("../Graphics/fonts/super-indie-font/SuperIndie.ttf");
+			ResourceManager::LoadShader("../Graphics/shaders/spritesheet.vert", "../Graphics/shaders/spritesheet.frag", "spritesheet");
+			ResourceManager::LoadTexture("../Graphics/textures/sampleSpritesheet.tx", "sampleSpritesheet");
+			
 
 			auto previousTime = std::chrono::system_clock::now();
-
-
-
 			while (!glfwWindowShouldClose(graphics.window.getWindow()))
 			{
 				auto currentTime = std::chrono::system_clock::now();

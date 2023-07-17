@@ -35,6 +35,14 @@ namespace Ebony
 		return Textures[name];
 	}
 
+	Texture2D& ResourceManager::LoadAtlas(const char* file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY)
+	{
+		Textures[name] = loadAtlasFromFile(file, tilesX, tilesY);
+		return Textures[name];
+
+	}
+
+
 	Texture2D& ResourceManager::GetTexture(const char* name)
 	{
 		return Textures[name];
@@ -98,6 +106,64 @@ namespace Ebony
 
 		return texture;
 	}
+
+	Texture2D ResourceManager::loadAtlasFromFile(char const* path, std::uint16_t tilesX, std::uint16_t tilesY)
+	{
+		unsigned int textureID = 0;
+		glGenTextures(1, &textureID);
+
+		Texture2D texture = Texture2D(textureID);
+
+		assets::AssetFile file{};
+		bool loaded = assets::load_binaryfile(path, file);
+
+		if (!loaded)
+		{
+			std::cout << "Error when loading image: " << path << std::endl;
+			exit(0);
+		}
+
+		assets::TextureInfo textureInfo = assets::read_texture_info(&file);
+
+		int nrComponents = textureInfo.textureFormat;
+		int width = textureInfo.pixelSize[0];
+		int height = textureInfo.pixelSize[1];
+
+		if (file.binaryBlob.data())
+		{
+			GLenum format{};
+
+			switch (nrComponents)
+			{
+			case 1:
+				format = GL_RED;
+				break;
+			case 3:
+				format = GL_RGB;
+				break;
+			case 4:
+				format = GL_RGBA;
+				break;
+			default:
+				break;
+			}
+
+			std::vector<char> data(textureInfo.textureSize);
+
+			assets::unpack_texture(&textureInfo, file.binaryBlob.data(), file.binaryBlob.size(), data.data());
+			texture.Internal_Format = format;
+			texture.Image_Format = format;
+			
+			
+			
+			texture.Generate3D(width, height, data.data(), tilesX, tilesY);
+
+			return texture;
+		}
+
+		return texture;
+	}
+
 
 	void ResourceManager::Clear()
 	{

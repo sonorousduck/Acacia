@@ -159,6 +159,33 @@ namespace Ebony
 
 	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
 	{
+		s.use();
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
+		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
+		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
+		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
+
+		if (hasCamera)
+		{
+			s.setMat4("view", mainCamera.GetViewMatrix());
+		}
+		else
+		{
+			s.setMat4("view", glm::mat4(1.0f));
+		}
+
+		s.setMat4("model", model);
+		//s.setVec3("spriteColor", Colors::White.GetRGB());
+
+		glActiveTexture(GL_TEXTURE0);
+		texture.Bind();
+
+		glBindVertexArray(this->quadVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
 		/*s.use();
 		glm::mat4 projection = glm::perspective(glm::radians(mainCamera.Zoom), static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.1f, 100.0f);
 		glm::mat4 view = mainCamera.GetViewMatrix();
@@ -215,17 +242,7 @@ namespace Ebony
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-
 	}
-
-	//void Graphics2d::DrawString(SpriteFont& spriteFont, std::string text, float x, float y, float scale, glm::vec3 color)
-	//{
-
-
-
-	//}
-
-
 
 	void Graphics2d::InitializeTextDrawing(Shader& textShader)
 	{
