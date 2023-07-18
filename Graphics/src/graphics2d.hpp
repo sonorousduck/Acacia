@@ -27,6 +27,7 @@
 #include "graphics.hpp"
 #include "spritefont.hpp"
 #include "colors.hpp"
+#include "renderTarget2d.hpp"
 
 namespace Ebony
 {
@@ -50,7 +51,8 @@ namespace Ebony
 		void EndDraw();
 
 		void Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color);
-		void Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, int layer);
+		void Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color);
+		void DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget);
 
 
 		void Cleanup();
@@ -59,7 +61,8 @@ namespace Ebony
 		//void InstancedDraw();
 		//void InstancedDraw(Shader& s);
 
-		//void SetRenderTarget();
+		void SetRenderTarget(RenderTarget2D& renderTarget, Color clearColor);
+		void UnbindRenderTarget(Color clearColor);
 
 		void onFramebufferSizeChange(int width, int height);
 

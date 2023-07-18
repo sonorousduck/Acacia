@@ -88,6 +88,9 @@ namespace Ebony {
 				fps = std::to_string(static_cast<int>(std::round(1 / deltaTime))) + " fps";
 				fpsUpdateDeltaTime += 0.25f;
 				layer = (layer + 1) % 44;
+				Shader& s = ResourceManager::GetShader("spritesheet");
+				s.use();
+				s.setInt("layer", layer);
 
 			}
 
@@ -101,12 +104,15 @@ namespace Ebony {
 			graphics.BeginDraw(clearColor);
 
 			//graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
-			//graphics.Draw(ResourceManager::GetShader("default"), ResourceManager::GetTexture("face"), glm::vec2(200.0f, 100.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
+			graphics.Draw(ResourceManager::GetShader("default"), ResourceManager::GetTexture("face"), glm::vec2(200.0f, 100.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
 
-
-			graphics.Draw(ResourceManager::GetShader("spritesheet"), ResourceManager::GetTexture("massiveTextureAtlas"), glm::vec2(200.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0.0f, Colors::Red, layer);
-			
+			graphics.SetRenderTarget(main, clearColor);
+			graphics.Draw(ResourceManager::GetShader("spritesheet"), ResourceManager::GetTexture("massiveTextureAtlas"), glm::vec2(200.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0.0f, Colors::Red);
 			graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red);
+			graphics.UnbindRenderTarget(clearColor);
+
+			graphics.DrawRenderTarget(ResourceManager::GetShader("screentexture"), main);
+
 
 
 			graphics.EndDraw();
@@ -127,11 +133,17 @@ namespace Ebony {
 			s.setInt("spritesheet", 0);
 			s.setMat4("projection", graphics.projection);
 
+			Shader& s1 = ResourceManager::LoadShader("../Graphics/shaders/screenTexture.vert", "../Graphics/shaders/screenTexture.frag", "screenTexture");
+
+			s1.use();
+			s1.setInt("screenTexture", 0);
+
 			ResourceManager::LoadAtlas("../Graphics/textures/test.tx", "test", 1, 4);
 			ResourceManager::LoadAtlas("../Graphics/textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1);
-			ResourceManager::LoadAtlas("../Graphics/textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24);
+			ResourceManager::LoadAtlas("../Graphics/textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
 			ResourceManager::LoadAtlas("../Graphics/textures/Better_Character_Animation.tx", "Better_Character_Animation", 44, 1);
 
+			main = RenderTarget2D::Create(graphics.screenWidth, graphics.screenHeight, GL_LINEAR, GL_NEAREST);
 
 			auto previousTime = std::chrono::system_clock::now();
 			while (!glfwWindowShouldClose(graphics.window.getWindow()))
@@ -160,6 +172,8 @@ namespace Ebony {
 		float fpsUpdateDeltaTime = 0.0f;
 		int layer = 0;
 		std::string fps = "";
+		RenderTarget2D main;
+
 	
 	};
 

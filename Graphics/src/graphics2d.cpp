@@ -163,7 +163,7 @@ namespace Ebony
 
 	}
 
-	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, int layer)
+	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
 	{
 		s.use();
 		glm::mat4 model = glm::mat4(1.0f);
@@ -184,7 +184,6 @@ namespace Ebony
 		}
 
 		s.setMat4("model", model);
-		s.setInt("layer", layer);
 		//s.setVec3("spriteColor", Colors::White.GetRGB());
 		//s.setInt("spritesheet", texture.ID);
 
@@ -203,6 +202,16 @@ namespace Ebony
 		s.setMat4("projection", projection);
 		s.setMat4("view", view);*/
 
+	}
+
+	void Graphics2d::DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget)
+	{
+		s.use();
+		glBindVertexArray(this->quadVAO);
+		glDisable(GL_DEPTH_TEST);
+		glBindTexture(GL_TEXTURE_2D, renderTarget.GetTextureColorBuffer());
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
 	}
 
 	void Graphics2d::DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color)
@@ -285,6 +294,22 @@ namespace Ebony
 	{
 		mainCamera = camera;
 		hasCamera = true;
+	}
+
+	void Graphics2d::SetRenderTarget(RenderTarget2D& renderTarget, Color clearColor)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, renderTarget.GetFramebuffer());
+		glClearColor(clearColor.r(), clearColor.g(), clearColor.b(), clearColor.a());
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+
+	}
+
+	void Graphics2d::UnbindRenderTarget(Color clearColor)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glClearColor(clearColor.r(), clearColor.g(), clearColor.b(), clearColor.a());
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 }
