@@ -1,7 +1,7 @@
 #include "texture.hpp"
 #include <algorithm>
 #include <vector>
-
+#include <iostream>
 
 Texture2D::Texture2D()
 	: Width(0), Height(0), Internal_Format(GL_RGB), Image_Format(GL_RGB), Wrap_S(GL_CLAMP_TO_EDGE), Wrap_T(GL_CLAMP_TO_EDGE), Filter_Min(GL_LINEAR), Filter_Max(GL_NEAREST)
@@ -19,6 +19,8 @@ void Texture2D::Generate(int width, int height, char* data)
 	this->Width = width;
 	this->Height = height;
 	this->isArray = false;
+
+
 
 	// Create texture
 	glBindTexture(GL_TEXTURE_2D, this->ID);
@@ -40,32 +42,43 @@ void Texture2D::Generate3D(int width, int height, char* data, std::uint16_t tile
 	this->Height = height;
 	this->isArray = true;
 
-	glBindTexture(GL_TEXTURE_2D_ARRAY, this->ID);
-
-
-	int tileWidth = width / tilesX; // 7 because there are 7 sprites in a row (this will be a parameter)
-	int tileHeight = height / tilesY; // ^^
-
+	int tileWidth = width / tilesX; 
+	int tileHeight = height / tilesY;
+	int channels = 4;
 	int imageCount = tilesX * tilesY;
 
-	// Create the image
-	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, this->Internal_Format, tileWidth, tileHeight, imageCount, 0, this->Image_Format, GL_UNSIGNED_BYTE, nullptr);
-	std::vector<unsigned char> tile(tileWidth * tileHeight * 4); // 4 because RGBA. Pretty sure I can just use Image_Format
-	int tileSizeX = tileWidth * 4;
-	std::uint16_t rowLen = tilesX * static_cast<std::uint16_t>(tileSizeX);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, this->ID);
 
-	for (int iy = 0; iy < tilesY; iy++)
+	//glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, this->Internal_Format,
+	//	tileWidth, tileHeight, imageCount, 0,
+	//	this->Image_Format, GL_UNSIGNED_BYTE, data);
+
+
+
+	// Create the image
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, this->Internal_Format,
+		tileWidth, tileHeight, imageCount, 0,
+		this->Image_Format, GL_UNSIGNED_BYTE, nullptr);
+
+	std::vector<char> tile(tileWidth * tileHeight * channels);
+	int tileSizeX = tileWidth * channels;
+	int rowLen = tilesX * tileSizeX;
+
+	for (int iy = 0; iy < tilesY; ++iy)
 	{
-		for (int ix = 0; ix < tilesX; ix++)
+		for (int ix = 0; ix < tilesX; ++ix)
 		{
-			char* ptr = data + iy * rowLen + ix * tileSizeX;
-			for (int row = 0; row < tileHeight; row++)
-			{
-				std::copy(ptr + row * rowLen, ptr + row * rowLen + tileSizeX, tile.begin() + row * tileSizeX);
-			}
+			char* ptr = data + iy * rowLen * tileHeight + ix * tileSizeX;
+			for (int row = 0; row < tileHeight; ++row)
+				std::copy(ptr + row * rowLen, ptr + row * rowLen + tileSizeX,
+					tile.begin() + (static_cast<std::_Vector_iterator<std::vector<char, std::allocator<char>>>::difference_type>(row) * tileSizeX));
+
+
 			int i = iy * tilesX + ix;
-			// Generate the information for each subimage
-			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, tileWidth, tileHeight, 1, this->Image_Format, GL_UNSIGNED_BYTE, tile.data());
+			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0,
+				0, 0, i,
+				tileWidth, tileHeight, 1,
+				this->Image_Format, GL_UNSIGNED_BYTE, tile.data());
 		}
 	}
 
@@ -77,7 +90,7 @@ void Texture2D::Generate3D(int width, int height, char* data, std::uint16_t tile
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_R, this->Wrap_T); // If I need to modify this, make sure I create a Wrap_R
 
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, this->Filter_Min);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, this->Filter_Max);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, this->Filter_Max);
 	// Unbind texture
 	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 }

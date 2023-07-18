@@ -120,6 +120,7 @@ namespace Ebony
 	void Graphics2d::EndDraw()
 	{
 		glfwSwapBuffers(window.getWindow());
+		
 	}
 
 
@@ -127,6 +128,7 @@ namespace Ebony
 	{
 		// This one will use a default shader that will already be loaded into graphics
 		Shader& s = ResourceManager::GetShader("default");
+		glEnable(GL_TEXTURE_2D_ARRAY);
 
 		s.use();
 		glm::mat4 model = glm::mat4(1.0f);
@@ -145,6 +147,8 @@ namespace Ebony
 		{
 			s.setMat4("view", glm::mat4(1.0f));
 		}
+
+
 
 		s.setMat4("model", model);
 		s.setVec3("spriteColor", Colors::White.GetRGB());
@@ -155,9 +159,11 @@ namespace Ebony
 		glBindVertexArray(this->quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
+		glDisable(GL_TEXTURE_2D_ARRAY);
+
 	}
 
-	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
+	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, int layer)
 	{
 		s.use();
 		glm::mat4 model = glm::mat4(1.0f);
@@ -178,7 +184,10 @@ namespace Ebony
 		}
 
 		s.setMat4("model", model);
+		s.setInt("layer", layer);
 		//s.setVec3("spriteColor", Colors::White.GetRGB());
+		//s.setInt("spritesheet", texture.ID);
+
 
 		glActiveTexture(GL_TEXTURE0);
 		texture.Bind();

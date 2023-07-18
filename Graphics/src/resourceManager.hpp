@@ -42,6 +42,7 @@ namespace Ebony
 
 		static Texture2D loadTextureFromFile(char const* path);
 		static Texture2D loadAtlasFromFile(char const* path, std::uint16_t tilesX, std::uint16_t tilesY);
+		static Texture2D loadAtlasFromFileAs3D(char const* path, std::uint16_t tilesX, std::uint16_t tilesY);
 
 	};
 }

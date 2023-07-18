@@ -46,9 +46,6 @@ namespace Ebony {
             s.setMat4("projection", graphics.projection);
 			clearColor = Colors::CornflowerBlue;
 
-			s.use();
-			s.setInt("image", 0);
-			s.setMat4("projection", graphics.projection);
 			//glEnable(GL_DEPTH_TEST);
 		}
 
@@ -89,8 +86,11 @@ namespace Ebony {
 			if (fpsUpdateDeltaTime <= 1.0f)
 			{
 				fps = std::to_string(static_cast<int>(std::round(1 / deltaTime))) + " fps";
-				fpsUpdateDeltaTime += 1.0f;
+				fpsUpdateDeltaTime += 0.25f;
+				layer = (layer + 1) % 44;
+
 			}
+
 		}
 
 
@@ -101,8 +101,10 @@ namespace Ebony {
 			graphics.BeginDraw(clearColor);
 
 			//graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
-			//graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 100.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
-			graphics.Draw(ResourceManager::GetTexture("sampleSpritesheet"), glm::vec2(200.0f, 100.0f), glm::vec2(200.0f, 50.0f), 0.0f, Colors::Red);
+			//graphics.Draw(ResourceManager::GetShader("default"), ResourceManager::GetTexture("face"), glm::vec2(200.0f, 100.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red);
+
+
+			graphics.Draw(ResourceManager::GetShader("spritesheet"), ResourceManager::GetTexture("massiveTextureAtlas"), glm::vec2(200.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0.0f, Colors::Red, layer);
 			
 			graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red);
 
@@ -119,9 +121,17 @@ namespace Ebony {
 			Init();
 			graphics.InitializeTextDrawing(ResourceManager::GetShader("text"));
 			spriteFont.LoadFont("../Graphics/fonts/super-indie-font/SuperIndie.ttf");
-			ResourceManager::LoadShader("../Graphics/shaders/spritesheet.vert", "../Graphics/shaders/spritesheet.frag", "spritesheet");
-			ResourceManager::LoadTexture("../Graphics/textures/sampleSpritesheet.tx", "sampleSpritesheet");
-			
+			Shader& s = ResourceManager::LoadShader("../Graphics/shaders/spritesheet3d.vert", "../Graphics/shaders/spritesheet3d.frag", "spritesheet");
+
+			s.use();
+			s.setInt("spritesheet", 0);
+			s.setMat4("projection", graphics.projection);
+
+			ResourceManager::LoadAtlas("../Graphics/textures/test.tx", "test", 1, 4);
+			ResourceManager::LoadAtlas("../Graphics/textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1);
+			ResourceManager::LoadAtlas("../Graphics/textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24);
+			ResourceManager::LoadAtlas("../Graphics/textures/Better_Character_Animation.tx", "Better_Character_Animation", 44, 1);
+
 
 			auto previousTime = std::chrono::system_clock::now();
 			while (!glfwWindowShouldClose(graphics.window.getWindow()))
@@ -148,6 +158,7 @@ namespace Ebony {
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;
 		float fpsUpdateDeltaTime = 0.0f;
+		int layer = 0;
 		std::string fps = "";
 	
 	};
