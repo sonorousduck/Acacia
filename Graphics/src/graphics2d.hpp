@@ -83,13 +83,14 @@ namespace Ebony
 
 
 		glm::mat4 projection;
+		unsigned int quadVAO = 0;
+		unsigned int quadRenderTarget = 0;
 
 	private:
 		void Initialize();
 		void initRenderData();
 		void SetupCallback();
 
-		unsigned int quadVAO = 0;
 		bool hasCamera = false;
 
 

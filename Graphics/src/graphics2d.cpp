@@ -94,10 +94,10 @@ namespace Ebony
 		glGenVertexArrays(1, &this->quadVAO);
 		glGenBuffers(1, &VBO);
 
+		glBindVertexArray(this->quadVAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-		glBindVertexArray(this->quadVAO);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(1);
@@ -106,6 +106,37 @@ namespace Ebony
 		
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
+
+		unsigned int VBORenderTarget;
+		float verticesRenderTarget[] = {
+			// pos      // tex
+			-1.0f,  1.0f,  0.0f, 1.0f,
+			-1.0f, -1.0f,  0.0f, 0.0f,
+			 1.0f, -1.0f,  1.0f, 0.0f,
+
+			-1.0f,  1.0f,  0.0f, 1.0f,
+			 1.0f, -1.0f,  1.0f, 0.0f,
+			 1.0f,  1.0f,  1.0f, 1.0f
+		};
+
+		glGenVertexArrays(1, &this->quadRenderTarget);
+		glGenBuffers(1, &VBORenderTarget);
+
+		glBindVertexArray(this->quadRenderTarget);
+		glBindBuffer(GL_ARRAY_BUFFER, VBORenderTarget);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verticesRenderTarget), &verticesRenderTarget, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+
+
+
 	}
 
 
@@ -208,7 +239,6 @@ namespace Ebony
 	{
 		s.use();
 		glBindVertexArray(this->quadVAO);
-		glDisable(GL_DEPTH_TEST);
 		glBindTexture(GL_TEXTURE_2D, renderTarget.GetTextureColorBuffer());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
@@ -308,6 +338,7 @@ namespace Ebony
 	void Graphics2d::UnbindRenderTarget(Color clearColor)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glDisable(GL_DEPTH_TEST);
 		glClearColor(clearColor.r(), clearColor.g(), clearColor.b(), clearColor.a());
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
