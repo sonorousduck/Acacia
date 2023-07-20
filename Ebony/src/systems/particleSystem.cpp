@@ -35,7 +35,10 @@ namespace systems
 				
 				if (particle.alive < particle.lifetime)
 				{
+					// TODO: Eventually, make this a more complicated update time loop. That way, we can use animations inside of the particles
 					particle.alive += elapsedTime;
+
+
 
 
 				}
