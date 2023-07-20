@@ -1,7 +1,7 @@
 #pragma once
 
 #include "system.hpp"
-#include "../animationControllerComponent.hpp"
+#include "../components/animationControllerComponent.hpp"
 
 #include <chrono>
 

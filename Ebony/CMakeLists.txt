@@ -26,8 +26,9 @@ set(HEADER_EVENTS
 )
 
 set(ComponentHeaders
-	src/component.hpp
-	src/animationControllerComponent.hpp
+	src/components/component.hpp
+	src/components/animationControllerComponent.hpp
+	src/components/particle.hpp
 )
 
 set(ComponentSources

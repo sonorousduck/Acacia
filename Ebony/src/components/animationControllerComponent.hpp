@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
-#include "animation.hpp"
+#include "../animation.hpp"
 
 
 namespace components

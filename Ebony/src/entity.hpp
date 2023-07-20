@@ -24,7 +24,7 @@ Thanks for Dean Mathias for base implementation of Entity base class
 
 #pragma once
 
-#include "component.hpp"
+#include "components/component.hpp"
 
 // Disable some compiler warnings that come from ctti
 #if defined(_MSC_VER)
