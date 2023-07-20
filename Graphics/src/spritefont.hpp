@@ -2,6 +2,7 @@
 #include "texture.hpp"
 #include <glm/glm.hpp>
 #include <unordered_map>
+#include <iostream>
 
 namespace Ebony 
 {
@@ -22,7 +23,7 @@ namespace Ebony
         std::unordered_map<char, Character> characters{};
 
 
-        void LoadFont(const char* fontLocation);
+        void LoadFont(const std::string& fontLocation);
 
 	    // glyph bounds
 	    // cropping

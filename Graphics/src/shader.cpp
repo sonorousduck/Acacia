@@ -3,7 +3,7 @@
 Shader::Shader()
 {}
 
-void Shader::LoadShader(const char* vertexPath, const char* fragmentPath)
+void Shader::LoadShader(const std::string& vertexPath, const std::string& fragmentPath)
 {
 	// 1. Retrive the vertex/fragment source code from filePath
 	std::string vertexCode{};
@@ -101,7 +101,7 @@ bool Shader::checkSuccessfulShaderProgramLinking(const unsigned int& program)
 }
 
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
+Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
 {
 	LoadShader(vertexPath, fragmentPath);
 }

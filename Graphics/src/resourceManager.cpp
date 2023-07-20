@@ -12,9 +12,9 @@ namespace Ebony
 	std::unordered_map<std::string, Texture2D> ResourceManager::Textures;
 	std::unordered_map<std::string, Shader> ResourceManager::Shaders;
 
-	Shader& ResourceManager::LoadShader(const char* vShaderFile, const char* fShaderFile, const char* name)
+	Shader& ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name)
 	{
-		Shaders[name] = Shader(vShaderFile, fShaderFile);
+		Shaders[name] = Shader("../Graphics/" + vShaderFile, "../Graphics/" + fShaderFile);
 		return Shaders[name];
 	}
 
@@ -29,15 +29,15 @@ namespace Ebony
 	}
 
 
-	Texture2D& ResourceManager::LoadTexture(const char* file, const char* name)
+	Texture2D& ResourceManager::LoadTexture(const std::string& file, const char* name)
 	{
-		Textures[name] = loadTextureFromFile(file);
+		Textures[name] = loadTextureFromFile("../Graphics/" + file);
 		return Textures[name];
 	}
 
-	Texture2D& ResourceManager::LoadAtlas(const char* file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY)
+	Texture2D& ResourceManager::LoadAtlas(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY)
 	{
-		Textures[name] = loadAtlasFromFileAs3D(file, tilesX, tilesY);
+		Textures[name] = loadAtlasFromFileAs3D("../Graphics/" + file, tilesX, tilesY);
 		return Textures[name];
 	}
 
@@ -51,7 +51,7 @@ namespace Ebony
 		Textures.erase(name);
 	}
 
-	Texture2D ResourceManager::loadTextureFromFile(char const* path)
+	Texture2D ResourceManager::loadTextureFromFile(const std::string& path)
 	{
 		unsigned int textureID = 0;
 		glGenTextures(1, &textureID);
@@ -59,7 +59,7 @@ namespace Ebony
 		Texture2D texture = Texture2D(textureID);
 
 		assets::AssetFile file{};
-		bool loaded = assets::load_binaryfile(path, file);
+		bool loaded = assets::load_binaryfile(path.c_str(), file);
 
 		if (!loaded)
 		{
@@ -166,7 +166,7 @@ namespace Ebony
 		return texture;
 	}
 
-	Texture2D ResourceManager::loadAtlasFromFileAs3D(char const* path, std::uint16_t tilesX, std::uint16_t tilesY)
+	Texture2D ResourceManager::loadAtlasFromFileAs3D(const std::string& path, std::uint16_t tilesX, std::uint16_t tilesY)
 	{
 		unsigned int textureID = 0;
 		glGenTextures(1, &textureID);
@@ -174,7 +174,7 @@ namespace Ebony
 		Texture2D texture = Texture2D(textureID);
 
 		assets::AssetFile file{};
-		bool loaded = assets::load_binaryfile(path, file);
+		bool loaded = assets::load_binaryfile(path.c_str(), file);
 
 		if (!loaded)
 		{

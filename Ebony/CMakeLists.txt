@@ -40,7 +40,7 @@ set(SystemHeaders
 	src/systems/animationRenderer.hpp
 	src/systems/particleRenderer.hpp
 	src/systems/staticRenderer.hpp
-
+	src/systems/particleSystem.hpp
 )
 
 set(SystemSources
@@ -49,7 +49,7 @@ set(SystemSources
 	src/systems/animationRenderer.cpp
 	src/systems/particleRenderer.cpp
 	src/systems/staticRenderer.cpp
-
+	src/systems/particleSystem.cpp
 )
 
 set(EntityHeaders

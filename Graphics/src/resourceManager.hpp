@@ -20,13 +20,13 @@ namespace Ebony
 		static std::unordered_map<std::string, Shader> Shaders;
 		static std::unordered_map<std::string, Texture2D> Textures;
 
-		static Shader& LoadShader(const char* vShaderFile, const char* fShaderFile, const char* name);
+		static Shader& LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name);
 		static Shader& GetShader(const char* name);
 		static void UnloadShader(const char* name);
 
 
-		static Texture2D& LoadTexture(const char* file, const char* name);
-		static Texture2D& LoadAtlas(const char* file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY);
+		static Texture2D& LoadTexture(const std::string& file, const char* name);
+		static Texture2D& LoadAtlas(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY);
 		static Texture2D& GetTexture(const char* name);
 		static void UnloadTexture(const char* name);
 
@@ -40,9 +40,9 @@ namespace Ebony
 
 		//static Shader& loadShaderFromFile();
 
-		static Texture2D loadTextureFromFile(char const* path);
+		static Texture2D loadTextureFromFile(const std::string& path);
 		static Texture2D loadAtlasFromFile(char const* path, std::uint16_t tilesX, std::uint16_t tilesY);
-		static Texture2D loadAtlasFromFileAs3D(char const* path, std::uint16_t tilesX, std::uint16_t tilesY);
+		static Texture2D loadAtlasFromFileAs3D(const std::string& path, std::uint16_t tilesX, std::uint16_t tilesY);
 
 	};
 }

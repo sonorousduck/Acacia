@@ -96,7 +96,7 @@ namespace Ebony
 
 		glBindVertexArray(this->quadVAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
@@ -123,6 +123,7 @@ namespace Ebony
 		glGenBuffers(1, &VBORenderTarget);
 
 		glBindVertexArray(this->quadRenderTarget);
+		
 		glBindBuffer(GL_ARRAY_BUFFER, VBORenderTarget);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(verticesRenderTarget), &verticesRenderTarget, GL_STATIC_DRAW);
 
@@ -134,9 +135,6 @@ namespace Ebony
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
-
-
-
 	}
 
 
@@ -155,7 +153,7 @@ namespace Ebony
 	}
 
 
-	void Graphics2d::Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
+	void Graphics2d::Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
 	{
 		// This one will use a default shader that will already be loaded into graphics
 		Shader& s = ResourceManager::GetShader("default");
@@ -163,7 +161,7 @@ namespace Ebony
 
 		s.use();
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
 		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
 		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
@@ -194,11 +192,11 @@ namespace Ebony
 
 	}
 
-	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color)
+	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
 	{
 		s.use();
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
 		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
 		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
@@ -238,7 +236,7 @@ namespace Ebony
 	void Graphics2d::DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget)
 	{
 		s.use();
-		glBindVertexArray(this->quadVAO);
+		glBindVertexArray(this->quadRenderTarget);
 		glBindTexture(GL_TEXTURE_2D, renderTarget.GetTextureColorBuffer());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
@@ -340,7 +338,7 @@ namespace Ebony
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glDisable(GL_DEPTH_TEST);
 		glClearColor(clearColor.r(), clearColor.g(), clearColor.b(), clearColor.a());
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 }

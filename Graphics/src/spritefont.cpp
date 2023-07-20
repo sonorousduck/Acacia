@@ -1,11 +1,10 @@
 #include "spritefont.hpp"
 #include <freetype/freetype.h>
-#include <iostream>
 
 namespace Ebony
 {
 
-	void SpriteFont::LoadFont(const char* fontLocation)
+	void SpriteFont::LoadFont(const std::string& fontLocation)
 	{
         FT_Library ft{};
         if (FT_Init_FreeType(&ft))
@@ -15,7 +14,7 @@ namespace Ebony
         }
 
         FT_Face face{};
-        if (FT_New_Face(ft, fontLocation, 0, &face))
+        if (FT_New_Face(ft, ("../Graphics/" + fontLocation).c_str(), 0, &face))
         {
             std::cout << "Error: Freetype: Failed to load the font" << std::endl;
             return;
