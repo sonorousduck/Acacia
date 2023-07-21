@@ -38,13 +38,32 @@ namespace systems
 					// TODO: Eventually, make this a more complicated update time loop. That way, we can use animations inside of the particles
 					particle.alive += elapsedTime;
 
+					particle.position += particle.velocity * glm::vec2(elapsedTime.count(), elapsedTime.count());
 
+					float lerpValue = static_cast<float>(particle.alive.count()) / static_cast<float>(particle.lifetime.count());
 
+					// Update size
+					if (particle.startSize != particle.endSize)
+					{
+						particle.currentSize = std::lerp(particle.startSize, particle.endSize, lerpValue);
+						// TODO: Should probably also set the scale of the sprite here too
+					}
 
+					if (particle.startAlpha != particle.endAlpha)
+					{
+						particle.currentAlpha = std::lerp(particle.startAlpha, particle.endAlpha, lerpValue);
+					}
+
+					if (particle.startColor != particle.endColor)
+					{
+						particle.currentColor.setR(std::lerp(particle.startColor.r(), particle.endColor.r(), lerpValue));
+						particle.currentColor.setG(std::lerp(particle.startColor.g(), particle.endColor.g(), lerpValue));
+						particle.currentColor.setB(std::lerp(particle.startColor.b(), particle.endColor.b(), lerpValue));
+					}
+
+					particle.rotation += particle.rotationRate * elapsedTime.count();
 				}
 			}
-
-
 		}
 	}
 
@@ -68,7 +87,7 @@ namespace systems
 		}
 
 		// Otherwise, do a linear search
-		for (unsigned int i = 0; i < particleGroup->unusedParticleIndex; i++)
+		for (int i = 0; i < particleGroup->unusedParticleIndex; i++)
 		{
 			if (particleGroup->particles[i].alive >= particleGroup->particles[i].lifetime)
 			{

@@ -26,6 +26,13 @@ namespace Ebony
 
 		glm::vec3 GetRGB();
 		glm::vec4 GetRGBA();
+
+		void setR(float r) { rgba.r = r; }
+		void setG(float g) { rgba.g = g; }
+		void setB(float b) { rgba.b = b; }
+		void setA(float a) { rgba.a = a; }
+
+
 		float r() { return rgba.r; };
 		float g() { return rgba.g; };
 		float b() { return rgba.b;  };
