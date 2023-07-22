@@ -6,6 +6,8 @@
 #include <resourceManager.hpp>
 #include <filesystem>
 #include <spritefont.hpp>
+#include <systems/particleSystem.hpp>
+#include <systems/particleRenderer.hpp>
 
 
 
@@ -36,6 +38,7 @@ namespace Ebony {
 			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE };
 			keyInput.setKeysToMonitorInit(keys);
 
+			testParticles = std::make_shared<entities::Entity>();
 
             Texture2D& faceTexture = ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
             Shader& s = ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
@@ -46,7 +49,23 @@ namespace Ebony {
             s.setMat4("projection", graphics.projection);
 			clearColor = Colors::CornflowerBlue;
 
-			//glEnable(GL_DEPTH_TEST);
+
+			Shader& s1 = ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
+
+			s1.use();
+			s1.setInt("sprite", 0);
+			s1.setMat4("projection", graphics.projection);
+
+			particleSystem = systems::ParticleSystem();
+			particleRenderer = systems::ParticleRenderer();
+
+			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"));
+			particleGroup->velocity = glm::vec2{ 0.5f, 0.5f };
+
+			testParticles->addComponent(std::move(particleGroup));
+
+			particleSystem.AddEntity(testParticles);
+			particleRenderer.AddEntity(testParticles);
 		}
 
 
@@ -71,7 +90,6 @@ namespace Ebony {
 			{
 				glfwSetWindowShouldClose(graphics.window.getWindow(), true);
 			}
-
 		}
 
 
@@ -82,6 +100,7 @@ namespace Ebony {
 			lastFrame = currentFrame;
 			fpsUpdateDeltaTime -= deltaTime;
 
+			particleSystem.Update(elapsedTime);
 
 			if (fpsUpdateDeltaTime <= 1.0f)
 			{
@@ -102,8 +121,10 @@ namespace Ebony {
 
 			graphics.SetRenderTarget(main, clearColor);
 			
-			graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red, 0.0f);
-			graphics.Draw(ResourceManager::GetShader("spritesheet"), ResourceManager::GetTexture("massiveTextureAtlas"), glm::vec2(200.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0.0f, Colors::Red, 1.0f);
+			particleRenderer.Update(graphics);
+
+			//graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red, 0.0f);
+			//graphics.Draw(ResourceManager::GetShader("spritesheet"), ResourceManager::GetTexture("massiveTextureAtlas"), glm::vec2(200.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0.0f, Colors::Red, 1.0f);
 			graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red);
 			
 			graphics.UnbindRenderTarget(clearColor);
@@ -166,13 +187,16 @@ namespace Ebony {
 		KeyInput keyInput;
 		Color clearColor;
 		SpriteFont spriteFont;
-		
+		systems::ParticleSystem particleSystem;
+		systems::ParticleRenderer particleRenderer;
+
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;
 		float fpsUpdateDeltaTime = 0.0f;
 		int layer = 0;
 		std::string fps = "";
 		RenderTarget2D main;
+		entities::EntityPtr testParticles;
 
 	
 	};

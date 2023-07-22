@@ -2,7 +2,7 @@
 
 namespace systems
 {
-	void AnimationRenderer::Update(Animation2d& animationSystem, Ebony::Graphics2d& graphics)
+	void AnimationRenderer::Update(Ebony::Graphics2d& graphics)
 	{
 
 		for (auto&& [id, entity] : m_Entities)

@@ -96,7 +96,7 @@ namespace entities
 
 		auto& getComponents() { return m_Components; }
 
-		std::shared_ptr<Entity> clone();
+		//std::shared_ptr<Entity> clone();
 		bool operator==(const Entity& rhs);
 		bool operator!=(const Entity& rhs);
 
@@ -104,9 +104,6 @@ namespace entities
 	private:
 		IdType m_Id;
 		std::unordered_map<ctti::unnamed_type_id_t, std::unique_ptr<components::Component>> m_Components;
-
-
-
 	};
 
 	// Convenience type aliases for use throughout the framework
@@ -115,6 +112,47 @@ namespace entities
 	using EntitySet = std::unordered_set<Entity::IdType>;
 	using EntityVector = std::vector<EntityPtr>;
 
+	// --------------------------------------------------------------
+	//
+	// Components are stored by their compile-time unnamed_type_id, because
+	// only one of each type can ever exist on an entity. Violating this gives
+	// violating the Bible vibes from the interwebs. So uhhh we don't need to die :)
+	//
+	// --------------------------------------------------------------
+	template <typename T>
+	void Entity::addComponent(std::unique_ptr<T> component)
+	{
+		m_Components[ctti::unnamed_type_id<T>()] = std::move(component);
+	}
+
+	// This finds it by whatever was passed in the diagonal braces
+	template <typename T>
+	void Entity::removeComponent()
+	{
+		m_Components.erase(ctti::unnamed_type_id<T>());
+	}
+
+	// This finds it by whatever was passed in the diagonal braces
+	template <typename T>
+	bool Entity::hasComponent()
+	{
+		return m_Components.contains(ctti::unnamed_type_id<T>());
+	}
+
+	// --------------------------------------------------------------
+	//
+	// This method is returning a raw pointer, because ownership is
+	// not an issue.  The calling object can only use/mutate the state
+	// of the component, not destroy it.
+	//
+	// --------------------------------------------------------------
+	template <typename T>
+	T* Entity::getComponent()
+	{
+		assert(hasComponent<T>());
+
+		return static_cast<T*>(m_Components[ctti::unnamed_type_id<T>()].get());
+	}
 }
 
 namespace std

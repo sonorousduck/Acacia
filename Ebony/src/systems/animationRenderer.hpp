@@ -10,7 +10,9 @@ namespace systems
 	{
 
 	public:
-		void Update(systems::Animation2d& animationSystem, Ebony::Graphics2d& graphics);
+		AnimationRenderer() : System({ ctti::unnamed_type_id<components::AnimationController>() }) {};
+
+		void Update(Ebony::Graphics2d& graphics);
 
 	private:
 		using System::Update; // disables compiler warning from clang

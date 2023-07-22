@@ -6,14 +6,25 @@
 #include "component.hpp"
 #include <colors.hpp>
 #include <texture.hpp>
+#include "shader.hpp"
 
 
 struct Particle
 {
 	Particle() {};
-	Particle(std::chrono::microseconds lifetime, std::chrono::microseconds alive) : lifetime(lifetime), alive(alive) {};
-	Particle(std::chrono::microseconds lifetime, std::chrono::microseconds alive, glm::vec2 position, glm::vec2 direction, glm::vec2 velocity) : 
-		lifetime(lifetime), alive(alive), position(position), direction(direction), velocity(velocity) {};
+	Particle(Texture2D& texture) : texture(texture) {};
+	Particle(Texture2D& texture, std::chrono::microseconds lifetime, std::chrono::microseconds alive) : texture(texture), lifetime(lifetime), alive(alive) {};
+
+	Particle(Texture2D& texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha) : texture(texture), lifetime(lifetime), startSize(startSize),
+	endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(Ebony::Colors::White)
+	{};
+
+
+
+	Particle(Texture2D& texture, std::chrono::microseconds lifetime, std::chrono::microseconds alive, glm::vec2 position, glm::vec2 direction, glm::vec2 velocity) :
+		texture(texture), lifetime(lifetime), alive(alive), position(position), direction(direction), velocity(velocity) {};
+
+	std::optional<Shader> shader;
 
 	// Allows for fade in/fade out, etc.
 	float startAlpha{ 1.0f };
@@ -21,9 +32,9 @@ struct Particle
 	float currentAlpha{ 1.0f };
 
 	// Allows control for the sizing of your particle through its life
-	float startSize{ 0.0f };
-	float endSize{ 0.0f };
-	float currentSize{ 0.0f };
+	glm::vec2 startSize{ 0.0f };
+	glm::vec2 endSize{ 0.0f };
+	glm::vec2 currentSize{ 0.0f };
 
 	glm::vec2 position{ 0.0f };
 	glm::vec2 direction{ 0.0f };
@@ -50,6 +61,11 @@ namespace components
 	class ParticleGroup : public PolymorphicComparable<Component, ParticleGroup>
 	{
 	public:
+		ParticleGroup(Texture2D& texture) : texture(texture) {};
+
+		// Allow the developer to set a shader, if desired. If none is found, then a default particle shader will be used
+		std::optional<Shader> shader;
+
 		// For now, while there isn't a proper GameObject, the particle group will have a position
 		glm::vec2 position{ 0.0f };
 
@@ -59,8 +75,11 @@ namespace components
 		// Tracks how long the particle group has been generating particles
 		std::chrono::microseconds duration{ 0 };
 
-		// Sets how long the lifetime of the particle should be
-		std::chrono::microseconds maxLifetime{ 0 };
+		// Allows the particle group to stop generating new particles after this amount of time (0 means always generate)
+		std::chrono::microseconds maxDuration{ 0 };
+
+		// Sets how long the lifetime of the particle should be. Defaults to 5 seconds
+		std::chrono::microseconds maxLifetime{ 5000 };
 
 		// Determines whether to loop forever or stop generation after the lifespan runs out
 		bool looping{ false };
@@ -69,8 +88,17 @@ namespace components
 		// the generation will overwrite the old particles to generate new ones (probably). This may change to just not generate
 		std::uint32_t maxParticles{ 10000 };
 
+		// Allows for fade in/fade out, etc.
+		float startAlpha{ 1.0f };
+		float endAlpha{ 1.0f };
+
+		// Allows control for the sizing of your particle through its life
+		glm::vec2 startSize{ 1.0f };
+		glm::vec2 endSize{ 1.0f };
+
+
 		// Texture that will be used for the particles. This will be given to each particle (most likely as a reference, which means it can't die until all of its particles are dead)
-		Texture2D texture;
+		Texture2D& texture;
 
 		// How long it should wait to start generating particles after creating the particle group
 		std::chrono::microseconds startDelay{ 0 };

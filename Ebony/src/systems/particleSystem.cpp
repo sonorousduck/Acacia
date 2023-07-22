@@ -33,6 +33,7 @@ namespace systems
 			{
 				Particle& particle = particleGroup->particles[i];
 				
+				// If lifetime is 0 microseconds, this means that it will always play
 				if (particle.alive < particle.lifetime)
 				{
 					// TODO: Eventually, make this a more complicated update time loop. That way, we can use animations inside of the particles
@@ -45,7 +46,9 @@ namespace systems
 					// Update size
 					if (particle.startSize != particle.endSize)
 					{
-						particle.currentSize = std::lerp(particle.startSize, particle.endSize, lerpValue);
+						particle.currentSize.x = std::lerp(particle.startSize.x, particle.endSize.x, lerpValue);
+						particle.currentSize.y = std::lerp(particle.startSize.y, particle.endSize.y, lerpValue);
+
 						// TODO: Should probably also set the scale of the sprite here too
 					}
 
@@ -71,7 +74,7 @@ namespace systems
 	{
 		while (particleGroup->particles.size() < particleGroup->maxParticles)
 		{
-			particleGroup->particles.push_back(Particle());
+			particleGroup->particles.push_back(Particle(particleGroup->texture, particleGroup->maxLifetime, particleGroup->startSize, particleGroup->endSize, particleGroup->startAlpha, particleGroup->endAlpha));
 		}
 	}
 

@@ -1,16 +1,18 @@
 #pragma once
 #include "system.hpp"
+#include <glm/glm.hpp>
 #include "../components/particle.hpp"
 
 namespace systems
 {
 	class ParticleSystem : public System
 	{
+	public:
 		ParticleSystem() : System({ ctti::unnamed_type_id<components::ParticleGroup>() })
 		{
 		}
 
-		virtual void Update(std::chrono::microseconds elapsedTime) override;
+		void Update(std::chrono::microseconds elapsedTime) override;
 
 	private:
 		void updateImpl(std::chrono::microseconds elapsedTime);
