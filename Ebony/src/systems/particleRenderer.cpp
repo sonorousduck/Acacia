@@ -18,13 +18,16 @@ namespace systems
 				{
 					if (particle.shader.has_value())
 					{
+						particle.shader.value().use();
+						particle.shader.value().setVec4("color", particle.currentColor.r(), particle.currentColor.g(), particle.currentColor.b(), particle.currentAlpha);
 						graphics.Draw(particle.shader.value(), particle.texture, particle.position, particle.currentSize, particle.rotation, particle.currentColor);
 					}
 					else
 					{
-						Ebony::ResourceManager::GetShader("defaultParticle").use();
-						Ebony::ResourceManager::GetShader("defaultParticle").setVec4("color", particle.currentColor.r(), particle.currentColor.g(), particle.currentColor.b(), particle.currentAlpha);
-						graphics.Draw(Ebony::ResourceManager::GetShader("defaultParticle"), particle.texture, particle.position, particle.currentSize, particle.rotation, particle.currentColor);
+						Shader& defaultShader = Ebony::ResourceManager::GetShader("defaultParticle");
+						defaultShader.use();
+						defaultShader.setVec4("color", particle.currentColor.r(), particle.currentColor.g(), particle.currentColor.b(), particle.currentAlpha);
+						graphics.Draw(defaultShader, particle.texture, particle.position, particle.currentSize, particle.rotation, particle.currentColor);
 					}
 				}
 			}

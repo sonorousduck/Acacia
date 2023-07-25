@@ -5,9 +5,10 @@ in vec4 vParticleColor;
 
 out vec4 outColor;
 
-uniform sampler2D sprite;
+uniform sampler2D particleTexture;
 
 void main()
 {
-    outColor = (texture(sprite, vUv) * vParticleColor);
+    outColor = (texture(particleTexture, vUv) * vParticleColor);
+    // outColor = vec4(1.0);
 }

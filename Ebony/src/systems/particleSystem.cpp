@@ -111,7 +111,9 @@ namespace systems
 	{
 		float random = ((rand() % 100) - 50) / 10.0f;
 		float rColor = 0.5f + ((rand() % 100) / 100.0f);
-		particle.position = particleGroup->position + random + offset;
+		//particle.position = particleGroup->position + random + offset;
+		particle.position = particleGroup->position;
+
 		particle.startColor = Ebony::Color(rColor, rColor, rColor);
 		particle.endColor = Ebony::Color(rColor, rColor, rColor);
 		particle.currentColor = Ebony::Color(rColor, rColor, rColor);

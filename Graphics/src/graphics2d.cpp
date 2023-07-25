@@ -223,14 +223,6 @@ namespace Ebony
 		glBindVertexArray(this->quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
-		/*s.use();
-		glm::mat4 projection = glm::perspective(glm::radians(mainCamera.Zoom), static_cast<float>(screenWidth) / static_cast<float>(screenHeight), 0.1f, 100.0f);
-		glm::mat4 view = mainCamera.GetViewMatrix();
-		glm::mat4 model = glm::mat4(1.0f);
-
-		s.setMat4("projection", projection);
-		s.setMat4("view", view);*/
-
 	}
 
 	void Graphics2d::DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget)

@@ -50,17 +50,14 @@ namespace Ebony {
 			clearColor = Colors::CornflowerBlue;
 
 
-			Shader& s1 = ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
-
-			s1.use();
-			s1.setInt("sprite", 0);
-			s1.setMat4("projection", graphics.projection);
+			
 
 			particleSystem = systems::ParticleSystem();
 			particleRenderer = systems::ParticleRenderer();
 
 			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"));
 			particleGroup->velocity = glm::vec2{ 0.5f, 0.5f };
+			particleGroup->rateOverTime = 5;
 
 			testParticles->addComponent(std::move(particleGroup));
 
@@ -155,7 +152,11 @@ namespace Ebony {
 			s.setInt("spritesheet", 0);
 			s.setMat4("projection", graphics.projection);
 
+			Shader& s2 = ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
 
+			s2.use();
+			s2.setInt("particleTexture", 0);
+			s2.setMat4("projection", graphics.projection);
 
 			ResourceManager::LoadAtlas("textures/test.tx", "test", 1, 4);
 			ResourceManager::LoadAtlas("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1);
@@ -171,6 +172,7 @@ namespace Ebony {
 			{
 				auto currentTime = std::chrono::system_clock::now();
 				auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
+				previousTime = currentTime;
 
 				ProcessInput(elapsedTime);
 				Update(elapsedTime);
