@@ -6,6 +6,7 @@ namespace systems
 {
 	void ParticleRenderer::Update(Ebony::Graphics2d& graphics)
 	{
+		glDepthMask(GL_FALSE);
 		for (auto&& [id, entity] : m_Entities)
 		{
 			auto particleEffect = entity->getComponent<components::ParticleGroup>();
@@ -34,6 +35,8 @@ namespace systems
 				}
 			}
 		}
+		glDepthMask(GL_TRUE);
+
 	}
 
 

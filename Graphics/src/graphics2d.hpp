@@ -79,6 +79,9 @@ namespace Ebony
 		unsigned int versionMinor;
 		const char* windowName;
 
+		int activeShaderId = -1;
+
+
 		unsigned int textVAO = 0, textVBO = 0;
 
 

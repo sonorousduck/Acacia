@@ -194,7 +194,11 @@ namespace Ebony
 
 	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
 	{
-		s.use();
+		if (activeShaderId != s.ID || activeShaderId == -1) 
+		{
+			s.use();
+			activeShaderId = s.ID;
+		}
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 

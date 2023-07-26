@@ -57,11 +57,13 @@ namespace Ebony {
 
 			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"));
 			particleGroup->velocity = glm::vec2{ 10.0f, 10.0f };
-			particleGroup->rateOverTime = 1;
+			particleGroup->rateOverTime = 10;
 			particleGroup->position = glm::vec2{ 400.0f, 400.0f };
 			particleGroup->maxLifetime = std::chrono::seconds(1);
 			particleGroup->startSize = glm::vec2{ 10.0f, 10.0f };
 			particleGroup->endSize = glm::vec2{ 10.0f, 10.0f };
+			particleGroup->startAlpha = 1.0f;
+			particleGroup->endAlpha = 0.5f;
 
 			testParticles->addComponent(std::move(particleGroup));
 
@@ -101,7 +103,10 @@ namespace Ebony {
 			lastFrame = currentFrame;
 			fpsUpdateDeltaTime -= deltaTime;
 
+
+			auto previousTime = std::chrono::system_clock::now();
 			particleSystem.Update(elapsedTime);
+			averageParticleSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 
 			if (fpsUpdateDeltaTime <= 1.0f)
 			{
@@ -122,9 +127,10 @@ namespace Ebony {
 
 			graphics.SetRenderTarget(main, clearColor);
 			
-			glDepthMask(GL_FALSE);
+			auto previousTime = std::chrono::system_clock::now();
 			particleRenderer.Update(graphics);
-			glDepthMask(GL_TRUE);
+			averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
+
 
 			//graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red, 0.0f);
 			graphics.Draw(ResourceManager::GetShader("spritesheet"), ResourceManager::GetTexture("massiveTextureAtlas"), glm::vec2(200.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0.0f, Colors::Red, 1.0f);
@@ -184,7 +190,11 @@ namespace Ebony {
 				Update(elapsedTime);
 				Draw(elapsedTime);
 				glfwPollEvents();
+				totalFrames++;
 			}
+
+			std::cout << "Particle Rendering took " << averageParticleRenderingTime / totalFrames << " on average." << std::endl;
+			std::cout << "Particle System Updates took " << averageParticleSystemTime / totalFrames << " on average." << std::endl;
 
 			glfwTerminate();
 		}
@@ -201,6 +211,11 @@ namespace Ebony {
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;
 		float fpsUpdateDeltaTime = 0.0f;
+		std::chrono::microseconds averageParticleRenderingTime = std::chrono::microseconds::zero();
+		std::chrono::microseconds averageParticleSystemTime = std::chrono::microseconds::zero();
+		std::uint64_t totalFrames = 0;
+
+
 		int layer = 0;
 		std::string fps = "";
 		RenderTarget2D main;
