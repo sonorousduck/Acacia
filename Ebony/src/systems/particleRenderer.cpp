@@ -27,7 +27,9 @@ namespace systems
 						Shader& defaultShader = Ebony::ResourceManager::GetShader("defaultParticle");
 						//defaultShader.use();
 						//defaultShader.setVec4("color", particle.currentColor.r(), particle.currentColor.g(), particle.currentColor.b(), particle.currentAlpha);
+						//graphics.Draw(defaultShader, Ebony::ResourceManager::GetTexture("face"), particle.position, particle.currentSize, particle.rotation, particle.currentColor);
 						graphics.Draw(defaultShader, particle.texture, particle.position, particle.currentSize, particle.rotation, particle.currentColor);
+
 					}
 				}
 			}

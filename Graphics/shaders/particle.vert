@@ -15,5 +15,5 @@ void main()
 {
     vUv = aUv;
     vParticleColor = color;
-    gl_Position = projection * view * model * vec4(aVertex, 0.0, 1.0);
+    gl_Position = projection * view * model * vec4(aVertex * 10.0, 0.0, 1.0);
 }

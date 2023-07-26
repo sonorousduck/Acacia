@@ -26,7 +26,7 @@ namespace systems
 			{
 				int unusedParticle = firstUnusedParticle(particleGroup);
 				// TODO: This will eventually be the game object, not the particle group that is passed
-				respawnParticle(particleGroup->particles[unusedParticle], particleGroup, glm::vec2(0.0f));
+				respawnParticle(particleGroup->particles[unusedParticle], particleGroup, glm::vec2(1.0f));
 			}
 
 			for (unsigned int i = 0; i < particleGroup->particles.size(); i++)
@@ -39,7 +39,7 @@ namespace systems
 					// TODO: Eventually, make this a more complicated update time loop. That way, we can use animations inside of the particles
 					particle.alive += elapsedTime;
 
-					particle.position += particle.velocity * glm::vec2(elapsedTime.count(), elapsedTime.count());
+					particle.position += particle.velocity * glm::vec2(elapsedTime.count() / 100000.0, elapsedTime.count() / 100000.0) ;
 
 					float lerpValue = static_cast<float>(particle.alive.count()) / static_cast<float>(particle.lifetime.count());
 
@@ -64,7 +64,7 @@ namespace systems
 						particle.currentColor.setB(std::lerp(particle.startColor.b(), particle.endColor.b(), lerpValue));
 					}
 
-					particle.rotation += particle.rotationRate * elapsedTime.count();
+					particle.rotation += particle.rotationRate * elapsedTime.count() / 100000.0f;
 				}
 			}
 		}
@@ -74,7 +74,7 @@ namespace systems
 	{
 		while (particleGroup->particles.size() < particleGroup->maxParticles)
 		{
-			particleGroup->particles.push_back(Particle(particleGroup->texture, particleGroup->maxLifetime, particleGroup->startSize, particleGroup->endSize, particleGroup->startAlpha, particleGroup->endAlpha));
+			particleGroup->particles.push_back(Particle(particleGroup->texture, std::chrono::microseconds::zero(), particleGroup->startSize, particleGroup->endSize, particleGroup->startAlpha, particleGroup->endAlpha));
 		}
 	}
 
@@ -111,15 +111,24 @@ namespace systems
 	{
 		float random = ((rand() % 100) - 50) / 10.0f;
 		float rColor = 0.5f + ((rand() % 100) / 100.0f);
-		//particle.position = particleGroup->position + random + offset;
-		particle.position = particleGroup->position;
+		particle.position = particleGroup->position + random + offset;
+		//particle.position = particleGroup->position;
 
 		particle.startColor = Ebony::Color(rColor, rColor, rColor);
 		particle.endColor = Ebony::Color(rColor, rColor, rColor);
 		particle.currentColor = Ebony::Color(rColor, rColor, rColor);
 
 		particle.alive = std::chrono::microseconds::zero();
-		particle.lifetime = std::chrono::microseconds(1000);
-		particle.velocity = particleGroup->velocity * 1.2f;
+		particle.lifetime = particleGroup->maxLifetime;
+		particle.velocity = particleGroup->velocity;
+
+		if (rand() % 2 < 1)
+		{
+			particle.velocity.x = -particle.velocity.x;
+		}
+		if (rand() % 2 < 1)
+		{
+			particle.velocity.y = -particle.velocity.y;
+		}
 	}
 }

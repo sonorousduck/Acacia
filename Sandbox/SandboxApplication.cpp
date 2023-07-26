@@ -56,8 +56,12 @@ namespace Ebony {
 			particleRenderer = systems::ParticleRenderer();
 
 			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"));
-			particleGroup->velocity = glm::vec2{ 0.5f, 0.5f };
-			particleGroup->rateOverTime = 5;
+			particleGroup->velocity = glm::vec2{ 10.0f, 10.0f };
+			particleGroup->rateOverTime = 1;
+			particleGroup->position = glm::vec2{ 400.0f, 400.0f };
+			particleGroup->maxLifetime = std::chrono::seconds(1);
+			particleGroup->startSize = glm::vec2{ 10.0f, 10.0f };
+			particleGroup->endSize = glm::vec2{ 10.0f, 10.0f };
 
 			testParticles->addComponent(std::move(particleGroup));
 
@@ -118,10 +122,12 @@ namespace Ebony {
 
 			graphics.SetRenderTarget(main, clearColor);
 			
+			glDepthMask(GL_FALSE);
 			particleRenderer.Update(graphics);
+			glDepthMask(GL_TRUE);
 
 			//graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red, 0.0f);
-			//graphics.Draw(ResourceManager::GetShader("spritesheet"), ResourceManager::GetTexture("massiveTextureAtlas"), glm::vec2(200.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0.0f, Colors::Red, 1.0f);
+			graphics.Draw(ResourceManager::GetShader("spritesheet"), ResourceManager::GetTexture("massiveTextureAtlas"), glm::vec2(200.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0.0f, Colors::Red, 1.0f);
 			graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red);
 			
 			graphics.UnbindRenderTarget(clearColor);
