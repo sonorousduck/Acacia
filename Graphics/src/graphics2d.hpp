@@ -52,6 +52,7 @@ namespace Ebony
 
 		void Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
 		void Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
+		void DrawInstanced(Shader& s, Texture2D& texture);
 		void DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget);
 
 
@@ -88,7 +89,12 @@ namespace Ebony
 
 		glm::mat4 projection;
 		unsigned int quadVAO = 0;
+		unsigned int instancedVAO = 0;
 		unsigned int quadRenderTarget = 0;
+		unsigned int particlePositionBuffer = 0, particleColorBuffer = 0;
+
+
+
 
 	private:
 		void Initialize();

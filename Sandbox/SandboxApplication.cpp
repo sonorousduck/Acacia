@@ -55,7 +55,7 @@ namespace Ebony {
 			particleSystem = systems::ParticleSystem();
 			particleRenderer = systems::ParticleRenderer();
 
-			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"));
+			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 5000);
 			particleGroup->velocity = glm::vec2{ 10.0f, 10.0f };
 			particleGroup->rateOverTime = 10;
 			particleGroup->position = glm::vec2{ 400.0f, 400.0f };

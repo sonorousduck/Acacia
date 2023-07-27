@@ -72,7 +72,7 @@ namespace systems
 
 	void ParticleSystem::Preallocate(components::ParticleGroup* particleGroup)
 	{
-		while (particleGroup->particles.size() < particleGroup->maxParticles)
+		while (particleGroup->particles.size() < particleGroup->getMaxParticles())
 		{
 			particleGroup->particles.push_back(Particle(particleGroup->texture, std::chrono::microseconds::zero(), particleGroup->startSize, particleGroup->endSize, particleGroup->startAlpha, particleGroup->endAlpha));
 		}
@@ -80,7 +80,7 @@ namespace systems
 
 	int ParticleSystem::firstUnusedParticle(components::ParticleGroup* particleGroup)
 	{
-		for (unsigned int i = particleGroup->unusedParticleIndex; i < particleGroup->maxParticles; i++)
+		for (unsigned int i = particleGroup->unusedParticleIndex; i < particleGroup->getMaxParticles(); i++)
 		{
 			if (particleGroup->particles[i].alive >= particleGroup->particles[i].lifetime)
 			{

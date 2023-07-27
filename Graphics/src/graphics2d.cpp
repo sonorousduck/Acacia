@@ -79,7 +79,7 @@ namespace Ebony
 	void Graphics2d::initRenderData()
 	{
 		// Since all sprites share the same vertex data, you only need one of these
-		unsigned int VBO;
+		unsigned int VBO = 0;
 		float vertices[] = {
 			// pos      // tex
 			0.0f, 1.0f, 0.0f, 1.0f,
