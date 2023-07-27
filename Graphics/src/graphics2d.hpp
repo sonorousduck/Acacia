@@ -80,6 +80,7 @@ namespace Ebony
 		const char* windowName;
 
 		int activeShaderId = -1;
+		int activeTextureId = -1;
 
 
 		unsigned int textVAO = 0, textVBO = 0;

@@ -157,9 +157,14 @@ namespace Ebony
 	{
 		// This one will use a default shader that will already be loaded into graphics
 		Shader& s = ResourceManager::GetShader("default");
+		if (activeShaderId != s.ID || activeShaderId == -1)
+		{
+			s.use();
+			activeShaderId = s.ID;
+		}
+
 		glEnable(GL_TEXTURE_2D_ARRAY);
 
-		s.use();
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
@@ -178,12 +183,15 @@ namespace Ebony
 		}
 
 
-
 		s.setMat4("model", model);
 		s.setVec3("spriteColor", Colors::White.GetRGB());
 
-		glActiveTexture(GL_TEXTURE0);
-		texture.Bind();
+		if (activeTextureId != texture.ID || activeTextureId == -1)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			texture.Bind();
+			activeTextureId = texture.ID;
+		}
 
 		glBindVertexArray(this->quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -220,9 +228,14 @@ namespace Ebony
 		//s.setVec3("spriteColor", Colors::White.GetRGB());
 		//s.setInt("spritesheet", texture.ID);
 
+		if (activeTextureId != texture.ID || activeTextureId == -1)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			texture.Bind();
+			activeTextureId = texture.ID;
+		}
 
-		glActiveTexture(GL_TEXTURE0);
-		texture.Bind();
+
 
 		glBindVertexArray(this->quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
