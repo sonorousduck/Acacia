@@ -157,7 +157,7 @@ namespace Ebony
 	{
 		// This one will use a default shader that will already be loaded into graphics
 		Shader& s = ResourceManager::GetShader("default");
-		if (activeShaderId != s.ID || activeShaderId == -1)
+		if (activeShaderId != s.ID)
 		{
 			s.use();
 			activeShaderId = s.ID;
@@ -186,7 +186,7 @@ namespace Ebony
 		s.setMat4("model", model);
 		s.setVec3("spriteColor", Colors::White.GetRGB());
 
-		if (activeTextureId != texture.ID || activeTextureId == -1)
+		if (activeTextureId != texture.ID)
 		{
 			glActiveTexture(GL_TEXTURE0);
 			texture.Bind();
@@ -202,7 +202,7 @@ namespace Ebony
 
 	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
 	{
-		if (activeShaderId != s.ID || activeShaderId == -1) 
+		if (activeShaderId != s.ID) 
 		{
 			s.use();
 			activeShaderId = s.ID;
@@ -228,7 +228,7 @@ namespace Ebony
 		//s.setVec3("spriteColor", Colors::White.GetRGB());
 		//s.setInt("spritesheet", texture.ID);
 
-		if (activeTextureId != texture.ID || activeTextureId == -1)
+		if (activeTextureId != texture.ID)
 		{
 			glActiveTexture(GL_TEXTURE0);
 			texture.Bind();
@@ -241,6 +241,26 @@ namespace Ebony
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 	}
+
+	void Graphics2d::DrawInstanced(Shader& s, Texture2D& texture, unsigned int VAO, std::uint32_t count)
+	{
+		if (activeShaderId != s.ID)
+		{
+			s.use();
+			activeShaderId = s.ID;
+		}
+		if (activeTextureId != texture.ID)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			texture.Bind();
+			activeTextureId = texture.ID;
+		}
+
+		glBindVertexArray(VAO);
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, count);
+		glBindVertexArray(0);
+	}
+
 
 	void Graphics2d::DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget)
 	{

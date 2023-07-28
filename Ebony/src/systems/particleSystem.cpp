@@ -28,6 +28,16 @@ namespace systems
 				// TODO: This will eventually be the game object, not the particle group that is passed
 				respawnParticle(particleGroup->particles[unusedParticle], particleGroup, glm::vec2(1.0f));
 			}
+			
+			// TODO: Potentially, to avoid reallocation every time, this should be moved somewhere else.
+			particleGroup->particlePositionSizeData.clear();
+			particleGroup->particlePositionSizeData.resize(particleGroup->particles.size() * 4); // x, y, xSize, ySize
+
+			particleGroup->particleColorData.clear();
+			particleGroup->particleColorData.resize(particleGroup->particles.size() * 4); // r, g, b, a
+			
+
+			std::uint32_t particleCount = 0;
 
 			for (unsigned int i = 0; i < particleGroup->particles.size(); i++)
 			{
@@ -65,8 +75,23 @@ namespace systems
 					}
 
 					particle.rotation += particle.rotationRate * elapsedTime.count() / 100000.0f;
+
+					// Update the buffers with the new information
+					particleGroup->particlePositionSizeData[4 * i] = particle.position.x;
+					particleGroup->particlePositionSizeData[4 * i + 1] = particle.position.y;
+					particleGroup->particlePositionSizeData[4 * i + 2] = particle.currentSize.x;
+					particleGroup->particlePositionSizeData[4 * i + 3] = particle.currentSize.y;
+
+					particleGroup->particleColorData[4 * i] = particle.currentColor.r();
+					particleGroup->particleColorData[4 * i + 1] = particle.currentColor.g();
+					particleGroup->particleColorData[4 * i + 2] = particle.currentColor.b();
+					particleGroup->particleColorData[4 * i + 3] = particle.currentAlpha;
+
+					particleCount++;
 				}
 			}
+
+			particleGroup->particleCount = particleCount;
 		}
 	}
 
@@ -130,5 +155,7 @@ namespace systems
 		{
 			particle.velocity.y = -particle.velocity.y;
 		}
+
+
 	}
 }

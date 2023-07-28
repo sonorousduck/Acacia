@@ -73,7 +73,6 @@ namespace components
 			glGenVertexArrays(1, &this->instancedVAO);
 			glBindVertexArray(this->instancedVAO);
 
-			// Create the Particle Effects Buffer (For instanced rendering. Eventually, I want to move this to be for any instanced rendering)
 			glGenBuffers(1, &particleVertexBuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, particleVertexBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
@@ -162,6 +161,7 @@ namespace components
 		glm::vec2 startSize{ 1.0f };
 		glm::vec2 endSize{ 1.0f };
 
+		std::uint32_t particleCount{ 0 };
 
 		// Texture that will be used for the particles. This will be given to each particle (most likely as a reference, which means it can't die until all of its particles are dead)
 		Texture2D& texture;
@@ -189,11 +189,17 @@ namespace components
 		// Tracks whether the particle group has been preallocated.
 		bool preallocated{ false };
 
+		unsigned int instancedVAO = 0;
+		unsigned int particleVertexBuffer = 0;
+		unsigned int particlePositionBuffer = 0;
+		unsigned int particleColorBuffer = 0;
+
+		std::vector<float> particlePositionSizeData = {};
+		std::vector<float> particleColorData = {};
+
+
 		private:
-			unsigned int instancedVAO = 0;
-			unsigned int particleVertexBuffer = 0;
-			unsigned int particlePositionBuffer = 0;
-			unsigned int particleColorBuffer = 0;
+			
 
 
 			// Max number of particles that will be generated at any given time. If you start encroaching on this number
