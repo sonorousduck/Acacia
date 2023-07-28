@@ -103,10 +103,9 @@ namespace components
 			glBindBuffer(GL_ARRAY_BUFFER, particleUvBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
 
+			// Initialize buffer with empty buffer, since it will be updated later at each frame
 			glGenBuffers(1, &particlePositionBuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
-
-			// Initialize buffer with empty buffer, since it will be updated later at each frame. TODO: THINK OF A BETTER WAY TO HANDLE THE MAX PARTICLES
 			glBufferData(GL_ARRAY_BUFFER, maxParticles * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 
 			glGenBuffers(1, &particleColorBuffer);

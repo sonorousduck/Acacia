@@ -256,6 +256,15 @@ namespace Ebony
 			activeTextureId = texture.ID;
 		}
 
+		if (hasCamera)
+		{
+			s.setMat4("view", mainCamera.GetViewMatrix());
+		}
+		else
+		{
+			s.setMat4("view", glm::mat4(1.0f));
+		}
+
 		glBindVertexArray(VAO);
 		// TODO: Convert this to GL_TRIANGLE_STRIPS
 		glDrawArraysInstanced(GL_TRIANGLES, 0, 4, count);
