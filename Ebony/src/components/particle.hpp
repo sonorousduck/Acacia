@@ -63,19 +63,45 @@ namespace components
 	public:
 		// Enforcing maxParticles so we don't have to remake the buffers as often
 		ParticleGroup(Texture2D& texture, std::uint32_t maxParticles = 5000) : texture(texture), maxParticles(maxParticles) {
+			/*static const GLfloat g_vertex_buffer_data[] = {
+			 -0.5f, -0.5f,
+			 0.5f, -0.5f, 
+			 -0.5f, 0.5f, 
+			 0.5f, 0.5f,
+			};*/
+
 			static const GLfloat g_vertex_buffer_data[] = {
-			 -0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 -0.5f, 0.5f, 0.0f,
-			 0.5f, 0.5f, 0.0f,
+				-1.0f,  1.0f,
+				-1.0f, -1.0f,
+				 1.0f, -1.0f,
+
+				-1.0f,  1.0f,
+				 1.0f, -1.0f,
+				 1.0f,  1.0f,
+			};
+
+			static const GLfloat g_uv_buffer_data[] = {
+				0.0f, 1.0f,
+				0.0f, 0.0f,
+				1.0f, 0.0f,
+
+				0.0f, 1.0f,
+				1.0f, 0.0f,
+				1.0f, 1.0f
 			};
 
 			glGenVertexArrays(1, &this->instancedVAO);
 			glBindVertexArray(this->instancedVAO);
 
+			// Allocate for the vertices
 			glGenBuffers(1, &particleVertexBuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, particleVertexBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+			// Allocate for the Uvs
+			glGenBuffers(1, &particleUvBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, particleUvBuffer);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
 
 			glGenBuffers(1, &particlePositionBuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
@@ -90,20 +116,28 @@ namespace components
 
 			glEnableVertexAttribArray(0);
 			glBindBuffer(GL_ARRAY_BUFFER, particleVertexBuffer);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
 
 			glEnableVertexAttribArray(1);
-			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
-			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+			glBindBuffer(GL_ARRAY_BUFFER, particleUvBuffer);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
 
 
 			glEnableVertexAttribArray(2);
-			glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
-			glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)0);
+			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-			glVertexAttribDivisor(0, 0); // Always use the same 4 vertices
-			glVertexAttribDivisor(1, 1); // Positions: One per quad
-			glVertexAttribDivisor(2, 1); // Color: One per quad
+
+			glEnableVertexAttribArray(3);
+			glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
+			glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)0);
+
+			glVertexAttribDivisor(0, 0); // Always use the same vertices
+			glVertexAttribDivisor(1, 0); // Always use the same uvs
+			glVertexAttribDivisor(2, 1); // Positions: One per quad
+			glVertexAttribDivisor(3, 1); // Color: One per quad
 
 
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -191,6 +225,7 @@ namespace components
 
 		unsigned int instancedVAO = 0;
 		unsigned int particleVertexBuffer = 0;
+		unsigned int particleUvBuffer = 0;
 		unsigned int particlePositionBuffer = 0;
 		unsigned int particleColorBuffer = 0;
 
