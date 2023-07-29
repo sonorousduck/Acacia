@@ -106,11 +106,11 @@ namespace components
 			// Initialize buffer with empty buffer, since it will be updated later at each frame
 			glGenBuffers(1, &particlePositionBuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
-			glBufferData(GL_ARRAY_BUFFER, maxParticles * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, static_cast<unsigned long long>(maxParticles) * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 
 			glGenBuffers(1, &particleColorBuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
-			glBufferData(GL_ARRAY_BUFFER, maxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, static_cast<unsigned long long>(maxParticles) * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 
 
 			glEnableVertexAttribArray(0);
@@ -121,7 +121,6 @@ namespace components
 			glEnableVertexAttribArray(1);
 			glBindBuffer(GL_ARRAY_BUFFER, particleUvBuffer);
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
 
 
 			glEnableVertexAttribArray(2);

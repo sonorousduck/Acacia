@@ -19,6 +19,10 @@ namespace systems
 			else
 			{
 				Preallocate(particleGroup);
+
+				// TODO: DELETE THIS! THIS SHOULDN"T BE HERE BUT WAS USED FOR TESTING
+				int unusedParticle = firstUnusedParticle(particleGroup);
+				respawnParticle(particleGroup->particles[unusedParticle], particleGroup, glm::vec2(1.0f));
 			}
 
 			// Rate over time is the number of new particles each update loop
@@ -31,7 +35,7 @@ namespace systems
 			
 			// TODO: Potentially, to avoid reallocation every time, this should be moved somewhere else.
 			particleGroup->particlePositionSizeData.clear();
-			particleGroup->particlePositionSizeData.resize(particleGroup->particles.size() * 16); // x, y, xSize, ySize
+			particleGroup->particlePositionSizeData.resize(particleGroup->particles.size() * 4); // x, y, xSize, ySize
 
 			particleGroup->particleColorData.clear();
 			particleGroup->particleColorData.resize(particleGroup->particles.size() * 4); // r, g, b, a
@@ -49,7 +53,7 @@ namespace systems
 					// TODO: Eventually, make this a more complicated update time loop. That way, we can use animations inside of the particles
 					particle.alive += elapsedTime;
 
-					particle.position += particle.velocity * glm::vec2(elapsedTime.count() / 100000.0, elapsedTime.count() / 100000.0) ;
+					particle.position += particle.velocity * glm::vec2(elapsedTime.count() / 100000.0, elapsedTime.count() / 100000.0);
 
 					float lerpValue = static_cast<float>(particle.alive.count()) / static_cast<float>(particle.lifetime.count());
 
@@ -75,45 +79,15 @@ namespace systems
 					particle.rotation += particle.rotationRate * elapsedTime.count() / 100000.0f;
 
 					// Update the buffers with the new information
-					//glm::mat4 model = glm::mat4(1.0f);
-					//// TODO: THE 0.0 SHOULD BE CHANGED TO THE DEPTH
-					//model = glm::translate(model, glm::vec3(particle.position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+					particleGroup->particlePositionSizeData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(i) + 0] = particle.position.x;
+					particleGroup->particlePositionSizeData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(i) + 1] = particle.position.y;
+					particleGroup->particlePositionSizeData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(i) + 2] = particle.currentSize.x;
+					particleGroup->particlePositionSizeData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(i) + 3] = particle.currentSize.y;
 
-					//model = glm::translate(model, glm::vec3(0.5f * particle.currentSize.x, 0.5f * particle.currentSize.y, 0.0f)); // move origin of rotation to center of quad
-					//model = glm::rotate(model, glm::radians(particle.rotation), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
-					//model = glm::translate(model, glm::vec3(-0.5f * particle.currentSize.x, -0.5f * particle.currentSize.y, 0.0f)); // move origin back
-					//model = glm::scale(model, glm::vec3(particle.currentSize, 1.0f)); // last scale
-
-					//particleGroup->particlePositionSizeData[16 * i]     = model[0].x;
-					//particleGroup->particlePositionSizeData[16 * i + 1] = model[0].y;
-					//particleGroup->particlePositionSizeData[16 * i + 2] = model[0].z;
-					//particleGroup->particlePositionSizeData[16 * i + 3] = model[0].w;
-
-					//particleGroup->particlePositionSizeData[16 * i + 4] = model[1].x;
-					//particleGroup->particlePositionSizeData[16 * i + 5] = model[1].y;
-					//particleGroup->particlePositionSizeData[16 * i + 6] = model[1].z;
-					//particleGroup->particlePositionSizeData[16 * i + 7] = model[1].w;
-
-					//particleGroup->particlePositionSizeData[16 * i + 8] = model[2].x;
-					//particleGroup->particlePositionSizeData[16 * i + 9] = model[2].y;
-					//particleGroup->particlePositionSizeData[16 * i + 10] = model[2].z;
-					//particleGroup->particlePositionSizeData[16 * i + 11] = model[2].w;
-
-					//particleGroup->particlePositionSizeData[16 * i + 12] = model[3].x;
-					//particleGroup->particlePositionSizeData[16 * i + 13] = model[3].y;
-					//particleGroup->particlePositionSizeData[16 * i + 14] = model[3].z;
-					//particleGroup->particlePositionSizeData[16 * i + 15] = model[3].w;
-
-
-					particleGroup->particlePositionSizeData[4 * i] = particle.position.x;
-					particleGroup->particlePositionSizeData[4 * i + 1] = particle.position.y;
-					particleGroup->particlePositionSizeData[4 * i + 2] = particle.currentSize.x;
-					particleGroup->particlePositionSizeData[4 * i + 3] = particle.currentSize.y;
-
-					particleGroup->particleColorData[4 * i] = particle.currentColor.r();
-					particleGroup->particleColorData[4 * i + 1] = particle.currentColor.g();
-					particleGroup->particleColorData[4 * i + 2] = particle.currentColor.b();
-					particleGroup->particleColorData[4 * i + 3] = particle.currentAlpha;
+					particleGroup->particleColorData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(i) + 0] = particle.currentColor.r();
+					particleGroup->particleColorData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(i) + 1] = particle.currentColor.g();
+					particleGroup->particleColorData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(i) + 2] = particle.currentColor.b();
+					particleGroup->particleColorData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(i) + 3] = particle.currentAlpha;
 
 					particleCount++;
 				}
@@ -129,6 +103,7 @@ namespace systems
 		{
 			particleGroup->particles.push_back(Particle(particleGroup->texture, std::chrono::microseconds::zero(), particleGroup->startSize, particleGroup->endSize, particleGroup->startAlpha, particleGroup->endAlpha));
 		}
+		particleGroup->preallocated = true;
 	}
 
 	int ParticleSystem::firstUnusedParticle(components::ParticleGroup* particleGroup)

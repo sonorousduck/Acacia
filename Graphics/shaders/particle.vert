@@ -19,14 +19,15 @@ void main()
     mat4 scale = mat4(1.0);
     mat4 rotation = mat4(1.0);
     
-    translation[0][0] = aPositionSize.x;
-    translation[1][1] = aPositionSize.y;
+    translation[3][0] = aPositionSize.x;
+    translation[3][1] = aPositionSize.y;
 
     scale[0][0] = aPositionSize.z;
     scale[1][1] = aPositionSize.w;
 
-    mat4 model = translation * rotation * scale;
+    mat4 model = translation * scale;
 
+//aPositionSize.x * aPositionSize.z, aPositionSize.y * aPositionSize.w,
     gl_Position = projection * view * model * vec4(aVertex * 10.0, 0.0, 1.0);
     // gl_Position = projection * view * instanceMatrix * vec4(aVertex * 10.0, 0.0, 1.0);
 
