@@ -266,7 +266,7 @@ namespace Ebony
 		}
 
 		glBindVertexArray(VAO);
-		// TODO: Convert this to GL_TRIANGLES_STRIP
+		// TODO: Convert this to GL_TRIANGLE_STRIP
 		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, count);
 		glBindVertexArray(0);
 	}

@@ -63,12 +63,12 @@ namespace components
 	public:
 		// Enforcing maxParticles so we don't have to remake the buffers as often
 		ParticleGroup(Texture2D& texture, std::uint32_t maxParticles = 5000) : texture(texture), maxParticles(maxParticles) {
-			/*static const GLfloat g_vertex_buffer_data[] = {
-			 -0.5f, -0.5f,
-			 0.5f, -0.5f, 
-			 -0.5f, 0.5f, 
-			 0.5f, 0.5f,
-			};*/
+			//static const GLfloat g_vertex_buffer_data[] = {
+			//	 -0.5f, -0.5f,
+			//	 0.5f, -0.5f, 
+			//	 -0.5f, 0.5f, 
+			//	 0.5f, 0.5f,
+			//};
 
 			static const GLfloat g_vertex_buffer_data[] = {
 				-1.0f,  1.0f,
@@ -89,6 +89,13 @@ namespace components
 				1.0f, 0.0f,
 				1.0f, 1.0f
 			};
+
+			//static const GLfloat g_uv_buffer_data[] = {
+			//	0.0f, 0.0f,
+			//	1.0f, 0.0f,
+			//	1.0f, 1.0f,
+			//	0.0f, 1.0f,
+			//};
 
 			glGenVertexArrays(1, &this->instancedVAO);
 			glBindVertexArray(this->instancedVAO);
@@ -130,7 +137,7 @@ namespace components
 
 			glEnableVertexAttribArray(3);
 			glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
-			glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)0);
+			glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 			glVertexAttribDivisor(0, 0); // Always use the same vertices
 			glVertexAttribDivisor(1, 0); // Always use the same uvs
@@ -229,10 +236,12 @@ namespace components
 
 		std::vector<float> particlePositionSizeData = {};
 		std::vector<float> particleColorData = {};
+		std::chrono::microseconds spawnRate = std::chrono::milliseconds(16);
+		std::chrono::microseconds accumulatedTime = std::chrono::milliseconds(0);
 
 
 		private:
-			
+
 
 
 			// Max number of particles that will be generated at any given time. If you start encroaching on this number
