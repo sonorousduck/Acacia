@@ -60,8 +60,7 @@ namespace systems
 					// Update size
 					if (particle.startSize != particle.endSize)
 					{
-						particle.currentSize.x = std::lerp(particle.startSize.x, particle.endSize.x, lerpValue);
-						particle.currentSize.y = std::lerp(particle.startSize.y, particle.endSize.y, lerpValue);
+						particle.currentSize = glm::mix(particle.startSize, particle.endSize, lerpValue);
 					}
 
 					if (particle.startAlpha != particle.endAlpha)
@@ -71,9 +70,7 @@ namespace systems
 
 					if (particle.startColor != particle.endColor)
 					{
-						particle.currentColor.setR(std::lerp(particle.startColor.r(), particle.endColor.r(), lerpValue));
-						particle.currentColor.setG(std::lerp(particle.startColor.g(), particle.endColor.g(), lerpValue));
-						particle.currentColor.setB(std::lerp(particle.startColor.b(), particle.endColor.b(), lerpValue));
+						particle.currentColor.rgba = glm::mix(particle.startColor.rgba, particle.endColor.rgba, lerpValue);
 					}
 
 					particle.rotation += particle.rotationRate * elapsedTime.count() / 100000.0f;
@@ -141,7 +138,7 @@ namespace systems
 		particle.position = particleGroup->position + random + offset;
 
 		particle.startColor = Ebony::Colors::White;
-		particle.endColor = Ebony::Colors::White;
+		particle.endColor = Ebony::Colors::Yellow;
 		particle.currentColor = Ebony::Colors::White;
 
 

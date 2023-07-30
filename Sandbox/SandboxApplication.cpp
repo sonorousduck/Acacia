@@ -53,13 +53,13 @@ namespace Ebony {
 			particleSystem = systems::ParticleSystem();
 			particleRenderer = systems::ParticleRenderer();
 
-			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 20000);
+			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 100000);
 			particleGroup->velocity = glm::vec2{ 50.0f, 10.0f };
-			particleGroup->rateOverTime = 500;
+			particleGroup->rateOverTime = 1500;
 			particleGroup->spawnRate = std::chrono::milliseconds(16);
 			particleGroup->position = glm::vec2{ 400.0f, 400.0f };
 			particleGroup->maxLifetime = std::chrono::milliseconds(500);
-			particleGroup->startSize = glm::vec2{ 1.0f, 1.0f };
+			particleGroup->startSize = glm::vec2{ 5.0f, 5.0f };
 			particleGroup->endSize = glm::vec2{ 1.0f, 1.0f };
 			particleGroup->startAlpha = 1.0f;
 			particleGroup->endAlpha = 1.0f;
