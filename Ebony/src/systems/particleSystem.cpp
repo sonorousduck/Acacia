@@ -138,7 +138,7 @@ namespace systems
 		particle.position = particleGroup->position + random + offset;
 
 		particle.startColor = Ebony::Colors::White;
-		particle.endColor = Ebony::Colors::Yellow;
+		particle.endColor = Ebony::Colors::White;
 		particle.currentColor = Ebony::Colors::White;
 
 

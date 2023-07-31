@@ -29,6 +29,7 @@ set(ComponentHeaders
 	src/components/component.hpp
 	src/components/animationControllerComponent.hpp
 	src/components/particle.hpp
+	src/components/inputComponent.hpp
 )
 
 set(ComponentSources
@@ -42,6 +43,7 @@ set(SystemHeaders
 	src/systems/particleRenderer.hpp
 	src/systems/staticRenderer.hpp
 	src/systems/particleSystem.hpp
+	src/systems/inputSystem.hpp
 )
 
 set(SystemSources
@@ -51,6 +53,8 @@ set(SystemSources
 	src/systems/particleRenderer.cpp
 	src/systems/staticRenderer.cpp
 	src/systems/particleSystem.cpp
+	src/systems/inputSystem.cpp
+
 )
 
 set(EntityHeaders

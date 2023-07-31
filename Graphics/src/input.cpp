@@ -4,6 +4,7 @@ namespace Ebony
 {
 
 	std::vector<KeyInput*> KeyInput::_instances;
+	int KeyInput::joysticksConnected = 0;
 
 	KeyInput::KeyInput(std::vector<int> keysToMonitor) : m_isEnabled(true)
 	{
@@ -90,7 +91,7 @@ namespace Ebony
 			{
 				isDown = PressedState::NONE;
 			}
-
+			
 
 			m_keys[key] = isDown;
 		}
@@ -99,6 +100,14 @@ namespace Ebony
 	void KeyInput::setupKeyInputs(Window& window)
 	{
 		glfwSetKeyCallback(window.getWindow(), KeyInput::callback);
+		glfwSetJoystickCallback(KeyInput::joystick_callback);
+		
+		int i = 0;
+		while (glfwJoystickPresent(i))
+		{
+			joysticksConnected++;
+			i++;
+		}
 	}
 
 	void KeyInput::callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -123,6 +132,20 @@ namespace Ebony
 		}
 	}
 
+	
+	void KeyInput::joystick_callback(int jid, int event)
+	{
+		if (event == GLFW_CONNECTED)
+		{
+			std::cout << "Joystick connected" << std::endl;
+			KeyInput::joysticksConnected++;
+		}
+		else if (event == GLFW_DISCONNECTED)
+		{
+			std::cout << "Joystick disconnected" << std::endl;
+			KeyInput::joysticksConnected--;
+		}
+	}
 
 
 

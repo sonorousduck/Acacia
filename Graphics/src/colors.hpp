@@ -18,7 +18,7 @@ namespace Ebony
 
 		bool operator==(Color& rhs)
 		{
-			return (GetRGBA() == rhs.GetRGBA());
+			return (rgba == rhs.rgba);
 		}
 
 

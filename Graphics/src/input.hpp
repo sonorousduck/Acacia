@@ -50,9 +50,11 @@ namespace Ebony
 
 	public:
 		static void setupKeyInputs(Window& window);
+		static int joysticksConnected;
 
 	private:
 		static void callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+		static void joystick_callback(int jid, int event);
 
 		static std::vector<KeyInput*> _instances;
 	};

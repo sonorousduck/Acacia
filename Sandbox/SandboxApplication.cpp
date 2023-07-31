@@ -8,7 +8,7 @@
 #include <spritefont.hpp>
 #include <systems/particleSystem.hpp>
 #include <systems/particleRenderer.hpp>
-
+#include <systems/inputSystem.hpp>
 
 
 namespace Ebony {
@@ -24,7 +24,6 @@ namespace Ebony {
 		~Sandbox()
 		{
 			graphics.Cleanup();
-
 		}
 
 		void Init() override
@@ -35,10 +34,11 @@ namespace Ebony {
 			graphics.SetMainCamera(camera);
 			Ebony::KeyInput::setupKeyInputs(graphics.window);
 
-			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE };
+			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_GAMEPAD_BUTTON_CIRCLE };
 			keyInput.setKeysToMonitorInit(keys);
 
 			testParticles = std::make_shared<entities::Entity>();
+			keyboardInput = std::make_shared<entities::Entity>();
 
             Texture2D& faceTexture = ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
             Shader& s = ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
@@ -59,7 +59,7 @@ namespace Ebony {
 			particleGroup->spawnRate = std::chrono::milliseconds(16);
 			particleGroup->position = glm::vec2{ 400.0f, 400.0f };
 			particleGroup->maxLifetime = std::chrono::milliseconds(500);
-			particleGroup->startSize = glm::vec2{ 5.0f, 5.0f };
+			particleGroup->startSize = glm::vec2{ 1.0f, 1.0f };
 			particleGroup->endSize = glm::vec2{ 1.0f, 1.0f };
 			particleGroup->startAlpha = 1.0f;
 			particleGroup->endAlpha = 1.0f;
@@ -68,30 +68,60 @@ namespace Ebony {
 
 			particleSystem.AddEntity(testParticles);
 			particleRenderer.AddEntity(testParticles);
+
+
+			inputSystem = systems::InputSystem();
+
+			// TODO: Right now, it just defaults to be the first controller. Add support for multiple controllers in the future
+			std::unique_ptr<components::Input> inputComponent = std::make_unique<components::Input>(0);
+			
+			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_START, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, [=]() { std::cout << "Circle was called" << std::endl; } });
+			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CROSS, [=]() { std::cout << "Cross was called" << std::endl; } });
+			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_SQUARE, [=]() { std::cout << "Square was called" << std::endl; } });
+			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, [=]() { std::cout << "Triangle was called" << std::endl; } });
+
+			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_ESCAPE, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_E, [=]() { std::cout << "E was called" << std::endl; } });
+
+
+			keyboardInput->addComponent(std::move(inputComponent));
+
+
+			inputSystem.AddEntity(keyboardInput);
 		}
 
 
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
 		{
-			Ebony::PressedState keyState = keyInput.getIsKeyDown(GLFW_KEY_E);
+			//Ebony::PressedState keyState = keyInput.getIsKeyDown(GLFW_KEY_E);
+			//if (keyState == PressedState::HELD)
+			//{
+			//	std::cout << "Held" << std::endl;
+			//}
+			///*else if (keyState == PressedState::PRESSED)
+			//{
+			//	std::cout << "Pressed" << std::endl;
+			//}*/
+			//else if (keyState == PressedState::RELEASED)
+			//{
+			//	std::cout << "Released" << std::endl;
+			//}
 
-			if (keyState == PressedState::HELD)
-			{
-				std::cout << "Held" << std::endl;
-			}
-			else if (keyState == PressedState::PRESSED)
-			{
-				std::cout << "Pressed" << std::endl;
-			}
-			else if (keyState == PressedState::RELEASED)
-			{
-				std::cout << "Released" << std::endl;
-			}
-
-			if (keyInput.getKeyPressedOrHeld(GLFW_KEY_ESCAPE))
+			/*if (keyInput.getKeyPressedOrHeld(GLFW_KEY_ESCAPE))
 			{
 				glfwSetWindowShouldClose(graphics.window.getWindow(), true);
+			}*/
+
+			Ebony::PressedState anotherKeyState = keyInput.getIsKeyDown(GLFW_GAMEPAD_BUTTON_CIRCLE);
+			
+			if (anotherKeyState == PressedState::PRESSED)
+			{
+				std::cout << "Circle was pressed" << std::endl;
 			}
+
+
+			inputSystem.Update(keyInput);
 		}
 
 
@@ -206,6 +236,7 @@ namespace Ebony {
 		SpriteFont spriteFont;
 		systems::ParticleSystem particleSystem;
 		systems::ParticleRenderer particleRenderer;
+		systems::InputSystem inputSystem;
 
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;
@@ -219,6 +250,7 @@ namespace Ebony {
 		std::string fps = "";
 		RenderTarget2D main;
 		entities::EntityPtr testParticles;
+		entities::EntityPtr keyboardInput;
 
 	
 	};
