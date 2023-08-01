@@ -1,7 +1,7 @@
 #pragma once
 
 #include "system.hpp"
-#include "animation2d.hpp"
+#include "../components/animationControllerComponent.hpp"
 #include <graphics2d.hpp>
 
 namespace systems

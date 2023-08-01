@@ -67,7 +67,7 @@ namespace systems
 
 						// TODO: Eventually, make this a more complicated update time loop. That way, we can use animations inside of the particles
 
-						particle.position += particle.velocity * glm::vec2(elapsedTime.count() / 100000.0, elapsedTime.count() / 100000.0);
+						particle.position += particle.currentSpeed * glm::vec2(elapsedTime.count() / 100000.0, elapsedTime.count() / 100000.0);
 
 						float lerpValue = static_cast<float>(particle.alive.count()) / static_cast<float>(particle.lifetime.count());
 
@@ -115,7 +115,7 @@ namespace systems
 		particleGroup->particles.reserve(particleGroup->getMaxParticles());
 		while (particleGroup->particles.size() < particleGroup->getMaxParticles())
 		{
-			particleGroup->particles.push_back(Particle(particleGroup->texture, std::chrono::microseconds::zero(), particleGroup->startSize, particleGroup->endSize, particleGroup->startAlpha, particleGroup->endAlpha, particleGroup->startColor, particleGroup->endColor));
+			particleGroup->particles.push_back(Particle(particleGroup));
 		}
 		particleGroup->preallocated = true;
 	}
@@ -156,17 +156,6 @@ namespace systems
 
 		particle.alive = std::chrono::microseconds::zero();
 		particle.lifetime = particleGroup->maxLifetime;
-		particle.velocity = particleGroup->velocity;
-
-		if (rand() % 2 < 1)
-		{
-			particle.velocity.x = -particle.velocity.x * ((rand() % 100) / 100.0f);
-		}
-		if (rand() % 2 < 1)
-		{
-			particle.velocity.y = -particle.velocity.y * ((rand() % 100) / 100.0f);
-		}
-
 
 	}
 }

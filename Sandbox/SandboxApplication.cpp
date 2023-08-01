@@ -9,6 +9,8 @@
 #include <systems/particleSystem.hpp>
 #include <systems/particleRenderer.hpp>
 #include <systems/inputSystem.hpp>
+#include <systems/animationRenderer.hpp>
+#include <systems/animation2d.hpp>
 
 
 namespace Ebony {
@@ -52,6 +54,9 @@ namespace Ebony {
 
 			particleSystem = systems::ParticleSystem();
 			particleRenderer = systems::ParticleRenderer();
+			animationRenderer = systems::AnimationRenderer();
+			animationSystem = systems::Animation2d();
+
 
 			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 100000);
 			particleGroup->velocity = glm::vec2{ 50.0f, 10.0f };
@@ -60,6 +65,13 @@ namespace Ebony {
 			particleGroup->position = glm::vec2{ 400.0f, 400.0f };
 			particleGroup->maxLifetime = std::chrono::milliseconds(500);
 			particleGroup->startSize = glm::vec2{ 1.0f, 1.0f };
+			particleGroup->maxStartSize = glm::vec2{ 5.0f, 5.0f };
+			particleGroup->randomStartSize = true;
+
+			particleGroup->startSpeed = glm::vec2{ -50.0f, -10.0f };
+			particleGroup->maxStartSpeed = glm::vec2{ 50.0f, 10.0f };
+			particleGroup->randomStartSpeed = true;
+
 			particleGroup->endSize = glm::vec2{ 1.0f, 1.0f };
 			particleGroup->startAlpha = 1.0f;
 			particleGroup->endAlpha = 1.0f;
@@ -72,6 +84,10 @@ namespace Ebony {
 
 			particleSystem.AddEntity(testParticles);
 			particleRenderer.AddEntity(testParticles);
+
+
+			auto animationController = std::make_unique<components::AnimationController>();
+
 
 
 			inputSystem = systems::InputSystem();
@@ -255,6 +271,8 @@ namespace Ebony {
 		SpriteFont spriteFont;
 		systems::ParticleSystem particleSystem;
 		systems::ParticleRenderer particleRenderer;
+		systems::AnimationRenderer animationRenderer;
+		systems::Animation2d animationSystem;
 		systems::InputSystem inputSystem;
 
 		float deltaTime = 0.0f;

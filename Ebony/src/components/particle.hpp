@@ -8,15 +8,20 @@
 #include <texture.hpp>
 #include "shader.hpp"
 
+#include <random>
+
+//struct Shape
+//{
+//
+//};
+
 
 struct Particle
 {
-	Particle() {};
-	Particle(Texture2D& texture) : texture(texture) {};
 	Particle(Texture2D& texture, std::chrono::microseconds lifetime, std::chrono::microseconds alive) : texture(texture), lifetime(lifetime), alive(alive) {};
 
 	Particle(Texture2D& texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha) : texture(texture), lifetime(lifetime), startSize(startSize),
-	endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(Ebony::Colors::White)
+		endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(Ebony::Colors::White)
 	{
 		lerpColor = startColor != endColor;
 		lerpAlpha = startAlpha != endAlpha;
@@ -29,6 +34,61 @@ struct Particle
 		lerpAlpha = startAlpha != endAlpha;
 		lerpSize = startSize != endSize;
 	};
+
+	// No way this worked... components::ParticleGroup doesn't work because it hasn't been defined yet
+	// But since auto gets its type assigned at compile time, it actually works
+	// Seems really dangerous to use this way.. :)
+	Particle(auto* particleGroup)
+	{
+		texture = particleGroup->texture;
+		lifetime = std::chrono::microseconds::zero();
+		endSize = particleGroup->endSize;
+		startAlpha = particleGroup->startAlpha;
+		endAlpha = particleGroup->endAlpha;
+		alive = std::chrono::microseconds::zero();
+		currentAlpha = startAlpha;
+		startColor = particleGroup->startColor;
+		currentColor = startColor;
+		endColor = particleGroup->endColor;
+
+
+		if (particleGroup->randomStartSpeed)
+		{
+			auto xValue = particleGroup->random_double() * (particleGroup->maxStartSpeed.x - particleGroup->startSpeed.x) + particleGroup->startSpeed.x;
+			auto yValue = particleGroup->random_double() * (particleGroup->maxStartSpeed.y - particleGroup->startSpeed.y) + particleGroup->startSpeed.y;
+
+			startSpeed = glm::vec2(xValue, yValue);
+			endSpeed = startSpeed;
+			currentSpeed = startSpeed;
+		}
+		else
+		{
+			startSpeed = particleGroup->startSpeed;
+			currentSpeed = startSpeed;
+			endSpeed = particleGroup->endSpeed;
+		}
+		if (particleGroup->randomStartSize)
+		{
+			auto xValue = particleGroup->random_double() * (particleGroup->maxStartSize.x - particleGroup->startSize.x) + particleGroup->startSize.x;
+			auto yValue = particleGroup->random_double() * (particleGroup->maxStartSize.y - particleGroup->startSize.y) + particleGroup->startSize.y;
+
+
+			startSize = glm::vec2(xValue, yValue);
+			currentSize = startSize;
+			endSize = startSize;
+
+		}
+		else
+		{
+			startSize = particleGroup->startSize;
+			currentSize = particleGroup->startSize;
+			endSize = particleGroup->endSize;
+		}
+
+		lerpColor = startColor != endColor;
+		lerpAlpha = startAlpha != endAlpha;
+		lerpSize = startSize != endSize;
+	}
 
 
 
@@ -46,6 +106,10 @@ struct Particle
 	glm::vec2 startSize{ 0.0f };
 	glm::vec2 endSize{ 0.0f };
 	glm::vec2 currentSize{ 0.0f };
+
+	glm::vec2 startSpeed{ 0.0f };
+	glm::vec2 endSpeed{ 0.0f };
+	glm::vec2 currentSpeed{ 0.0f };
 
 	glm::vec2 position{ 0.0f };
 	glm::vec2 direction{ 0.0f };
@@ -71,6 +135,8 @@ struct Particle
 	// Particle texture
 	Texture2D texture;
 };
+
+
 namespace components
 {
 	class ParticleGroup : public PolymorphicComparable<Component, ParticleGroup>
@@ -226,10 +292,11 @@ namespace components
 
 		bool randomStartSpeed = false;
 		glm::vec2 startSpeed{ 1.0f };
+		glm::vec2 maxStartSpeed{ 1.0f };
+
 		glm::vec2 endSpeed{ 1.0f };
 
-
-
+		
 		Ebony::Color startColor{};
 		Ebony::Color endColor{};
 
@@ -261,6 +328,11 @@ namespace components
 		// Tracks whether the particle group has been preallocated.
 		bool preallocated{ false };
 
+		std::uint32_t min = 0;
+		std::uint32_t max = 100;
+
+		std::random_device rd;
+
 
 		unsigned int instancedVAO = 0;
 		unsigned int particleVertexBuffer = 0;
@@ -272,6 +344,13 @@ namespace components
 		std::vector<float> particleColorData = {};
 		std::chrono::microseconds spawnRate = std::chrono::milliseconds(16);
 		std::chrono::microseconds accumulatedTime = std::chrono::milliseconds(0);
+
+		inline double random_double()
+		{
+			static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+			static std::mt19937 generator;
+			return distribution(generator);
+		}
 
 
 		private:
@@ -290,3 +369,4 @@ namespace components
 			std::uint32_t maxParticles{ 1000 };
 	};
 }
+
