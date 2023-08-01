@@ -58,17 +58,17 @@ namespace systems
 					float lerpValue = static_cast<float>(particle.alive.count()) / static_cast<float>(particle.lifetime.count());
 
 					// Update size
-					if (particle.startSize != particle.endSize)
+					if (particleGroup->lerpSize)
 					{
 						particle.currentSize = glm::mix(particle.startSize, particle.endSize, lerpValue);
 					}
 
-					if (particle.startAlpha != particle.endAlpha)
+					if (particleGroup->lerpAlpha)
 					{
 						particle.currentAlpha = std::lerp(particle.startAlpha, particle.endAlpha, lerpValue);
 					}
 
-					if (particle.startColor != particle.endColor)
+					if (particleGroup->lerpColor)
 					{
 						particle.currentColor.rgba = glm::mix(particle.startColor.rgba, particle.endColor.rgba, lerpValue);
 					}
@@ -98,7 +98,7 @@ namespace systems
 	{
 		while (particleGroup->particles.size() < particleGroup->getMaxParticles())
 		{
-			particleGroup->particles.push_back(Particle(particleGroup->texture, std::chrono::microseconds::zero(), particleGroup->startSize, particleGroup->endSize, particleGroup->startAlpha, particleGroup->endAlpha));
+			particleGroup->particles.push_back(Particle(particleGroup->texture, std::chrono::microseconds::zero(), particleGroup->startSize, particleGroup->endSize, particleGroup->startAlpha, particleGroup->endAlpha, particleGroup->startColor, particleGroup->endColor));
 		}
 		particleGroup->preallocated = true;
 	}
@@ -136,11 +136,6 @@ namespace systems
 	{
 		float random = ((rand() % 100) - 50) / 10.0f;
 		particle.position = particleGroup->position + random + offset;
-
-		particle.startColor = Ebony::Colors::White;
-		particle.endColor = Ebony::Colors::White;
-		particle.currentColor = Ebony::Colors::White;
-
 
 		particle.alive = std::chrono::microseconds::zero();
 		particle.lifetime = particleGroup->maxLifetime;

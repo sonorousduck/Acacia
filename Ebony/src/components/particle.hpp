@@ -18,6 +18,9 @@ struct Particle
 	Particle(Texture2D& texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha) : texture(texture), lifetime(lifetime), startSize(startSize),
 	endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(Ebony::Colors::White)
 	{};
+	Particle(Texture2D& texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha, Ebony::Color startColor, Ebony::Color endColor) : texture(texture), lifetime(lifetime), startSize(startSize),
+		endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(startColor), startColor(startColor), endColor(endColor)
+	{};
 
 
 
@@ -195,10 +198,16 @@ namespace components
 		// Allows for fade in/fade out, etc.
 		float startAlpha{ 1.0f };
 		float endAlpha{ 1.0f };
+		bool lerpAlpha = false;
 
 		// Allows control for the sizing of your particle through its life
 		glm::vec2 startSize{ 1.0f };
 		glm::vec2 endSize{ 1.0f };
+		bool lerpSize = false;
+
+		Ebony::Color startColor{};
+		Ebony::Color endColor{};
+		bool lerpColor = false;
 
 		std::uint32_t particleCount{ 0 };
 
@@ -246,6 +255,6 @@ namespace components
 
 			// Max number of particles that will be generated at any given time. If you start encroaching on this number
 			// the generation will overwrite the old particles to generate new ones (probably). This may change to just not generate
-			std::uint32_t maxParticles{ 5000 };
+			std::uint32_t maxParticles{ 1000 };
 	};
 }
