@@ -26,30 +26,38 @@ namespace systems
 				{
 					iter->second();
 				}
+
 			}
 
 			if (Ebony::KeyInput::joysticksConnected > 0)
 			{
-				for (auto iter = input->controllerActionKeyPairs.begin(); iter != input->controllerActionKeyPairs.end(); iter++)
+				GLFWgamepadstate state{};
+				if (glfwGetGamepadState(input->joystickId, &state))
 				{
-					// Unfortunately, there isn't a nice way to have a callback system like key input, for some reason. But we can manually check for all controller buttons here
 
-					GLFWgamepadstate state{};
-
-					if (glfwGetGamepadState(input->joystickId, &state))
+					for (auto iter = input->controllerActionKeyPairs.begin(); iter != input->controllerActionKeyPairs.end(); iter++)
 					{
-						if (state.buttons[iter->first])
+						if (state.buttons[iter->first] && input->previousActions[iter->first] != GLFW_PRESS)
 						{
 							iter->second();
 						}
+						// TODO: Potentially, I will want this to have onPress, onRelease, and onHold callbacks. But for now, suffices to just have on press
+						input->previousActions[iter->first] = state.buttons[iter->first];
 
 						// There are also state.axes which are the joystick positions. This will need to be translated as well, but might have its own callbacks since you need to take in a float
 						// The axis indices are GLFW_GAMEPAD_AXIS_LEFT_X, GLFW_GAMEPAD_AXIS_LEFT_Y, GLFW_GAMEPAD_AXIS_RIGHT_X, GLFW_GAMEPAD_AXIS_RIGHT_Y, GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER
-
 					}
 
+					for (auto iter = input->controllerAxes.begin(); iter != input->controllerAxes.end(); iter++)
+					{
+						if (state.axes[iter->first])
+						{
+							iter->second(state.axes[iter->first]);
+						}
+					}
 				}
 			}
+		
 
 			
 			/*if (entity->hasComponent<components::KeyboardInput>())

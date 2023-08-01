@@ -80,6 +80,48 @@ namespace Ebony {
 			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CROSS, [=]() { std::cout << "Cross was called" << std::endl; } });
 			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_SQUARE, [=]() { std::cout << "Square was called" << std::endl; } });
 			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, [=]() { std::cout << "Triangle was called" << std::endl; } });
+			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, [=](float value) { 
+				if (abs(value) > 0.5)
+				{
+					std::cout << "Left X: " << value << std::endl;
+				}
+				}});
+
+			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_Y, [=](float value) {
+				if (abs(value) > 0.5)
+				{
+					std::cout << "Left Y: " << value << std::endl;
+				}
+				} });
+
+			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_X, [=](float value) {
+				if (abs(value) > 0.5)
+				{
+					std::cout << "Right X: " << value << std::endl;
+				}
+				} });
+
+			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_Y, [=](float value) {
+				if (abs(value) > 0.5)
+				{
+					std::cout << "Right Y: " << value << std::endl;
+				}
+				} });
+
+			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, [=](float value) {
+				if (value > -0.5)
+				{
+					std::cout << "Left Trigger: " << value << std::endl;
+				}
+			} });
+
+			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, [=](float value) {
+			if (value > -0.5)
+			{
+				std::cout << "Right Trigger: " << value << std::endl;
+			}
+			} });
+
 
 			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_ESCAPE, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
 			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_E, [=]() { std::cout << "E was called" << std::endl; } });

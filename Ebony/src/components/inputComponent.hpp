@@ -13,10 +13,12 @@ namespace components
 		Input(int joystickId) : joystickId(joystickId) {};
 
 		std::unordered_map<int, std::function<void()>> controllerActionKeyPairs{};
+		std::unordered_map<int, std::function<void(float)>> controllerAxes{};
+
 		std::unordered_map<int, std::function<void()>> keyboardActionKeyPairs{};
 
-		std::unordered_map<std::string, bool> actions{};
-		std::unordered_map<std::string, bool> previousActions{};
+		std::unordered_map<int, bool> actions{};
+		std::unordered_map<int, bool> previousActions{};
 
 		// TODO: Probably need to have a controller id attributed to an input as well (i.e. so you can have it known this is player one's input)
 		int joystickId = -1;
