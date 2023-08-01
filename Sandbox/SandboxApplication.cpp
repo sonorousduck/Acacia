@@ -140,33 +140,6 @@ namespace Ebony {
 
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
 		{
-			//Ebony::PressedState keyState = keyInput.getIsKeyDown(GLFW_KEY_E);
-			//if (keyState == PressedState::HELD)
-			//{
-			//	std::cout << "Held" << std::endl;
-			//}
-			///*else if (keyState == PressedState::PRESSED)
-			//{
-			//	std::cout << "Pressed" << std::endl;
-			//}*/
-			//else if (keyState == PressedState::RELEASED)
-			//{
-			//	std::cout << "Released" << std::endl;
-			//}
-
-			/*if (keyInput.getKeyPressedOrHeld(GLFW_KEY_ESCAPE))
-			{
-				glfwSetWindowShouldClose(graphics.window.getWindow(), true);
-			}*/
-
-			Ebony::PressedState anotherKeyState = keyInput.getIsKeyDown(GLFW_GAMEPAD_BUTTON_CIRCLE);
-			
-			if (anotherKeyState == PressedState::PRESSED)
-			{
-				std::cout << "Circle was pressed" << std::endl;
-			}
-
-
 			inputSystem.Update(keyInput);
 		}
 

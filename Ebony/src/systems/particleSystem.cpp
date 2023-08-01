@@ -112,6 +112,7 @@ namespace systems
 
 	void ParticleSystem::Preallocate(components::ParticleGroup* particleGroup)
 	{
+		particleGroup->particles.reserve(particleGroup->getMaxParticles());
 		while (particleGroup->particles.size() < particleGroup->getMaxParticles())
 		{
 			particleGroup->particles.push_back(Particle(particleGroup->texture, std::chrono::microseconds::zero(), particleGroup->startSize, particleGroup->endSize, particleGroup->startAlpha, particleGroup->endAlpha, particleGroup->startColor, particleGroup->endColor));

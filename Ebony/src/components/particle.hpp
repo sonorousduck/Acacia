@@ -77,7 +77,9 @@ namespace components
 	{
 	public:
 		// Enforcing maxParticles so we don't have to remake the buffers as often
-		ParticleGroup(Texture2D& texture, std::uint32_t maxParticles = 5000) : texture(texture), maxParticles(maxParticles) {
+		ParticleGroup(Texture2D& texture, std::uint32_t maxParticles = 5000) : texture(texture), maxParticles(maxParticles) 
+		{
+
 			//static const GLfloat g_vertex_buffer_data[] = {
 			//	 -0.5f, -0.5f,
 			//	 0.5f, -0.5f, 
@@ -162,6 +164,7 @@ namespace components
 
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindVertexArray(0);
+
 		};
 
 		// Allow the developer to set a shader, if desired. If none is found, then a default particle shader will be used
@@ -206,6 +209,8 @@ namespace components
 			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 			glVertexAttribDivisor(1, 1); // Positions: One per quad
 		}
+
+		
 
 		// Allows for fade in/fade out, etc.
 		float startAlpha{ 1.0f };
@@ -257,12 +262,6 @@ namespace components
 		bool preallocated{ false };
 
 
-
-
-
-
-
-
 		unsigned int instancedVAO = 0;
 		unsigned int particleVertexBuffer = 0;
 		unsigned int particleUvBuffer = 0;
@@ -277,8 +276,15 @@ namespace components
 
 		private:
 
-
-
+			//void Preallocate()
+			//{
+			//	particles.reserve(maxParticles);
+			//	while (particles.size() < maxParticles)
+			//	{
+			//		particles.push_back(Particle(texture, std::chrono::microseconds::zero(), startSize, endSize, startAlpha, endAlpha, startColor, endColor));
+			//	}
+			//	preallocated = true;
+			//}
 			// Max number of particles that will be generated at any given time. If you start encroaching on this number
 			// the generation will overwrite the old particles to generate new ones (probably). This may change to just not generate
 			std::uint32_t maxParticles{ 1000 };
