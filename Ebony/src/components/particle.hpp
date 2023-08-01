@@ -17,10 +17,18 @@ struct Particle
 
 	Particle(Texture2D& texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha) : texture(texture), lifetime(lifetime), startSize(startSize),
 	endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(Ebony::Colors::White)
-	{};
+	{
+		lerpColor = startColor != endColor;
+		lerpAlpha = startAlpha != endAlpha;
+		lerpSize = startSize != endSize;
+	};
 	Particle(Texture2D& texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha, Ebony::Color startColor, Ebony::Color endColor) : texture(texture), lifetime(lifetime), startSize(startSize),
 		endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(startColor), startColor(startColor), endColor(endColor)
-	{};
+	{
+		lerpColor = startColor != endColor;
+		lerpAlpha = startAlpha != endAlpha;
+		lerpSize = startSize != endSize;
+	};
 
 
 
@@ -45,6 +53,10 @@ struct Particle
 
 	float rotationRate{ 0.0f };
 	float rotation{ 0.0f };
+
+	bool lerpColor = false;
+	bool lerpSize = false;
+	bool lerpAlpha = false;
 
 	// Color over time
 	Ebony::Color startColor = Ebony::Colors::White;
@@ -187,7 +199,7 @@ namespace components
 			
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
 
-			// Initialize buffer with empty buffer, since it will be updated later at each frame. TODO: THINK OF A BETTER WAY TO HANDLE THE MAX PARTICLES
+			// Initialize buffer with empty buffer, since it will be updated later at each frame.
 			glBufferData(GL_ARRAY_BUFFER, maxParticles * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 			glEnableVertexAttribArray(1);
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
@@ -198,16 +210,23 @@ namespace components
 		// Allows for fade in/fade out, etc.
 		float startAlpha{ 1.0f };
 		float endAlpha{ 1.0f };
-		bool lerpAlpha = false;
 
 		// Allows control for the sizing of your particle through its life
 		glm::vec2 startSize{ 1.0f };
 		glm::vec2 endSize{ 1.0f };
-		bool lerpSize = false;
+
+		// Random size generation
+		bool randomStartSize = false;
+		glm::vec2 maxStartSize{1.0f};
+
+		bool randomStartSpeed = false;
+		glm::vec2 startSpeed{ 1.0f };
+		glm::vec2 endSpeed{ 1.0f };
+
+
 
 		Ebony::Color startColor{};
 		Ebony::Color endColor{};
-		bool lerpColor = false;
 
 		std::uint32_t particleCount{ 0 };
 
@@ -236,6 +255,13 @@ namespace components
 
 		// Tracks whether the particle group has been preallocated.
 		bool preallocated{ false };
+
+
+
+
+
+
+
 
 		unsigned int instancedVAO = 0;
 		unsigned int particleVertexBuffer = 0;

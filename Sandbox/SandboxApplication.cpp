@@ -59,15 +59,14 @@ namespace Ebony {
 			particleGroup->spawnRate = std::chrono::milliseconds(16);
 			particleGroup->position = glm::vec2{ 400.0f, 400.0f };
 			particleGroup->maxLifetime = std::chrono::milliseconds(500);
-			particleGroup->startSize = glm::vec2{ 5.0f, 5.0f };
+			particleGroup->startSize = glm::vec2{ 1.0f, 1.0f };
 			particleGroup->endSize = glm::vec2{ 1.0f, 1.0f };
-			particleGroup->lerpSize = true;
 			particleGroup->startAlpha = 1.0f;
-			particleGroup->endAlpha = 0.2f;
-			particleGroup->lerpAlpha = true;
+			particleGroup->endAlpha = 1.0f;
 			particleGroup->startColor = Ebony::Colors::White;
-			particleGroup->endColor = Ebony::Colors::Yellow;
-			particleGroup->lerpColor = true;
+			particleGroup->endColor = Ebony::Colors::White;
+			//particleGroup->maxDuration = std::chrono::seconds(3);
+			//particleGroup->startDelay = std::chrono::seconds(5);
 
 			testParticles->addComponent(std::move(particleGroup));
 
