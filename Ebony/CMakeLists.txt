@@ -71,6 +71,7 @@ set(MiscHeaders
 	src/misc/Task.hpp
 	src/misc/WorkerThread.hpp
 	src/misc/ConcurrentTaskGraph.hpp
+	src/misc/ConcurrentQueue.hpp
 )
 
 set(MiscSources

@@ -6,21 +6,28 @@
 #include <mutex>
 #include <set>
 #include <unordered_map>
+#include "Task.hpp"
 
-
-class ThreadPool
+// Referenced work by Dean Mathias
+namespace Ebony
 {
-public:
-	ThreadPool(const ThreadPool&) = delete;
-	ThreadPool(ThreadPool&&) = delete;
-	ThreadPool& operator=(const ThreadPool&) = delete;
-	ThreadPool& operator=(ThreadPool&&) = delete;
 
 
-	static ThreadPool& instance;
-	static void terminate();
 
-	void enqueueTask(std::shared_ptr<Task> task);
+	class ThreadPool
+	{
+	public:
+		ThreadPool(const ThreadPool&) = delete;
+		ThreadPool(ThreadPool&&) = delete;
+		ThreadPool& operator=(const ThreadPool&) = delete;
+		ThreadPool& operator=(ThreadPool&&) = delete;
 
 
-};
+		static ThreadPool& instance;
+		static void terminate();
+
+		void enqueueTask(std::shared_ptr<Task> task);
+
+
+	};
+}
