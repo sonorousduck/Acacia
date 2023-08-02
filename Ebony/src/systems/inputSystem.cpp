@@ -26,7 +26,16 @@ namespace systems
 				{
 					iter->second();
 				}
+			}
 
+			for (auto iter = input->onReleaseKeyboardActionKeyPairs.begin(); iter != input->onReleaseKeyboardActionKeyPairs.end(); iter++)
+			{
+				Ebony::PressedState pressedState = keyInput.getIsKeyDown(iter->first);
+
+				if (pressedState == Ebony::PressedState::RELEASED)
+				{
+					iter->second();
+				}
 			}
 
 			if (Ebony::KeyInput::joysticksConnected > 0)

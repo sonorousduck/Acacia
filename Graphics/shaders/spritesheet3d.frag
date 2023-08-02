@@ -8,5 +8,5 @@ uniform sampler2DArray spritesheet;
 
 void main()
 {
-    outColor = texture(spritesheet, vec3(vUv, layer)); // The 1 will become a uniform to select the correct image (I believe)
+    outColor = texture(spritesheet, vec3(vUv, layer));
 }

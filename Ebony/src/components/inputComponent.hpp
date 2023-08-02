@@ -16,6 +16,7 @@ namespace components
 		std::unordered_map<int, std::function<void(float)>> controllerAxes{};
 
 		std::unordered_map<int, std::function<void()>> keyboardActionKeyPairs{};
+		std::unordered_map<int, std::function<void()>> onReleaseKeyboardActionKeyPairs{};
 
 		std::unordered_map<int, bool> actions{};
 		std::unordered_map<int, bool> previousActions{};

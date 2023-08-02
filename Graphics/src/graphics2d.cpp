@@ -242,6 +242,48 @@ namespace Ebony
 		glBindVertexArray(0);
 	}
 
+	void Graphics2d::DrawAnimation(Shader& s, Texture2D& texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
+	{
+		if (activeShaderId != s.ID)
+		{
+			s.use();
+			activeShaderId = s.ID;
+		}
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
+		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
+		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
+		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
+
+		if (hasCamera)
+		{
+			s.setMat4("view", mainCamera.GetViewMatrix());
+		}
+		else
+		{
+			s.setMat4("view", glm::mat4(1.0f));
+		}
+
+		s.setMat4("model", model);
+		s.setInt("layer", layer);
+
+		if (activeTextureId != texture.ID)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			texture.Bind();
+			activeTextureId = texture.ID;
+		}
+
+
+
+		glBindVertexArray(this->quadVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+	}
+
+
 	void Graphics2d::DrawInstanced(Shader& s, Texture2D& texture, unsigned int VAO, std::uint32_t count)
 	{
 		if (activeShaderId != s.ID)

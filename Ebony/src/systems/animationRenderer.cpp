@@ -14,7 +14,7 @@ namespace systems
 			// Draw each Texture2D here
 			for (auto& animation : animationsToDraw)
 			{
-				graphics.Draw(Ebony::ResourceManager::GetShader("spritesheet"), animation.GetSprite().spritesheet, glm::vec2(100.0f, 100.0f), glm::vec2(1.0f, 1.0f), 0.0f, Ebony::Colors::White);
+				graphics.DrawAnimation(Ebony::ResourceManager::GetShader("spritesheet"), animation.GetSprite().spritesheet, animation.GetCurrentSpriteFrame(), glm::vec2(200.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0.0f, Ebony::Colors::Red, animation.GetDepth());
 			}
 
 

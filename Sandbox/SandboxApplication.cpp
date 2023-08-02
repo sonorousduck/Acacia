@@ -36,7 +36,7 @@ namespace Ebony {
 			graphics.SetMainCamera(camera);
 			Ebony::KeyInput::setupKeyInputs(graphics.window);
 
-			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_GAMEPAD_BUTTON_CIRCLE };
+			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT };
 			keyInput.setKeysToMonitorInit(keys);
 
 			testParticles = std::make_shared<entities::Entity>();
@@ -59,60 +59,72 @@ namespace Ebony {
 			animationSystem = systems::Animation2d();
 
 
-			//auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 100000);
-			//particleGroup->velocity = glm::vec2{ 50.0f, 10.0f };
-			//particleGroup->rateOverTime = 1;
-			//particleGroup->spawnRate = std::chrono::milliseconds(100);
-			//particleGroup->position = glm::vec2{ 400.0f, 400.0f };
-			//particleGroup->maxLifetime = std::chrono::milliseconds(500);
-			//particleGroup->startSize = glm::vec2{ 1.0f, 1.0f };
-			//particleGroup->maxStartSize = glm::vec2{ 5.0f, 5.0f };
-			//particleGroup->randomStartSize = true;
+			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 100000);
+			particleGroup->velocity = glm::vec2{ 50.0f, 10.0f };
+			particleGroup->rateOverTime = 1500;
+			particleGroup->spawnRate = std::chrono::milliseconds(16);
+			particleGroup->position = glm::vec2{ 400.0f, 400.0f };
+			particleGroup->maxLifetime = std::chrono::milliseconds(500);
+			particleGroup->startSize = glm::vec2{ 1.0f, 1.0f };
+			particleGroup->maxStartSize = glm::vec2{ 5.0f, 5.0f };
+			particleGroup->randomStartSize = true;
 
-			//particleGroup->startSpeed = glm::vec2{ -50.0f, -10.0f };
-			//particleGroup->maxStartSpeed = glm::vec2{ 50.0f, 10.0f };
-			//particleGroup->randomStartSpeed = true;
+			particleGroup->startSpeed = glm::vec2{ -50.0f, -10.0f };
+			particleGroup->maxStartSpeed = glm::vec2{ 50.0f, 10.0f };
+			particleGroup->randomStartSpeed = true;
 
-			//particleGroup->endSize = glm::vec2{ 1.0f, 1.0f };
-			//particleGroup->startAlpha = 1.0f;
-			//particleGroup->endAlpha = 1.0f;
-			//particleGroup->startColor = Ebony::Colors::White;
-			//particleGroup->endColor = Ebony::Colors::White;
-			////particleGroup->maxDuration = std::chrono::seconds(3);
-			////particleGroup->startDelay = std::chrono::seconds(5);
+			particleGroup->endSize = glm::vec2{ 1.0f, 1.0f };
+			particleGroup->startAlpha = 1.0f;
+			particleGroup->endAlpha = 1.0f;
+			particleGroup->startColor = Ebony::Colors::White;
+			particleGroup->endColor = Ebony::Colors::White;
+			//particleGroup->maxDuration = std::chrono::seconds(3);
+			//particleGroup->startDelay = std::chrono::seconds(5);
 
-			//testParticles->addComponent(std::move(particleGroup));
+			testParticles->addComponent(std::move(particleGroup));
 
-			//particleSystem.AddEntity(testParticles);
-			//particleRenderer.AddEntity(testParticles);
-
-
-			auto animationController = std::make_unique<components::AnimationController>();
-
-
-			std::vector<std::chrono::microseconds> timings1(44, std::chrono::microseconds(100));
-			std::vector<std::chrono::microseconds> timings2(44, std::chrono::microseconds(1000));
-
-			std::vector<components::Link> links1 = { components::Link(1, [=]() { return true; }) };
-			std::vector<Ebony::Animation> animations1 = { Ebony::Animation(SpriteSheet(ResourceManager::GetTexture("Better_Character_Animation"), 44, timings1)) };
-
-			auto node1 = components::Node(links1, animations1);
-
-			std::vector<components::Link> links2 = { components::Link(0, [=]() { return false; }) };
-			std::vector<Ebony::Animation> animations2 = { Ebony::Animation(SpriteSheet(ResourceManager::GetTexture("Better_Character_Animation"), 44, timings2)) };
-
-			auto node2 = components::Node(links2, animations2);
+			particleSystem.AddEntity(testParticles);
+			particleRenderer.AddEntity(testParticles);
 
 
 
-			animationController->animationTree.emplace_back(node1);
-			animationController->animationTree.emplace_back(node2);
+			for (size_t i = 0; i < 1000; i++)
+			{
+				entities::EntityPtr test = std::make_shared<entities::Entity>();;
 
 
-			animationsTest->addComponent(std::move(animationController));
+				auto animationController = std::make_unique<components::AnimationController>();
 
-			animationSystem.AddEntity(animationsTest);
-			animationRenderer.AddEntity(animationsTest);
+
+				std::vector<std::chrono::microseconds> timings1(44, std::chrono::milliseconds(500 + 1000 - i));
+				std::vector<std::chrono::microseconds> timings2(44, std::chrono::milliseconds(100 + 1000 - i));
+
+				std::vector<components::Link> links1 = { components::Link(1, [=]() {
+					return (isRunning);
+
+					}) };
+				std::vector<Ebony::Animation> animations1 = { Ebony::Animation(SpriteSheet(ResourceManager::GetTexture("Better_Character_Animation"), 44, timings1)) };
+				animations1[0].SetDepth((1.0f / 1000) * i);
+
+				auto node1 = components::Node(links1, animations1);
+
+				std::vector<components::Link> links2 = { components::Link(0, [=]() { return (!isRunning); }) };
+				std::vector<Ebony::Animation> animations2 = { Ebony::Animation(SpriteSheet(ResourceManager::GetTexture("Better_Character_Animation"), 44, timings2)) };
+				animations2[0].SetDepth((1.0f / 1000) * i);
+
+				auto node2 = components::Node(links2, animations2);
+
+
+				animationController->animationTree.emplace_back(node1);
+				animationController->animationTree.emplace_back(node2);
+
+
+				test->addComponent(std::move(animationController));
+
+				animationSystem.AddEntity(test);
+				animationRenderer.AddEntity(test);
+			}
+			
 
 
 
@@ -171,6 +183,9 @@ namespace Ebony {
 
 			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_ESCAPE, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
 			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_E, [=]() { std::cout << "E was called" << std::endl; } });
+			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = true; } });
+			inputComponent->onReleaseKeyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = false; } });
+
 
 
 			keyboardInput->addComponent(std::move(inputComponent));
@@ -188,28 +203,27 @@ namespace Ebony {
 
 		void Update(std::chrono::microseconds elapsedTime) override
 		{
+			auto firstTime = std::chrono::system_clock::now();
 			float currentFrame = static_cast<float>(glfwGetTime());
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
 			fpsUpdateDeltaTime -= deltaTime;
 
-			animationSystem.Update(elapsedTime);
-
-
 			auto previousTime = std::chrono::system_clock::now();
+			animationSystem.Update(elapsedTime);
+			averageAnimationSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
+
+			previousTime = std::chrono::system_clock::now();
 			particleSystem.Update(elapsedTime);
 			averageParticleSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 
 			if (fpsUpdateDeltaTime <= 1.0f)
 			{
 				fps = std::to_string(static_cast<int>(std::round(1 / deltaTime))) + " fps";
-				fpsUpdateDeltaTime += 0.25f;
-				//layer = (layer + 1) % 44;
-				//Shader& s = ResourceManager::GetShader("spritesheet");
-				//s.use();
-				//s.setInt("layer", layer);
+				fpsUpdateDeltaTime += 0.16f;
 			}
 
+			averageUpdateTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - firstTime);
 		}
 
 
@@ -225,9 +239,6 @@ namespace Ebony {
 			particleRenderer.Update(graphics);
 			averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 
-
-			//graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red, 0.0f);
-			graphics.Draw(ResourceManager::GetShader("spritesheet"), ResourceManager::GetTexture("massiveTextureAtlas"), glm::vec2(200.0f, 100.0f), glm::vec2(100.0f, 100.0f), 0.0f, Colors::Red, 1.0f);
 			graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red);
 			
 			graphics.UnbindRenderTarget(clearColor);
@@ -289,7 +300,10 @@ namespace Ebony {
 
 			std::cout << "Particle Rendering took " << averageParticleRenderingTime / totalFrames << " on average." << std::endl;
 			std::cout << "Particle System Updates took " << averageParticleSystemTime / totalFrames << " on average." << std::endl;
-			//std::cout << "Particle Count at termination: " << testParticles->getComponent<components::ParticleGroup>()->particleCount << std::endl;
+			std::cout << "Animation System Updates took " << averageAnimationSystemTime / totalFrames << " on average." << std::endl;
+			std::cout << "Average Updates took " << averageUpdateTime / totalFrames << " on average." << std::endl;
+
+			std::cout << "Particle Count at termination: " << testParticles->getComponent<components::ParticleGroup>()->particleCount << std::endl;
 			glfwTerminate();
 		}
 
@@ -308,12 +322,15 @@ namespace Ebony {
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;
 		float fpsUpdateDeltaTime = 0.0f;
+		bool isRunning = false;
 		std::chrono::microseconds averageParticleRenderingTime = std::chrono::microseconds::zero();
 		std::chrono::microseconds averageParticleSystemTime = std::chrono::microseconds::zero();
+		std::chrono::microseconds averageAnimationSystemTime = std::chrono::microseconds::zero();
+		std::chrono::microseconds averageUpdateTime = std::chrono::microseconds::zero();
+
 		std::uint64_t totalFrames = 0;
 
 
-		int layer = 0;
 		std::string fps = "";
 		RenderTarget2D main;
 		entities::EntityPtr testParticles;

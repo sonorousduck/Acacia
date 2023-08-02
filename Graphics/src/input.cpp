@@ -42,10 +42,10 @@ namespace Ebony
 			{
 				result = m_keys[key];
 
-				if (result == PressedState::RELEASED)
+				/*if (result == PressedState::RELEASED)
 				{
 					m_keys[key] = PressedState::NONE;
-				}
+				}*/
 			}
 		}
 		return result;

@@ -13,7 +13,7 @@ namespace Ebony
 	class Animation
 	{
 	public:
-		Animation(SpriteSheet spritesheet) : m_Spritesheet(spritesheet) {};
+		Animation(SpriteSheet spritesheet) : m_Spritesheet(spritesheet), depth(1.0) {};
 
 		const auto& GetSprite() { return m_Spritesheet; }
 		auto GetSpriteCount() { return m_Spritesheet.numDivisions; }
@@ -38,7 +38,26 @@ namespace Ebony
 		}
 
 		auto getElapsedTime() { return m_ElapsedTime; }
-		void updateElapsedTime(std::chrono::microseconds time) { m_ElapsedTime += time; }
+		void updateElapsedTime(std::chrono::microseconds time) 
+		{ 
+			m_ElapsedTime += time;
+			while (m_ElapsedTime >= GetSpriteTime())
+			{
+				m_ElapsedTime -= GetSpriteTime();
+				IncrementSprite();
+			}
+		
+		}
+
+		void SetDepth(float newDepth)
+		{
+			depth = newDepth;
+		}
+
+		auto GetDepth()
+		{
+			return depth;
+		}
 
 		void AddOnAnimationStart()
 		{
@@ -69,9 +88,10 @@ namespace Ebony
 	private:
 		SpriteSheet m_Spritesheet;
 
-		std::uint8_t m_CurrentSprite{ 0 };
-		std::uint8_t m_NumRepeatTimes{ 0 };
-		std::uint8_t m_FrameNumber{ 0 };
+		std::uint16_t m_CurrentSprite{ 0 };
+		std::uint16_t m_NumRepeatTimes{ 0 };
+		std::uint16_t m_FrameNumber{ 0 };
+		float depth = 1.0;
 		bool m_ShouldRepeatForever{ false };
 		bool m_Started{ false };
 

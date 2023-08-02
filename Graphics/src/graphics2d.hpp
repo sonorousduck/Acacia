@@ -52,6 +52,7 @@ namespace Ebony
 
 		void Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
 		void Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
+		void DrawAnimation(Shader& s, Texture2D& texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth);
 		void DrawInstanced(Shader& s, Texture2D& texture, unsigned int VAO, std::uint32_t count);
 		void DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget);
 
