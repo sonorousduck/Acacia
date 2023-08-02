@@ -283,7 +283,11 @@ namespace Ebony
 
 	void Graphics2d::DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color)
 	{
-		s.use();
+		if (activeShaderId != s.ID)
+		{
+			s.use();
+			activeShaderId = s.ID;
+		}
 		s.setVec3("textColor", color.GetRGB());
 		glActiveTexture(GL_TEXTURE0);
 		glBindVertexArray(textVAO);

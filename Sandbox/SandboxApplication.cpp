@@ -59,32 +59,32 @@ namespace Ebony {
 			animationSystem = systems::Animation2d();
 
 
-			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 100000);
-			particleGroup->velocity = glm::vec2{ 50.0f, 10.0f };
-			particleGroup->rateOverTime = 1;
-			particleGroup->spawnRate = std::chrono::milliseconds(100);
-			particleGroup->position = glm::vec2{ 400.0f, 400.0f };
-			particleGroup->maxLifetime = std::chrono::milliseconds(500);
-			particleGroup->startSize = glm::vec2{ 1.0f, 1.0f };
-			particleGroup->maxStartSize = glm::vec2{ 5.0f, 5.0f };
-			particleGroup->randomStartSize = true;
+			//auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 100000);
+			//particleGroup->velocity = glm::vec2{ 50.0f, 10.0f };
+			//particleGroup->rateOverTime = 1;
+			//particleGroup->spawnRate = std::chrono::milliseconds(100);
+			//particleGroup->position = glm::vec2{ 400.0f, 400.0f };
+			//particleGroup->maxLifetime = std::chrono::milliseconds(500);
+			//particleGroup->startSize = glm::vec2{ 1.0f, 1.0f };
+			//particleGroup->maxStartSize = glm::vec2{ 5.0f, 5.0f };
+			//particleGroup->randomStartSize = true;
 
-			particleGroup->startSpeed = glm::vec2{ -50.0f, -10.0f };
-			particleGroup->maxStartSpeed = glm::vec2{ 50.0f, 10.0f };
-			particleGroup->randomStartSpeed = true;
+			//particleGroup->startSpeed = glm::vec2{ -50.0f, -10.0f };
+			//particleGroup->maxStartSpeed = glm::vec2{ 50.0f, 10.0f };
+			//particleGroup->randomStartSpeed = true;
 
-			particleGroup->endSize = glm::vec2{ 1.0f, 1.0f };
-			particleGroup->startAlpha = 1.0f;
-			particleGroup->endAlpha = 1.0f;
-			particleGroup->startColor = Ebony::Colors::White;
-			particleGroup->endColor = Ebony::Colors::White;
-			//particleGroup->maxDuration = std::chrono::seconds(3);
-			//particleGroup->startDelay = std::chrono::seconds(5);
+			//particleGroup->endSize = glm::vec2{ 1.0f, 1.0f };
+			//particleGroup->startAlpha = 1.0f;
+			//particleGroup->endAlpha = 1.0f;
+			//particleGroup->startColor = Ebony::Colors::White;
+			//particleGroup->endColor = Ebony::Colors::White;
+			////particleGroup->maxDuration = std::chrono::seconds(3);
+			////particleGroup->startDelay = std::chrono::seconds(5);
 
-			testParticles->addComponent(std::move(particleGroup));
+			//testParticles->addComponent(std::move(particleGroup));
 
-			particleSystem.AddEntity(testParticles);
-			particleRenderer.AddEntity(testParticles);
+			//particleSystem.AddEntity(testParticles);
+			//particleRenderer.AddEntity(testParticles);
 
 
 			auto animationController = std::make_unique<components::AnimationController>();
@@ -204,10 +204,10 @@ namespace Ebony {
 			{
 				fps = std::to_string(static_cast<int>(std::round(1 / deltaTime))) + " fps";
 				fpsUpdateDeltaTime += 0.25f;
-				layer = (layer + 1) % 44;
-				Shader& s = ResourceManager::GetShader("spritesheet");
-				s.use();
-				s.setInt("layer", layer);
+				//layer = (layer + 1) % 44;
+				//Shader& s = ResourceManager::GetShader("spritesheet");
+				//s.use();
+				//s.setInt("layer", layer);
 			}
 
 		}
@@ -221,9 +221,9 @@ namespace Ebony {
 			
 			animationRenderer.Update(graphics);
 
-			/*auto previousTime = std::chrono::system_clock::now();
+			auto previousTime = std::chrono::system_clock::now();
 			particleRenderer.Update(graphics);
-			averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);*/
+			averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 
 
 			//graphics.Draw(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 0.0f), glm::vec2(300.0f, 400.0f), 45.0f, Colors::Red, 0.0f);
@@ -289,7 +289,7 @@ namespace Ebony {
 
 			std::cout << "Particle Rendering took " << averageParticleRenderingTime / totalFrames << " on average." << std::endl;
 			std::cout << "Particle System Updates took " << averageParticleSystemTime / totalFrames << " on average." << std::endl;
-			std::cout << "Particle Count at termination: " << testParticles->getComponent<components::ParticleGroup>()->particleCount << std::endl;
+			//std::cout << "Particle Count at termination: " << testParticles->getComponent<components::ParticleGroup>()->particleCount << std::endl;
 			glfwTerminate();
 		}
 
