@@ -1,4 +1,5 @@
 #include "animationRenderer.hpp"
+#include <resourceManager.hpp>
 
 namespace systems
 {
@@ -13,7 +14,7 @@ namespace systems
 			// Draw each Texture2D here
 			for (auto& animation : animationsToDraw)
 			{
-				graphics.Draw(animation.GetSprite().spritesheet, glm::vec2(100.0f, 100.0f), glm::vec2(1.0f, 1.0f), 0.0f, Ebony::Colors::White);
+				graphics.Draw(Ebony::ResourceManager::GetShader("spritesheet"), animation.GetSprite().spritesheet, glm::vec2(100.0f, 100.0f), glm::vec2(1.0f, 1.0f), 0.0f, Ebony::Colors::White);
 			}
 
 
