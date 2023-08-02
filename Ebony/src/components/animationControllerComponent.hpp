@@ -12,24 +12,29 @@ namespace components
 {
 	struct Link
 	{
-		size_t childNode;
-		std::function<bool()> shouldTraverse;
+		Link(size_t childNode, std::function<bool()> shouldTraverse) : childNode(childNode), shouldTraverse(shouldTraverse) {}
+
+		size_t childNode; // The node that the link points to
+		std::function<bool()> shouldTraverse; // The function that has to evaluate as true in order to move to that node
 	};
 
 	struct Node
 	{
-		std::vector<Link> links;
+		Node(std::vector<Link> links, std::vector<Ebony::Animation> animations) : links(links), animations(animations) {}
+
+		std::vector<Link> links{};
+		std::vector<Ebony::Animation> animations{};
 	};
 
 	class AnimationController : public PolymorphicComparable<Component, AnimationController>
 	{
 	public:
-		AnimationController() : animations(std::vector<std::vector<Ebony::Animation>>()), animationTree(std::vector<Node>()) { };
-		AnimationController(std::vector<Node> animationTree, std::vector<std::vector<Ebony::Animation>> animations) : animationTree(animationTree), animations(animations) {};
+		AnimationController() : animationTree(std::vector<Node>()) { };
+		AnimationController(std::vector<Node> animationTree) : animationTree(animationTree) {};
 
 		std::vector<Ebony::Animation> GetSprite()
 		{
-			return animations.at(currentNode);
+			return animationTree.at(currentNode).animations;
 		}
 
 		// Add animation will both add a node and an animation
@@ -54,11 +59,11 @@ namespace components
 
 		bool operator==(AnimationController& rhs)
 		{
-			if (animations.size() == rhs.animations.size())
+			if (animationTree.size() == rhs.animationTree.size())
 			{
-				for (unsigned int i = 0; i < animations.size(); i++)
+				for (unsigned int i = 0; i < animationTree.size(); i++)
 				{
-					if (animations[i].size() != rhs.animations[i].size())
+					if (animationTree[i].animations.size() != rhs.animationTree[i].animations.size())
 					{
 						return false;
 					}
@@ -71,7 +76,7 @@ namespace components
 
 
 		// Vector of nodes containing animations
-		std::vector<std::vector<Ebony::Animation>> animations;
+		//std::vector<std::vector<Ebony::Animation>> animations;
 		std::vector<Node> animationTree;
 		size_t currentNode{ 0 };
 

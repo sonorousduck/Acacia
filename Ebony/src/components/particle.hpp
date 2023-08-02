@@ -8,16 +8,87 @@
 #include <texture.hpp>
 #include "shader.hpp"
 
+#include <random>
+
+//struct Shape
+//{
+//
+//};
+
 
 struct Particle
 {
-	Particle() {};
-	Particle(Texture2D& texture) : texture(texture) {};
 	Particle(Texture2D& texture, std::chrono::microseconds lifetime, std::chrono::microseconds alive) : texture(texture), lifetime(lifetime), alive(alive) {};
 
 	Particle(Texture2D& texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha) : texture(texture), lifetime(lifetime), startSize(startSize),
-	endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(Ebony::Colors::White)
-	{};
+		endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(Ebony::Colors::White)
+	{
+		lerpColor = startColor != endColor;
+		lerpAlpha = startAlpha != endAlpha;
+		lerpSize = startSize != endSize;
+	};
+	Particle(Texture2D& texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha, Ebony::Color startColor, Ebony::Color endColor) : texture(texture), lifetime(lifetime), startSize(startSize),
+		endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(startColor), startColor(startColor), endColor(endColor)
+	{
+		lerpColor = startColor != endColor;
+		lerpAlpha = startAlpha != endAlpha;
+		lerpSize = startSize != endSize;
+	};
+
+	// No way this worked... components::ParticleGroup doesn't work because it hasn't been defined yet
+	// But since auto gets its type assigned at compile time, it actually works
+	// Seems really dangerous to use this way.. :)
+	Particle(auto* particleGroup)
+	{
+		texture = particleGroup->texture;
+		lifetime = std::chrono::microseconds::zero();
+		endSize = particleGroup->endSize;
+		startAlpha = particleGroup->startAlpha;
+		endAlpha = particleGroup->endAlpha;
+		alive = std::chrono::microseconds::zero();
+		currentAlpha = startAlpha;
+		startColor = particleGroup->startColor;
+		currentColor = startColor;
+		endColor = particleGroup->endColor;
+
+
+		if (particleGroup->randomStartSpeed)
+		{
+			auto xValue = particleGroup->random_double() * (particleGroup->maxStartSpeed.x - particleGroup->startSpeed.x) + particleGroup->startSpeed.x;
+			auto yValue = particleGroup->random_double() * (particleGroup->maxStartSpeed.y - particleGroup->startSpeed.y) + particleGroup->startSpeed.y;
+
+			startSpeed = glm::vec2(xValue, yValue);
+			endSpeed = startSpeed;
+			currentSpeed = startSpeed;
+		}
+		else
+		{
+			startSpeed = particleGroup->startSpeed;
+			currentSpeed = startSpeed;
+			endSpeed = particleGroup->endSpeed;
+		}
+		if (particleGroup->randomStartSize)
+		{
+			auto xValue = particleGroup->random_double() * (particleGroup->maxStartSize.x - particleGroup->startSize.x) + particleGroup->startSize.x;
+			auto yValue = particleGroup->random_double() * (particleGroup->maxStartSize.y - particleGroup->startSize.y) + particleGroup->startSize.y;
+
+
+			startSize = glm::vec2(xValue, yValue);
+			currentSize = startSize;
+			endSize = startSize;
+
+		}
+		else
+		{
+			startSize = particleGroup->startSize;
+			currentSize = particleGroup->startSize;
+			endSize = particleGroup->endSize;
+		}
+
+		lerpColor = startColor != endColor;
+		lerpAlpha = startAlpha != endAlpha;
+		lerpSize = startSize != endSize;
+	}
 
 
 
@@ -36,12 +107,20 @@ struct Particle
 	glm::vec2 endSize{ 0.0f };
 	glm::vec2 currentSize{ 0.0f };
 
+	glm::vec2 startSpeed{ 0.0f };
+	glm::vec2 endSpeed{ 0.0f };
+	glm::vec2 currentSpeed{ 0.0f };
+
 	glm::vec2 position{ 0.0f };
 	glm::vec2 direction{ 0.0f };
 	glm::vec2 velocity{ 0.0f };
 
 	float rotationRate{ 0.0f };
 	float rotation{ 0.0f };
+
+	bool lerpColor = false;
+	bool lerpSize = false;
+	bool lerpAlpha = false;
 
 	// Color over time
 	Ebony::Color startColor = Ebony::Colors::White;
@@ -56,19 +135,23 @@ struct Particle
 	// Particle texture
 	Texture2D texture;
 };
+
+
 namespace components
 {
 	class ParticleGroup : public PolymorphicComparable<Component, ParticleGroup>
 	{
 	public:
 		// Enforcing maxParticles so we don't have to remake the buffers as often
-		ParticleGroup(Texture2D& texture, std::uint32_t maxParticles = 5000) : texture(texture), maxParticles(maxParticles) {
-			/*static const GLfloat g_vertex_buffer_data[] = {
-			 -0.5f, -0.5f,
-			 0.5f, -0.5f, 
-			 -0.5f, 0.5f, 
-			 0.5f, 0.5f,
-			};*/
+		ParticleGroup(Texture2D& texture, std::uint32_t maxParticles = 5000) : texture(texture), maxParticles(maxParticles) 
+		{
+
+			//static const GLfloat g_vertex_buffer_data[] = {
+			//	 -0.5f, -0.5f,
+			//	 0.5f, -0.5f, 
+			//	 -0.5f, 0.5f, 
+			//	 0.5f, 0.5f,
+			//};
 
 			static const GLfloat g_vertex_buffer_data[] = {
 				-1.0f,  1.0f,
@@ -90,6 +173,13 @@ namespace components
 				1.0f, 1.0f
 			};
 
+			//static const GLfloat g_uv_buffer_data[] = {
+			//	0.0f, 0.0f,
+			//	1.0f, 0.0f,
+			//	1.0f, 1.0f,
+			//	0.0f, 1.0f,
+			//};
+
 			glGenVertexArrays(1, &this->instancedVAO);
 			glBindVertexArray(this->instancedVAO);
 
@@ -103,15 +193,14 @@ namespace components
 			glBindBuffer(GL_ARRAY_BUFFER, particleUvBuffer);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
 
+			// Initialize buffer with empty buffer, since it will be updated later at each frame
 			glGenBuffers(1, &particlePositionBuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
-
-			// Initialize buffer with empty buffer, since it will be updated later at each frame. TODO: THINK OF A BETTER WAY TO HANDLE THE MAX PARTICLES
-			glBufferData(GL_ARRAY_BUFFER, maxParticles * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, static_cast<unsigned long long>(maxParticles) * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 
 			glGenBuffers(1, &particleColorBuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
-			glBufferData(GL_ARRAY_BUFFER, maxParticles * 4 * sizeof(GLubyte), NULL, GL_STREAM_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, static_cast<unsigned long long>(maxParticles) * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 
 
 			glEnableVertexAttribArray(0);
@@ -124,7 +213,6 @@ namespace components
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 
-
 			glEnableVertexAttribArray(2);
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
 			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -132,7 +220,7 @@ namespace components
 
 			glEnableVertexAttribArray(3);
 			glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
-			glVertexAttribPointer(3, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)0);
+			glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 			glVertexAttribDivisor(0, 0); // Always use the same vertices
 			glVertexAttribDivisor(1, 0); // Always use the same uvs
@@ -142,6 +230,7 @@ namespace components
 
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindVertexArray(0);
+
 		};
 
 		// Allow the developer to set a shader, if desired. If none is found, then a default particle shader will be used
@@ -179,13 +268,15 @@ namespace components
 			
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
 
-			// Initialize buffer with empty buffer, since it will be updated later at each frame. TODO: THINK OF A BETTER WAY TO HANDLE THE MAX PARTICLES
+			// Initialize buffer with empty buffer, since it will be updated later at each frame.
 			glBufferData(GL_ARRAY_BUFFER, maxParticles * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 			glEnableVertexAttribArray(1);
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
 			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
 			glVertexAttribDivisor(1, 1); // Positions: One per quad
 		}
+
+		
 
 		// Allows for fade in/fade out, etc.
 		float startAlpha{ 1.0f };
@@ -194,6 +285,20 @@ namespace components
 		// Allows control for the sizing of your particle through its life
 		glm::vec2 startSize{ 1.0f };
 		glm::vec2 endSize{ 1.0f };
+
+		// Random size generation
+		bool randomStartSize = false;
+		glm::vec2 maxStartSize{1.0f};
+
+		bool randomStartSpeed = false;
+		glm::vec2 startSpeed{ 1.0f };
+		glm::vec2 maxStartSpeed{ 1.0f };
+
+		glm::vec2 endSpeed{ 1.0f };
+
+		
+		Ebony::Color startColor{};
+		Ebony::Color endColor{};
 
 		std::uint32_t particleCount{ 0 };
 
@@ -223,6 +328,12 @@ namespace components
 		// Tracks whether the particle group has been preallocated.
 		bool preallocated{ false };
 
+		std::uint32_t min = 0;
+		std::uint32_t max = 100;
+
+		std::random_device rd;
+
+
 		unsigned int instancedVAO = 0;
 		unsigned int particleVertexBuffer = 0;
 		unsigned int particleUvBuffer = 0;
@@ -231,14 +342,31 @@ namespace components
 
 		std::vector<float> particlePositionSizeData = {};
 		std::vector<float> particleColorData = {};
+		std::chrono::microseconds spawnRate = std::chrono::milliseconds(16);
+		std::chrono::microseconds accumulatedTime = std::chrono::milliseconds(0);
+
+		inline double random_double()
+		{
+			static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+			static std::mt19937 generator;
+			return distribution(generator);
+		}
 
 
 		private:
-			
 
-
+			//void Preallocate()
+			//{
+			//	particles.reserve(maxParticles);
+			//	while (particles.size() < maxParticles)
+			//	{
+			//		particles.push_back(Particle(texture, std::chrono::microseconds::zero(), startSize, endSize, startAlpha, endAlpha, startColor, endColor));
+			//	}
+			//	preallocated = true;
+			//}
 			// Max number of particles that will be generated at any given time. If you start encroaching on this number
 			// the generation will overwrite the old particles to generate new ones (probably). This may change to just not generate
-			std::uint32_t maxParticles{ 5000 };
+			std::uint32_t maxParticles{ 1000 };
 	};
 }
+

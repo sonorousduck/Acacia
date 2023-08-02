@@ -18,7 +18,7 @@ namespace Ebony
 
 		bool operator==(Color& rhs)
 		{
-			return (GetRGBA() == rhs.GetRGBA());
+			return (rgba == rhs.rgba);
 		}
 
 
@@ -37,9 +37,9 @@ namespace Ebony
 		float g() { return rgba.g; };
 		float b() { return rgba.b;  };
 		float a() { return rgba.a; };
+		glm::vec4 rgba;
 
 	private:
-		glm::vec4 rgba;
 	};
 
 	namespace Colors

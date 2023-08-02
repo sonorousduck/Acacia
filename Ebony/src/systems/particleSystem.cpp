@@ -13,6 +13,10 @@ namespace systems
 		for (auto& [id, entity] : m_Entities)
 		{
 			auto particleGroup = entity->getComponent<components::ParticleGroup>();
+			bool hasDelay = particleGroup->startDelay != std::chrono::microseconds::zero() && particleGroup->duration < particleGroup->startDelay;
+			particleGroup->duration += elapsedTime;
+
+
 
 			// This will be the case most of the time. I want the compiler to optimize to go down the path that it IS preallocated, rather than it not being preallocated
 			if (particleGroup->preallocated) {}
@@ -21,86 +25,99 @@ namespace systems
 				Preallocate(particleGroup);
 			}
 
-			// Rate over time is the number of new particles each update loop
-			for (unsigned int i = 0; i < particleGroup->rateOverTime; i++)
+			if (particleGroup->maxDuration == std::chrono::microseconds::zero() || particleGroup->duration < particleGroup->maxDuration + particleGroup->startDelay && !hasDelay)
 			{
-				int unusedParticle = firstUnusedParticle(particleGroup);
-				// TODO: This will eventually be the game object, not the particle group that is passed
-				respawnParticle(particleGroup->particles[unusedParticle], particleGroup, glm::vec2(1.0f));
-			}
-			
-			// TODO: Potentially, to avoid reallocation every time, this should be moved somewhere else.
-			particleGroup->particlePositionSizeData.clear();
-			particleGroup->particlePositionSizeData.resize(particleGroup->particles.size() * 4); // x, y, xSize, ySize
+				particleGroup->accumulatedTime += elapsedTime;
 
-			particleGroup->particleColorData.clear();
-			particleGroup->particleColorData.resize(particleGroup->particles.size() * 4); // r, g, b, a
-			
 
-			std::uint32_t particleCount = 0;
-
-			for (unsigned int i = 0; i < particleGroup->particles.size(); i++)
-			{
-				Particle& particle = particleGroup->particles[i];
-				
-				// If lifetime is 0 microseconds, this means that it will always play
-				if (particle.alive < particle.lifetime)
+				while (particleGroup->accumulatedTime >= particleGroup->spawnRate)
 				{
-					// TODO: Eventually, make this a more complicated update time loop. That way, we can use animations inside of the particles
-					particle.alive += elapsedTime;
-
-					particle.position += particle.velocity * glm::vec2(elapsedTime.count() / 100000.0, elapsedTime.count() / 100000.0) ;
-
-					float lerpValue = static_cast<float>(particle.alive.count()) / static_cast<float>(particle.lifetime.count());
-
-					// Update size
-					if (particle.startSize != particle.endSize)
+					// Rate over time is the number of new particles each update loop
+					for (unsigned int i = 0; i < particleGroup->rateOverTime; i++)
 					{
-						particle.currentSize.x = std::lerp(particle.startSize.x, particle.endSize.x, lerpValue);
-						particle.currentSize.y = std::lerp(particle.startSize.y, particle.endSize.y, lerpValue);
-
-						// TODO: Should probably also set the scale of the sprite here too
+						int unusedParticle = firstUnusedParticle(particleGroup);
+						// TODO: This will eventually be the game object, not the particle group that is passed
+						respawnParticle(particleGroup->particles[unusedParticle], particleGroup, glm::vec2(1.0f));
 					}
-
-					if (particle.startAlpha != particle.endAlpha)
-					{
-						particle.currentAlpha = std::lerp(particle.startAlpha, particle.endAlpha, lerpValue);
-					}
-
-					if (particle.startColor != particle.endColor)
-					{
-						particle.currentColor.setR(std::lerp(particle.startColor.r(), particle.endColor.r(), lerpValue));
-						particle.currentColor.setG(std::lerp(particle.startColor.g(), particle.endColor.g(), lerpValue));
-						particle.currentColor.setB(std::lerp(particle.startColor.b(), particle.endColor.b(), lerpValue));
-					}
-
-					particle.rotation += particle.rotationRate * elapsedTime.count() / 100000.0f;
-
-					// Update the buffers with the new information
-					particleGroup->particlePositionSizeData[4 * i] = particle.position.x;
-					particleGroup->particlePositionSizeData[4 * i + 1] = particle.position.y;
-					particleGroup->particlePositionSizeData[4 * i + 2] = particle.currentSize.x;
-					particleGroup->particlePositionSizeData[4 * i + 3] = particle.currentSize.y;
-
-					particleGroup->particleColorData[4 * i] = particle.currentColor.r();
-					particleGroup->particleColorData[4 * i + 1] = particle.currentColor.g();
-					particleGroup->particleColorData[4 * i + 2] = particle.currentColor.b();
-					particleGroup->particleColorData[4 * i + 3] = particle.currentAlpha;
-
-					particleCount++;
+					particleGroup->accumulatedTime -= particleGroup->spawnRate;
 				}
 			}
 
-			particleGroup->particleCount = particleCount;
+			// If there is a start delay, we don't want to do any of the stuff after this point
+			if (!hasDelay)
+			{
+				// TODO: Potentially, to avoid reallocation every time, this should be moved somewhere else.
+				particleGroup->particlePositionSizeData.clear();
+				particleGroup->particlePositionSizeData.resize(particleGroup->particles.size() * 4); // x, y, xSize, ySize
+
+				particleGroup->particleColorData.clear();
+				particleGroup->particleColorData.resize(particleGroup->particles.size() * 4); // r, g, b, a
+
+
+				std::uint32_t particleCount = 0;
+
+				for (unsigned int i = 0; i < particleGroup->particles.size(); i++)
+				{
+					Particle& particle = particleGroup->particles[i];
+
+					// If lifetime is 0 microseconds, this means that it will always play
+					if (particle.alive < particle.lifetime)
+					{
+						particle.alive += elapsedTime;
+
+						// TODO: Eventually, make this a more complicated update time loop. That way, we can use animations inside of the particles
+
+						particle.position += particle.currentSpeed * glm::vec2(elapsedTime.count() / 100000.0, elapsedTime.count() / 100000.0);
+
+						float lerpValue = static_cast<float>(particle.alive.count()) / static_cast<float>(particle.lifetime.count());
+
+						// Update size
+						if (particle.lerpSize)
+						{
+							particle.currentSize = glm::mix(particle.startSize, particle.endSize, lerpValue);
+						}
+
+						if (particle.lerpAlpha)
+						{
+							particle.currentAlpha = std::lerp(particle.startAlpha, particle.endAlpha, lerpValue);
+						}
+
+						if (particle.lerpColor)
+						{
+							particle.currentColor.rgba = glm::mix(particle.startColor.rgba, particle.endColor.rgba, lerpValue);
+						}
+
+						particle.rotation += particle.rotationRate * elapsedTime.count() / 100000.0f;
+
+						// Update the buffers with the new information
+						particleGroup->particlePositionSizeData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(particleCount) + 0] = particle.position.x;
+						particleGroup->particlePositionSizeData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(particleCount) + 1] = particle.position.y;
+						particleGroup->particlePositionSizeData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(particleCount) + 2] = particle.currentSize.x;
+						particleGroup->particlePositionSizeData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(particleCount) + 3] = particle.currentSize.y;
+
+						particleGroup->particleColorData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(particleCount) + 0] = particle.currentColor.r();
+						particleGroup->particleColorData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(particleCount) + 1] = particle.currentColor.g();
+						particleGroup->particleColorData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(particleCount) + 2] = particle.currentColor.b();
+						particleGroup->particleColorData[4 * static_cast<std::vector<float, std::allocator<float>>::size_type>(particleCount) + 3] = particle.currentAlpha;
+
+						particleCount++;
+					}
+				}
+
+				particleGroup->particleCount = particleCount;
+
+			}
 		}
 	}
 
 	void ParticleSystem::Preallocate(components::ParticleGroup* particleGroup)
 	{
+		particleGroup->particles.reserve(particleGroup->getMaxParticles());
 		while (particleGroup->particles.size() < particleGroup->getMaxParticles())
 		{
-			particleGroup->particles.push_back(Particle(particleGroup->texture, std::chrono::microseconds::zero(), particleGroup->startSize, particleGroup->endSize, particleGroup->startAlpha, particleGroup->endAlpha));
+			particleGroup->particles.push_back(Particle(particleGroup));
 		}
+		particleGroup->preallocated = true;
 	}
 
 	int ParticleSystem::firstUnusedParticle(components::ParticleGroup* particleGroup)
@@ -135,27 +152,10 @@ namespace systems
 	void ParticleSystem::respawnParticle(Particle& particle, components::ParticleGroup* particleGroup, glm::vec2 offset)
 	{
 		float random = ((rand() % 100) - 50) / 10.0f;
-		float rColor = 0.5f + ((rand() % 100) / 100.0f);
 		particle.position = particleGroup->position + random + offset;
-		//particle.position = particleGroup->position;
-
-		particle.startColor = Ebony::Color(rColor, rColor, rColor);
-		particle.endColor = Ebony::Color(rColor, rColor, rColor);
-		particle.currentColor = Ebony::Color(rColor, rColor, rColor);
 
 		particle.alive = std::chrono::microseconds::zero();
 		particle.lifetime = particleGroup->maxLifetime;
-		particle.velocity = particleGroup->velocity;
-
-		if (rand() % 2 < 1)
-		{
-			particle.velocity.x = -particle.velocity.x;
-		}
-		if (rand() % 2 < 1)
-		{
-			particle.velocity.y = -particle.velocity.y;
-		}
-
 
 	}
 }

@@ -14,7 +14,7 @@ namespace systems
 			auto sprite = entity->getComponent<components::AnimationController>();
 
 			// This updates the current node's animations. Also will call any callbacks registered to the sprite frames for the animations
-			for (auto& animation : sprite->animations.at(sprite->currentNode))
+			for (auto& animation : sprite->animationTree.at(sprite->currentNode).animations)
 			{
 				animation.updateElapsedTime(elapsedTime);
 				
@@ -32,7 +32,7 @@ namespace systems
 			{
 				if (link.shouldTraverse())
 				{
-					for (auto& animation : sprite->animations.at(sprite->currentNode))
+					for (auto& animation : sprite->animationTree.at(sprite->currentNode).animations)
 					{
 						animation.ResetAnimation();
 					}

@@ -9,13 +9,26 @@ out vec4 vParticleColor;
 
 uniform mat4 projection;
 uniform mat4 view;
-uniform mat4 model;
 
 void main()
 {
     vUv = aUv;
     vParticleColor = aColor;
-    gl_Position = projection * view * aPositionSize * vec4(aVertex * 10.0, 0.0, 1.0);
+
+    mat4 translation = mat4(1.0);
+    mat4 scale = mat4(1.0);
+    mat4 rotation = mat4(1.0);
+    
+    translation[3][0] = aPositionSize.x;
+    translation[3][1] = aPositionSize.y;
+
+    scale[0][0] = aPositionSize.z;
+    scale[1][1] = aPositionSize.w;
+
+    mat4 model = translation * scale;
+
+//aPositionSize.x * aPositionSize.z, aPositionSize.y * aPositionSize.w,
+    gl_Position = projection * view * model * vec4(aVertex * 10.0, 0.0, 1.0);
     // gl_Position = projection * view * instanceMatrix * vec4(aVertex * 10.0, 0.0, 1.0);
 
 }

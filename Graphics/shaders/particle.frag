@@ -11,6 +11,6 @@ void main()
 {
     outColor = (texture(particleTexture, vUv) * vParticleColor);
     // outColor = (texture(particleTexture, vUv));
-
+// 
     // outColor = vec4(1.0);
 }
