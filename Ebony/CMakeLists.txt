@@ -66,6 +66,19 @@ set(EntitySources
 	src/entity.cpp
 )
 
+set(MiscHeaders
+	src/misc/ThreadPool.hpp
+	src/misc/Task.hpp
+	src/misc/WorkerThread.hpp
+	src/misc/ConcurrentTaskGraph.hpp
+)
+
+set(MiscSources
+	src/misc/ThreadPool.cpp
+	src/misc/Task.cpp
+	src/misc/WorkerThread.cpp
+	src/misc/ConcurrentTaskGraph.cpp
+)
 
 
 source_group("Main\\Header Files" FILES ${HEADER_FILES})
@@ -76,6 +89,9 @@ source_group("Systems\\Header Files" FILES ${SystemHeaders})
 source_group("Systems\\Source Files" FILES ${SystemSources})
 source_group("Entities\\Header Files" FILES ${EntityHeaders})
 source_group("Entities\\Source Files" FILES ${EntitySources})
+source_group("Misc\\Header Files" FILES ${MiscHeaders})
+source_group("Misc\\Source Files" FILES ${MiscSources})
+
 
 source_group("Main\\Event Files" FILES ${HEADER_EVENTS})
 
@@ -90,6 +106,8 @@ set(CODE_FILES
 	${HEADER_EVENTS}
 	${EntityHeaders}
 	${EntitySources}
+	${MiscHeaders}
+	${MiscSources}
 )
 
 
