@@ -176,8 +176,8 @@ namespace Ebony
 			return;
 		}
 
-		std::vector<std::shared_ptr<Task>> tasks{};
-		std::vector<std::shared_ptr<Task>> tasksIO{};
+		std::vector<std::shared_ptr<Task>> tasks;
+		std::vector<std::shared_ptr<Task>> tasksIO;
 
 		while (!graph->queueEmpty())
 		{
@@ -210,6 +210,7 @@ namespace Ebony
 	// -----------------------------------------------------------------
 	void ThreadPool::taskComplete(const std::shared_ptr<Task>& task)
 	{
+		// Because of the use of non-synchronized containers, this method needs to be synchronized itself
 		std::lock_guard<std::mutex> lock(m_MutexTaskComplete);
 
 		m_ActiveTasks--;
@@ -218,7 +219,7 @@ namespace Ebony
 		// so no need to look at the graph again.
 		if (m_TaskGraphs.contains(task->getGraphId()))
 		{
-			auto& graph = m_TaskGraphs[task->getGraphId()];
+			auto graph = m_TaskGraphs[task->getGraphId()];
 			graph->taskComplete(task->getId());
 
 			// This can only be true if all tasks in the graph have no predecessors and are
@@ -231,7 +232,6 @@ namespace Ebony
 
 			enqueueAvailableGraphTasks(graph);
 		}
-
 
 		if (m_ActiveTasks.load() == 0 && m_OnEmpty)
 		{

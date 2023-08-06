@@ -1,18 +1,19 @@
 #include "Ebony.hpp"
 #include "camera.hpp"
-
-
 #include "glm/glm.hpp"
-#include <resourceManager.hpp>
-#include <filesystem>
-#include <spritefont.hpp>
-#include <systems/particleSystem.hpp>
-#include <systems/particleRenderer.hpp>
-#include <systems/inputSystem.hpp>
-#include <systems/animationRenderer.hpp>
-#include <systems/animation2d.hpp>
+#include "resourceManager.hpp"
+#include "spritefont.hpp"
+#include "systems/particleSystem.hpp"
+#include "systems/particleRenderer.hpp"
+#include "systems/inputSystem.hpp"
+#include "systems/animationRenderer.hpp"
+#include "systems/animation2d.hpp"
 #include "misc/ThreadPool.hpp"
+
+#include <filesystem>
 #include <latch>
+#include <algorithm>
+
 
 namespace Ebony {
 
@@ -216,8 +217,8 @@ namespace Ebony {
 				[&graphDone]()
 				{
 					graphDone.count_down();
-				}
-			);
+				});
+
 			auto task1 = ThreadPool::instance().createTask(
 				taskGraph,
 				[this, elapsedTime]()
@@ -244,11 +245,11 @@ namespace Ebony {
 
 			/*auto previousTime = std::chrono::system_clock::now();
 			animationSystem.Update(elapsedTime);
-			averageAnimationSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);*/
+			averageAnimationSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 
-			//previousTime = std::chrono::system_clock::now();
-			//particleSystem.Update(elapsedTime);
-			//averageParticleSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
+			previousTime = std::chrono::system_clock::now();
+			particleSystem.Update(elapsedTime);
+			averageParticleSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);*/
 
 			if (fpsUpdateDeltaTime <= 1.0f)
 			{
