@@ -11,7 +11,8 @@
 #include <systems/inputSystem.hpp>
 #include <systems/animationRenderer.hpp>
 #include <systems/animation2d.hpp>
-
+#include "misc/ThreadPool.hpp"
+#include <latch>
 
 namespace Ebony {
 
@@ -209,13 +210,45 @@ namespace Ebony {
 			lastFrame = currentFrame;
 			fpsUpdateDeltaTime -= deltaTime;
 
-			auto previousTime = std::chrono::system_clock::now();
-			animationSystem.Update(elapsedTime);
-			averageAnimationSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
+			std::latch graphDone{ 1 };
 
-			previousTime = std::chrono::system_clock::now();
-			particleSystem.Update(elapsedTime);
-			averageParticleSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
+			auto taskGraph = ThreadPool::instance().createTaskGraph(
+				[&graphDone]()
+				{
+					graphDone.count_down();
+				}
+			);
+			auto task1 = ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					animationSystem.Update(elapsedTime);
+				}
+			);
+
+			auto task2 = ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					particleSystem.Update(elapsedTime);
+				}
+			);
+
+			// Declare predecessors here
+			//taskGraph->declarePredecessor(task1->getId(), task2->getId());
+
+
+			ThreadPool::instance().submitTaskGraph(taskGraph);
+			graphDone.wait();
+
+
+			/*auto previousTime = std::chrono::system_clock::now();
+			animationSystem.Update(elapsedTime);
+			averageAnimationSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);*/
+
+			//previousTime = std::chrono::system_clock::now();
+			//particleSystem.Update(elapsedTime);
+			//averageParticleSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 
 			if (fpsUpdateDeltaTime <= 1.0f)
 			{
@@ -299,12 +332,13 @@ namespace Ebony {
 			}
 
 			std::cout << "Particle Rendering took " << averageParticleRenderingTime / totalFrames << " on average." << std::endl;
-			std::cout << "Particle System Updates took " << averageParticleSystemTime / totalFrames << " on average." << std::endl;
-			std::cout << "Animation System Updates took " << averageAnimationSystemTime / totalFrames << " on average." << std::endl;
+			//std::cout << "Particle System Updates took " << averageParticleSystemTime / totalFrames << " on average." << std::endl;
+			//std::cout << "Animation System Updates took " << averageAnimationSystemTime / totalFrames << " on average." << std::endl;
 			std::cout << "Average Updates took " << averageUpdateTime / totalFrames << " on average." << std::endl;
 
 			std::cout << "Particle Count at termination: " << testParticles->getComponent<components::ParticleGroup>()->particleCount << std::endl;
 			glfwTerminate();
+			ThreadPool::terminate();
 		}
 
 

@@ -30,8 +30,8 @@ THE SOFTWARE.
 #include <unordered_map>
 
 #include "Task.hpp"
-#include "ConcurrentQueue.hpp"
 #include "WorkerThread.hpp"
+#include "ConcurrentTaskGraph.hpp"
 
 namespace Ebony
 {
@@ -54,12 +54,13 @@ namespace Ebony
 		void notifyEmpty(std::function<void(void)> onEmpty);
 
 
-		// TODO: Missing createTaskGraph function
+		std::shared_ptr<ConcurrentTaskGraph> createTaskGraph(std::function<void(void)> onComplete = nullptr);
 		std::shared_ptr<Task> createTask(std::function<void(void)> job, std::function<void(void)> onComplete = nullptr);
 		std::shared_ptr<Task> createIOTask(std::function<void(void)> job, std::function<void(void)> onComplete = nullptr);
-		// TODO: Missing createTask and createIOTask when you pass in the graph as well
+		std::shared_ptr<Task> createTask(std::shared_ptr<ConcurrentTaskGraph>& graph, std::function<void(void)> job, std::function<void(void)> onComplete = nullptr);
+		std::shared_ptr<Task> createIOTask(std::shared_ptr<ConcurrentTaskGraph>& graph, std::function<void(void)> job, std::function<void(void)> onComplete = nullptr);
 
-		//void submitTaskGraph(std::shared_ptr<ConcurrentTaskGraph> graph);
+		void submitTaskGraph(std::shared_ptr<ConcurrentTaskGraph> graph);
 
 	protected:
 		ThreadPool(std::uint16_t sizeInitial);
@@ -73,7 +74,7 @@ namespace Ebony
 		ConcurrentQueue<std::shared_ptr<Task>> m_WorkQueue;
 		std::condition_variable m_EventWorkQueue;
 		std::mutex m_MutexWorkQueueEvent;
-		//std::unordered_map<std::uint64_t, std::shared_ptr<ConcurrentTaskGraph>> m_TaskGraphs;
+		std::unordered_map<std::uint64_t, std::shared_ptr<ConcurrentTaskGraph>> m_TaskGraphs;
 
 		// Separate threading system for IO as well, don't want to bog down systems with this
 		std::shared_ptr<WorkerThread> m_IoThread;
@@ -81,11 +82,11 @@ namespace Ebony
 		std::condition_variable m_IoEventWorkQueue;
 		std::mutex m_IoMutexWorkQueueEvent;
 
-		//void enqueueAvailableGraphTasks(std::shared_ptr<ConcurrentTaskGraph> graph);
+		void enqueueAvailableGraphTasks(std::shared_ptr<ConcurrentTaskGraph> graph);
 		void taskComplete(const std::shared_ptr<Task>& task);
 
 
-		friend class WorkerThread;
+		friend class WorkerThread; // to allow it to call taskComplete
 
 	};
 }

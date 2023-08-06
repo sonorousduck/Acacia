@@ -113,6 +113,14 @@ namespace Ebony
 		m_OnEmpty = onEmpty;
 	}
 
+	std::shared_ptr<ConcurrentTaskGraph> ThreadPool::createTaskGraph(std::function<void(void)> onComplete)
+	{
+		auto graph = std::make_shared<ConcurrentTaskGraph>(onComplete);
+		
+		m_TaskGraphs[graph->getId()] = graph;
+		return graph;
+	}
+
 
 	std::shared_ptr<Task> ThreadPool::createTask(std::function<void(void)> job, std::function<void(void)> onComplete)
 	{
@@ -124,6 +132,73 @@ namespace Ebony
 		return std::make_shared<Task>(0, true, job, onComplete);
 	}
 
+	std::shared_ptr<Task> ThreadPool::createTask(std::shared_ptr<ConcurrentTaskGraph>& graph, std::function<void(void)> job, std::function<void(void)> onComplete)
+	{
+		auto task = std::make_shared<Task>(graph->getId(), false, job, onComplete);
+		graph->add(task);
+
+		return task;
+	}
+
+	std::shared_ptr<Task> ThreadPool::createIOTask(std::shared_ptr<ConcurrentTaskGraph>& graph, std::function<void(void)> job, std::function<void(void)> onComplete)
+	{
+		auto task = std::make_shared<Task>(graph->getId(), false, job, onComplete);
+		graph->add(task);
+
+		return task;
+	}
+
+	// -----------------------------------------------------------------
+	//
+	// Pullable out any tasks that can be computed right now.  Dependent tasks
+	// will get added as predecessor tasks complete.
+	//
+	// -----------------------------------------------------------------
+	void ThreadPool::submitTaskGraph(std::shared_ptr<ConcurrentTaskGraph> graph)
+	{
+		graph->finalize();
+		enqueueAvailableGraphTasks(graph);
+	}
+
+	// -----------------------------------------------------------------
+	//
+	// Pullable out any tasks that can be computed right now and add them all
+	// at once, to ensure none complete while others from the same graph
+	// are still being added.
+	//
+	// -----------------------------------------------------------------
+	void ThreadPool::enqueueAvailableGraphTasks(std::shared_ptr<ConcurrentTaskGraph> graph)
+	{
+		// We do this so that we don't notify worker threads there might be tasks when there aren't.
+		// This issue is that if there aren't any taks, things that will notify on empty will receive a call as a result
+		if (graph->queueEmpty())
+		{
+			return;
+		}
+
+		std::vector<std::shared_ptr<Task>> tasks{};
+		std::vector<std::shared_ptr<Task>> tasksIO{};
+
+		while (!graph->queueEmpty())
+		{
+			m_ActiveTasks++;
+			auto task = graph->dequeue();
+			if (!task->isIo())
+			{
+				tasks.push_back(task);
+			}
+			else
+			{
+				tasksIO.push_back(task);
+			}
+		}
+
+		m_WorkQueue.enqueue(tasks);
+		m_EventWorkQueue.notify_all();
+
+		m_IoWorkQueue.enqueue(tasksIO);
+		m_IoEventWorkQueue.notify_all();
+	}
 
 	// -----------------------------------------------------------------
 	//
@@ -139,23 +214,23 @@ namespace Ebony
 
 		m_ActiveTasks--;
 
-		//// If the associated graph doesn't exist, there are no more tasks possible from the graph
-		//// so no need to look at the graph again.
-		//if (m_taskGraphs.contains(task->getGraphId()))
-		//{
-		//	auto graph = m_taskGraphs[task->getGraphId()];
-		//	graph->taskComplete(task->getId());
+		// If the associated graph doesn't exist, there are no more tasks possible from the graph
+		// so no need to look at the graph again.
+		if (m_TaskGraphs.contains(task->getGraphId()))
+		{
+			auto& graph = m_TaskGraphs[task->getGraphId()];
+			graph->taskComplete(task->getId());
 
-		//	// This can only be true if all tasks in the graph have no predecessors and are
-		//	// either done with their execution or in the available execution task queue on
-		//	// the thread pool itself.
-		//	if (graph->graphEmpty() && graph->queueEmpty())
-		//	{
-		//		m_taskGraphs.erase(graph->getId());
-		//	}
+			// This can only be true if all tasks in the graph have no predecessors and are
+			// either done with their execution or in the available execution task queue on
+			// the thread pool itself.
+			if (graph->graphEmpty() && graph->queueEmpty())
+			{
+				m_TaskGraphs.erase(graph->getId());
+			}
 
-		//	enqueueAvailableGraphTasks(graph);
-		//}
+			enqueueAvailableGraphTasks(graph);
+		}
 
 
 		if (m_ActiveTasks.load() == 0 && m_OnEmpty)
