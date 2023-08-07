@@ -61,8 +61,9 @@ namespace Ebony {
 			animationSystem = systems::Animation2d();
 
 
-			auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 100000);
-			particleGroup->velocity = glm::vec2{ 50.0f, 10.0f };
+			auto particleGroup = components::ParticleGroup::Line(ResourceManager::GetTexture("face"), 100000);
+			//auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 100000);
+			//particleGroup->velocity = glm::vec2{ 50.0f, 10.0f };
 			particleGroup->rateOverTime = 1500;
 			particleGroup->spawnRate = std::chrono::milliseconds(16);
 			particleGroup->position = glm::vec2{ 400.0f, 400.0f };
@@ -71,7 +72,7 @@ namespace Ebony {
 			particleGroup->maxStartSize = glm::vec2{ 5.0f, 5.0f };
 			particleGroup->randomStartSize = true;
 
-			particleGroup->startSpeed = glm::vec2{ -50.0f, -10.0f };
+			particleGroup->startSpeed = glm::vec2{ 50.0f, 10.0f };
 			particleGroup->maxStartSpeed = glm::vec2{ 50.0f, 10.0f };
 			particleGroup->randomStartSpeed = true;
 
@@ -80,6 +81,7 @@ namespace Ebony {
 			particleGroup->endAlpha = 1.0f;
 			particleGroup->startColor = Ebony::Colors::White;
 			particleGroup->endColor = Ebony::Colors::White;
+			//particleGroup->emissionArea = glm::vec2(100.0f, 100.0f);
 			//particleGroup->maxDuration = std::chrono::seconds(3);
 			//particleGroup->startDelay = std::chrono::seconds(5);
 

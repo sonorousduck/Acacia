@@ -112,12 +112,12 @@ namespace systems
 
 	void ParticleSystem::Preallocate(components::ParticleGroup* particleGroup)
 	{
+		particleGroup->preallocated = true;
 		particleGroup->particles.reserve(particleGroup->getMaxParticles());
 		while (particleGroup->particles.size() < particleGroup->getMaxParticles())
 		{
 			particleGroup->particles.push_back(Particle(particleGroup));
 		}
-		particleGroup->preallocated = true;
 	}
 
 	int ParticleSystem::firstUnusedParticle(components::ParticleGroup* particleGroup)
@@ -151,11 +151,12 @@ namespace systems
 	// its shape, emission velocity, etc.
 	void ParticleSystem::respawnParticle(Particle& particle, components::ParticleGroup* particleGroup, glm::vec2 offset)
 	{
-		float random = ((rand() % 100) - 50) / 10.0f;
+		//float random = ((rand() % 100) - 50) / 10.0f;
+		glm::vec2 random = glm::vec2(particleGroup->random_double(), particleGroup->random_double()) * particleGroup->emissionArea;
+		// TODO: Replace this with emission area
 		particle.position = particleGroup->position + random + offset;
 
 		particle.alive = std::chrono::microseconds::zero();
 		particle.lifetime = particleGroup->maxLifetime;
-
 	}
 }

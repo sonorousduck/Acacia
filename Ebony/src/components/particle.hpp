@@ -137,11 +137,101 @@ struct Particle
 };
 
 
+
+
 namespace components
 {
 	class ParticleGroup : public PolymorphicComparable<Component, ParticleGroup>
 	{
 	public:
+		ParticleGroup(Texture2D& texture, glm::vec2 velocity, float emissionArc, std::uint32_t maxParticles = 5000) : 
+			texture(texture), 
+			maxParticles(maxParticles), 
+			startSpeed(velocity),
+			maxStartSpeed(velocity),
+			emissionArc(emissionArc)
+		{
+			static const GLfloat g_vertex_buffer_data[] = {
+				-1.0f,  1.0f,
+				-1.0f, -1.0f,
+				 1.0f, -1.0f,
+
+				-1.0f,  1.0f,
+				 1.0f, -1.0f,
+				 1.0f,  1.0f,
+			};
+
+			static const GLfloat g_uv_buffer_data[] = {
+				0.0f, 1.0f,
+				0.0f, 0.0f,
+				1.0f, 0.0f,
+
+				0.0f, 1.0f,
+				1.0f, 0.0f,
+				1.0f, 1.0f
+			};
+
+			//static const GLfloat g_uv_buffer_data[] = {
+			//	0.0f, 0.0f,
+			//	1.0f, 0.0f,
+			//	1.0f, 1.0f,
+			//	0.0f, 1.0f,
+			//};
+
+			glGenVertexArrays(1, &this->instancedVAO);
+			glBindVertexArray(this->instancedVAO);
+
+			// Allocate for the vertices
+			glGenBuffers(1, &particleVertexBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, particleVertexBuffer);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+			// Allocate for the Uvs
+			glGenBuffers(1, &particleUvBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, particleUvBuffer);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
+
+			// Initialize buffer with empty buffer, since it will be updated later at each frame
+			glGenBuffers(1, &particlePositionBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
+			glBufferData(GL_ARRAY_BUFFER, static_cast<unsigned long long>(maxParticles) * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
+
+			glGenBuffers(1, &particleColorBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
+			glBufferData(GL_ARRAY_BUFFER, static_cast<unsigned long long>(maxParticles) * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
+
+
+			glEnableVertexAttribArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, particleVertexBuffer);
+			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+
+			glEnableVertexAttribArray(1);
+			glBindBuffer(GL_ARRAY_BUFFER, particleUvBuffer);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+
+			glEnableVertexAttribArray(2);
+			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
+			glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+
+			glEnableVertexAttribArray(3);
+			glBindBuffer(GL_ARRAY_BUFFER, particleColorBuffer);
+			glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+			glVertexAttribDivisor(0, 0); // Always use the same vertices
+			glVertexAttribDivisor(1, 0); // Always use the same uvs
+			glVertexAttribDivisor(2, 1); // Positions: One per quad
+			glVertexAttribDivisor(3, 1); // Color: One per quad
+
+
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
+		}
+
+
+
 		// Enforcing maxParticles so we don't have to remake the buffers as often
 		ParticleGroup(Texture2D& texture, std::uint32_t maxParticles = 5000) : texture(texture), maxParticles(maxParticles) 
 		{
@@ -314,7 +404,7 @@ namespace components
 
 		// Defined in degrees with 0 being aligned with the heading
 		// Will default to 0, 360 which is just a full circle around itself
-		glm::vec2 emissionArc{ 0.0f };
+		float emissionArc{ 0.0f };
 
 		// This controls how many particles are generated in the update loops
 		std::uint32_t rateOverTime{ 0 };
@@ -352,6 +442,25 @@ namespace components
 			return distribution(generator);
 		}
 
+		static std::unique_ptr<ParticleGroup> Line(Texture2D& texture, std::uint32_t maxParticles = 5000)
+		{
+			return std::make_unique<ParticleGroup>(texture, glm::vec2(10.0f, 0.0f), 0.0f, maxParticles);
+		}
+
+		static std::unique_ptr<ParticleGroup> Box(Texture2D& texture, std::uint32_t maxParticles = 5000)
+		{
+			return std::make_unique<ParticleGroup>(texture, glm::vec2(20.0f, 10.0f), 360.0f, maxParticles);
+		}
+
+		static std::unique_ptr<ParticleGroup> Circle(Texture2D& texture, std::uint32_t maxParticles = 5000)
+		{
+			return std::make_unique<ParticleGroup>(texture, glm::vec2(10.0f, 10.0f), 360.0f, maxParticles);
+		}
+
+		static std::unique_ptr<ParticleGroup> Cone(Texture2D& texture, float coneAngle, std::uint32_t maxParticles = 5000)
+		{
+			return std::make_unique<ParticleGroup>(texture, glm::vec2(10.0f, 5.0f), coneAngle, maxParticles);
+		}
 
 		private:
 
@@ -369,4 +478,3 @@ namespace components
 			std::uint32_t maxParticles{ 1000 };
 	};
 }
-
