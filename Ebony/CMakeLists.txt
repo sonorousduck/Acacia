@@ -30,6 +30,7 @@ set(ComponentHeaders
 	src/components/animationControllerComponent.hpp
 	src/components/particle.hpp
 	src/components/inputComponent.hpp
+	src/components/audioSource.hpp
 )
 
 set(ComponentSources
@@ -44,6 +45,7 @@ set(SystemHeaders
 	src/systems/staticRenderer.hpp
 	src/systems/particleSystem.hpp
 	src/systems/inputSystem.hpp
+	src/systems/audioSystem.hpp
 )
 
 set(SystemSources
@@ -54,6 +56,7 @@ set(SystemSources
 	src/systems/staticRenderer.cpp
 	src/systems/particleSystem.cpp
 	src/systems/inputSystem.cpp
+	src/systems/audioSystem.cpp
 
 )
 

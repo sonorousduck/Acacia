@@ -24,8 +24,9 @@ void SoundSource::Play(const ALuint newBuffer)
 		buffer = newBuffer;
 		alSourcei(source, AL_BUFFER, static_cast<ALint>(buffer));
 	}
-
+	isPlaying = true;
 	alSourcePlay(source);
+	isPlaying = false;
 
 	//ALint state = AL_PLAYING;
 	//while (state == AL_PLAYING && alGetError() == AL_NO_ERROR)

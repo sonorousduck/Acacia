@@ -6,6 +6,7 @@
 
 namespace components
 {
+	// I think that derived classes could be handled PolymorphicComparable<Input, MouseInput> or something like that. That way they will all show up under input
 	class Input : public PolymorphicComparable<Component, Input>
 	{
 	public:

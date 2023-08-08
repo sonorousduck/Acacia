@@ -10,6 +10,7 @@ public:
 	~SoundSource();
 
 	void Play(const ALuint buffer);
+	bool isPlaying = false;
 
 private:
 	ALuint source;
