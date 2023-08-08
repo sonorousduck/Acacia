@@ -18,7 +18,7 @@ namespace systems
 		void updateImpl(std::chrono::microseconds elapsedTime);
 		void Preallocate(components::ParticleGroup* particleGroup);
 		int firstUnusedParticle(components::ParticleGroup* particleGroup);
-		void respawnParticle(Particle& particle, components::ParticleGroup* particleGroup, glm::vec2 offset);
+		void respawnParticle(Particle& particle, float lowerBound, float upperBound, components::ParticleGroup* particleGroup);
 	};
 
 

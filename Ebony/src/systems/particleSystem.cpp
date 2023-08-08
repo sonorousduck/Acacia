@@ -32,12 +32,15 @@ namespace systems
 
 				while (particleGroup->accumulatedTime >= particleGroup->spawnRate)
 				{
+
+
+
 					// Rate over time is the number of new particles each update loop
 					for (unsigned int i = 0; i < particleGroup->rateOverTime; i++)
 					{
 						int unusedParticle = firstUnusedParticle(particleGroup);
 						// TODO: This will eventually be the game object, not the particle group that is passed
-						respawnParticle(particleGroup->particles[unusedParticle], particleGroup, glm::vec2(1.0f));
+						respawnParticle(particleGroup->particles[unusedParticle], particleGroup->minAngle, particleGroup->maxAngle, particleGroup);
 					}
 					particleGroup->accumulatedTime -= particleGroup->spawnRate;
 				}
@@ -149,12 +152,34 @@ namespace systems
 
 	// This should also be modified to take into account the things that the particle group defines, such as
 	// its shape, emission velocity, etc.
-	void ParticleSystem::respawnParticle(Particle& particle, components::ParticleGroup* particleGroup, glm::vec2 offset)
+	void ParticleSystem::respawnParticle(Particle& particle, float lowerBound, float upperBound, components::ParticleGroup* particleGroup)
 	{
-		//float random = ((rand() % 100) - 50) / 10.0f;
-		glm::vec2 random = glm::vec2(particleGroup->random_double(), particleGroup->random_double()) * particleGroup->emissionArea;
-		// TODO: Replace this with emission area
-		particle.position = particleGroup->position + random + offset;
+		if (particleGroup->volume)
+		{
+			glm::vec2 random = particleGroup->random_double_vec2() * particleGroup->emissionArea;
+			particle.position = particleGroup->position + random;
+		}
+		else
+		{
+			glm::vec2 random = particleGroup->random_double_vec2();
+
+			// We only want to spawn on the outskirts of the emission area
+			particle.position = particleGroup->emissionArea * random - (particleGroup->emissionArea / 2.0f) + particleGroup->position;
+		}
+		
+
+		// If particleGroup arc angle is not 0, generate a random vector within the given arc angle
+		if (lowerBound != upperBound)
+		{
+			double randomAngle = ((particleGroup->maxAngle - particleGroup->minAngle) * particleGroup->random_double() + particleGroup->minAngle) * std::numbers::pi / 180.0;
+			glm::vec2 directionVector = glm::vec2(cos(randomAngle), sin(randomAngle));
+
+			particle.startSpeed = directionVector * particleGroup->startMagnitude;
+			particle.endSpeed = directionVector * particleGroup->endMagnitude;
+			particle.currentSpeed = particle.startSpeed;
+		}
+
+		//particle.velocity = 
 
 		particle.alive = std::chrono::microseconds::zero();
 		particle.lifetime = particleGroup->maxLifetime;

@@ -9,7 +9,7 @@
 #include "shader.hpp"
 
 #include <random>
-
+#include <numbers>
 //struct Shape
 //{
 //
@@ -51,7 +51,17 @@ struct Particle
 		currentColor = startColor;
 		endColor = particleGroup->endColor;
 
+		//if (particleGroup->emissionArc != 0.0f)
+		//{
+		//	//glm::vec2 randomDirection = particleGroup->random_double_vec2();
 
+		//	double randomAngle = (particleGroup->maxAngle - particleGroup->minAngle) * particleGroup->random_double() + particleGroup->minAngle;
+		//	glm::vec2 directionVector = glm::vec2(cos(randomAngle), sin(randomAngle));
+
+		//	startSpeed = directionVector * particleGroup->startMagnitude;
+		//	endSpeed = directionVector * particleGroup->endMagnitude;
+		//	currentSpeed = startSpeed;
+		//}
 		if (particleGroup->randomStartSpeed)
 		{
 			auto xValue = particleGroup->random_double() * (particleGroup->maxStartSpeed.x - particleGroup->startSpeed.x) + particleGroup->startSpeed.x;
@@ -148,9 +158,17 @@ namespace components
 			texture(texture), 
 			maxParticles(maxParticles), 
 			startSpeed(velocity),
+			endSpeed(velocity),
 			maxStartSpeed(velocity),
 			emissionArc(emissionArc)
 		{
+			startAngle = static_cast<float>(atan2(startSpeed.y, startSpeed.x) * 180 / std::numbers::pi);
+			endAngle = static_cast<float>(atan2(endSpeed.y, endSpeed.x) * 180 / std::numbers::pi);
+			startMagnitude = static_cast<float>(glm::length(startSpeed));
+			endMagnitude = static_cast<float>(glm::length(endSpeed));
+			minAngle = startAngle - emissionArc / 2.0f;
+			maxAngle = startAngle + emissionArc / 2.0f;
+
 			static const GLfloat g_vertex_buffer_data[] = {
 				-1.0f,  1.0f,
 				-1.0f, -1.0f,
@@ -354,12 +372,12 @@ namespace components
 		{
 			maxParticles = newMax;
 			
-			// TODO: Test to see if this even works
+			// TODO: Test to see if this even works (Setting a new max particles)
 			
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
 
 			// Initialize buffer with empty buffer, since it will be updated later at each frame.
-			glBufferData(GL_ARRAY_BUFFER, maxParticles * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, static_cast<unsigned long long>(maxParticles) * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 			glEnableVertexAttribArray(1);
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
 			glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -383,8 +401,16 @@ namespace components
 		bool randomStartSpeed = false;
 		glm::vec2 startSpeed{ 1.0f };
 		glm::vec2 maxStartSpeed{ 1.0f };
+		float startAngle{ 0.0f };
+		float endAngle{ 0.0f };
+		float minAngle{ 0.0f };
+		float maxAngle{ 0.0f };
+		float startMagnitude{ 1.0f };
+		float endMagnitude{ 1.0f };
 
 		glm::vec2 endSpeed{ 1.0f };
+
+		bool volume{ true };
 
 		
 		Ebony::Color startColor{};
@@ -392,7 +418,7 @@ namespace components
 
 		std::uint32_t particleCount{ 0 };
 
-		// Texture that will be used for the particles. This will be given to each particle (most likely as a reference, which means it can't die until all of its particles are dead)
+		// Texture that will be used for the particles. This will be given I mto each particle (most likely as a reference, which means it can't die until all of its particles are dead)
 		Texture2D& texture;
 
 		// How long it should wait to start generating particles after creating the particle group
@@ -442,24 +468,41 @@ namespace components
 			return distribution(generator);
 		}
 
-		static std::unique_ptr<ParticleGroup> Line(Texture2D& texture, std::uint32_t maxParticles = 5000)
+		inline glm::vec2 random_double_vec2()
 		{
-			return std::make_unique<ParticleGroup>(texture, glm::vec2(10.0f, 0.0f), 0.0f, maxParticles);
+			static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+			static std::mt19937 generator;
+			return glm::vec2(distribution(generator), distribution(generator));
 		}
 
-		static std::unique_ptr<ParticleGroup> Box(Texture2D& texture, std::uint32_t maxParticles = 5000)
+		static std::unique_ptr<ParticleGroup> Line(Texture2D& texture, glm::vec2 emissionArea, glm::vec2 velocity = glm::vec2(0.0f, 10.0f), std::uint32_t maxParticles = 5000)
+		{
+			auto particleGroup = std::make_unique<ParticleGroup>(texture, velocity, 0.0f, maxParticles);
+			particleGroup->emissionArea = emissionArea;
+			return particleGroup;
+		}
+
+		static std::unique_ptr<ParticleGroup> Point(Texture2D& texture, glm::vec2 velocity = glm::vec2(10.0f, 0.0f), std::uint32_t maxParticles = 5000)
+		{
+			return std::make_unique<ParticleGroup>(texture, velocity, 0.0f, maxParticles);
+		}
+
+		static std::unique_ptr<ParticleGroup> Box(Texture2D& texture, glm::vec2 velocity = glm::vec2(20.0f, 10.0f), std::uint32_t maxParticles = 5000)
 		{
 			return std::make_unique<ParticleGroup>(texture, glm::vec2(20.0f, 10.0f), 360.0f, maxParticles);
 		}
 
-		static std::unique_ptr<ParticleGroup> Circle(Texture2D& texture, std::uint32_t maxParticles = 5000)
+		static std::unique_ptr<ParticleGroup> Circle(Texture2D& texture, glm::vec2 emissionArea, glm::vec2 velocity = glm::vec2(10.0f, 10.0f), std::uint32_t maxParticles = 5000)
 		{
-			return std::make_unique<ParticleGroup>(texture, glm::vec2(10.0f, 10.0f), 360.0f, maxParticles);
+			auto particleGroup = std::make_unique<ParticleGroup>(texture, velocity, 360.0f, maxParticles);
+			particleGroup->volume = false;
+			particleGroup->emissionArea = emissionArea;
+			return particleGroup;
 		}
 
-		static std::unique_ptr<ParticleGroup> Cone(Texture2D& texture, float coneAngle, std::uint32_t maxParticles = 5000)
+		static std::unique_ptr<ParticleGroup> Cone(Texture2D& texture, glm::vec2 speed, float coneAngle, std::uint32_t maxParticles = 5000)
 		{
-			return std::make_unique<ParticleGroup>(texture, glm::vec2(10.0f, 5.0f), coneAngle, maxParticles);
+			return std::make_unique<ParticleGroup>(texture, speed, coneAngle, maxParticles);
 		}
 
 		private:
