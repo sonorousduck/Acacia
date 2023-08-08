@@ -26,8 +26,8 @@ source_group("Main\\Source Files" FILES ${SOURCE_FILES})
 
 
 
-add_executable(Audio ${HEADER_FILES} ${SOURCE_FILES})
-#add_library(Audio ${HEADER_FILES} ${SOURCE_FILES})
+#add_executable(Audio ${HEADER_FILES} ${SOURCE_FILES})
+add_library(Audio ${HEADER_FILES} ${SOURCE_FILES})
 
 target_link_libraries(Audio OpenAL sndfile)
 

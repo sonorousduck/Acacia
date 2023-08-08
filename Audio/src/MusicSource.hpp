@@ -1,5 +1,5 @@
 #pragma once
-#include <AL/al.h>
+#include "AL/al.h"
 #include <sndfile.h>
 #include "alhelpers.hpp"
 #include <iostream>

@@ -108,7 +108,7 @@ target_include_directories(Graphics PRIVATE include/ include/glm)
 
 target_include_directories(Graphics PRIVATE ThirdParty/imgui)
 
-target_link_libraries(Graphics glfw stb_image assetlib assimp ctti freetype)
+target_link_libraries(Graphics glfw stb_image assetlib assimp ctti freetype Audio)
 set_property(TARGET Graphics PROPERTY CXX_STANDARD 20)
 
 

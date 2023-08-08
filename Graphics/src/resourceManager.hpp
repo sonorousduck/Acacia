@@ -8,7 +8,8 @@
 
 #include "texture.hpp"
 #include "shader.hpp"
-
+#include "../Audio/src/MusicSource.hpp"
+#include "../Audio/src/SoundSource.hpp"
 
 namespace Ebony
 {
@@ -19,6 +20,8 @@ namespace Ebony
 	public:
 		static std::unordered_map<std::string, Shader> Shaders;
 		static std::unordered_map<std::string, Texture2D> Textures;
+		static std::unordered_map<std::string, ALuint> SoundEffectBuffers;
+		static std::unordered_map<std::string, EbonyAudio::MusicSource> Music;
 
 		static Shader& LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name);
 		static Shader& GetShader(const char* name);
@@ -29,6 +32,16 @@ namespace Ebony
 		static Texture2D& LoadAtlas(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY);
 		static Texture2D& GetTexture(const char* name);
 		static void UnloadTexture(const char* name);
+
+		static ALuint LoadSoundEffect(const std::string& file, const char* name);
+		static void UnloadSoundEffect(const char* name);
+		static ALuint GetSoundEffect(const char* name);
+
+		static EbonyAudio::MusicSource& LoadMusic(const std::string& file, const char* name);
+		static void UnloadMusic(const char* name);
+		static EbonyAudio::MusicSource& GetMusic(const char* name);
+		
+		
 
 
 		// Unallocates all resources

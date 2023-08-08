@@ -13,6 +13,7 @@
 #include <filesystem>
 #include <latch>
 #include <algorithm>
+#include <systems/audioSystem.hpp>
 
 
 namespace Ebony {
@@ -48,6 +49,13 @@ namespace Ebony {
             Texture2D& faceTexture = ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
             Shader& s = ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 			ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
+
+			//ResourceManager::LoadMusic("Music/song18.mp3", "song18");
+			//ResourceManager::LoadMusic("Music/TownTheme.wav", "TownTheme");
+
+			//ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
+			//ResourceManager::LoadSoundEffect("SoundEffects/magnet_action.wav", "magnet_action");
+
             
             s.use();
             s.setInt("image", 0);
@@ -59,6 +67,7 @@ namespace Ebony {
 			particleRenderer = systems::ParticleRenderer();
 			animationRenderer = systems::AnimationRenderer();
 			animationSystem = systems::Animation2d();
+			audioSystem = systems::AudioSystem();
 
 
 			auto particleGroup = components::ParticleGroup::Cone(ResourceManager::GetTexture("face"), glm::vec2(10.0f, -10.0f), 45.0f, 100000);
@@ -237,6 +246,13 @@ namespace Ebony {
 				}
 			);
 
+			//auto task3 = ThreadPool::instance().createTask(
+			//	taskGraph,
+			//	[this, elapsedTime]()
+			//	{
+			//	}
+			//);
+
 			// Declare predecessors here
 			//taskGraph->declarePredecessor(task1->getId(), task2->getId());
 
@@ -244,6 +260,7 @@ namespace Ebony {
 			ThreadPool::instance().submitTaskGraph(taskGraph);
 			graphDone.wait();
 
+			audioSystem.Update(elapsedTime);
 
 			/*auto previousTime = std::chrono::system_clock::now();
 			animationSystem.Update(elapsedTime);
@@ -355,6 +372,7 @@ namespace Ebony {
 		systems::AnimationRenderer animationRenderer;
 		systems::Animation2d animationSystem;
 		systems::InputSystem inputSystem;
+		systems::AudioSystem audioSystem;
 
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;

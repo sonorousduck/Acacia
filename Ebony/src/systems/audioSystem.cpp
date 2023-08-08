@@ -15,7 +15,7 @@ namespace systems
 			auto audioSource = entity->getComponent<components::AudioSource>();
 
 			// If current song is playing, we need to update the buffers
-			if (audioSource->currentState == components::Playing)
+			if (audioSource->currentState & components::Playing)
 			{
 				audioSource->source.UpdateBufferStream();
 			}
@@ -32,16 +32,27 @@ namespace systems
 				{
 					// Queue the song
 					// Increment the index
+
+					std::string_view test = audioSource->soundEffectQueue.front();
+					audioSource->soundEffectQueue.pop_front();
+
+					//soundSources.at(audioSource->useableSoundIndex).Play(); 
+					audioSource->useableSoundIndex = (static_cast<unsigned long long>(audioSource->useableSoundIndex) + 1) % soundSources.size();
+
 				}
 				else
 				{
 					bool foundIndex = false;
-					for (std::uint16_t i = audioSource->useableSoundIndex + 1; i < soundSources.size(); i++)
+					for (auto i = audioSource->useableSoundIndex + 1; i < soundSources.size(); i++)
 					{
 						if (!soundSources.at(i).isPlaying)
 						{
 							// Queue the song
+							//soundSources.at(i).Play(audioSource->soundEffectQueue.pop_front());
 							// Set the index
+							audioSource->useableSoundIndex = static_cast<std::uint16_t>((static_cast<unsigned long long>(i) + 1) % soundSources.size());
+
+
 							foundIndex = true;
 							break;
 						}
@@ -55,6 +66,10 @@ namespace systems
 							{
 								// Queue the song
 								// Set the index
+								//soundSources.at(i).Play(audioSource->soundEffectQueue.pop_front());
+								audioSource->useableSoundIndex = static_cast<std::uint16_t>((static_cast<unsigned long long>(i) + 1) % soundSources.size());
+
+
 								foundIndex = true;
 								break;
 							}
@@ -70,14 +85,12 @@ namespace systems
 
 						// Queue the song
 						// Set the index
+						//soundSources.at(soundSources.size() - 2).Play(audioSource->soundEffectQueue.pop_front());
+						audioSource->useableSoundIndex = static_cast<std::uint16_t>(soundSources.size() - 1);
+
+
 					}
 				}
-
-				// If not, run a for loop check from index to the end
-
-				// If still not, run a for loop from beginning to index
-
-				// Else, add 2 audio sources to the vector
 			}
 
 		}
