@@ -19,6 +19,7 @@ int main()
     source.SetLoop(true);
 
     EbonyAudio::Music::Play(source);
+   //EbonyAudio::Music::Play(source1);
 
     uint32_t sound1 = SoundBuffer::get()->addSoundEffect("SoundEffects/wall.wav");
     uint32_t sound2 = SoundBuffer::get()->addSoundEffect("SoundEffects/magnet_action.wav");

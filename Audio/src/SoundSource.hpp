@@ -13,7 +13,7 @@ public:
 	bool isPlaying = false;
 
 private:
-	ALuint source;
+	ALuint source = 0;
 	float pitch = 1.0f;
 	float gain = 1.0f;
 	float positions[3] = { 0, 0, 0 };

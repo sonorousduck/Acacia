@@ -25,18 +25,19 @@ namespace components
 			previousSong(""),
 			currentSong(""),
 			repeat(false)
-		{}
+		{
+		}
 
 		State previousState;
 		State currentState;
 
 		std::string_view previousSong;
 		std::string_view currentSong;
-		EbonyAudio::MusicSource source;
+		//EbonyAudio::MusicSource source;
 
 		bool repeat;
 
-		std::deque<std::string_view> soundEffectQueue{};
+		std::deque<ALuint> soundEffectQueue{};
 
 		// This should contain a few speakers (that can grow) so you can just reuse them instead of creating new ones everytime.
 		// Maybe just contain one in the beginning, but if it ever needs more sound sources, it can expand

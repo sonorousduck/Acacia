@@ -13,8 +13,8 @@ namespace systems
 		AudioSystem() : System({ctti::unnamed_type_id<components::AudioSource>()})
 		{
 			// Initialize for playing. This has to happen before it is able to play anything, so this seems like a great place!
-			SoundDevice::init();
-			EbonyAudio::Music::Init();
+			//SoundDevice::init();
+			//EbonyAudio::Music::Init();
 		}
 
 		void Update(std::chrono::microseconds elapsedTime) override;

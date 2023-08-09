@@ -14,6 +14,7 @@
 #include <latch>
 #include <algorithm>
 #include <systems/audioSystem.hpp>
+#include "../Audio/src/SoundBuffer.hpp"
 
 
 namespace Ebony {
@@ -36,6 +37,8 @@ namespace Ebony {
 			Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 
 			graphics.Initialize("Ebony", 800, 600);
+			SoundDevice::init();
+			EbonyAudio::Music::Init();
 			graphics.SetMainCamera(camera);
 			Ebony::KeyInput::setupKeyInputs(graphics.window);
 
@@ -45,6 +48,18 @@ namespace Ebony {
 			testParticles = std::make_shared<entities::Entity>();
 			keyboardInput = std::make_shared<entities::Entity>();
 			animationsTest = std::make_shared<entities::Entity>();
+			testEntity = std::make_shared<entities::Entity>();
+
+			particleSystem = systems::ParticleSystem();
+			particleRenderer = systems::ParticleRenderer();
+			animationRenderer = systems::AnimationRenderer();
+			animationSystem = systems::Animation2d();
+			//audioSystem = systems::AudioSystem();
+
+
+
+
+
 
             Texture2D& faceTexture = ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
             Shader& s = ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
@@ -54,7 +69,10 @@ namespace Ebony {
 			//ResourceManager::LoadMusic("Music/TownTheme.wav", "TownTheme");
 
 			//ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
-			//ResourceManager::LoadSoundEffect("SoundEffects/magnet_action.wav", "magnet_action");
+
+			ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
+			ResourceManager::LoadSoundEffect("SoundEffects/magnet_action.wav", "magnet_action");
+
 
             
             s.use();
@@ -62,12 +80,16 @@ namespace Ebony {
             s.setMat4("projection", graphics.projection);
 			clearColor = Colors::CornflowerBlue;
 
+			SoundSource mySpeaker{};
+			mySpeaker.Play(ResourceManager::GetSoundEffect("magnet_action"));
 
-			particleSystem = systems::ParticleSystem();
-			particleRenderer = systems::ParticleRenderer();
-			animationRenderer = systems::AnimationRenderer();
-			animationSystem = systems::Animation2d();
-			audioSystem = systems::AudioSystem();
+
+
+			//auto audioComponent = std::make_unique<components::AudioSource>();
+			//audioComponent->soundEffectQueue.push_back(ResourceManager::GetSoundEffect("magnet_action"));
+			//testEntity->addComponent(std::move(audioComponent));
+
+			//audioSystem.AddEntity(testEntity);
 
 
 			auto particleGroup = components::ParticleGroup::Cone(ResourceManager::GetTexture("face"), glm::vec2(10.0f, -10.0f), 45.0f, 100000);
@@ -260,7 +282,7 @@ namespace Ebony {
 			ThreadPool::instance().submitTaskGraph(taskGraph);
 			graphDone.wait();
 
-			audioSystem.Update(elapsedTime);
+			//audioSystem.Update(elapsedTime);
 
 			/*auto previousTime = std::chrono::system_clock::now();
 			animationSystem.Update(elapsedTime);
@@ -391,6 +413,7 @@ namespace Ebony {
 		entities::EntityPtr testParticles;
 		entities::EntityPtr keyboardInput;
 		entities::EntityPtr animationsTest;
+		entities::EntityPtr testEntity;
 
 	
 	};
