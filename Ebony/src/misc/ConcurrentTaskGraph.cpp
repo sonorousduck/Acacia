@@ -146,7 +146,7 @@ namespace Ebony
 
 	bool ConcurrentTaskGraph::graphEmpty()
 	{
-		return m_CountEnqueued = m_PredecessorCount.size();
+		return m_CountEnqueued == m_PredecessorCount.size();
 	}
 
 }

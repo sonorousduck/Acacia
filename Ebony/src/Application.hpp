@@ -16,9 +16,14 @@ namespace Ebony {
 		virtual ~Application();
 		virtual void Run();
 		virtual void Init();
+		virtual void AddNewEntities();
+		virtual void RemoveOldEntities();
 		virtual void Update(std::chrono::microseconds elapsedTime);
 		virtual void Draw(std::chrono::microseconds elapsedTime);
 		virtual void ProcessInput(std::chrono::microseconds elapsedTime);
+		
+		
+	
 	};
 
 	// To be defined in a client

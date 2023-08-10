@@ -33,6 +33,13 @@ namespace Ebony
 		static Texture2D& GetTexture(const char* name);
 		static void UnloadTexture(const char* name);
 
+
+		static void LoadTextureAsync(const std::string& file, const char* name);
+		static void LoadAtlasAsync(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY);
+		static void LoadShaderAsync(const std::string& vShaderFile, const std::string& fShaderFile, const char* name);
+		static void LoadSoundEffectAsync(const std::string& file, const char* name);
+		static void LoadMusicAsync(const std::string& file, const char* name);
+
 		static std::uint32_t LoadSoundEffect(const std::string& file, const char* name);
 		static void UnloadSoundEffect(const char* name);
 		static std::uint32_t GetSoundEffect(const char* name);

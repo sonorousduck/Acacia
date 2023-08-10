@@ -35,6 +35,12 @@ namespace Ebony {
 			graphics.Cleanup();
 		}
 
+		void LoadContent()
+		{
+
+		}
+
+
 		void Init() override
 		{
 			Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
@@ -102,7 +108,8 @@ namespace Ebony {
 
 			auto textComponent = std::make_unique<components::Text>(fps, glm::vec2{25.0f, 100.0f}, 1.0f, Ebony::Colors::Black, Ebony::Colors::White, spriteFont);
 			testEntity->addComponent(std::move(textComponent));
-			fontRenderer.AddEntity(testEntity);
+			
+			AddEntity(testEntity);
 
 
 			auto particleGroup = components::ParticleGroup::Cone(ResourceManager::GetTexture("face"), glm::vec2(10.0f, -10.0f), 45.0f, 1000);
@@ -131,8 +138,7 @@ namespace Ebony {
 
 			testParticles->addComponent(std::move(particleGroup));
 
-			particleSystem.AddEntity(testParticles);
-			particleRenderer.AddEntity(testParticles);
+			AddEntity(testParticles);
 
 
 
@@ -169,12 +175,9 @@ namespace Ebony {
 
 				test->addComponent(std::move(animationController));
 
-				animationSystem.AddEntity(test);
-				animationRenderer.AddEntity(test);
+				AddEntity(test);
 			}
 			
-
-
 
 			inputSystem = systems::InputSystem();
 
@@ -241,8 +244,11 @@ namespace Ebony {
 			keyboardInput->addComponent(std::move(inputComponent));
 			testEntity->addComponent(std::move(mouseComponent));
 
-			inputSystem.AddEntity(keyboardInput);
-			inputSystem.AddEntity(testEntity);
+			AddEntity(keyboardInput);
+			AddEntity(testEntity);
+
+			AddNewEntities();
+			EB_TRACE("Added all entities");
 		}
 
 
@@ -332,8 +338,6 @@ namespace Ebony {
 			averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 			
 			fontRenderer.Update(graphics);
-
-			//graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red, Colors::Black);
 			
 			graphics.UnbindRenderTarget(clearColor);
 
@@ -391,15 +395,64 @@ namespace Ebony {
 				totalFrames++;
 			}
 
-			std::cout << "Particle Rendering took " << averageParticleRenderingTime / totalFrames << " on average." << std::endl;
-			//std::cout << "Particle System Updates took " << averageParticleSystemTime / totalFrames << " on average." << std::endl;
-			//std::cout << "Animation System Updates took " << averageAnimationSystemTime / totalFrames << " on average." << std::endl;
-			std::cout << "Average Updates took " << averageUpdateTime / totalFrames << " on average." << std::endl;
+			EB_INFO("Particle Rendering took " + std::to_string(averageParticleRenderingTime.count() / totalFrames) + "us on average.");
+			EB_INFO("Average Updates took " + std::to_string(averageUpdateTime.count() / totalFrames) + "us on average.");
+			EB_INFO("Particle Count at termination: " + std::to_string(testParticles->getComponent<components::ParticleGroup>()->particleCount));
 
-			std::cout << "Particle Count at termination: " << testParticles->getComponent<components::ParticleGroup>()->particleCount << std::endl;
 			glfwTerminate();
 			ThreadPool::terminate();
 		}
+
+		void AddEntity(entities::EntityPtr entity)
+		{
+			std::lock_guard<std::mutex> lock(mutexEntities);
+
+			newEntities.push_back(entity);
+		}
+
+		void RemoveEntity(entities::Entity::IdType id)
+		{
+			std::lock_guard<std::mutex> lock(mutexEntities);
+
+			removeEntities.insert(id);
+		}
+		
+		void AddNewEntities() override
+		{
+			for (auto&& entity : newEntities)
+			{
+				// Add all systems here
+				particleSystem.AddEntity(entity);
+				particleRenderer.AddEntity(entity);
+				animationRenderer.AddEntity(entity);
+				animationSystem.AddEntity(entity);
+				inputSystem.AddEntity(entity);
+				audioSystem.AddEntity(entity);
+				fontRenderer.AddEntity(entity);
+
+
+				allEntities[entity->getId()] = entity;
+			}
+
+			newEntities.clear();
+		}
+
+		void RemoveOldEntities() override
+		{
+			for (auto&& entityId : removeEntities)
+			{
+				allEntities.erase(entityId);
+
+				particleSystem.RemoveEntity(entityId);
+				particleRenderer.RemoveEntity(entityId);
+				animationRenderer.RemoveEntity(entityId);
+				animationSystem.RemoveEntity(entityId);
+				inputSystem.RemoveEntity(entityId);
+				audioSystem.RemoveEntity(entityId);
+				fontRenderer.RemoveEntity(entityId);
+			}
+		}
+
 
 
 	public:
@@ -415,6 +468,11 @@ namespace Ebony {
 		systems::AudioSystem audioSystem;
 		systems::FontRenderer fontRenderer;
 
+		entities::EntityMap allEntities;
+		std::vector<entities::EntityPtr> newEntities;
+		std::unordered_set<entities::Entity::IdType> removeEntities;
+		std::unordered_set<entities::Entity::IdType> updatedEntities;
+		std::mutex mutexEntities; // This is necessary so we can add to the newEntities vector even though it is multithreaded
 
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;

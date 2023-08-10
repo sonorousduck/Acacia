@@ -40,4 +40,14 @@ namespace Ebony {
 		
 	}
 
+	void Application::AddNewEntities()
+	{
+
+	}
+
+	void Application::RemoveOldEntities()
+	{
+
+	}
+
 }

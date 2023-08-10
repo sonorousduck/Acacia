@@ -260,6 +260,37 @@ namespace Ebony
 		return Music[name];
 	}
 
+	void ResourceManager::LoadTextureAsync(const std::string& file, const char* name)
+	{
+		auto task = [=]()
+		{
+			Textures[name] = loadTextureFromFile("../Graphics/" + file);
+		};
+
+		auto threadTask = ThreadPool::instance().createIOTask(task);
+		ThreadPool::instance().enqueueTask(task);
+	}
+
+	void ResourceManager::LoadAtlasAsync(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY)
+	{
+
+	}
+
+	void ResourceManager::LoadShaderAsync(const std::string& vShaderFile, const std::string& fShaderFile, const char* name)
+	{
+
+	}
+
+	void ResourceManager::LoadSoundEffectAsync(const std::string& file, const char* name)
+	{
+
+	}
+
+	void ResourceManager::LoadMusicAsync(const std::string& file, const char* name)
+	{
+
+	}
+
 	void ResourceManager::Clear()
 	{
 		for (auto& iter : Shaders)
