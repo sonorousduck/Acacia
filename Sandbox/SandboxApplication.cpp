@@ -105,7 +105,7 @@ namespace Ebony {
 			fontRenderer.AddEntity(testEntity);
 
 
-			auto particleGroup = components::ParticleGroup::Cone(ResourceManager::GetTexture("face"), glm::vec2(10.0f, -10.0f), 45.0f, 100000);
+			auto particleGroup = components::ParticleGroup::Cone(ResourceManager::GetTexture("face"), glm::vec2(10.0f, -10.0f), 45.0f, 1000);
 			//auto particleGroup = std::make_unique<components::ParticleGroup>(ResourceManager::GetTexture("face"), 100000);
 			//particleGroup->velocity = glm::vec2{ 50.0f, 10.0f };
 			particleGroup->rateOverTime = 1;
@@ -136,7 +136,7 @@ namespace Ebony {
 
 
 
-			for (size_t i = 0; i < 1000; i++)
+			for (size_t i = 0; i < 1; i++)
 			{
 				entities::EntityPtr test = std::make_shared<entities::Entity>();;
 
