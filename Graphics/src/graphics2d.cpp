@@ -323,14 +323,18 @@ namespace Ebony
 		glBindVertexArray(0);
 	}
 
-	void Graphics2d::DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color)
+	void Graphics2d::DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color, Color outlineColor, float depth)
 	{
 		if (activeShaderId != s.ID)
 		{
 			s.use();
 			activeShaderId = s.ID;
 		}
+
 		s.setVec3("textColor", color.GetRGB());
+		s.setVec3("outlineColor", outlineColor.GetRGB());
+		s.setFloat("depth", depth);
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindVertexArray(textVAO);
 
@@ -380,6 +384,7 @@ namespace Ebony
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+		// TODO: This should change to use the actual window sizes
 		glm::mat4 textProjection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
 		textShader.use();
 		textShader.setMat4("projection", textProjection);

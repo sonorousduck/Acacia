@@ -31,6 +31,8 @@ set(ComponentHeaders
 	src/components/particle.hpp
 	src/components/inputComponent.hpp
 	src/components/audioSource.hpp
+	src/components/text.hpp
+	src/components/mouseInputComponent.hpp
 )
 
 set(ComponentSources
@@ -46,6 +48,8 @@ set(SystemHeaders
 	src/systems/particleSystem.hpp
 	src/systems/inputSystem.hpp
 	src/systems/audioSystem.hpp
+	src/systems/fontRenderer.hpp
+
 )
 
 set(SystemSources
@@ -57,6 +61,7 @@ set(SystemSources
 	src/systems/particleSystem.cpp
 	src/systems/inputSystem.cpp
 	src/systems/audioSystem.cpp
+	src/systems/fontRenderer.cpp
 
 )
 

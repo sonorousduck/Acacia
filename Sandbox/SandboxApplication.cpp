@@ -15,6 +15,9 @@
 #include <algorithm>
 #include <systems/audioSystem.hpp>
 #include "../Audio/src/SoundBuffer.hpp"
+#include <components/text.hpp>
+#include <systems/fontRenderer.hpp>
+#include <components/mouseInputComponent.hpp>
 
 
 namespace Ebony {
@@ -42,6 +45,8 @@ namespace Ebony {
 			graphics.SetMainCamera(camera);
 			Ebony::KeyInput::setupKeyInputs(graphics.window);
 
+
+
 			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT };
 			keyInput.setKeysToMonitorInit(keys);
 
@@ -54,10 +59,11 @@ namespace Ebony {
 			particleRenderer = systems::ParticleRenderer();
 			animationRenderer = systems::AnimationRenderer();
 			animationSystem = systems::Animation2d();
+			fontRenderer = systems::FontRenderer();
 			//audioSystem = systems::AudioSystem();
 
 
-
+			//mySpeaker = SoundSource();
 
 
 
@@ -74,14 +80,17 @@ namespace Ebony {
 			ResourceManager::LoadSoundEffect("SoundEffects/magnet_action.wav", "magnet_action");
 
 
-            
+			graphics.InitializeTextDrawing(ResourceManager::GetShader("text"));
+			spriteFont.LoadFont("fonts/super-indie-font/SuperIndie.ttf");
+
+
             s.use();
             s.setInt("image", 0);
             s.setMat4("projection", graphics.projection);
 			clearColor = Colors::CornflowerBlue;
 
-			SoundSource mySpeaker{};
-			mySpeaker.Play(ResourceManager::GetSoundEffect("magnet_action"));
+			//SoundSource mySpeaker{};
+			//mySpeaker.Play(ResourceManager::GetSoundEffect("magnet_action"));
 
 
 
@@ -90,6 +99,10 @@ namespace Ebony {
 			//testEntity->addComponent(std::move(audioComponent));
 
 			//audioSystem.AddEntity(testEntity);
+
+			auto textComponent = std::make_unique<components::Text>(fps, glm::vec2{25.0f, 100.0f}, 1.0f, Ebony::Colors::Black, Ebony::Colors::White, spriteFont);
+			testEntity->addComponent(std::move(textComponent));
+			fontRenderer.AddEntity(testEntity);
 
 
 			auto particleGroup = components::ParticleGroup::Cone(ResourceManager::GetTexture("face"), glm::vec2(10.0f, -10.0f), 45.0f, 100000);
@@ -221,12 +234,15 @@ namespace Ebony {
 			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = true; } });
 			inputComponent->onReleaseKeyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = false; } });
 
+			auto mouseComponent = std::make_unique<components::MouseInput>();
+
 
 
 			keyboardInput->addComponent(std::move(inputComponent));
-
+			testEntity->addComponent(std::move(mouseComponent));
 
 			inputSystem.AddEntity(keyboardInput);
+			inputSystem.AddEntity(testEntity);
 		}
 
 
@@ -296,6 +312,7 @@ namespace Ebony {
 			{
 				fps = std::to_string(static_cast<int>(std::round(1 / deltaTime))) + " fps";
 				fpsUpdateDeltaTime += 0.16f;
+				testEntity->getComponent<components::Text>()->text = fps;
 			}
 
 			averageUpdateTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - firstTime);
@@ -313,8 +330,10 @@ namespace Ebony {
 			auto previousTime = std::chrono::system_clock::now();
 			particleRenderer.Update(graphics);
 			averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
+			
+			fontRenderer.Update(graphics);
 
-			graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red);
+			//graphics.DrawString(ResourceManager::GetShader("text"), spriteFont, fps, 25.0f, 100.0f, 1.0f, Colors::Red, Colors::Black);
 			
 			graphics.UnbindRenderTarget(clearColor);
 
@@ -336,8 +355,7 @@ namespace Ebony {
 			s1.use();
 			s1.setInt("screenTexture", 0);
 
-			graphics.InitializeTextDrawing(ResourceManager::GetShader("text"));
-			spriteFont.LoadFont("fonts/super-indie-font/SuperIndie.ttf");
+			
 			Shader& s = ResourceManager::LoadShader("shaders/spritesheet3d.vert", "shaders/spritesheet3d.frag", "spritesheet");
 
 			s.use();
@@ -395,6 +413,8 @@ namespace Ebony {
 		systems::Animation2d animationSystem;
 		systems::InputSystem inputSystem;
 		systems::AudioSystem audioSystem;
+		systems::FontRenderer fontRenderer;
+
 
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;

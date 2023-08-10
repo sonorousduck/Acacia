@@ -42,7 +42,7 @@ namespace Ebony
 
 		//// Need to load fonts as well
 
-		void DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color);
+		void DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color, Color outlineColor, float depth = 0.0f);
 		//void DrawString(SpriteFont& spriteFont, std::string text, float x, float y, float scale, glm::vec3 color);
 
 		void SetMainCamera(Camera& camera);
