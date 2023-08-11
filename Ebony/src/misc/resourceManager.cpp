@@ -287,7 +287,7 @@ namespace Ebony
 		};
 
 		ResourceManager::tasksRemaining++;
-		auto threadTask = ThreadPool::instance().createIOTask(task);
+		auto threadTask = ThreadPool::instance().createTask(task);
 		ThreadPool::instance().enqueueTask(threadTask);
 	}
 
@@ -307,7 +307,7 @@ namespace Ebony
 		};
 
 		ResourceManager::tasksRemaining++;
-		auto threadTask = ThreadPool::instance().createIOTask(task);
+		auto threadTask = ThreadPool::instance().createTask(task);
 		ThreadPool::instance().enqueueTask(threadTask);
 	}
 
@@ -326,13 +326,14 @@ namespace Ebony
 
 	void ResourceManager::loadComplete(const std::string& file, std::function<void(std::string)> onComplete)
 	{
-		std::cout << "Eventually, this load complete should contain more information and whether it failed" << std::endl;
 
 		std::cout << "Finished loading: " << file << std::endl;
 		tasksRemaining--;
 
 		if (onComplete != nullptr)
 		{
+			std::cout << "Eventually, this load complete should contain more information and whether it failed" << std::endl;
+
 			onComplete(file);
 		}
 		

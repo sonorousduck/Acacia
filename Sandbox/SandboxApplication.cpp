@@ -71,10 +71,13 @@ namespace Ebony {
 			graphics.Initialize("Ebony", 800, 600);
 			SoundDevice::init();
 			EbonyAudio::Music::Init();
+			LoadContent();
+
+
+
 			graphics.SetMainCamera(camera);
 			Ebony::KeyInput::setupKeyInputs(graphics.window);
 
-			LoadContent();
 
 			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT };
 			keyInput.setKeysToMonitorInit(keys);
