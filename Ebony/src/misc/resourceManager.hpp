@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 #include <string>
-
+#include <functional>
 #include <glad/glad.h>
 
 #include "texture.hpp"
@@ -18,10 +18,7 @@ namespace Ebony
 	class ResourceManager
 	{
 	public:
-		static std::unordered_map<std::string, Shader> Shaders;
-		static std::unordered_map<std::string, Texture2D> Textures;
-		static std::unordered_map<std::string, std::uint32_t> SoundEffectBuffers;
-		static std::unordered_map<std::string, EbonyAudio::MusicSource> Music;
+
 
 		static Shader& LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name);
 		static Shader& GetShader(const char* name);
@@ -34,11 +31,11 @@ namespace Ebony
 		static void UnloadTexture(const char* name);
 
 
-		static void LoadTextureAsync(const std::string& file, const char* name);
-		static void LoadAtlasAsync(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY);
-		static void LoadShaderAsync(const std::string& vShaderFile, const std::string& fShaderFile, const char* name);
-		static void LoadSoundEffectAsync(const std::string& file, const char* name);
-		static void LoadMusicAsync(const std::string& file, const char* name);
+		static void LoadTextureAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
+		static void LoadAtlasAsync(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY, std::function<void(std::string)> onComplete);
+		static void LoadShaderAsync(const std::string& vShaderFile, const std::string& fShaderFile, const char* name, std::function<void(std::string)> onComplete);
+		static void LoadSoundEffectAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
+		static void LoadMusicAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
 
 		static std::uint32_t LoadSoundEffect(const std::string& file, const char* name);
 		static void UnloadSoundEffect(const char* name);
@@ -48,7 +45,7 @@ namespace Ebony
 		static void UnloadMusic(const char* name);
 		static EbonyAudio::MusicSource& GetMusic(const char* name);
 		
-		
+		static void loadComplete(const std::string& file, std::function<void(std::string)> onComplete);
 
 
 		// Unallocates all resources
@@ -63,6 +60,13 @@ namespace Ebony
 		static Texture2D loadTextureFromFile(const std::string& path);
 		static Texture2D loadAtlasFromFile(char const* path, std::uint16_t tilesX, std::uint16_t tilesY);
 		static Texture2D loadAtlasFromFileAs3D(const std::string& path, std::uint16_t tilesX, std::uint16_t tilesY);
+
+		static std::unordered_map<std::string, Shader> Shaders;
+		static std::unordered_map<std::string, Texture2D> Textures;
+		static std::unordered_map<std::string, std::uint32_t> SoundEffectBuffers;
+		static std::unordered_map<std::string, EbonyAudio::MusicSource> Music;
+		
+		static std::atomic_uint16_t tasksRemaining; // We need this so we are guarenteed not to start a level while content is loading
 
 	};
 }

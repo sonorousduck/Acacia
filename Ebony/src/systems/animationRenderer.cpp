@@ -1,5 +1,5 @@
 #include "animationRenderer.hpp"
-#include <resourceManager.hpp>
+#include "../misc/resourceManager.hpp"
 
 namespace systems
 {

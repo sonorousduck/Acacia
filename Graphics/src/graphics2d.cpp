@@ -1,6 +1,7 @@
 #include "graphics2d.hpp"
 #include "window.hpp"
-#include "resourceManager.hpp"
+#include "../Ebony/src/misc/resourceManager.hpp"
+
 #include "spritefont.hpp"
 
 

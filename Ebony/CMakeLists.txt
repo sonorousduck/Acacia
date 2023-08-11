@@ -80,6 +80,7 @@ set(MiscHeaders
 	src/misc/WorkerThread.hpp
 	src/misc/ConcurrentTaskGraph.hpp
 	src/misc/ConcurrentQueue.hpp
+	src/misc/resourceManager.hpp
 )
 
 set(MiscSources
@@ -87,6 +88,8 @@ set(MiscSources
 	src/misc/Task.cpp
 	src/misc/WorkerThread.cpp
 	src/misc/ConcurrentTaskGraph.cpp
+	src/misc/resourceManager.cpp
+
 )
 
 

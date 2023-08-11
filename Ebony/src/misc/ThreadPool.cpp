@@ -142,7 +142,7 @@ namespace Ebony
 
 	std::shared_ptr<Task> ThreadPool::createIOTask(std::shared_ptr<ConcurrentTaskGraph>& graph, std::function<void(void)> job, std::function<void(void)> onComplete)
 	{
-		auto task = std::make_shared<Task>(graph->getId(), false, job, onComplete);
+		auto task = std::make_shared<Task>(graph->getId(), true, job, onComplete);
 		graph->add(task);
 
 		return task;

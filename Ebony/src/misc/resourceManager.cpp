@@ -7,6 +7,7 @@
 #include <asset_load.hpp>
 #include <texture_asset.hpp>
 #include <alext.h>
+#include "ThreadPool.hpp"
 #include "../../Audio/src/SoundBuffer.hpp"
 
 namespace Ebony
@@ -15,6 +16,7 @@ namespace Ebony
 	std::unordered_map<std::string, Shader> ResourceManager::Shaders;
 	std::unordered_map<std::string, ALuint> ResourceManager::SoundEffectBuffers;
 	std::unordered_map<std::string, EbonyAudio::MusicSource> ResourceManager::Music;
+	std::atomic_uint16_t ResourceManager::tasksRemaining{ 0 };
 
 	Shader& ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name)
 	{
@@ -260,35 +262,80 @@ namespace Ebony
 		return Music[name];
 	}
 
-	void ResourceManager::LoadTextureAsync(const std::string& file, const char* name)
+	void ResourceManager::LoadTextureAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete)
 	{
 		auto task = [=]()
 		{
+			std::cout << "Starting to load texture" << std::endl;
+
 			Textures[name] = loadTextureFromFile("../Graphics/" + file);
+			ResourceManager::loadComplete(file, onComplete);
 		};
 
+		ResourceManager::tasksRemaining++;
+		auto threadTask = ThreadPool::instance().createTask(task);
+		ThreadPool::instance().enqueueTask(threadTask);
+	}
+
+	void ResourceManager::LoadAtlasAsync(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY, std::function<void(std::string)> onComplete)
+	{
+		auto task = [=]()
+		{
+			std::cout << "Starting to load texture atlas" << std::endl;
+			Textures[name] = loadAtlasFromFileAs3D("../Graphics/" + file, tilesX, tilesY);
+			ResourceManager::loadComplete(file, onComplete);
+		};
+
+		ResourceManager::tasksRemaining++;
 		auto threadTask = ThreadPool::instance().createIOTask(task);
-		ThreadPool::instance().enqueueTask(task);
+		ThreadPool::instance().enqueueTask(threadTask);
 	}
 
-	void ResourceManager::LoadAtlasAsync(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY)
+	void ResourceManager::LoadShaderAsync(const std::string& vShaderFile, const std::string& fShaderFile, const char* name, std::function<void(std::string)> onComplete)
 	{
 
 	}
 
-	void ResourceManager::LoadShaderAsync(const std::string& vShaderFile, const std::string& fShaderFile, const char* name)
+	void ResourceManager::LoadSoundEffectAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete)
 	{
+		auto task = [=]()
+		{
+			std::cout << "Starting to load sound effect" << std::endl;
 
+			SoundEffectBuffers[name] = SoundBuffer::get()->addSoundEffect(("../Audio/" + file).c_str());;
+			ResourceManager::loadComplete(file, onComplete);
+		};
+
+		ResourceManager::tasksRemaining++;
+		auto threadTask = ThreadPool::instance().createIOTask(task);
+		ThreadPool::instance().enqueueTask(threadTask);
 	}
 
-	void ResourceManager::LoadSoundEffectAsync(const std::string& file, const char* name)
+	void ResourceManager::LoadMusicAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete)
 	{
+		auto task = [=]()
+		{
+			Music[name] = EbonyAudio::MusicSource::LoadFromFile("../Audio/" + file);
+			ResourceManager::loadComplete(file, onComplete);
+		};
 
+		ResourceManager::tasksRemaining++;
+		auto threadTask = ThreadPool::instance().createIOTask(task);
+		ThreadPool::instance().enqueueTask(threadTask);
 	}
 
-	void ResourceManager::LoadMusicAsync(const std::string& file, const char* name)
+	void ResourceManager::loadComplete(const std::string& file, std::function<void(std::string)> onComplete)
 	{
+		std::cout << "Eventually, this load complete should contain more information and whether it failed" << std::endl;
 
+		std::cout << "Finished loading: " << file << std::endl;
+		tasksRemaining--;
+
+		if (onComplete != nullptr)
+		{
+			onComplete(file);
+		}
+		
 	}
 
 	void ResourceManager::Clear()

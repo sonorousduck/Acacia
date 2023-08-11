@@ -1,7 +1,7 @@
 #include "Ebony.hpp"
 #include "camera.hpp"
 #include "glm/glm.hpp"
-#include "resourceManager.hpp"
+#include "misc/resourceManager.hpp"
 #include "spritefont.hpp"
 #include "systems/particleSystem.hpp"
 #include "systems/particleRenderer.hpp"
@@ -37,6 +37,29 @@ namespace Ebony {
 
 		void LoadContent()
 		{
+			std::atomic_bool success{ true };
+			std::latch contentLoaded{ 1 };
+
+			auto onComplete = [&]([[maybe_unused]] std::string key)
+			{
+				contentLoaded.count_down();
+			};
+			// TODO: Right now, there is no indicator whether it was successful or not
+			/*auto onError = [&]([[maybe_unused]] std::string key)
+			{
+				success = false;
+				contentLoaded.count_down();
+			};*/
+
+			ResourceManager::LoadTextureAsync("textures/awesomeface.tx", "face", nullptr);
+			ResourceManager::LoadSoundEffectAsync("SoundEffects/wall.wav", "wall", nullptr);
+			ResourceManager::LoadSoundEffectAsync("SoundEffects/magnet_action.wav", "magnet_action", nullptr);
+			ResourceManager::LoadAtlasAsync("textures/test.tx", "test", 1, 4, nullptr);
+			ResourceManager::LoadAtlasAsync("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1, nullptr);
+			ResourceManager::LoadAtlasAsync("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24, nullptr); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
+			ResourceManager::LoadAtlasAsync("textures/Better_Character_Animation.tx", "Better_Character_Animation", 44, 1, onComplete);
+
+			contentLoaded.wait();
 
 		}
 
@@ -51,7 +74,7 @@ namespace Ebony {
 			graphics.SetMainCamera(camera);
 			Ebony::KeyInput::setupKeyInputs(graphics.window);
 
-
+			LoadContent();
 
 			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT };
 			keyInput.setKeysToMonitorInit(keys);
@@ -73,7 +96,6 @@ namespace Ebony {
 
 
 
-            Texture2D& faceTexture = ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
             Shader& s = ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 			ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
 
@@ -82,8 +104,6 @@ namespace Ebony {
 
 			//ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
 
-			ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
-			ResourceManager::LoadSoundEffect("SoundEffects/magnet_action.wav", "magnet_action");
 
 
 			graphics.InitializeTextDrawing(ResourceManager::GetShader("text"));
@@ -372,10 +392,7 @@ namespace Ebony {
 			s2.setInt("particleTexture", 0);
 			s2.setMat4("projection", graphics.projection);
 
-			ResourceManager::LoadAtlas("textures/test.tx", "test", 1, 4);
-			ResourceManager::LoadAtlas("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1);
-			ResourceManager::LoadAtlas("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
-			ResourceManager::LoadAtlas("textures/Better_Character_Animation.tx", "Better_Character_Animation", 44, 1);
+
 
 			main = RenderTarget2D::Create(graphics.screenWidth, graphics.screenHeight, GL_LINEAR, GL_NEAREST);
 

@@ -15,7 +15,6 @@ set(HEADER_FILES
   src/window.hpp
   src/input.hpp
   src/colors.hpp
-  src/resourceManager.hpp
   src/spritesheet.hpp
   src/graphics.hpp
   src/spritefont.hpp
@@ -38,7 +37,6 @@ set(SOURCE_FILES
   src/input.cpp
   src/colors.cpp
   src/testmain.cpp
-  src/resourceManager.cpp
   src/spritesheet.cpp
   src/spritefont.cpp
   src/subtexture2d.cpp

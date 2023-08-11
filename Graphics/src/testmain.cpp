@@ -16,7 +16,7 @@
 #include <map>
 #include "model.hpp"
 #include "graphics2d.hpp"
-#include "resourceManager.hpp"
+#include "../Ebony/src/misc/resourceManager.hpp"
 
 #include "particleGenerator.hpp"
 #include "colors.hpp"
