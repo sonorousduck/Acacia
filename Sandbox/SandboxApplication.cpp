@@ -51,13 +51,12 @@ namespace Ebony {
 				contentLoaded.count_down();
 			};*/
 
-			ResourceManager::LoadTextureAsync("textures/awesomeface.tx", "face", nullptr);
+			//ResourceManager::LoadTextureAsync("textures/awesomeface.tx", "face", nullptr);
 			ResourceManager::LoadSoundEffectAsync("SoundEffects/wall.wav", "wall", nullptr);
 			ResourceManager::LoadSoundEffectAsync("SoundEffects/magnet_action.wav", "magnet_action", nullptr);
 			ResourceManager::LoadAtlasAsync("textures/test.tx", "test", 1, 4, nullptr);
 			ResourceManager::LoadAtlasAsync("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1, nullptr);
-			ResourceManager::LoadAtlasAsync("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24, nullptr); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
-			ResourceManager::LoadAtlasAsync("textures/Better_Character_Animation.tx", "Better_Character_Animation", 44, 1, onComplete);
+			ResourceManager::LoadAtlasAsync("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24, onComplete); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
 
 			contentLoaded.wait();
 
@@ -77,10 +76,15 @@ namespace Ebony {
 
 			graphics.SetMainCamera(camera);
 			Ebony::KeyInput::setupKeyInputs(graphics.window);
+			Ebony::MouseInput::setupMouseInputs(graphics.window);
 
 
 			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT };
 			keyInput.setKeysToMonitorInit(keys);
+
+			// All buttons defined here: https://www.glfw.org/docs/3.3/group__buttons.html
+			std::vector<int> buttons = { GLFW_MOUSE_BUTTON_1 };
+			mouseInput.setButtonsToMonitor(buttons);
 
 			testParticles = std::make_shared<entities::Entity>();
 			keyboardInput = std::make_shared<entities::Entity>();
@@ -106,6 +110,8 @@ namespace Ebony {
 			//ResourceManager::LoadMusic("Music/TownTheme.wav", "TownTheme");
 
 			//ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
+			ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
+			ResourceManager::LoadAtlas("textures/Better_Character_Animation.tx", "Better_Character_Animation", 44, 1);
 
 
 
@@ -206,7 +212,7 @@ namespace Ebony {
 
 			// TODO: Right now, it just defaults to be the first controller. Add support for multiple controllers in the future
 			std::unique_ptr<components::Input> inputComponent = std::make_unique<components::Input>(0);
-			
+
 			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_START, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
 			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, [=]() { std::cout << "Circle was called" << std::endl; } });
 			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CROSS, [=]() { std::cout << "Cross was called" << std::endl; } });
@@ -260,15 +266,23 @@ namespace Ebony {
 			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = true; } });
 			inputComponent->onReleaseKeyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = false; } });
 
-			auto mouseComponent = std::make_unique<components::MouseInput>();
-
-
 
 			keyboardInput->addComponent(std::move(inputComponent));
-			testEntity->addComponent(std::move(mouseComponent));
 
 			AddEntity(keyboardInput);
 			AddEntity(testEntity);
+
+			entities::EntityPtr anotherEntity = std::make_shared<entities::Entity>();
+			auto mouseComponent = std::make_unique<components::MouseInput>();
+
+			mouseComponent->actions.insert({ GLFW_MOUSE_BUTTON_1, [=]() {std::cout << "Button pressed!" << std::endl; } });
+
+			anotherEntity->addComponent(std::move(mouseComponent));
+
+
+
+			AddEntity(anotherEntity);
+
 
 			AddNewEntities();
 			EB_TRACE("Added all entities");
@@ -277,7 +291,8 @@ namespace Ebony {
 
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
 		{
-			inputSystem.Update(keyInput);
+			inputSystem.Update(keyInput, mouseInput);
+			// inputSystem.Update(keyInput, std::nullopt);
 		}
 
 
@@ -478,6 +493,7 @@ namespace Ebony {
 	public:
 		Graphics2d graphics;
 		KeyInput keyInput;
+		MouseInput mouseInput;
 		Color clearColor;
 		SpriteFont spriteFont;
 		systems::ParticleSystem particleSystem;

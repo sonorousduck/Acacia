@@ -72,11 +72,11 @@ namespace systems
 
 	protected:
 		entities::EntityMap m_Entities;
+		std::unordered_set<ctti::unnamed_type_id_t> m_Interests;
 
 		virtual bool isInterested(const entities::EntityPtr& entity);
 
 	private:
-		std::unordered_set<ctti::unnamed_type_id_t> m_Interests;
 
 	};
 

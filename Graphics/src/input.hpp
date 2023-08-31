@@ -59,47 +59,69 @@ namespace Ebony
 		static std::vector<KeyInput*> _instances;
 	};
 
-
-
-
-
-
-
-
-
-	class Input
+	class MouseInput
 	{
 	public:
-		Input();
+		MouseInput() { m_isEnabled = true; }
+		MouseInput(std::vector<int> buttonsToMonitor);
+		~MouseInput();
+
+		static void setupMouseInputs(Window& window);
+		void setButtonsToMonitor(std::vector<int> buttonsToMonitor);
+
+		bool getButtonPressedOrHeld(int button);
+		PressedState getIsButtonDown(int button);
+		double xPos = 0.0, yPos = 0.0;
 
 
-		void onScroll(double xOffset, double yOffset);
-		void onMouseButton(int button, int action, int mods);
-		void onKeyInput(int key, int scancode, int action, int mods);
-		void onCursorPos(double x, double y);
+	private:
+		void setIsButtonDown(int key, PressedState isDown);
 
-		void setupJoystickInputs();
-		void ProcessInput(GLFWwindow* window, Camera& camera, float deltaTime);
-
-		//void AddOnPressCallback(int key, std::function<void()> func);
-		//void AddOnReleaseCallback(int key, std::function<void()> func);
-		//void AddOnHeldCallback(int key, std::function<void()> func);
+		std::unordered_map<int, PressedState> m_buttons;
+		bool m_isEnabled;
 
 
-		float lastMosX = 0.0f;
-		float lastMosY = 0.0f;
-		bool firstMouse = true;
-		bool cursorDisabled = true;
+		static void mouse_position_callback(GLFWwindow* window, double xPos, double yPos);
+		static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
-
-		unsigned int numControllersConnected = 0;
-		unsigned int maxNumControllersConnected = 4; // Actual limit is 16
-		std::vector<GLFWgamepadstate> gamepadStates;
-
-
-		std::unordered_map<int, Press> keyPressed;
-		std::unordered_map<int, bool> pressedKeys;
-		std::unordered_map<int, bool> releasedKeys;
-		std::unordered_map<int, bool> heldKeys;
+		static std::vector<MouseInput*> _instances;
 	};
+
+
+
+	//class Input
+	//{
+	//public:
+	//	Input();
+
+
+	//	void onScroll(double xOffset, double yOffset);
+	//	void onMouseButton(int button, int action, int mods);
+	//	void onKeyInput(int key, int scancode, int action, int mods);
+	//	void onCursorPos(double x, double y);
+
+	//	void setupJoystickInputs();
+	//	void ProcessInput(GLFWwindow* window, Camera& camera, float deltaTime);
+
+	//	//void AddOnPressCallback(int key, std::function<void()> func);
+	//	//void AddOnReleaseCallback(int key, std::function<void()> func);
+	//	//void AddOnHeldCallback(int key, std::function<void()> func);
+
+
+	//	float lastMosX = 0.0f;
+	//	float lastMosY = 0.0f;
+	//	bool firstMouse = true;
+	//	bool cursorDisabled = true;
+
+
+	//	unsigned int numControllersConnected = 0;
+	//	unsigned int maxNumControllersConnected = 4; // Actual limit is 16
+	//	std::vector<GLFWgamepadstate> gamepadStates;
+
+
+	//	std::unordered_map<int, Press> keyPressed;
+	//	std::unordered_map<int, bool> pressedKeys;
+	//	std::unordered_map<int, bool> releasedKeys;
+	//	std::unordered_map<int, bool> heldKeys;
+	//};
 }
