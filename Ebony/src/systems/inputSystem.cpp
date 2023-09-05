@@ -1,5 +1,6 @@
 #include "inputSystem.hpp"
 
+#include <algorithm>
 #include <iostream>
 
 namespace systems
