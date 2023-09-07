@@ -13,6 +13,17 @@ namespace Ebony
 
 	}
 
+	void Graphics2d::InitializeImgui()
+	{
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		io = ImGui::GetIO(); (void)io;
+		ImGui::StyleColorsDark();
+		ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
+		ImGui_ImplOpenGL3_Init("#version 330");
+	}
+
+
 	void Graphics2d::Initialize(const char* windowName, int width, int height) {
 		windowName = windowName;
 		screenWidth = width;
@@ -23,6 +34,7 @@ namespace Ebony
 		window = Window();
 		window.createWindow(windowName, versionMajor, versionMinor);
 		Initialize();
+		InitializeImgui();
 		SetupCallback();
 
 		projection = glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f, -1.0f, 1.0f);
@@ -145,10 +157,26 @@ namespace Ebony
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+		// This probably won't be where IMGUI ends up, since we will want to be able to disable it when it is running a game
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 	}
 
 	void Graphics2d::EndDraw()
 	{
+
+		// This probably won't be where IMGUI ends up, since we will want to be able to disable it when it is running a game
+		ImGui::Begin("Ebony");
+		ImGui::Text("Hello there!");
+		ImGui::End();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+
 		glfwSwapBuffers(window.getWindow());
 		
 	}
@@ -406,6 +434,12 @@ namespace Ebony
 
 	void Graphics2d::Cleanup()
 	{
+		// This probably won't be where IMGUI ends up, since we will want to be able to disable it when it is running a game
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+
+
 		glDeleteVertexArrays(1, &quadVAO);
 	}
 

@@ -1,5 +1,10 @@
 #pragma once
 
+#include "../Graphics/ThirdParty/imgui/imgui.h"
+#include "../Graphics/ThirdParty/imgui/imgui_impl_glfw.h"
+#include "../Graphics/ThirdParty/imgui/imgui_impl_opengl3.h"
+
+
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <cmath>
@@ -11,6 +16,7 @@
 #include <chrono>
 #include <map>
 #include <functional>
+#include <optional>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -49,6 +55,8 @@ namespace Ebony
 
 		void BeginDraw(Color clearColor);
 		void EndDraw();
+
+		void InitializeImgui();
 
 		void Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
 		void Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
@@ -94,6 +102,7 @@ namespace Ebony
 		unsigned int quadRenderTarget = 0;
 		unsigned int particlePositionBuffer = 0, particleColorBuffer = 0;
 
+		ImGuiIO io;
 
 
 
