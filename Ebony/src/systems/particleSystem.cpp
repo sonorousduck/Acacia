@@ -51,10 +51,10 @@ namespace systems
 			{
 				// TODO: Potentially, to avoid reallocation every time, this should be moved somewhere else.
 				particleGroup->particlePositionSizeData.clear();
-				particleGroup->particlePositionSizeData.resize(particleGroup->particles.size() * 4); // x, y, xSize, ySize
+				particleGroup->particlePositionSizeData.resize(particleGroup->particles.size() * 4 * sizeof(float)); // x, y, xSize, ySize
 
 				particleGroup->particleColorData.clear();
-				particleGroup->particleColorData.resize(particleGroup->particles.size() * 4); // r, g, b, a
+				particleGroup->particleColorData.resize(particleGroup->particles.size() * 4 * sizeof(float)); // r, g, b, a
 
 
 				std::uint32_t particleCount = 0;

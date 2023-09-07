@@ -18,10 +18,10 @@ namespace systems
 		for (auto& [id, entity] : m_Entities)
 		{
 
-			// TODO: This will eventually be split into Keyboard input and Controller input separately
-			if (entity->hasComponent<components::Input>())
+			// Handle Keyboard first
+			if (entity->hasComponent<components::KeyboardInput>())
 			{
-				auto input = entity->getComponent<components::Input>();
+				auto input = entity->getComponent<components::KeyboardInput>();
 
 				for (auto iter = input->keyboardActionKeyPairs.begin(); iter != input->keyboardActionKeyPairs.end(); iter++)
 				{
@@ -42,6 +42,12 @@ namespace systems
 						iter->second();
 					}
 				}
+			}
+
+			// Handle Controller Input
+			if (entity->hasComponent<components::ControllerInput>()) 
+			{
+				auto input = entity->getComponent<components::ControllerInput>();
 
 				if (Ebony::KeyInput::joysticksConnected > 0)
 				{
@@ -73,7 +79,7 @@ namespace systems
 				}
 			}
 			
-
+			// Handle Mouse input
 			if (entity->hasComponent<components::MouseInput>())
 			{
 				auto input = entity->getComponent<components::MouseInput>();

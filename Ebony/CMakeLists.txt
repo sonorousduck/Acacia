@@ -29,10 +29,11 @@ set(ComponentHeaders
 	src/components/component.hpp
 	src/components/animationControllerComponent.hpp
 	src/components/particle.hpp
-	src/components/inputComponent.hpp
+	src/components/controllerComponent.hpp
+	src/components/keyboardComponent.hpp
+	src/components/mouseInputComponent.hpp
 	src/components/audioSource.hpp
 	src/components/text.hpp
-	src/components/mouseInputComponent.hpp
 )
 
 set(ComponentSources

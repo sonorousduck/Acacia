@@ -169,6 +169,9 @@ namespace components
 			minAngle = startAngle - emissionArc / 2.0f;
 			maxAngle = startAngle + emissionArc / 2.0f;
 
+			particlePositionSizeData.resize(maxParticles);
+			particleColorData.resize(maxParticles);
+
 			static const GLfloat g_vertex_buffer_data[] = {
 				-1.0f,  1.0f,
 				-1.0f, -1.0f,
@@ -260,6 +263,9 @@ namespace components
 			//	 -0.5f, 0.5f, 
 			//	 0.5f, 0.5f,
 			//};
+
+			particlePositionSizeData.resize(maxParticles);
+			particleColorData.resize(maxParticles);
 
 			static const GLfloat g_vertex_buffer_data[] = {
 				-1.0f,  1.0f,
@@ -371,7 +377,8 @@ namespace components
 		void setMaxParticles(std::uint32_t newMax)
 		{
 			maxParticles = newMax;
-			
+			particlePositionSizeData.resize(newMax);
+			particleColorData.resize(newMax);
 			// TODO: Test to see if this even works (Setting a new max particles)
 			
 			glBindBuffer(GL_ARRAY_BUFFER, particlePositionBuffer);
@@ -456,8 +463,8 @@ namespace components
 		unsigned int particlePositionBuffer = 0;
 		unsigned int particleColorBuffer = 0;
 
-		std::vector<float> particlePositionSizeData = {};
-		std::vector<float> particleColorData = {};
+		std::vector<float> particlePositionSizeData;
+		std::vector<float> particleColorData;
 		std::chrono::microseconds spawnRate = std::chrono::milliseconds(16);
 		std::chrono::microseconds accumulatedTime = std::chrono::milliseconds(0);
 

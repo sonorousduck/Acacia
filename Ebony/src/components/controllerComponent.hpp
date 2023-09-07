@@ -7,17 +7,14 @@
 namespace components
 {
 	// I think that derived classes could be handled PolymorphicComparable<Input, MouseInput> or something like that. That way they will all show up under input
-	class Input : public PolymorphicComparable<Component, Input>
+	class ControllerInput : public PolymorphicComparable<Component, ControllerInput>
 	{
 	public:
-		Input() {};
-		Input(int joystickId) : joystickId(joystickId) {};
+		ControllerInput() {};
+		ControllerInput(int joystickId) : joystickId(joystickId) {};
 
 		std::unordered_map<int, std::function<void()>> controllerActionKeyPairs{};
 		std::unordered_map<int, std::function<void(float)>> controllerAxes{};
-
-		std::unordered_map<int, std::function<void()>> keyboardActionKeyPairs{};
-		std::unordered_map<int, std::function<void()>> onReleaseKeyboardActionKeyPairs{};
 
 		std::unordered_map<int, bool> actions{};
 		std::unordered_map<int, bool> previousActions{};

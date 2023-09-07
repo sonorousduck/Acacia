@@ -52,8 +52,8 @@ namespace Ebony {
 			};*/
 
 			//ResourceManager::LoadTextureAsync("textures/awesomeface.tx", "face", nullptr);
-			ResourceManager::LoadSoundEffectAsync("SoundEffects/wall.wav", "wall", nullptr);
-			ResourceManager::LoadSoundEffectAsync("SoundEffects/magnet_action.wav", "magnet_action", nullptr);
+			ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
+			ResourceManager::LoadSoundEffect("SoundEffects/magnet_action.wav", "magnet_action");
 			ResourceManager::LoadAtlasAsync("textures/test.tx", "test", 1, 4, nullptr);
 			ResourceManager::LoadAtlasAsync("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1, nullptr);
 			ResourceManager::LoadAtlasAsync("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24, onComplete); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
@@ -211,49 +211,52 @@ namespace Ebony {
 			inputSystem = systems::InputSystem();
 
 			// TODO: Right now, it just defaults to be the first controller. Add support for multiple controllers in the future
-			std::unique_ptr<components::Input> inputComponent = std::make_unique<components::Input>(0);
+			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
+			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
 
-			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_START, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
-			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, [=]() { std::cout << "Circle was called" << std::endl; } });
-			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CROSS, [=]() { std::cout << "Cross was called" << std::endl; } });
-			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_SQUARE, [=]() { std::cout << "Square was called" << std::endl; } });
-			inputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, [=]() { std::cout << "Triangle was called" << std::endl; } });
-			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, [=](float value) { 
+
+
+			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_START, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, [=]() { std::cout << "Circle was called" << std::endl; } });
+			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CROSS, [=]() { std::cout << "Cross was called" << std::endl; } });
+			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_SQUARE, [=]() { std::cout << "Square was called" << std::endl; } });
+			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, [=]() { std::cout << "Triangle was called" << std::endl; } });
+			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Left X: " << value << std::endl;
 				}
 				}});
 
-			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_Y, [=](float value) {
+			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_Y, [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Left Y: " << value << std::endl;
 				}
 				} });
 
-			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_X, [=](float value) {
+			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_X, [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Right X: " << value << std::endl;
 				}
 				} });
 
-			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_Y, [=](float value) {
+			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_Y, [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Right Y: " << value << std::endl;
 				}
 				} });
 
-			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, [=](float value) {
+			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, [=](float value) {
 				if (value > -0.5)
 				{
 					std::cout << "Left Trigger: " << value << std::endl;
 				}
 			} });
 
-			inputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, [=](float value) {
+			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, [=](float value) {
 			if (value > -0.5)
 			{
 				std::cout << "Right Trigger: " << value << std::endl;
@@ -261,13 +264,14 @@ namespace Ebony {
 			} });
 
 
-			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_ESCAPE, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
-			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_E, [=]() { std::cout << "E was called" << std::endl; } });
-			inputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = true; } });
-			inputComponent->onReleaseKeyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = false; } });
+			keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_ESCAPE, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+			keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_E, [=]() { std::cout << "E was called" << std::endl; } });
+			keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = true; } });
+			keyboardInputComponent->onReleaseKeyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = false; } });
 
 
-			keyboardInput->addComponent(std::move(inputComponent));
+			keyboardInput->addComponent(std::move(controllerInputComponent));
+			keyboardInput->addComponent(std::move(keyboardInputComponent));
 
 			AddEntity(keyboardInput);
 			AddEntity(testEntity);

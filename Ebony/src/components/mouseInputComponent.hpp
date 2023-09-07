@@ -3,11 +3,10 @@
 #include <functional>
 
 #include "component.hpp"
-#include "inputComponent.hpp"
 
 namespace components
 {
-	class MouseInput : public PolymorphicComparable<Input, MouseInput>
+	class MouseInput : public PolymorphicComparable<Component, MouseInput>
 	{
 	public:
 		MouseInput() {};

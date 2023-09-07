@@ -1,19 +1,21 @@
 #pragma once
 
-#include "system.hpp"
-
-#include "../components/inputComponent.hpp"
-#include "../components/mouseInputComponent.hpp"
-
-#include "input.hpp"
 #include <optional>
+
+#include "system.hpp"
+#include "input.hpp"
+
+#include "../components/mouseInputComponent.hpp"
+#include "../components/controllerComponent.hpp"
+#include "../components/keyboardComponent.hpp"
+
 
 namespace systems
 {
 	class InputSystem : public System
 	{
 	public:
-		InputSystem() : System({ ctti::unnamed_type_id<components::Input>(), ctti::unnamed_type_id<components::MouseInput>()})
+		InputSystem() : System({ ctti::unnamed_type_id<components::KeyboardInput>(), ctti::unnamed_type_id<components::ControllerInput>(), ctti::unnamed_type_id<components::MouseInput>()})
 		{
 		}
 
