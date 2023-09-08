@@ -248,7 +248,8 @@ namespace Ebony
 
 	EbonyAudio::MusicSource& ResourceManager::LoadMusic(const std::string& file, const char* name)
 	{
-		Music[name] = EbonyAudio::MusicSource::LoadFromFile("../Audio/" + file);
+		auto test = EbonyAudio::MusicSource::LoadFromFile("../Audio/" + file);
+		Music[name] = test;
 		return Music[name];
 	}
 

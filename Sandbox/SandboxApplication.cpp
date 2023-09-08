@@ -73,7 +73,6 @@ namespace Ebony {
 			LoadContent();
 
 
-
 			graphics.SetMainCamera(camera);
 			Ebony::KeyInput::setupKeyInputs(graphics.window);
 			Ebony::MouseInput::setupMouseInputs(graphics.window);
@@ -96,7 +95,7 @@ namespace Ebony {
 			animationRenderer = systems::AnimationRenderer();
 			animationSystem = systems::Animation2d();
 			fontRenderer = systems::FontRenderer();
-			//audioSystem = systems::AudioSystem();
+			audioSystem = systems::AudioSystem();
 
 
 			//mySpeaker = SoundSource();
@@ -109,7 +108,7 @@ namespace Ebony {
 			//ResourceManager::LoadMusic("Music/song18.mp3", "song18");
 			//ResourceManager::LoadMusic("Music/TownTheme.wav", "TownTheme");
 
-			//ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
+			ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
 			ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
 			ResourceManager::LoadAtlas("textures/Better_Character_Animation.tx", "Better_Character_Animation", 44, 1);
 
@@ -129,11 +128,10 @@ namespace Ebony {
 
 
 
-			//auto audioComponent = std::make_unique<components::AudioSource>();
-			//audioComponent->soundEffectQueue.push_back(ResourceManager::GetSoundEffect("magnet_action"));
-			//testEntity->addComponent(std::move(audioComponent));
-
-			//audioSystem.AddEntity(testEntity);
+			auto audioComponent = std::make_unique<components::AudioSource>();
+			audioComponent->soundEffectQueue.push_back(ResourceManager::GetSoundEffect("magnet_action"));
+			testEntity->addComponent(std::move(audioComponent));
+			
 
 			auto textComponent = std::make_unique<components::Text>(fps, glm::vec2{25.0f, 100.0f}, 1.0f, Ebony::Colors::Black, Ebony::Colors::White, spriteFont);
 			testEntity->addComponent(std::move(textComponent));
