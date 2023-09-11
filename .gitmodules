@@ -1,7 +1,6 @@
 [submodule "ThirdParty/lz4"]
 	path = ThirdParty/lz4
 	url = git@github.com:lz4/lz4.git
-
 [submodule "ThirdParty/spdlog"]
 	path = ThirdParty/spdlog
 	url = git@github.com:gabime/spdlog.git
@@ -29,3 +28,6 @@
 [submodule "ThirdParty/freetype"]
 	path = ThirdParty/freetype
 	url = https://gitlab.freedesktop.org/freetype/freetype.git
+[submodule "ThirdParty/box2d"]
+	path = ThirdParty/box2d
+	url = git@github.com:erincatto/box2d.git
