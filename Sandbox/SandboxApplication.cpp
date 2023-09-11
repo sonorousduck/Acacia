@@ -368,6 +368,7 @@ namespace Ebony {
 		void Draw(std::chrono::microseconds elapsedTime) override
 		{
 			graphics.BeginDraw(clearColor);
+			graphics.BeginImgui();
 
 			graphics.SetRenderTarget(main, clearColor);
 			
@@ -384,7 +385,17 @@ namespace Ebony {
 			graphics.DrawRenderTarget(ResourceManager::GetShader("screenTexture"), main);
 
 
+			
+			graphics.DrawWindow("Ebony");
+			graphics.ImguiText("Hello there!");
+			graphics.ImguiText("General Kenobi");
 
+			ImGui::ArrowButton("Left", ImGuiDir_Left);
+			
+			graphics.CompleteWindow();
+
+
+			graphics.EndImgui();
 			graphics.EndDraw();
 		}
 

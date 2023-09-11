@@ -78,7 +78,7 @@ namespace Ebony
 		lastMosY = screenHeight / 2.0f;
 
 
-		glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
 
 		glfwMakeContextCurrent(window.getWindow());
 
@@ -159,26 +159,41 @@ namespace Ebony
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-		// This probably won't be where IMGUI ends up, since we will want to be able to disable it when it is running a game
+
+	}
+
+	void Graphics2d::BeginImgui()
+	{
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
 
-	void Graphics2d::EndDraw()
+	void Graphics2d::DrawWindow(std::string_view windowName)
 	{
+		ImGui::Begin(windowName.data());
+	}
 
-		// This probably won't be where IMGUI ends up, since we will want to be able to disable it when it is running a game
-		ImGui::Begin("Ebony");
-		ImGui::Text("Hello there!");
+	void Graphics2d::ImguiText(std::string_view text)
+	{
+		ImGui::Text(text.data());
+	}
+
+	void Graphics2d::CompleteWindow()
+	{
 		ImGui::End();
+	}
 
+	void Graphics2d::EndImgui()
+	{
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	}
 
 
+	void Graphics2d::EndDraw()
+	{
 		glfwSwapBuffers(window.getWindow());
-		
 	}
 
 

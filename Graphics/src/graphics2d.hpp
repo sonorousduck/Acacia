@@ -64,6 +64,12 @@ namespace Ebony
 		void DrawInstanced(Shader& s, Texture2D& texture, unsigned int VAO, std::uint32_t count);
 		void DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget);
 
+		void BeginImgui();
+		void DrawWindow(std::string_view windowName);
+		void ImguiSlider();
+		void CompleteWindow();
+		void ImguiText(std::string_view text);
+		void EndImgui();
 
 		void Cleanup();
 
