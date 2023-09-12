@@ -20,6 +20,11 @@ namespace systems
 					s = particleEffect->shader.value();
 				}
 			
+
+				std::cout << particleEffect->particlePositionSizeData[0] << std::endl;
+				std::cout << &particleEffect->particlePositionSizeData[0] << std::endl;
+				std::cout << particleEffect->particlePositionSizeData[static_cast<unsigned long long>(particleEffect->particleCount) * 4 * sizeof(float)] << std::endl;
+
 				glBindBuffer(GL_ARRAY_BUFFER, particleEffect->particlePositionBuffer);
 				glBufferData(GL_ARRAY_BUFFER, static_cast<unsigned long long>(particleEffect->getMaxParticles()) * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 				glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<unsigned long long>(particleEffect->particleCount) * 4 * sizeof(float), &particleEffect->particlePositionSizeData[0]);

@@ -34,6 +34,7 @@ set(ComponentHeaders
 	src/components/mouseInputComponent.hpp
 	src/components/audioSource.hpp
 	src/components/text.hpp
+	src/components/collider.hpp
 )
 
 set(ComponentSources
@@ -50,6 +51,7 @@ set(SystemHeaders
 	src/systems/inputSystem.hpp
 	src/systems/audioSystem.hpp
 	src/systems/fontRenderer.hpp
+	src/systems/collisionSystem.hpp
 
 )
 
@@ -63,6 +65,7 @@ set(SystemSources
 	src/systems/inputSystem.cpp
 	src/systems/audioSystem.cpp
 	src/systems/fontRenderer.cpp
+	src/systems/collisionSystem.cpp
 
 )
 
@@ -140,7 +143,7 @@ set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 target_link_libraries(Ebony spdlog Audio Graphics)
-
+target_link_libraries(Ebony box2d)
 
 # add_subdirectory(ThirdParty/rapidjson)
 # include_directories(ThirdParty/rapidjson/include)

@@ -37,13 +37,13 @@ namespace Ebony {
 
 		void LoadContent()
 		{
-			std::atomic_bool success{ true };
-			std::latch contentLoaded{ 1 };
+			//std::atomic_bool success{ true };
+			//std::latch contentLoaded{ 1 };
 
-			auto onComplete = [&]([[maybe_unused]] std::string key)
-			{
-				contentLoaded.count_down();
-			};
+			//auto onComplete = [&]([[maybe_unused]] std::string key)
+			//{
+			//	contentLoaded.count_down();
+			//};
 			// TODO: Right now, there is no indicator whether it was successful or not
 			/*auto onError = [&]([[maybe_unused]] std::string key)
 			{
@@ -51,14 +51,18 @@ namespace Ebony {
 				contentLoaded.count_down();
 			};*/
 
-			//ResourceManager::LoadTextureAsync("textures/awesomeface.tx", "face", nullptr);
-			ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
-			ResourceManager::LoadSoundEffect("SoundEffects/magnet_action.wav", "magnet_action");
-			ResourceManager::LoadAtlasAsync("textures/test.tx", "test", 1, 4, nullptr);
-			ResourceManager::LoadAtlasAsync("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1, nullptr);
-			ResourceManager::LoadAtlasAsync("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24, onComplete); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
+			//ResourceManager::LoadTextureAsync("textures/awesomeface.tx", "face", onComplete);
+			//ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
+			//ResourceManager::LoadSoundEffect("SoundEffects/magnet_action.wav", "magnet_action");
+			//ResourceManager::LoadAtlasAsync("textures/test.tx", "test", 1, 4, nullptr);
+			//ResourceManager::LoadAtlasAsync("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1, nullptr);
+			//ResourceManager::LoadAtlasAsync("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24, onComplete); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
 
-			contentLoaded.wait();
+			ResourceManager::LoadAtlas("textures/test.tx", "test", 1, 4);
+			ResourceManager::LoadAtlas("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1);
+			ResourceManager::LoadAtlas("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
+
+			//contentLoaded.wait();
 
 		}
 
@@ -128,9 +132,9 @@ namespace Ebony {
 
 
 
-			auto audioComponent = std::make_unique<components::AudioSource>();
-			audioComponent->soundEffectQueue.push_back(ResourceManager::GetSoundEffect("magnet_action"));
-			testEntity->addComponent(std::move(audioComponent));
+			//auto audioComponent = std::make_unique<components::AudioSource>();
+			//audioComponent->soundEffectQueue.push_back(ResourceManager::GetSoundEffect("magnet_action"));
+			//testEntity->addComponent(std::move(audioComponent));
 			
 
 			auto textComponent = std::make_unique<components::Text>(fps, glm::vec2{25.0f, 100.0f}, 1.0f, Ebony::Colors::Black, Ebony::Colors::White, spriteFont);
@@ -435,6 +439,13 @@ namespace Ebony {
 				auto currentTime = std::chrono::system_clock::now();
 				auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
 				previousTime = currentTime;
+
+
+				// Was hoping this would help the scaling issues, but it does not
+				//int bufferWidth = 0;
+				//int bufferHeight = 0;
+				//glfwGetFramebufferSize(graphics.window.getWindow(), &bufferWidth, &bufferHeight);
+				//glViewport(0, 0, bufferWidth, bufferHeight);
 
 				ProcessInput(elapsedTime);
 				Update(elapsedTime);

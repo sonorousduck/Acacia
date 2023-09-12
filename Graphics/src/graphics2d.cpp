@@ -153,6 +153,7 @@ namespace Ebony
 
 	void Graphics2d::BeginDraw(Color clearColor)
 	{
+
 		glClearColor(clearColor.r(), clearColor.g(), clearColor.b(), clearColor.a());
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_BLEND);

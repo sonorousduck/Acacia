@@ -525,6 +525,6 @@ namespace components
 			//}
 			// Max number of particles that will be generated at any given time. If you start encroaching on this number
 			// the generation will overwrite the old particles to generate new ones (probably). This may change to just not generate
-			std::uint32_t maxParticles{ 1000 };
+			std::uint32_t maxParticles{ 5000 };
 	};
 }

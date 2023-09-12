@@ -39,6 +39,8 @@ target_include_directories(lz4 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lz4/lib" )
 # target_include_directories(vk_mem_alloc INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/vk_mem_alloc" )
 target_include_directories(glm INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/glm")
 
+# add_subdirectory(box2d)
+
 add_subdirectory(gltf)
 add_subdirectory(openal-soft)
 
@@ -90,6 +92,9 @@ target_link_libraries(assimp INTERFACE ${assimp_lib} )
 add_subdirectory(libsndfile)
 add_subdirectory(freetype)
 set(freetype_lib "${CMAKE_CURRENT_SOURCE_DIR}/freetype/build/Release/freetype.lib")
+
+# set(BOX2D_BUILD_TESTBED OFF CACHE BOOL)
+add_subdirectory(box2d)
 
 #target_include_directories(freetype INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/freetype/include")
 target_link_libraries(freetype INTERFACE ${freetype_lib})
