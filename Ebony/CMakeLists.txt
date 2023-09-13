@@ -37,10 +37,6 @@ set(ComponentHeaders
 	src/components/collider.hpp
 )
 
-set(ComponentSources
-
-)
-
 set(SystemHeaders
 	src/systems/animation2d.hpp
 	src/systems/system.hpp
@@ -72,10 +68,12 @@ set(SystemSources
 set(EntityHeaders
 	src/entity.hpp
 
+
 )
 
 set(EntitySources
 	src/entity.cpp
+
 )
 
 set(MiscHeaders
@@ -85,6 +83,7 @@ set(MiscHeaders
 	src/misc/ConcurrentTaskGraph.hpp
 	src/misc/ConcurrentQueue.hpp
 	src/misc/resourceManager.hpp
+
 )
 
 set(MiscSources
@@ -96,17 +95,27 @@ set(MiscSources
 
 )
 
+set (SingletonHeaders
+	src/singletons/inputPersistence.hpp
+)
+
+set (SingletonSources
+	src/singletons/inputPersistence.cpp
+)
+
 
 source_group("Main\\Header Files" FILES ${HEADER_FILES})
 source_group("Main\\Source Files" FILES ${SOURCE_FILES})
 source_group("Components\\Header Files" FILES ${ComponentHeaders})
-source_group("Components\\Source Files" FILES ${ComponentSources})
+# source_group("Components\\Source Files" FILES ${ComponentSources})
 source_group("Systems\\Header Files" FILES ${SystemHeaders})
 source_group("Systems\\Source Files" FILES ${SystemSources})
 source_group("Entities\\Header Files" FILES ${EntityHeaders})
 source_group("Entities\\Source Files" FILES ${EntitySources})
 source_group("Misc\\Header Files" FILES ${MiscHeaders})
 source_group("Misc\\Source Files" FILES ${MiscSources})
+source_group("Singleton\\Header Files" FILES ${SingletonHeaders})
+source_group("Singleton\\Source Files" FILES ${SingletonSources})
 
 
 source_group("Main\\Event Files" FILES ${HEADER_EVENTS})
@@ -124,6 +133,8 @@ set(CODE_FILES
 	${EntitySources}
 	${MiscHeaders}
 	${MiscSources}
+	${SingletonHeaders}
+	${SingletonSources}
 )
 
 
