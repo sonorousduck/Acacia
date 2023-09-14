@@ -6,7 +6,6 @@
 
 
 
-
 namespace Ebony
 {
 	class InputPersistence

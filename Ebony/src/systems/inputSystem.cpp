@@ -23,17 +23,40 @@ namespace systems
 			{
 				auto input = entity->getComponent<components::KeyboardInput>();
 
-				for (auto iter = input->keyboardActionKeyPairs.begin(); iter != input->keyboardActionKeyPairs.end(); iter++)
+				// We have all our bindings, so we need to determine which state each is in
+
+				for (auto iter = input->bindings.begin(); iter != input->bindings.end(); iter++)
 				{
 					Ebony::PressedState pressedState = keyInput.getIsKeyDown(iter->first);
 
-					if (pressedState == Ebony::PressedState::PRESSED)
+					if (pressedState == Ebony::PressedState::PRESSED && input->onPressActions.contains(iter->second))
 					{
-						iter->second();
+						input->onPressActions[iter->second]();
+					}
+					else if (pressedState == Ebony::PressedState::HELD && input->onHeldActions.contains(iter->second))
+					{
+						input->onHeldActions[iter->second]();
+					}
+					else if (pressedState == Ebony::PressedState::RELEASED && input->onReleaseActions.contains(iter->second))
+					{
+						input->onReleaseActions[iter->second]();
 					}
 				}
 
-				for (auto iter = input->onReleaseKeyboardActionKeyPairs.begin(); iter != input->onReleaseKeyboardActionKeyPairs.end(); iter++)
+
+
+				//for (auto iter = input->onPressActions.begin(); iter != input->onPressActions.end(); iter++)
+				//{
+				//	// Get the function from the dictionary
+				//	Ebony::PressedState pressedState = keyInput.getIsKeyDown(iter->first);
+
+				//	if (pressedState == Ebony::PressedState::PRESSED)
+				//	{
+				//		iter->second();
+				//	}
+				//}
+
+				/*for (auto iter = input->onReleaseKeyboardActionKeyPairs.begin(); iter != input->onReleaseKeyboardActionKeyPairs.end(); iter++)
 				{
 					Ebony::PressedState pressedState = keyInput.getIsKeyDown(iter->first);
 
@@ -41,7 +64,7 @@ namespace systems
 					{
 						iter->second();
 					}
-				}
+				}*/
 			}
 
 			// Handle Controller Input

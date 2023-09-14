@@ -266,10 +266,18 @@ namespace Ebony {
 			} });
 
 
-			keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_ESCAPE, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
-			keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_E, [=]() { std::cout << "E was called" << std::endl; } });
-			keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = true; } });
-			keyboardInputComponent->onReleaseKeyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = false; } });
+			keyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
+			keyboardInputComponent->onPressActions.insert({ "quit", [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+
+			keyboardInputComponent->bindings.insert({ GLFW_KEY_E, "print" });
+			keyboardInputComponent->onReleaseActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
+			keyboardInputComponent->onHeldActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
+
+
+			//keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_ESCAPE, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+			//keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_E, [=]() { std::cout << "E was called" << std::endl; } });
+			//keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = true; } });
+			//keyboardInputComponent->onReleaseKeyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = false; } });
 
 
 			keyboardInput->addComponent(std::move(controllerInputComponent));

@@ -1,5 +1,9 @@
 #include "inputPersistence.hpp"
-
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/document.h"
 
 void Ebony::InputPersistence::LoadSavedKeyboardControls(components::KeyboardInput& keyboard)
 {
