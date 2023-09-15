@@ -234,47 +234,48 @@ namespace Ebony {
 			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CROSS, [=]() { std::cout << "Cross was called" << std::endl; } });
 			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_SQUARE, [=]() { std::cout << "Square was called" << std::endl; } });
 			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, [=]() { std::cout << "Triangle was called" << std::endl; } });*/
-			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, [=](float value) {
+
+			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, "left" });
+			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_Y, "right" });
+			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_X, "up" });
+			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_Y, "down" });
+
+			controllerInputComponent->joystickActions.insert({ "up", [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Left X: " << value << std::endl;
 				}
-				}});
+				} });
 
-			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_Y, [=](float value) {
+			controllerInputComponent->joystickActions.insert({ "down", [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Left Y: " << value << std::endl;
 				}
-				} });
-
-			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_X, [=](float value) {
+			} });
+			
+			controllerInputComponent->joystickActions.insert({ "left", [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Right X: " << value << std::endl;
 				}
 				} });
-
-			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_Y, [=](float value) {
+			
+			controllerInputComponent->joystickActions.insert({ "right", [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Right Y: " << value << std::endl;
 				}
 				} });
 
-			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, [=](float value) {
-				if (value > -0.5)
-				{
-					std::cout << "Left Trigger: " << value << std::endl;
-				}
-			} });
 
-			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, [=](float value) {
-			if (value > -0.5)
-			{
-				std::cout << "Right Trigger: " << value << std::endl;
-			}
-			} });
+
+			//controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, [=](float value) {
+			//if (value > -0.5)
+			//{
+			//	std::cout << "Right Trigger: " << value << std::endl;
+			//}
+			//} });
 
 
 			keyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
@@ -298,7 +299,9 @@ namespace Ebony {
 			entities::EntityPtr anotherEntity = std::make_shared<entities::Entity>();
 			auto mouseComponent = std::make_unique<components::MouseInput>();
 
-			mouseComponent->actions.insert({ GLFW_MOUSE_BUTTON_1, [=]() {std::cout << "Button pressed!" << std::endl; } });
+			mouseComponent->bindings.insert({ GLFW_MOUSE_BUTTON_1, "mousePress" });
+			mouseComponent->onPressActions.insert({ "mousePress", [=]() {std::cout << "Button pressed!" << std::endl; }});
+			mouseComponent->onReleaseActions.insert({ "mousePress",[=]() {std::cout << "Mouse Button released!" << std::endl; }});
 
 			anotherEntity->addComponent(std::move(mouseComponent));
 

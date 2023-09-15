@@ -184,6 +184,11 @@ namespace Ebony
 			if (it != m_buttons.end())
 			{
 				result = m_buttons[button];
+
+				if (result == PressedState::RELEASED)
+				{
+					m_buttons[button] = PressedState::NONE;
+				}
 			}
 		}
 

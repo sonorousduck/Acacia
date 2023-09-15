@@ -20,7 +20,8 @@ namespace components
 
 
 		//std::unordered_map<int, std::function<void()>> controllerActionKeyPairs{};
-		std::unordered_map<int, std::function<void(float)>> controllerAxes{};
+		std::unordered_map<int, std::string_view> joystickBindings{};
+		std::unordered_map<std::string_view, std::function<void(float)>> joystickActions{};
 
 		//std::unordered_map<int, bool> actions{};
 		//std::unordered_map<int, bool> previousActions{};

@@ -104,13 +104,21 @@ namespace systems
 			{
 				auto input = entity->getComponent<components::MouseInput>();
 
-				for (auto iter = input->actions.begin(); iter != input->actions.end(); iter++)
+				for (auto iter = input->bindings.begin(); iter != input->bindings.end(); iter++)
 				{
 					Ebony::PressedState pressedState = mouseInput.getIsButtonDown(iter->first);
 
-					if (pressedState == Ebony::PressedState::PRESSED)
+					if (pressedState == Ebony::PressedState::PRESSED && input->onPressActions.contains(iter->second))
 					{
-						iter->second();
+						input->onPressActions[iter->second]();
+					}
+					else if (pressedState == Ebony::PressedState::HELD && input->onHeldActions.contains(iter->second))
+					{
+						input->onHeldActions[iter->second]();
+					}
+					else if (pressedState == Ebony::PressedState::RELEASED && input->onReleaseActions.contains(iter->second))
+					{
+						input->onReleaseActions[iter->second]();
 					}
 				}
 			}
