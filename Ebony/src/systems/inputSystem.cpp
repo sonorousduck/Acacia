@@ -73,6 +73,17 @@ namespace systems
 							}
 						}
 
+						for (auto iter = input->joystickBindings.begin(); iter != input->joystickBindings.end(); iter++)
+						{
+							// Update the joystick (and trigger) information
+							Ebony::PressedState pressedState = controllerInput.setIsTriggerDown(iter->first, state.axes[iter->first]);
+
+							if ((pressedState == Ebony::PressedState::PRESSED || pressedState == Ebony::PressedState::RELEASED) && input->onPressActions.contains(iter->second))
+							{
+								input->joystickActions[iter->second](state.axes[iter->first]);
+							}
+						}
+
 
 
 						//for (auto iter = input->controllerActionKeyPairs.begin(); iter != input->controllerActionKeyPairs.end(); iter++)

@@ -355,5 +355,30 @@ namespace Ebony
 		return m_buttons[button];
 	}
 
+	PressedState ControllerInput::setIsTriggerDown(int button, float value)
+	{
+		std::unordered_map<int, PressedState>::iterator it = m_joystick_triggers.find(button);
 
+		if (it != m_joystick_triggers.end())
+		{
+			PressedState state = m_joystick_triggers[button];
+			PressedState finalState = PressedState::NONE;
+
+			if (abs(value) > 0.5f) 
+			{
+				finalState = PressedState::PRESSED;
+			}
+			else if (state == PressedState::PRESSED)
+			{
+				finalState = PressedState::RELEASED;
+			}
+			else if (state == PressedState::RELEASED)
+			{
+				finalState = PressedState::NONE;
+			}
+
+			m_joystick_triggers[button] = finalState;
+		}
+		return m_joystick_triggers[button];
+	}
 }

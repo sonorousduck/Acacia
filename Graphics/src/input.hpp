@@ -102,11 +102,13 @@ namespace Ebony
 
 		// Must be public due to Controllers not having callback functions available
 		PressedState setIsButtonDown(int button, unsigned int isDown);
+		PressedState setIsTriggerDown(int button, float value);
 
 	private:
 
 
 		std::unordered_map<int, PressedState> m_buttons;
+		std::unordered_map<int, PressedState> m_joystick_triggers;
 		bool m_isEnabled;
 		static std::vector<ControllerInput*> _instances;
 
