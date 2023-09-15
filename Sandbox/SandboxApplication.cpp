@@ -89,6 +89,11 @@ namespace Ebony {
 			std::vector<int> buttons = { GLFW_MOUSE_BUTTON_1 };
 			mouseInput.setButtonsToMonitor(buttons);
 
+			std::vector<int> controllerButtons = { GLFW_GAMEPAD_BUTTON_CROSS, GLFW_GAMEPAD_BUTTON_CIRCLE, GLFW_GAMEPAD_BUTTON_TRIANGLE, GLFW_GAMEPAD_BUTTON_SQUARE, GLFW_GAMEPAD_BUTTON_START };
+			controllerInput.setButtonsToMonitorInit(controllerButtons);
+
+
+
 			testParticles = std::make_shared<entities::Entity>();
 			keyboardInput = std::make_shared<entities::Entity>();
 			animationsTest = std::make_shared<entities::Entity>();
@@ -216,13 +221,19 @@ namespace Ebony {
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
 
+			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_START, "quit" });
+			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, "print" });
+			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, "printRelease" });
 
+			controllerInputComponent->onPressActions.insert({ "quit", [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+			controllerInputComponent->onHeldActions.insert({ "print", [=]() {std::cout << "Circle was called (OnHeld)" << std::endl; } });
+			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=]() {std::cout << "Triangle was called" << std::endl; } });
 
-			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_START, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+			/*controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_START, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
 			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, [=]() { std::cout << "Circle was called" << std::endl; } });
 			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CROSS, [=]() { std::cout << "Cross was called" << std::endl; } });
 			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_SQUARE, [=]() { std::cout << "Square was called" << std::endl; } });
-			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, [=]() { std::cout << "Triangle was called" << std::endl; } });
+			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, [=]() { std::cout << "Triangle was called" << std::endl; } });*/
 			controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, [=](float value) {
 				if (abs(value) > 0.5)
 				{
@@ -273,11 +284,9 @@ namespace Ebony {
 			keyboardInputComponent->onReleaseActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
 			keyboardInputComponent->onHeldActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
 
-
-			//keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_ESCAPE, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
-			//keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_E, [=]() { std::cout << "E was called" << std::endl; } });
-			//keyboardInputComponent->keyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = true; } });
-			//keyboardInputComponent->onReleaseKeyboardActionKeyPairs.insert({ GLFW_KEY_LEFT_SHIFT, [=]() { isRunning = false; } });
+			keyboardInputComponent->bindings.insert({ GLFW_KEY_LEFT_SHIFT, "toggleRun" });
+			keyboardInputComponent->onReleaseActions.insert({ "toggleRun", [=]() { isRunning = false; } });
+			keyboardInputComponent->onPressActions.insert({ "toggleRun", [=]() { isRunning = true; } });
 
 
 			keyboardInput->addComponent(std::move(controllerInputComponent));
@@ -305,7 +314,7 @@ namespace Ebony {
 
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
 		{
-			inputSystem.Update(keyInput, mouseInput);
+			inputSystem.Update(keyInput, mouseInput, controllerInput);
 			// inputSystem.Update(keyInput, std::nullopt);
 		}
 
@@ -526,6 +535,7 @@ namespace Ebony {
 		Graphics2d graphics;
 		KeyInput keyInput;
 		MouseInput mouseInput;
+		ControllerInput controllerInput;
 		Color clearColor;
 		SpriteFont spriteFont;
 		systems::ParticleSystem particleSystem;

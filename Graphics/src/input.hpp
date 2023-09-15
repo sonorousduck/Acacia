@@ -87,7 +87,30 @@ namespace Ebony
 		static std::vector<MouseInput*> _instances;
 	};
 
+	class ControllerInput
+	{
+	public:
+		ControllerInput() { m_isEnabled = true; };
+		ControllerInput(std::vector<int> buttonsToMonitor);
+		~ControllerInput();
 
+		PressedState getIsButtonDown(int button);
+		bool getIsEnabled() { return m_isEnabled; }
+		void setIsEnabled(bool value) { m_isEnabled = value; }
+
+		void setButtonsToMonitorInit(std::vector<int> buttonsToMonitor);
+
+		// Must be public due to Controllers not having callback functions available
+		PressedState setIsButtonDown(int button, unsigned int isDown);
+
+	private:
+
+
+		std::unordered_map<int, PressedState> m_buttons;
+		bool m_isEnabled;
+		static std::vector<ControllerInput*> _instances;
+
+	};
 
 	//class Input
 	//{
