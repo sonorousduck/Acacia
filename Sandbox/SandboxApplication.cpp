@@ -240,28 +240,28 @@ namespace Ebony {
 			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_X, "up" });
 			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_Y, "down" });
 
-			controllerInputComponent->joystickActions.insert({ "up", [=](float value) {
+			controllerInputComponent->joystickActions.insert({ "left", [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Left X: " << value << std::endl;
 				}
 				} });
 
-			controllerInputComponent->joystickActions.insert({ "down", [=](float value) {
+			controllerInputComponent->joystickActions.insert({ "right", [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Left Y: " << value << std::endl;
 				}
 			} });
 			
-			controllerInputComponent->joystickActions.insert({ "left", [=](float value) {
+			controllerInputComponent->joystickActions.insert({ "up", [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Right X: " << value << std::endl;
 				}
 				} });
 			
-			controllerInputComponent->joystickActions.insert({ "right", [=](float value) {
+			controllerInputComponent->joystickActions.insert({ "down", [=](float value) {
 				if (abs(value) > 0.5)
 				{
 					std::cout << "Right Y: " << value << std::endl;
