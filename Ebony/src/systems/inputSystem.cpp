@@ -78,7 +78,7 @@ namespace systems
 							// Update the joystick (and trigger) information
 							Ebony::PressedState pressedState = controllerInput.setIsTriggerDown(iter->first, state.axes[iter->first]);
 
-							if ((pressedState == Ebony::PressedState::PRESSED || pressedState == Ebony::PressedState::RELEASED) && input->onPressActions.contains(iter->second))
+							if ((pressedState == Ebony::PressedState::PRESSED || pressedState == Ebony::PressedState::RELEASED) && input->joystickActions.contains(iter->second))
 							{
 								input->joystickActions[iter->second](state.axes[iter->first]);
 							}

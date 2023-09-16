@@ -364,7 +364,7 @@ namespace Ebony
 			PressedState state = m_joystick_triggers[button];
 			PressedState finalState = PressedState::NONE;
 
-			if (abs(value) > 0.5f) 
+			if (abs(value) > 0.10f) 
 			{
 				finalState = PressedState::PRESSED;
 			}
