@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <functional>
 #include "window.hpp"
+#include "../../Ebony/src/components/keyboardComponent.hpp"
 
 
 namespace Ebony
@@ -40,6 +41,9 @@ namespace Ebony
 		void setIsEnabled(bool value) { m_isEnabled = value; };
 
 		void setKeysToMonitorInit(std::vector<int> keysToMonitor);
+
+		void saveKeyBindings(std::string_view filepath, components::KeyboardInput& keyboardInput);
+		void loadKeyBindings(std::string_view filepath, components::KeyboardInput& keyboardInput);
 
 	private:
 		void setIsKeyDown(int key, PressedState isDown);

@@ -1,4 +1,11 @@
 #include "input.hpp"
+#define RAPIDJSON_HAS_STDSTRING 1
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/document.h"
+
 
 namespace Ebony
 {
@@ -147,6 +154,90 @@ namespace Ebony
 			KeyInput::joysticksConnected--;
 		}
 	}
+
+	void KeyInput::saveKeyBindings(std::string_view filepath, components::KeyboardInput& keyboardInput)
+	{
+		rapidjson::Document document{};
+		rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+		document.SetObject();
+
+		/*for (auto iter = input->bindings.begin(); iter != input->bindings.end(); iter++)
+		{
+			Ebony::PressedState pressedState = keyInput.getIsKeyDown(iter->first);
+
+			if (pressedState == Ebony::PressedState::PRESSED && input->onPressActions.contains(iter->second))
+			{
+				input->onPressActions[iter->second]();
+			}
+			else if (pressedState == Ebony::PressedState::HELD && input->onHeldActions.contains(iter->second))
+			{
+				input->onHeldActions[iter->second]();
+			}
+			else if (pressedState == Ebony::PressedState::RELEASED && input->onReleaseActions.contains(iter->second))
+			{
+				input->onReleaseActions[iter->second]();
+			}
+		}*/
+
+
+		// Iterate through the bindings first
+		// iter->first = Key
+		// iter->second = functionString
+		// Json Structure:
+		// bindings: {
+		//	key: string,
+		//	key: string,
+		// },
+
+
+		// TODO: THIS MAY NEED TO BE ADDING MEMBERS TO THE OBJECT AND NOT THE VALUE
+
+		rapidjson::Value bindingNestedObject(rapidjson::kObjectType);
+		document.AddMember("bindings", bindingNestedObject, allocator);
+		rapidjson::Value& bindingNestedObjectValue = document["bindings"];
+		
+		for (auto iter = keyboardInput.bindings.begin(); iter != keyboardInput.bindings.end(); iter++)
+		{
+			char* keyString = (char*)(iter->first);
+			bindingNestedObjectValue.AddMember(rapidjson::GenericStringRef(keyString), iter->second, allocator);
+		}
+
+		rapidjson::Value onPressNestedObject(rapidjson::kObjectType);
+		document.AddMember("onPress", onPressNestedObject, allocator);
+		rapidjson::Value& onPressNestedObjectValue = document["onPress"];
+		// Iterate through the onPressActions
+		for (auto iter = keyboardInput.onPressActions.begin(); iter != keyboardInput.onPressActions.end(); iter++)
+		{
+			onPressNestedObjectValue.AddMember(rapidjson::StringRef((char*)(iter->first.data())), iter->second, allocator);
+		}
+
+		// Iterate through the onReleaseActions
+		rapidjson::Value onReleaseNestedObject(rapidjson::kObjectType);
+		document.AddMember("onRelease", onReleaseNestedObject, allocator);
+		rapidjson::Value& onReleaseNestedObjectValue = document["onPress"];
+
+		for (auto iter = keyboardInput.onReleaseActions.begin(); iter != keyboardInput.onReleaseActions.end(); iter++)
+		{
+			onReleaseNestedObjectValue.AddMember(rapidjson::StringRef((char*)(iter->first.data())), iter->second, allocator);
+		}
+
+		// Iterate through the onHeldActions
+		rapidjson::Value onHeldNestedObject(rapidjson::kObjectType);
+		document.AddMember("onHeld", onReleaseNestedObject, allocator);
+		rapidjson::Value& onHeldNestedObjectValue = document["onHeld"];
+
+		for (auto iter = keyboardInput.onHeldActions.begin(); iter != keyboardInput.onHeldActions.end(); iter++)
+		{
+			onHeldNestedObjectValue.AddMember(rapidjson::StringRef((char*)(iter->first.data())), iter->second, allocator);
+		}
+
+	}
+
+	void KeyInput::loadKeyBindings(std::string_view filepath, components::KeyboardInput& keyboardInput)
+	{
+
+	}
+
 
 	MouseInput::MouseInput(std::vector<int> buttonsToMonitor) : m_isEnabled(true)
 	{

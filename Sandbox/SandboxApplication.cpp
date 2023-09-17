@@ -239,35 +239,42 @@ namespace Ebony {
 			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_Y, "right" });
 			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_X, "up" });
 			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_Y, "down" });
+			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, "shoot" });
 
 			controllerInputComponent->joystickActions.insert({ "left", [=](float value) {
-				if (abs(value) > 0.5)
+				if (abs(value) > 0.10)
 				{
 					std::cout << "Left X: " << value << std::endl;
 				}
 				} });
 
 			controllerInputComponent->joystickActions.insert({ "right", [=](float value) {
-				if (abs(value) > 0.5)
+				if (abs(value) > 0.10)
 				{
 					std::cout << "Left Y: " << value << std::endl;
 				}
 			} });
 			
 			controllerInputComponent->joystickActions.insert({ "up", [=](float value) {
-				if (abs(value) > 0.5)
+				if (abs(value) > 0.10)
 				{
 					std::cout << "Right X: " << value << std::endl;
 				}
 				} });
 			
 			controllerInputComponent->joystickActions.insert({ "down", [=](float value) {
-				if (abs(value) > 0.5)
+				if (abs(value) > 0.10)
 				{
 					std::cout << "Right Y: " << value << std::endl;
 				}
 				} });
 
+			controllerInputComponent->joystickActions.insert({ "shoot", [=](float value) {
+				if (value > -0.25)
+				{
+					std::cout << "Right Trigger: " << value << std::endl;
+				}
+				} });
 
 
 			//controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, [=](float value) {
