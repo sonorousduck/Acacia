@@ -16,11 +16,10 @@ namespace components
 
 		std::unique_ptr<b2Shape> collider;
 
+		// Basically, the callback will take itself and the object with which it collided
 		std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr)>> onCollisionStart;
 		std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr)>> onCollision;
 		std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr)>> onCollisionEnd;
-
-
 
 	};
 }

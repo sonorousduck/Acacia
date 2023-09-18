@@ -221,9 +221,9 @@ namespace Ebony {
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
 
-			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_START, "quit" });
-			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, "print" });
-			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, "printRelease" });
+			//controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_START, "quit" });
+			//controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, "print" });
+			//controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, "printRelease" });
 
 
 
@@ -237,11 +237,11 @@ namespace Ebony {
 			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_SQUARE, [=]() { std::cout << "Square was called" << std::endl; } });
 			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, [=]() { std::cout << "Triangle was called" << std::endl; } });*/
 
-			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, "left" });
-			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_Y, "right" });
-			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_X, "up" });
-			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_Y, "down" });
-			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, "shoot" });
+			//controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, "left" });
+			//controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_Y, "right" });
+			//controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_X, "up" });
+			//controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_Y, "down" });
+			//controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, "shoot" });
 
 			controllerInputComponent->joystickActions.insert({ "left", [=](float value) {
 				if (abs(value) > 0.10)
@@ -278,6 +278,7 @@ namespace Ebony {
 				}
 				} });
 
+			controllerInputComponent->loadControllerBindings("../controllerBindings.json", "../joystickBindings.json");
 
 			//controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, [=](float value) {
 			//if (value > -0.5)
@@ -299,7 +300,7 @@ namespace Ebony {
 			keyboardInputComponent->onPressActions.insert({ "toggleRun", [=]() { isRunning = true; } });
 
 
-			keyboardInputComponent->loadKeyBindings("../keybindings.json");
+			keyboardInputComponent->loadKeyBindings("../keyBindings.json");
 
 
 			keyboardInput->addComponent(std::move(controllerInputComponent));
@@ -311,14 +312,16 @@ namespace Ebony {
 			entities::EntityPtr anotherEntity = std::make_shared<entities::Entity>();
 			auto mouseComponent = std::make_unique<components::MouseInput>();
 
-			mouseComponent->bindings.insert({ GLFW_MOUSE_BUTTON_1, "mousePress" });
+			//mouseComponent->bindings.insert({ GLFW_MOUSE_BUTTON_1, "mousePress" });
 			mouseComponent->onPressActions.insert({ "mousePress", [=]() {std::cout << "Button pressed!" << std::endl; }});
 			mouseComponent->onReleaseActions.insert({ "mousePress",[=]() {std::cout << "Mouse Button released!" << std::endl; }});
+			
+			mouseComponent->loadMouseBindings("../mouseBindings.json");
 
 			anotherEntity->addComponent(std::move(mouseComponent));
 
-			keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keybindings.json");
-
+			//keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keyBindings.json");
+			//keyboardInput->getComponent<components::ControllerInput>()->saveControllerBindings("../controllerBindings.json", "../joystickBindings.json");
 
 			AddEntity(anotherEntity);
 
@@ -331,7 +334,6 @@ namespace Ebony {
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
 		{
 			inputSystem.Update(keyInput, mouseInput, controllerInput);
-			// inputSystem.Update(keyInput, std::nullopt);
 		}
 
 
