@@ -225,6 +225,8 @@ namespace Ebony {
 			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, "print" });
 			controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, "printRelease" });
 
+
+
 			controllerInputComponent->onPressActions.insert({ "quit", [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
 			controllerInputComponent->onHeldActions.insert({ "print", [=]() {std::cout << "Circle was called (OnHeld)" << std::endl; } });
 			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=]() {std::cout << "Triangle was called" << std::endl; } });
@@ -285,16 +287,19 @@ namespace Ebony {
 			//} });
 
 
-			keyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
+			//keyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
 			keyboardInputComponent->onPressActions.insert({ "quit", [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
 
-			keyboardInputComponent->bindings.insert({ GLFW_KEY_E, "print" });
+			//keyboardInputComponent->bindings.insert({ GLFW_KEY_E, "print" });
 			keyboardInputComponent->onReleaseActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
 			keyboardInputComponent->onHeldActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
 
-			keyboardInputComponent->bindings.insert({ GLFW_KEY_LEFT_SHIFT, "toggleRun" });
+			//keyboardInputComponent->bindings.insert({ GLFW_KEY_LEFT_SHIFT, "toggleRun" });
 			keyboardInputComponent->onReleaseActions.insert({ "toggleRun", [=]() { isRunning = false; } });
 			keyboardInputComponent->onPressActions.insert({ "toggleRun", [=]() { isRunning = true; } });
+
+
+			keyboardInputComponent->loadKeyBindings("../keybindings.json");
 
 
 			keyboardInput->addComponent(std::move(controllerInputComponent));
@@ -312,6 +317,7 @@ namespace Ebony {
 
 			anotherEntity->addComponent(std::move(mouseComponent));
 
+			keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keybindings.json");
 
 
 			AddEntity(anotherEntity);
