@@ -35,6 +35,8 @@ set(ComponentHeaders
 	src/components/audioSource.hpp
 	src/components/text.hpp
 	src/components/collider.hpp
+	src/components/subcolliderClass.hpp
+	src/components/rigidbodyComponent.hpp
 )
 
 set(SystemHeaders

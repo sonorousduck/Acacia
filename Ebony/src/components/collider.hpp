@@ -1,25 +1,33 @@
 #pragma once
 
-#include <optional>
-#include <functional>
+#include <vector>
 
 #include "component.hpp"
-#include "../entity.hpp"
-#include <box2d/b2_shape.h>
+#include "subcolliderClass.hpp"
 
 namespace components
 {
 	class Collider : public PolymorphicComparable<Component, Collider>
 	{
 	public:
-		Collider() {};
+		Collider(Subcollider aabbCollider) : aabbCollider(aabbCollider) {};
 
-		std::unique_ptr<b2Shape> collider;
+		Collider(Subcollider aabbCollider, std::vector<Subcollider> subcolliders) : aabbCollider(aabbCollider), subcolliders(subcolliders), preciseSubcolliderDetection(true) {}
 
-		// Basically, the callback will take itself and the object with which it collided
-		std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr)>> onCollisionStart;
-		std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr)>> onCollision;
-		std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr)>> onCollisionEnd;
+
+		Subcollider aabbCollider;
+		std::vector<Subcollider> subcolliders{};
+
+		bool preciseSubcolliderDetection = false;
+		bool isEnabled = true;
+
+		// Need to figure out how to do the bitwise comparisons
+		std::uint16_t layer;
+		
+
+	private:
+
+
 
 	};
 }
