@@ -50,7 +50,7 @@ set(SystemHeaders
 	src/systems/audioSystem.hpp
 	src/systems/fontRenderer.hpp
 	src/systems/collisionSystem.hpp
-
+	src/systems/physicsSystem.hpp
 )
 
 set(SystemSources
@@ -64,6 +64,7 @@ set(SystemSources
 	src/systems/audioSystem.cpp
 	src/systems/fontRenderer.cpp
 	src/systems/collisionSystem.cpp
+	src/systems/physicsSystem.cpp
 
 )
 
@@ -85,7 +86,7 @@ set(MiscHeaders
 	src/misc/ConcurrentTaskGraph.hpp
 	src/misc/ConcurrentQueue.hpp
 	src/misc/resourceManager.hpp
-
+	src/misc/Quadtree.hpp
 )
 
 set(MiscSources
@@ -94,6 +95,7 @@ set(MiscSources
 	src/misc/WorkerThread.cpp
 	src/misc/ConcurrentTaskGraph.cpp
 	src/misc/resourceManager.cpp
+	src/misc/Quadtree.cpp
 
 )
 
