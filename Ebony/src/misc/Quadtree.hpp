@@ -42,7 +42,10 @@ namespace Ebony
 		std::vector<bool> GetQuadrants(entities::EntityPtr entity);
 		void Insert(entities::EntityPtr entity);
 		void Split();
+		
+		
 		std::vector<entities::EntityPtr> GetPossibleCollisions(entities::EntityPtr entity);
+
 
 
 
