@@ -278,7 +278,7 @@ namespace Ebony {
 				}
 				} });
 
-			controllerInputComponent->loadControllerBindings("../controllerBindings.json", "../joystickBindings.json");
+			//controllerInputComponent->loadControllerBindings("../controllerBindings.json", "../joystickBindings.json");
 
 			//controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, [=](float value) {
 			//if (value > -0.5)
@@ -317,7 +317,7 @@ namespace Ebony {
 			mouseComponent->onReleaseActions.insert({ "mousePress",[=]() {std::cout << "Mouse Button released!" << std::endl; }});
 			
 			mouseComponent->loadMouseBindings("../mouseBindings.json");
-
+			//mouseComponent->saveMouseBindings("../mouseBindings.json");
 			anotherEntity->addComponent(std::move(mouseComponent));
 
 			//keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keyBindings.json");
