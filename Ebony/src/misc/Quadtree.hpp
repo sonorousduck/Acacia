@@ -54,6 +54,8 @@ namespace Ebony
 		std::vector<entities::EntityPtr> entitiesInLevel{};
 		std::vector<Quadtree> children{};
 
+		void GetPossibleCollisions(entities::EntityPtr entity, )
+
 
 	};
 
