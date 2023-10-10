@@ -37,6 +37,7 @@ set(ComponentHeaders
 	src/components/collider.hpp
 	src/components/subcolliderClass.hpp
 	src/components/rigidbodyComponent.hpp
+	src/components/transform.hpp
 )
 
 set(SystemHeaders

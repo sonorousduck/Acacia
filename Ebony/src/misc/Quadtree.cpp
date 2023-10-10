@@ -119,6 +119,12 @@ namespace Ebony
 		return vectorResults;
 	}
 
+	void Quadtree::Clear()
+	{
+		entitiesInLevel.clear();
+		children.clear();
+	}
+
 	void Quadtree::GetPossibleCollisions(entities::EntityPtr entity, std::unordered_set<entities::EntityPtr>& results)
 	{
 		if (children.size() == 0)
@@ -126,6 +132,18 @@ namespace Ebony
 			// Union the results with all entities in this level
 			results.insert(entitiesInLevel.begin(), entitiesInLevel.end());
 		}
+
+		std::vector<bool> possibleRegions = GetQuadrants(entity);
+
+		// Add the possible collisions for each child
+		for (std::uint8_t i = 0; i < 4; i++)
+		{
+			if (possibleRegions[i])
+			{
+				children[i].GetPossibleCollisions(entity, results);
+			}
+		}
+
 
 	}
 }

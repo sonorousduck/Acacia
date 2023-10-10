@@ -52,8 +52,7 @@ namespace Ebony
 		
 		std::vector<entities::EntityPtr> GetPossibleCollisions(entities::EntityPtr entity);
 
-
-
+		void Clear();
 
 	private:
 		std::uint16_t currentLevel;

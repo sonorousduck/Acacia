@@ -1,7 +1,6 @@
 #include "inputSystem.hpp"
 
 #include <algorithm>
-#include <iostream>
 
 namespace systems
 {
@@ -159,10 +158,7 @@ namespace systems
 			{
 				return entity->getComponents().contains(interest);
 			});
-		if (doICare)
-		{
-			std::cout << "YEP!" << std::endl;
-		}
+
 
 		return doICare;
 	}

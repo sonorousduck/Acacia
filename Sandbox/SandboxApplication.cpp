@@ -18,6 +18,7 @@
 #include <components/text.hpp>
 #include <systems/fontRenderer.hpp>
 #include <components/mouseInputComponent.hpp>
+#include <systems/physicsSystem.hpp>
 
 
 namespace Ebony {
@@ -105,6 +106,7 @@ namespace Ebony {
 			animationSystem = systems::Animation2d();
 			fontRenderer = systems::FontRenderer();
 			audioSystem = systems::AudioSystem();
+			physicsSystem = systems::PhysicsSystem();
 
 
 			//mySpeaker = SoundSource();
@@ -319,6 +321,15 @@ namespace Ebony {
 			mouseComponent->loadMouseBindings("../mouseBindings.json");
 			//mouseComponent->saveMouseBindings("../mouseBindings.json");
 			anotherEntity->addComponent(std::move(mouseComponent));
+			
+
+			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), true, true);
+
+			auto rigidbody = std::make_unique<components::RigidBody>(glm::vec2(100.0f, 100.0f));
+			auto collider = std::make_unique<components::Collider>(aabbcollider, 0);
+
+			anotherEntity->addComponent(std::move(rigidbody));
+			anotherEntity->addComponent(std::move(collider));
 
 			//keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keyBindings.json");
 			//keyboardInput->getComponent<components::ControllerInput>()->saveControllerBindings("../controllerBindings.json", "../joystickBindings.json");
@@ -366,6 +377,14 @@ namespace Ebony {
 				[this, elapsedTime]()
 				{
 					particleSystem.Update(elapsedTime);
+				}
+			);
+
+			auto task3 = ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					physicsSystem.Update(elapsedTime);
 				}
 			);
 
@@ -523,6 +542,7 @@ namespace Ebony {
 				inputSystem.AddEntity(entity);
 				audioSystem.AddEntity(entity);
 				fontRenderer.AddEntity(entity);
+				physicsSystem.AddEntity(entity);
 
 
 				allEntities[entity->getId()] = entity;
@@ -544,6 +564,7 @@ namespace Ebony {
 				inputSystem.RemoveEntity(entityId);
 				audioSystem.RemoveEntity(entityId);
 				fontRenderer.RemoveEntity(entityId);
+				physicsSystem.RemoveEntity(entityId);
 			}
 		}
 
@@ -563,6 +584,7 @@ namespace Ebony {
 		systems::InputSystem inputSystem;
 		systems::AudioSystem audioSystem;
 		systems::FontRenderer fontRenderer;
+		systems::PhysicsSystem physicsSystem;
 
 		entities::EntityMap allEntities;
 		std::vector<entities::EntityPtr> newEntities;

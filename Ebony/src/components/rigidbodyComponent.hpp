@@ -63,7 +63,7 @@ namespace components
 
 		std::uint16_t getNextScriptedMovementLength()
 		{
-			return scriptedMovements.size();
+			return static_cast<std::uint16_t>(scriptedMovements.size());
 		}
 
 		// Returns the next force and removes it from the list
@@ -83,7 +83,7 @@ namespace components
 
 		std::uint16_t getForceLength()
 		{
-			return forces.size();
+			return static_cast<std::uint16_t>(forces.size());
 		}
 
 		
