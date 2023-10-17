@@ -350,9 +350,6 @@ namespace components
 		// Allow the developer to set a shader, if desired. If none is found, then a default particle shader will be used
 		std::optional<Shader> shader;
 
-		// For now, while there isn't a proper GameObject, the particle group will have a position
-		glm::vec2 position{ 0.0f };
-
 		// This defines the base velocity that each particle will be generated around
 		glm::vec2 velocity{ 0.0f };
 

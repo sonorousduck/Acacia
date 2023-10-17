@@ -3,6 +3,7 @@
 #include "system.hpp"
 #include "../components/text.hpp"
 #include <graphics2d.hpp>
+#include "../components/transform.hpp"
 
 
 namespace systems
@@ -10,7 +11,7 @@ namespace systems
 	class FontRenderer : public System
 	{
 	public:
-		FontRenderer() : System({ ctti::unnamed_type_id<components::Text>() }) {};
+		FontRenderer() : System({ ctti::unnamed_type_id<components::Text>(), ctti::unnamed_type_id<components::Transform>()}) {};
 
 		void Update(Ebony::Graphics2d& graphics);
 

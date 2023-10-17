@@ -55,12 +55,6 @@ namespace systems
 		// Basically, ensure it has a rigidbody and a transform
 		auto& components = entity->getComponents();
 		bool doICare = components.contains(ctti::unnamed_type_id<components::RigidBody>()) && components.contains(ctti::unnamed_type_id<components::Transform>());
-		
-	
-		if (doICare)
-		{
-			std::cout << "YEP!" << std::endl;
-		}
 
 		return doICare;
 

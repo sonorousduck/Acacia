@@ -144,8 +144,10 @@ namespace Ebony {
 			//testEntity->addComponent(std::move(audioComponent));
 			
 
-			auto textComponent = std::make_unique<components::Text>(fps, glm::vec2{25.0f, 100.0f}, 1.0f, Ebony::Colors::Black, Ebony::Colors::White, spriteFont);
+			auto textComponent = std::make_unique<components::Text>(fps, Ebony::Colors::Black, Ebony::Colors::White, spriteFont);
 			testEntity->addComponent(std::move(textComponent));
+			testEntity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 25.0f, 100.0f }, 0.0f, glm::vec2{ 1.0f, 1.0f })));
+
 			
 			AddEntity(testEntity);
 
@@ -155,7 +157,6 @@ namespace Ebony {
 			//particleGroup->velocity = glm::vec2{ 50.0f, 10.0f };
 			particleGroup->rateOverTime = 1;
 			particleGroup->spawnRate = std::chrono::milliseconds(16);
-			particleGroup->position = glm::vec2{ 400.0f, 400.0f };
 			particleGroup->maxLifetime = std::chrono::milliseconds(500);
 			particleGroup->startSize = glm::vec2{ 1.0f, 1.0f };
 			particleGroup->maxStartSize = glm::vec2{ 1.0f, 1.0f };
@@ -175,6 +176,8 @@ namespace Ebony {
 			//particleGroup->startDelay = std::chrono::seconds(5);
 
 			testParticles->addComponent(std::move(particleGroup));
+			testParticles->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 25.0f, 100.0f }, 0.0f, glm::vec2{ 1.0f, 1.0f })));
+
 
 			AddEntity(testParticles);
 
@@ -187,9 +190,10 @@ namespace Ebony {
 
 				auto animationController = std::make_unique<components::AnimationController>();
 
-
-				std::vector<std::chrono::microseconds> timings1(44, std::chrono::milliseconds(500 + 1000 - i));
-				std::vector<std::chrono::microseconds> timings2(44, std::chrono::milliseconds(100 + 1000 - i));
+				std::vector<std::chrono::microseconds> timings1(44, std::chrono::milliseconds(500 - i));
+				std::vector<std::chrono::microseconds> timings2(44, std::chrono::milliseconds(100 - i));
+				//std::vector<std::chrono::microseconds> timings1(44, std::chrono::milliseconds(500 + 1000 - i));
+				//std::vector<std::chrono::microseconds> timings2(44, std::chrono::milliseconds(100 + 1000 - i));
 
 				std::vector<components::Link> links1 = { components::Link(1, [=]() {
 					return (isRunning);
@@ -212,6 +216,7 @@ namespace Ebony {
 
 
 				test->addComponent(std::move(animationController));
+				test->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 200.0f, 100.0f }, 0.0f, glm::vec2{ 100.0f, 100.0f })));
 
 				AddEntity(test);
 			}
@@ -327,9 +332,11 @@ namespace Ebony {
 
 			auto rigidbody = std::make_unique<components::RigidBody>(glm::vec2(100.0f, 100.0f));
 			auto collider = std::make_unique<components::Collider>(aabbcollider, 0);
+			auto transform = std::make_unique<components::Transform>(glm::vec2(100.0f, 100.0f), 0.0f, glm::vec2(1.0f, 1.0f));
 
 			anotherEntity->addComponent(std::move(rigidbody));
 			anotherEntity->addComponent(std::move(collider));
+			anotherEntity->addComponent(std::move(transform));
 
 			//keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keyBindings.json");
 			//keyboardInput->getComponent<components::ControllerInput>()->saveControllerBindings("../controllerBindings.json", "../joystickBindings.json");

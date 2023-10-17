@@ -13,6 +13,7 @@ namespace systems
 		for (auto& [id, entity] : m_Entities)
 		{
 			auto particleGroup = entity->getComponent<components::ParticleGroup>();
+			auto transform = entity->getComponent<components::Transform>();
 			bool hasDelay = particleGroup->startDelay != std::chrono::microseconds::zero() && particleGroup->duration < particleGroup->startDelay;
 			particleGroup->duration += elapsedTime;
 
@@ -40,7 +41,7 @@ namespace systems
 					{
 						int unusedParticle = firstUnusedParticle(particleGroup);
 						// TODO: This will eventually be the game object, not the particle group that is passed
-						respawnParticle(particleGroup->particles[unusedParticle], particleGroup->minAngle, particleGroup->maxAngle, particleGroup);
+						respawnParticle(particleGroup->particles[unusedParticle], particleGroup->minAngle, particleGroup->maxAngle, particleGroup, transform);
 					}
 					particleGroup->accumulatedTime -= particleGroup->spawnRate;
 				}
@@ -152,19 +153,19 @@ namespace systems
 
 	// This should also be modified to take into account the things that the particle group defines, such as
 	// its shape, emission velocity, etc.
-	void ParticleSystem::respawnParticle(Particle& particle, float lowerBound, float upperBound, components::ParticleGroup* particleGroup)
+	void ParticleSystem::respawnParticle(Particle& particle, float lowerBound, float upperBound, components::ParticleGroup* particleGroup, components::Transform* transform)
 	{
 		if (particleGroup->volume)
 		{
 			glm::vec2 random = particleGroup->random_double_vec2() * particleGroup->emissionArea;
-			particle.position = particleGroup->position + random;
+			particle.position = transform->position + random;
 		}
 		else
 		{
 			glm::vec2 random = particleGroup->random_double_vec2();
 
 			// We only want to spawn on the outskirts of the emission area
-			particle.position = particleGroup->emissionArea * random - (particleGroup->emissionArea / 2.0f) + particleGroup->position;
+			particle.position = particleGroup->emissionArea * random - (particleGroup->emissionArea / 2.0f) + transform->position;
 		}
 		
 

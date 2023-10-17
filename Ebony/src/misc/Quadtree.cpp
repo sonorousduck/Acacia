@@ -119,6 +119,7 @@ namespace Ebony
 		return vectorResults;
 	}
 
+
 	void Quadtree::Clear()
 	{
 		entitiesInLevel.clear();
