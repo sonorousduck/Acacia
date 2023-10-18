@@ -31,7 +31,7 @@ namespace systems
 		// To avoid warnings, this has to be initialized... Which is unfortunate since it just gets initialized again later
 		Ebony::Quadtree quadtree = Ebony::Quadtree(QUADTREE_SIZE, QUADTREE_SIZE);
 
-		bool HasCollision(const components::Collider* collider, const components::Collider* otherCollider);
-		bool HasAABBCollision(const components::Collider* collider, const components::Collider* otherCollider);
+		bool HasCollision(const entities::EntityPtr entity, const entities::EntityPtr otherEntity);
+		bool HasAABBCollision(const entities::EntityPtr& entity, const entities::EntityPtr& otherEntity);
 	};
 }

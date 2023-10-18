@@ -183,7 +183,7 @@ namespace Ebony {
 
 
 
-			for (size_t i = 0; i < 1; i++)
+			for (size_t i = 0; i < 2; i++)
 			{
 				entities::EntityPtr test = std::make_shared<entities::Entity>();;
 
@@ -215,8 +215,22 @@ namespace Ebony {
 				animationController->animationTree.emplace_back(node2);
 
 
+				components::Subcollider aabb = components::Subcollider(
+					glm::vec2(0.0f, 0.0f), 
+					glm::vec2(1.0f, 1.0f), 
+					true, 
+					true, 
+					[=](entities::EntityPtr, entities::EntityPtr) 
+					{
+						std::cout << "Testing" << std::endl; 
+					}, 
+					std::nullopt,
+					std::nullopt);
+
 				test->addComponent(std::move(animationController));
-				test->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 200.0f, 100.0f }, 0.0f, glm::vec2{ 100.0f, 100.0f })));
+				test->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 200.0f + i * 50, 100.0f }, 0.0f, glm::vec2{ 100.0f, 100.0f })));
+				test->addComponent(std::move(std::make_unique<components::RigidBody>()));
+				test->addComponent(std::move(std::make_unique<components::Collider>(aabb, 0)));
 
 				AddEntity(test);
 			}
@@ -330,7 +344,7 @@ namespace Ebony {
 
 			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), true, true);
 
-			auto rigidbody = std::make_unique<components::RigidBody>(glm::vec2(100.0f, 100.0f));
+			auto rigidbody = std::make_unique<components::RigidBody>();
 			auto collider = std::make_unique<components::Collider>(aabbcollider, 0);
 			auto transform = std::make_unique<components::Transform>(glm::vec2(100.0f, 100.0f), 0.0f, glm::vec2(1.0f, 1.0f));
 
@@ -387,13 +401,13 @@ namespace Ebony {
 				}
 			);
 
-			auto task3 = ThreadPool::instance().createTask(
-				taskGraph,
-				[this, elapsedTime]()
-				{
-					physicsSystem.Update(elapsedTime);
-				}
-			);
+			//auto task3 = ThreadPool::instance().createTask(
+			//	taskGraph,
+			//	[this, elapsedTime]()
+			//	{
+			//		physicsSystem.Update(elapsedTime);
+			//	}
+			//);
 
 			//auto task3 = ThreadPool::instance().createTask(
 			//	taskGraph,
@@ -408,6 +422,7 @@ namespace Ebony {
 
 			ThreadPool::instance().submitTaskGraph(taskGraph);
 			graphDone.wait();
+			physicsSystem.Update(elapsedTime);
 
 			//audioSystem.Update(elapsedTime);
 

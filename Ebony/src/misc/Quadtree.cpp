@@ -1,7 +1,7 @@
 #include "Quadtree.hpp"
 #include "../components/collider.hpp"
-#include "../components/rigidbodyComponent.hpp"
-
+#include "../components/transform.hpp"
+#include <iostream>
 
 namespace Ebony
 {
@@ -9,9 +9,9 @@ namespace Ebony
 	// Returns the quadrants in which this particular entity is located
 	std::vector<bool> Quadtree::GetQuadrants(entities::EntityPtr entity)
 	{
-		// Assume that it has both a rigidbody and a collider. The physics system shouldn't have updated it for collisions if this was not the case
+		// Assume that it has both a transform and a collider. The physics system shouldn't have updated it for collisions if this was not the case
 		auto collider = entity->getComponent<components::Collider>();
-		auto rigidBody = entity->getComponent<components::RigidBody>();
+		auto transform = entity->getComponent<components::Transform>();
 
 
 		std::vector<bool> quadrants{};
@@ -19,7 +19,7 @@ namespace Ebony
 
 		for (std::uint8_t i = 0; i < 4; i++)
 		{
-			if (children.size() - 1 < i)
+			if (children.size() - 1 < i || children.size() == 0)
 			{
 				quadrants.at(i) = false;
 				continue;
@@ -31,7 +31,7 @@ namespace Ebony
 		
 			// Adapted from Dr. Mathias' lecture slides
 
-			glm::vec2 position = rigidBody->getPosition();
+			glm::vec2 position = transform->position;
 			glm::vec2 colliderSize = collider->aabbCollider.getSize();
 			
 			quadrants[i] = !(position.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f > children[i].position.x + children[i].size.x ||

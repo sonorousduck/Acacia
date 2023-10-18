@@ -22,6 +22,7 @@ namespace components
 		bool preciseSubcolliderDetection = false;
 		bool isEnabled = true;
 		bool isCollidingLastFrame = false;
+		bool isDebugging = true;
 
 		std::set<std::uint16_t> currentlyCollidingWith{};
 

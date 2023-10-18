@@ -17,6 +17,12 @@ namespace systems
 
 		for (auto& [id, entity] : m_Entities)
 		{
+			quadtree.Insert(entity);
+		}
+
+
+		for (auto& [id, entity] : m_Entities)
+		{
 			auto rigidBody = entity->getComponent<components::RigidBody>();
 
 			// Update physics
@@ -36,7 +42,7 @@ namespace systems
 
 				for (std::uint16_t i = 0; i < possibleCollisions.size(); i++)
 				{
-					if (HasAABBCollision(collider, possibleCollisions[i]->getComponent<components::Collider>()))
+					if (HasAABBCollision(entity, possibleCollisions[i]))
 					{
 						if (!collider->preciseSubcolliderDetection)
 						{
@@ -77,7 +83,7 @@ namespace systems
 						else
 						{
 							// Has collision will handle the Collision callbacks, since there will be specific callbacks for each subcollider
-							HasCollision(collider, possibleCollisions[i]->getComponent<components::Collider>());
+							HasCollision(entity, possibleCollisions[i]);
 						}
 					}
 				}
@@ -91,14 +97,25 @@ namespace systems
 		}
 	}
 
-	bool PhysicsSystem::HasCollision(const components::Collider* collider, const components::Collider* otherCollider)
+	bool PhysicsSystem::HasCollision(const entities::EntityPtr entity, const entities::EntityPtr otherEntity)
 	{
 		return false;
 	}
 
-	bool PhysicsSystem::HasAABBCollision(const components::Collider* collider, const components::Collider* otherCollider)
+	bool PhysicsSystem::HasAABBCollision(const entities::EntityPtr& entity, const entities::EntityPtr& otherEntity)
 	{
-		return false;
+		components::Subcollider aabbCollider = entity->getComponent<components::Collider>()->aabbCollider;
+		components::Subcollider otherAabbCollider = otherEntity->getComponent<components::Collider>()->aabbCollider;
+
+		components::Transform* transform = entity->getComponent<components::Transform>();
+		components::Transform* otherTransform = otherEntity->getComponent<components::Transform>();
+
+		return !(
+			transform->position.x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + otherAabbCollider.getSize().x / 2.0f || // aabb left is greater than otherAbb right
+			transform->position.x + aabbCollider.getSize().x / 2.0f < otherTransform->position.x - otherAabbCollider.getSize().x / 2.0f || // aabb right is less than otherAbb left
+			transform->position.y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + otherAabbCollider.getSize().y / 2.0f || // aabb top is below otherAbb bottom
+			transform->position.y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - otherAabbCollider.getSize().y / 2.0f    // aabb bottom is above otherAbb top
+			);
 	}
 
 	bool PhysicsSystem::isInterested(const entities::EntityPtr& entity)
@@ -109,6 +126,12 @@ namespace systems
 		// Basically, ensure it has a rigidbody and a transform
 		auto& components = entity->getComponents();
 		bool doICare = components.contains(ctti::unnamed_type_id<components::RigidBody>()) && components.contains(ctti::unnamed_type_id<components::Transform>());
+
+		// TODO: DO THIS FOR STATIC OBJECTS
+		//if (components.contains(ctti::unnamed_type_id<components::Collider>()))
+		//{
+
+		//}
 
 		return doICare;
 

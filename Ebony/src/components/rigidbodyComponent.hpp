@@ -7,34 +7,28 @@
 #include "component.hpp"
 #include "glm/glm.hpp"
 
+#include <iostream>
+
 
 namespace components
 {
 	class RigidBody : public PolymorphicComparable<Component, RigidBody>
 	{
 	public:
-		RigidBody(glm::vec2 position) : 
-			position(position),
-			previousPosition(position) 
-		{}
+		RigidBody()
+		{
+		}
 		
-		RigidBody(glm::vec2 position, glm::vec2 velocity, glm::vec2 acceleration, bool usesGravity = false) : 
-			position(position), 
-			previousPosition(position), 
+		RigidBody(glm::vec2 velocity, glm::vec2 acceleration, bool usesGravity = false) : 
 			velocity(velocity), 
 			acceleration(acceleration), 
 			usesGravity(usesGravity) 
 		{}
 
 
-		glm::vec2 getPreviousPosition() { return this->previousPosition; }
-		glm::vec2 getPosition() { return this->position; }
 		glm::vec2 getVelocity() { return this->velocity; }
 		glm::vec2 getAcceleration() { return this->acceleration; }
 		
-		// Really, I would only want the Physics System to change these. Maybe look into a way to declare the physics system a friend?
-		void setPreviousPosition(glm::vec2 value) { this->previousPosition = value; }
-		void setPosition(glm::vec2 value) { this->position = value; }
 		void setVelocity(glm::vec2 value) { this->velocity = value; }
 		void setAcceleration(glm::vec2 value) { this->acceleration = value; }
 
@@ -93,9 +87,6 @@ namespace components
 
 
 	private:
-		
-		glm::vec2 previousPosition{};
-		glm::vec2 position{};
 		glm::vec2 velocity{};
 		glm::vec2 acceleration{};
 		
