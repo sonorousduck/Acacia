@@ -4,6 +4,7 @@
 
 #include "component.hpp"
 #include "subcolliderClass.hpp"
+#include <set>
 
 namespace components
 {
@@ -21,6 +22,8 @@ namespace components
 		bool preciseSubcolliderDetection = false;
 		bool isEnabled = true;
 		bool isCollidingLastFrame = false;
+
+		std::set<std::uint16_t> currentlyCollidingWith{};
 
 		// Need to figure out how to do the bitwise comparisons
 		std::uint16_t layer;
