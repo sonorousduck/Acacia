@@ -13,8 +13,19 @@ SoundDevice* SoundDevice::get()
 
 void SoundDevice::init()
 {
-	if (_instance == nullptr)
-		_instance = new SoundDevice();
+	try 
+	{
+		if (_instance == nullptr)
+		{
+			_instance = new SoundDevice();
+		}
+	}
+	catch (std::string error)
+	{
+		std::cout << error << std::endl;
+		// TODO: Initialize a false object
+	}
+	
 }
 
 

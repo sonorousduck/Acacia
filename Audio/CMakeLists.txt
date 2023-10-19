@@ -11,6 +11,9 @@ set(HEADER_FILES
     ThirdParty/minimp3/minimp3_ex.h
     src/alhelpers.hpp
     src/SourcePool.hpp
+    src/EmptySoundDevice.hpp
+    src/Sound.hpp
+    src/audioManager.hpp
 )
 
 set(SOURCE_FILES
@@ -21,6 +24,10 @@ set(SOURCE_FILES
     src/MusicSource.cpp
     src/alhelpers.cpp
     src/SourcePool.cpp
+    src/EmptySoundDevice.cpp
+    src/Sound.cpp
+    src/audioManager.cpp
+
 )
 
 source_group("Main\\Headers" FILES ${HEADER_FILES})
@@ -28,8 +35,8 @@ source_group("Main\\Source Files" FILES ${SOURCE_FILES})
 
 
 
-#add_executable(Audio ${HEADER_FILES} ${SOURCE_FILES})
-add_library(Audio ${HEADER_FILES} ${SOURCE_FILES})
+add_executable(Audio ${HEADER_FILES} ${SOURCE_FILES})
+#add_library(Audio ${HEADER_FILES} ${SOURCE_FILES})
 
 target_link_libraries(Audio OpenAL sndfile)
 

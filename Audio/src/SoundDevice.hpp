@@ -6,10 +6,13 @@ class SoundDevice
 public:
 	static SoundDevice* get();
 	static void init();
+
+
+	ALCdevice* m_ALCDevice;
+	ALCcontext* m_ALCContext;
+
 private:
 	SoundDevice();
 	~SoundDevice();
 
-	ALCdevice* m_ALCDevice;
-	ALCcontext* m_ALCContext;
 };

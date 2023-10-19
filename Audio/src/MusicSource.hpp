@@ -5,6 +5,7 @@
 #include <iostream>
 #include <utility>
 
+
 namespace EbonyAudio
 {
 	enum class AudioFileFormat
@@ -62,12 +63,12 @@ namespace EbonyAudio
 		// These are used if it isn't an MP3
 		static const int NUM_BUFFERS = 4;
 		static const int BUFFER_SAMPLES = 8192;
-		ALuint source;
-		ALuint buffers[NUM_BUFFERS];
-		SNDFILE* sndFile;
-		SF_INFO sfInfo;
-		short* memBuf;
-		ALenum format;
+		ALuint source{};
+		ALuint buffers[NUM_BUFFERS]{};
+		SNDFILE* sndFile{};
+		SF_INFO sfInfo{};
+		short* memBuf{};
+		ALenum format{};
 
 
 		//MusicSource() = delete;

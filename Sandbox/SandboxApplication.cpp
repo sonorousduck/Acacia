@@ -109,7 +109,7 @@ namespace Ebony {
 			physicsSystem = systems::PhysicsSystem();
 
 
-			//mySpeaker = SoundSource();
+			mySpeaker = SoundSource();
 
 
 
@@ -134,8 +134,7 @@ namespace Ebony {
             s.setMat4("projection", graphics.projection);
 			clearColor = Colors::CornflowerBlue;
 
-			//SoundSource mySpeaker{};
-			//mySpeaker.Play(ResourceManager::GetSoundEffect("magnet_action"));
+			mySpeaker.Play(ResourceManager::GetSoundEffect("wall"));
 
 
 
@@ -643,6 +642,7 @@ namespace Ebony {
 		entities::EntityPtr keyboardInput;
 		entities::EntityPtr animationsTest;
 		entities::EntityPtr testEntity;
+		SoundSource mySpeaker{};
 
 	
 	};
