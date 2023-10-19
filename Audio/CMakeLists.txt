@@ -10,6 +10,7 @@ set(HEADER_FILES
     ThirdParty/minimp3/minimp3.h
     ThirdParty/minimp3/minimp3_ex.h
     src/alhelpers.hpp
+    src/SourcePool.hpp
 )
 
 set(SOURCE_FILES
@@ -19,6 +20,7 @@ set(SOURCE_FILES
     src/SoundSource.cpp
     src/MusicSource.cpp
     src/alhelpers.cpp
+    src/SourcePool.cpp
 )
 
 source_group("Main\\Headers" FILES ${HEADER_FILES})

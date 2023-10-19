@@ -217,19 +217,30 @@ namespace Ebony {
 
 				components::Subcollider aabb = components::Subcollider(
 					glm::vec2(0.0f, 0.0f), 
-					glm::vec2(1.0f, 1.0f), 
+					glm::vec2(30.0f, 1.0f), 
 					true, 
 					true, 
-					[=](entities::EntityPtr, entities::EntityPtr) 
+					[=](entities::EntityPtr entity, entities::EntityPtr otherEntity, std::chrono::microseconds elapsedTime)
 					{
-						std::cout << "Testing" << std::endl; 
+						entity->getComponent<components::Transform>()->position.x += 10.0f * elapsedTime.count() / 1000000.0f;
 					}, 
-					std::nullopt,
+					[=](entities::EntityPtr entity, entities::EntityPtr otherEntity, std::chrono::microseconds elapsedTime)
+					{
+						entity->getComponent<components::Transform>()->position.x += 10.0f * elapsedTime.count() / 1000000.0f;
+					},
 					std::nullopt);
 
 				test->addComponent(std::move(animationController));
-				test->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 200.0f + i * 50, 100.0f }, 0.0f, glm::vec2{ 100.0f, 100.0f })));
-				test->addComponent(std::move(std::make_unique<components::RigidBody>()));
+				test->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 200.0f + i * 20, 100.0f }, 0.0f, glm::vec2{ 100.0f, 100.0f })));
+				if (i == 0)
+				{
+					test->addComponent(std::move(std::make_unique<components::RigidBody>(glm::vec2{ 10.0f, 1.0f}, glm::vec2{15.0f, 120.5f}, false)));
+				}
+				else
+				{
+					test->addComponent(std::move(std::make_unique<components::RigidBody>(glm::vec2{ 10.0f, 1.0f }, glm::vec2{ 3.0f, -20.5f }, false)));
+
+				}
 				test->addComponent(std::move(std::make_unique<components::Collider>(aabb, 0)));
 
 				AddEntity(test);
@@ -344,12 +355,12 @@ namespace Ebony {
 
 			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), true, true);
 
-			auto rigidbody = std::make_unique<components::RigidBody>();
-			auto collider = std::make_unique<components::Collider>(aabbcollider, 0);
+			//auto rigidbody = std::make_unique<components::RigidBody>();
+			//auto collider = std::make_unique<components::Collider>(aabbcollider, 0);
 			auto transform = std::make_unique<components::Transform>(glm::vec2(100.0f, 100.0f), 0.0f, glm::vec2(1.0f, 1.0f));
 
-			anotherEntity->addComponent(std::move(rigidbody));
-			anotherEntity->addComponent(std::move(collider));
+			//anotherEntity->addComponent(std::move(rigidbody));
+			//anotherEntity->addComponent(std::move(collider));
 			anotherEntity->addComponent(std::move(transform));
 
 			//keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keyBindings.json");
@@ -401,13 +412,13 @@ namespace Ebony {
 				}
 			);
 
-			//auto task3 = ThreadPool::instance().createTask(
-			//	taskGraph,
-			//	[this, elapsedTime]()
-			//	{
-			//		physicsSystem.Update(elapsedTime);
-			//	}
-			//);
+			auto task3 = ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					physicsSystem.Update(elapsedTime);
+				}
+			);
 
 			//auto task3 = ThreadPool::instance().createTask(
 			//	taskGraph,
@@ -422,7 +433,7 @@ namespace Ebony {
 
 			ThreadPool::instance().submitTaskGraph(taskGraph);
 			graphDone.wait();
-			physicsSystem.Update(elapsedTime);
+			//physicsSystem.Update(elapsedTime);
 
 			//audioSystem.Update(elapsedTime);
 

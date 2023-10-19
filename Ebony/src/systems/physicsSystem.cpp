@@ -17,15 +17,48 @@ namespace systems
 
 		for (auto& [id, entity] : m_Entities)
 		{
-			quadtree.Insert(entity);
+			if (entity->hasComponent<components::Collider>())
+			{
+				quadtree.Insert(entity);
+			}
 		}
 
 
 		for (auto& [id, entity] : m_Entities)
 		{
 			auto rigidBody = entity->getComponent<components::RigidBody>();
+			auto transform = entity->getComponent<components::Transform>();
 
 			// Update physics
+			// TODO: Update gravity, and other things
+			if (rigidBody->usesGravity)
+			{
+				// TODO: Do something
+			}
+
+			// Apply forces
+			while (rigidBody->getForceLength() > 0)
+			{
+				// Apply Forces
+			}
+
+
+			auto time_ms = elapsedTime.count() / 1000000.0f;
+
+			// Apply velocity and acceleration to object position
+			transform->previousPosition = transform->position;
+			transform->position = transform->position + rigidBody->getVelocity() * time_ms + rigidBody->getAcceleration() * time_ms * time_ms;
+
+			// Update velocity as well
+			rigidBody->setVelocity(rigidBody->getVelocity() + rigidBody->getAcceleration() * time_ms);
+
+
+			while (rigidBody->getNextScriptedMovementLength() > 0)
+			{
+				// Apply scripted movements
+			}
+			
+
 
 
 			// Collision Detection, if a collider exists
@@ -42,7 +75,7 @@ namespace systems
 
 				for (std::uint16_t i = 0; i < possibleCollisions.size(); i++)
 				{
-					if (HasAABBCollision(entity, possibleCollisions[i]))
+					if (entity->getId() != possibleCollisions[i]->getId() && HasAABBCollision(entity, possibleCollisions[i]))
 					{
 						if (!collider->preciseSubcolliderDetection)
 						{
@@ -51,7 +84,7 @@ namespace systems
 							{
 								if (collider->aabbCollider.onCollisionStart.has_value())
 								{
-									collider->aabbCollider.onCollisionStart.value()(entity, possibleCollisions[i]);
+									collider->aabbCollider.onCollisionStart.value()(entity, possibleCollisions[i], elapsedTime);
 									collider->aabbCollider.isCollidingLastFrame = true;
 
 									collider->currentlyCollidingWith.insert(possibleCollisions[i]->getId());
@@ -63,7 +96,7 @@ namespace systems
 							{
 								if (collider->aabbCollider.onCollision.has_value())
 								{
-									collider->aabbCollider.onCollision.value()(entity, possibleCollisions[i]);
+									collider->aabbCollider.onCollision.value()(entity, possibleCollisions[i], elapsedTime);
 								}
 							}
 
@@ -74,7 +107,7 @@ namespace systems
 								{
 									if (collider->aabbCollider.onCollisionEnd.has_value())
 									{
-										collider->aabbCollider.onCollisionEnd.value()(entity, possibleCollisions[i]);
+										collider->aabbCollider.onCollisionEnd.value()(entity, possibleCollisions[i], elapsedTime);
 									}
 								}
 							}
@@ -109,6 +142,14 @@ namespace systems
 
 		components::Transform* transform = entity->getComponent<components::Transform>();
 		components::Transform* otherTransform = otherEntity->getComponent<components::Transform>();
+
+		auto check = aabbCollider.getSize();
+
+		auto test = transform->position.x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + otherAabbCollider.getSize().x / 2.0f;
+		auto test1 = transform->position.x + aabbCollider.getSize().x / 2.0f < otherTransform->position.x - otherAabbCollider.getSize().x / 2.0f;
+		auto test2 = transform->position.y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + otherAabbCollider.getSize().y / 2.0f;
+		auto test3 = transform->position.y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - otherAabbCollider.getSize().y / 2.0f;
+
 
 		return !(
 			transform->position.x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + otherAabbCollider.getSize().x / 2.0f || // aabb left is greater than otherAbb right

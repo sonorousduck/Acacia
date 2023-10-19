@@ -102,10 +102,12 @@ set(MiscSources
 
 set (SingletonHeaders
 	src/singletons/inputPersistence.hpp
+	src/singletons/audioManager.hpp
 )
 
 set (SingletonSources
 	src/singletons/inputPersistence.cpp
+	src/singletons/audioManager.cpp
 )
 
 
