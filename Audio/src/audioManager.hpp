@@ -4,6 +4,7 @@
 #include "MusicSource.hpp"
 #include "SoundSource.hpp"
 #include "SourcePool.hpp"
+#include "AudioType.hpp"
 
 
 // ==============================================================
@@ -12,15 +13,8 @@
 //
 // ==============================================================
 
-namespace Ebony
+namespace EbonyAudio
 {
-	enum AudioType
-	{
-		ENTITY = 1,
-		UI = 2,
-		MUSIC = 4,
-	};
-
 
 	class AudioManager
 	{
@@ -29,8 +23,21 @@ namespace Ebony
 
 		static AudioManager Init();
 		
-		SoundSource createSoundSourceObject(SoundSource sound, AudioType type);
+		static SoundSource createSoundSourceObject(SoundSource sound, AudioType type);
 
+
+		static SoundSource GetSource(AudioType type);
+		static void ReturnSource(AudioType type);
+
+		// This may need to be changed for the float volume, but this can do to start
+		static void SetVolume(float volume, AudioType type);
+
+		static void Mute(AudioType type);
+
+		static void SetPlaylist();
+		static void PlayPlaylist();
+
+		static void PlaySound();
 
 
 	private:
@@ -39,6 +46,12 @@ namespace Ebony
 		{
 
 		}
+
+		static SourcePool UISourcePool;
+		static SourcePool EntitySourcePool;
+		static SourcePool MusicSourcePool;
+		
+
 
 
 	};

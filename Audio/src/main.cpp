@@ -13,7 +13,7 @@
 int main()
 {
     // First, we need to create an audio manager
-    Ebony::AudioManager audioManager = Ebony::AudioManager::Init();
+    EbonyAudio::AudioManager audioManager = EbonyAudio::AudioManager::Init();
 
 
 

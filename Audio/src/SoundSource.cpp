@@ -9,7 +9,11 @@ SoundSource::SoundSource()
 	alSource3f(source, AL_VELOCITY, velocity[0], velocity[1], velocity[2]);
 	alSourcei(source, AL_LOOPING, loopSound);
 	alSourcei(source, AL_BUFFER, buffer);
+}
 
+void SoundSource::Delete()
+{
+	alDeleteSources(1, &source);
 }
 
 SoundSource::~SoundSource()

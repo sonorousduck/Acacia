@@ -14,6 +14,7 @@ set(HEADER_FILES
     src/EmptySoundDevice.hpp
     src/Sound.hpp
     src/audioManager.hpp
+    src/AudioType.hpp
 )
 
 set(SOURCE_FILES

@@ -7,8 +7,8 @@ class SoundSource
 {
 public:
 	SoundSource();
-	~SoundSource();
-
+	
+	void Delete();
 	void Play(const ALuint buffer);
 	bool isPlaying = false;
 
