@@ -5,7 +5,6 @@
 #include "MusicSource.hpp"
 #include <thread>
 #include <chrono>
-
 #include "audioManager.hpp"
 
 // Tutorials thanks to https://www.youtube.com/watch?v=pYK8XZHV74s (Code, Tech and Tutorials)
@@ -14,6 +13,15 @@ int main()
 {
     // First, we need to create an audio manager
     EbonyAudio::AudioManager audioManager = EbonyAudio::AudioManager::Init();
+
+    uint32_t sound = audioManager.LoadSound("wall", "SoundEffects/wall.wav");
+
+    std::unique_ptr<SoundSource> speaker = audioManager.GetSource(EbonyAudio::UI);
+    //speaker->Play(sound);
+
+    //std::cout << "Beep Beep" << std::endl;
+    //std::unique_ptr<SoundSource> soundSource = audioManager.GetSource(EbonyAudio::AudioType::UI);
+    //soundSource->Play(sound1);
 
 
 
@@ -29,14 +37,19 @@ int main()
    // EbonyAudio::Music::Play(source);
    ////EbonyAudio::Music::Play(source1);
 
-   // uint32_t sound1 = SoundBuffer::get()->addSoundEffect("SoundEffects/wall.wav");
+   uint32_t sound1 = SoundBuffer::get()->addSoundEffect("SoundEffects/wall.wav");
    // uint32_t sound2 = SoundBuffer::get()->addSoundEffect("SoundEffects/magnet_action.wav");
 
-   // SoundSource mySpeaker{};
+   SoundSource mySpeaker{};
    // SoundSource anotherSpeaker{};
 
 
-   // mySpeaker.Play(sound1);
+   mySpeaker.Play(sound1);
+
+   while (true)
+   {
+
+   }
    // anotherSpeaker.Play(sound2);
 
     //MusicSource myMusic("Music/song18.mp3");

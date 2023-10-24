@@ -62,22 +62,26 @@ SoundDevice::SoundDevice()
 
 }
 
+
+// https://stackoverflow.com/questions/58995268/how-to-check-result-of-alcdestroycontext
 SoundDevice::~SoundDevice()
 {
-	if (!alcMakeContextCurrent(nullptr))
+	ALCboolean check = alcMakeContextCurrent(NULL);
+	if (!check)
 	{
-		throw("Failed to set context to nullptr");
+		std::cerr << "[ERROR]::alcMakeContextCurrent() failed to make current context NULL.\n";
 	}
 
 	alcDestroyContext(m_ALCContext);
-	if (m_ALCContext)
+	ALenum err = alcGetError(m_ALCDevice);
+	if (err != AL_NO_ERROR)
 	{
-		throw("Failed to unset during close");
+		std::cerr << "[ERROR]::alcDestroyContext() error: " << alcGetString(m_ALCDevice, err) << std::endl;
 	}
 
-	if (!alcCloseDevice(m_ALCDevice))
+	check = alcCloseDevice(m_ALCDevice);
+	if (!check)
 	{
-		throw("Failed to close sound device");
+		std::cerr << "[ERROR]::alcCloseDevice() failed to close the device.\n";
 	}
-
 }

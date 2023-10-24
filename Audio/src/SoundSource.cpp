@@ -13,13 +13,16 @@ SoundSource::SoundSource()
 
 void SoundSource::Delete()
 {
-	alDeleteSources(1, &source);
+	if (source != 0)
+	{
+		alDeleteSources(1, &source);
+	}
 }
 
-SoundSource::~SoundSource()
-{
-	alDeleteSources(1, &source);
-}
+//SoundSource::~SoundSource()
+//{
+//	alDeleteSources(1, &source);
+//}
 
 void SoundSource::Play(const ALuint newBuffer)
 {

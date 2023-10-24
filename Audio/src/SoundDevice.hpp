@@ -11,8 +11,10 @@ public:
 	ALCdevice* m_ALCDevice;
 	ALCcontext* m_ALCContext;
 
+	~SoundDevice();
+
+
 private:
 	SoundDevice();
-	~SoundDevice();
 
 };

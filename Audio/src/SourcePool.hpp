@@ -27,6 +27,7 @@ namespace EbonyAudio
 		// Should be called to delete all sources that are tracked.
 		void CleanUp()
 		{
+			std::cout << "Cleaning up sources" << std::endl;
 			for (auto i = 0; i < sources.size(); i++)
 			{
 				sources[i]->Delete();
