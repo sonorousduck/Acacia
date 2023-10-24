@@ -63,7 +63,9 @@ namespace EbonyAudio
 		static SourcePool UISourcePool;
 		static SourcePool EntitySourcePool;
 		static SourcePool MusicSourcePool;
-		static std::unordered_map<std::string, ALuint> SoundEffectBuffers;
+		//static std::unordered_map<std::string, ALuint> SoundEffectBuffers;
+		static std::vector<ALuint> SoundEffectBuffers;
+
 		static SoundDevice* device;
 
 		static std::vector<std::uint8_t> volumes;

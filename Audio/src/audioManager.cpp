@@ -16,7 +16,8 @@ namespace EbonyAudio
     SourcePool AudioManager::UISourcePool{ SourcePool(AudioType::UI, 1) };
     SourcePool AudioManager::EntitySourcePool{ SourcePool(AudioType::ENTITY, 1) };
     SourcePool AudioManager::MusicSourcePool{ SourcePool(AudioType::MUSIC, 1) };
-    std::unordered_map<std::string, ALuint> AudioManager::SoundEffectBuffers;
+    //std::unordered_map<std::string, ALuint> AudioManager::SoundEffectBuffers;
+    std::vector<ALuint> AudioManager::SoundEffectBuffers;
     SoundDevice* AudioManager::device{ SoundDevice::get() };
 
     // Volume should be 0-100. May change this to be float, if it makes sense to
@@ -122,7 +123,8 @@ namespace EbonyAudio
             return 0;
         }
 
-        SoundEffectBuffers[name] = buffer;
+        //SoundEffectBuffers[name] = buffer;
+        SoundEffectBuffers.push_back(buffer);
 
         return buffer;
     }

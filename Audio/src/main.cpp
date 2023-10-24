@@ -44,7 +44,10 @@ int main()
    // SoundSource anotherSpeaker{};
 
 
-   mySpeaker.Play(sound1);
+   //mySpeaker.Play(sound1);
+
+    speaker->Play(sound1);
+    //mySpeaker.Play(sound1);
 
    while (true)
    {
