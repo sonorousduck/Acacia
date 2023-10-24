@@ -2,12 +2,9 @@
 
 #include <iostream>
 
-EbonyAudio::SourcePool::SourcePool(AudioType audioType, std::uint16_t sourceCount) : poolType(audioType)
+EbonyAudio::SourcePool::SourcePool(AudioType audioType, std::uint16_t sourceCount) : poolType(audioType), sourceCount(sourceCount)
 {
-	for (std::uint16_t i = 0; i < sourceCount; i++)
-	{
-		this->sources.push_back(std::move(std::make_unique<SoundSource>()));
-	}
+
 
 }
 
@@ -24,14 +21,23 @@ std::unique_ptr<SoundSource> EbonyAudio::SourcePool::GetSource()
 	return std::move(source);
 }
 
+void EbonyAudio::SourcePool::Init()
+{
+	for (std::uint16_t i = 0; i < sourceCount; i++)
+	{
+		this->sources.push_back(std::move(std::make_unique<SoundSource>(SoundSource())));
+	}
+
+}
+
 void EbonyAudio::SourcePool::ReleaseSource(std::unique_ptr<SoundSource> source)
 {
 	this->sources.push_back(std::move(source));
 }
 
-void EbonyAudio::SourcePool::AddNewSource()
+void EbonyAudio::SourcePool::AddNewSource(std::unique_ptr<SoundSource> source)
 {
-	this->sources.push_back(std::move(std::make_unique<SoundSource>()));
+	this->sources.push_back(std::move(source));
 }
 
 void EbonyAudio::SourcePool::DeleteSourcePermanently()

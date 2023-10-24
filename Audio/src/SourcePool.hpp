@@ -14,11 +14,13 @@ namespace EbonyAudio
 		// Requests a source from the source list. May return nothing if no sources available... (TODO: Implement this)
 		std::unique_ptr<SoundSource> GetSource();
 
+		void Init();
+
 		// Returns a source back to the source list
 		void ReleaseSource(std::unique_ptr<SoundSource> source);
 		
 		// i.e. if you want to have another new source added to the source list to pull from
-		void AddNewSource();
+		void AddNewSource(std::unique_ptr<SoundSource> source);
 
 		// i.e. removes a potential source from the list, shrinking the number of available sources by one
 		void DeleteSourcePermanently();
@@ -35,6 +37,7 @@ namespace EbonyAudio
 		}
 
 
+		std::uint16_t sourceCount;
 
 
 	private:
@@ -44,6 +47,7 @@ namespace EbonyAudio
 
 		// Specifies the type of pool this is. Mostly useful for the Audio Manager that is managing this pool
 		AudioType poolType;
+
 
 	};
 }

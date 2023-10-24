@@ -42,12 +42,20 @@ namespace EbonyAudio
 
 		static ALuint LoadSound(const std::string& name, const char* filename);
 
+		static ALuint GetSound(const std::string& name);
+
 
 		~AudioManager()
 		{
 			UISourcePool.CleanUp();
 			EntitySourcePool.CleanUp();
 			MusicSourcePool.CleanUp();
+
+			for (auto it = AudioManager::SoundEffectBuffers.begin(); it != AudioManager::SoundEffectBuffers.end(); it++)
+			{
+				alDeleteBuffers(1, &it->second);
+			}
+
 
 			delete device;
 
@@ -63,8 +71,8 @@ namespace EbonyAudio
 		static SourcePool UISourcePool;
 		static SourcePool EntitySourcePool;
 		static SourcePool MusicSourcePool;
-		//static std::unordered_map<std::string, ALuint> SoundEffectBuffers;
-		static std::vector<ALuint> SoundEffectBuffers;
+		static std::unordered_map<std::string, ALuint> SoundEffectBuffers;
+		//static std::vector<ALuint> SoundEffectBuffers;
 
 		static SoundDevice* device;
 

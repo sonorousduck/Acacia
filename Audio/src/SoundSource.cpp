@@ -41,8 +41,4 @@ void SoundSource::Play(const ALuint newBuffer)
 	//	std::cout << "Currently playing sound" << std::endl;
 	//	alGetSourcei(source, AL_SOURCE_STATE, &state);
 	//}
-
-	std::cout << "Done playing sound!" << std::endl;
-
-
 }

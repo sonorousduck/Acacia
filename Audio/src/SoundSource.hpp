@@ -11,9 +11,9 @@ public:
 	void Delete();
 	void Play(const ALuint buffer);
 	bool isPlaying = false;
+	ALuint source = 0;
 
 private:
-	ALuint source = 0;
 	float pitch = 1.0f;
 	float gain = 1.0f;
 	float positions[3] = { 0, 0, 0 };

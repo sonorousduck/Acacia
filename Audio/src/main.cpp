@@ -11,12 +11,20 @@
 
 int main()
 {
+    //SoundSource mySpeaker{};
+
+
     // First, we need to create an audio manager
     EbonyAudio::AudioManager audioManager = EbonyAudio::AudioManager::Init();
 
-    uint32_t sound = audioManager.LoadSound("wall", "SoundEffects/wall.wav");
+    audioManager.LoadSound("wall", "SoundEffects/wall.wav");
+    audioManager.LoadSound("magnet", "SoundEffects/magnet_action.wav");
 
     std::unique_ptr<SoundSource> speaker = audioManager.GetSource(EbonyAudio::UI);
+    std::unique_ptr<SoundSource> speaker1 = audioManager.GetSource(EbonyAudio::UI);
+
+    auto sound = audioManager.GetSound("wall");
+    auto sound1 = audioManager.GetSound("magnet");
     //speaker->Play(sound);
 
     //std::cout << "Beep Beep" << std::endl;
@@ -29,30 +37,41 @@ int main()
    // SoundDevice::init();
    // EbonyAudio::Music::Init();
 
-   // auto source = EbonyAudio::MusicSource::LoadFromFile("Music/song18.mp3");
+   //auto source = EbonyAudio::MusicSource::LoadFromFile("Music/song18.mp3");
    // auto source1 = EbonyAudio::MusicSource::LoadFromFile("Music/TownTheme.wav");
 
-   // source.SetLoop(true);
+   //source.SetLoop(true);
 
    // EbonyAudio::Music::Play(source);
-   ////EbonyAudio::Music::Play(source1);
+   //EbonyAudio::Music::Play(source1);
 
-   uint32_t sound1 = SoundBuffer::get()->addSoundEffect("SoundEffects/wall.wav");
-   // uint32_t sound2 = SoundBuffer::get()->addSoundEffect("SoundEffects/magnet_action.wav");
+   //uint32_t sound1 = SoundBuffer::get()->addSoundEffect("SoundEffects/wall.wav");
 
-   SoundSource mySpeaker{};
    // SoundSource anotherSpeaker{};
 
 
    //mySpeaker.Play(sound1);
 
-    speaker->Play(sound1);
+    speaker->Play(sound);
+    speaker1->Play(sound1);
+    //mySpeaker.Play(sound1);
     //mySpeaker.Play(sound1);
 
-   while (true)
+    ALint state = AL_PLAYING;
+    while (state == AL_PLAYING && alGetError() == AL_NO_ERROR)
+    {
+    	std::cout << "Currently playing sound" << std::endl;
+    	alGetSourcei(speaker->source, AL_SOURCE_STATE, &state);
+    }
+
+    audioManager.ReturnSource(std::move(speaker), EbonyAudio::UI);
+    audioManager.ReturnSource(std::move(speaker1), EbonyAudio::UI);
+
+
+   /*while (true)
    {
 
-   }
+   }*/
    // anotherSpeaker.Play(sound2);
 
     //MusicSource myMusic("Music/song18.mp3");

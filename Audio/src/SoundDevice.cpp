@@ -44,6 +44,7 @@ SoundDevice::SoundDevice()
 		throw("Failed to set sound context");
 	}
 
+
 	if (!alcMakeContextCurrent(m_ALCContext))
 	{
 		throw("Failed to make context current");
