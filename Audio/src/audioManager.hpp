@@ -40,7 +40,7 @@ namespace EbonyAudio
 		static void SetPlaylist();
 		static void PlayPlaylist();
 
-		static void PlaySound(ALuint sound, AudioType type);
+		static std::shared_ptr<SoundStream> PlaySound(ALuint sound, AudioType type);
 
 		static ALuint LoadSound(const std::string& name, const char* filename);
 
@@ -76,7 +76,7 @@ namespace EbonyAudio
 		static std::unordered_map<std::string, ALuint> SoundEffectBuffers;
 		//static std::vector<ALuint> SoundEffectBuffers;
 
-		static std::vector<std::unique_ptr<SoundStream>> sourcesPlaying;
+		static std::vector<std::shared_ptr<SoundStream>> sourcesPlaying;
 
 		static SoundDevice* device;
 

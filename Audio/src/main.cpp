@@ -26,8 +26,7 @@ int main()
     auto sound = audioManager.GetSound("wall");
     auto sound1 = audioManager.GetSound("magnet");
 
-    audioManager.PlaySound(sound, EbonyAudio::UI); 
-
+    std::shared_ptr<EbonyAudio::SoundStream> stream = audioManager.PlaySound(sound, EbonyAudio::UI);
     //speaker->Play(sound);
 
     //std::cout << "Beep Beep" << std::endl;

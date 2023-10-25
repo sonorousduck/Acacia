@@ -18,7 +18,7 @@ namespace EbonyAudio
     SourcePool AudioManager::EntitySourcePool{ SourcePool(AudioType::ENTITY, 8) };
     SourcePool AudioManager::MusicSourcePool{ SourcePool(AudioType::MUSIC, 2) };
     std::unordered_map<std::string, ALuint> AudioManager::SoundEffectBuffers;
-    std::vector<std::unique_ptr<SoundStream>> AudioManager::sourcesPlaying{};
+    std::vector<std::shared_ptr<SoundStream>> AudioManager::sourcesPlaying{};
     //std::vector<ALuint> AudioManager::SoundEffectBuffers;
     SoundDevice* AudioManager::device{ SoundDevice::get() };
 
@@ -53,12 +53,9 @@ namespace EbonyAudio
                     ALint state = AL_PLAYING;
                     alGetSourcei(source->sound, AL_SOURCE_STATE, &state);
 
-                    std::cout << source->speaker << std::endl;
                     if (state == AL_INITIAL)
                     {
-                        std::cout << state << std::endl;
                         AudioManager::ReturnSource(std::move(source->speaker), source->speaker->type);
-                        
                     }
 
                     return (state != AL_PLAYING);
@@ -263,18 +260,21 @@ namespace EbonyAudio
     {
     }
 
-    void EbonyAudio::AudioManager::PlaySound(ALuint sound, AudioType type)
+    std::shared_ptr<SoundStream> EbonyAudio::AudioManager::PlaySound(ALuint sound, AudioType type)
     {
         std::unique_ptr<SoundSource> speaker = GetSource(type);
 
         if (speaker != nullptr)
         {
-            std::unique_ptr<SoundStream> test = std::make_unique<SoundStream>(std::move(speaker), sound);
-            sourcesPlaying.push_back(std::move(test));
+            std::shared_ptr<SoundStream> sharedStream = std::make_shared<SoundStream>(std::move(speaker), sound);
+            sourcesPlaying.push_back(sharedStream);
+
+            return sharedStream;
         }
         else
         {
             std::cout << "Not enough sources in " << type << " to play the sound effect" << std::endl;
+            return nullptr;
         }
     }
 }
