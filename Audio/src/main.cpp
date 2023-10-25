@@ -20,11 +20,14 @@ int main()
     audioManager.LoadSound("wall", "SoundEffects/wall.wav");
     audioManager.LoadSound("magnet", "SoundEffects/magnet_action.wav");
 
-    std::unique_ptr<SoundSource> speaker = audioManager.GetSource(EbonyAudio::UI);
-    std::unique_ptr<SoundSource> speaker1 = audioManager.GetSource(EbonyAudio::UI);
+    //std::unique_ptr<SoundSource> speaker = audioManager.GetSource(EbonyAudio::UI);
+    //std::unique_ptr<SoundSource> speaker1 = audioManager.GetSource(EbonyAudio::UI);
 
     auto sound = audioManager.GetSound("wall");
     auto sound1 = audioManager.GetSound("magnet");
+
+    audioManager.PlaySound(sound, EbonyAudio::UI); 
+
     //speaker->Play(sound);
 
     //std::cout << "Beep Beep" << std::endl;
@@ -52,20 +55,26 @@ int main()
 
    //mySpeaker.Play(sound1);
 
-    speaker->Play(sound);
-    speaker1->Play(sound1);
+    //speaker->Play(sound);
+    //speaker1->Play(sound1);
     //mySpeaker.Play(sound1);
     //mySpeaker.Play(sound1);
 
-    ALint state = AL_PLAYING;
+
+    while (true)
+    {
+        audioManager.Update();
+    }
+
+    /*ALint state = AL_PLAYING;
     while (state == AL_PLAYING && alGetError() == AL_NO_ERROR)
     {
     	std::cout << "Currently playing sound" << std::endl;
-    	alGetSourcei(speaker->source, AL_SOURCE_STATE, &state);
-    }
+    	alGetSourcei(speaker1->source, AL_SOURCE_STATE, &state);
+    }*/
 
-    audioManager.ReturnSource(std::move(speaker), EbonyAudio::UI);
-    audioManager.ReturnSource(std::move(speaker1), EbonyAudio::UI);
+    //audioManager.ReturnSource(std::move(speaker), EbonyAudio::UI);
+    //audioManager.ReturnSource(std::move(speaker1), EbonyAudio::UI);
 
 
    /*while (true)

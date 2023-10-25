@@ -15,6 +15,7 @@ set(HEADER_FILES
     src/Sound.hpp
     src/audioManager.hpp
     src/AudioType.hpp
+    src/SoundStream.hpp
 )
 
 set(SOURCE_FILES
@@ -28,6 +29,7 @@ set(SOURCE_FILES
     src/EmptySoundDevice.cpp
     src/Sound.cpp
     src/audioManager.cpp
+    src/SoundStream.cpp
 
 )
 

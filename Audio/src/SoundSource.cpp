@@ -1,6 +1,6 @@
 #include "SoundSource.hpp"
 
-SoundSource::SoundSource()
+SoundSource::SoundSource(EbonyAudio::AudioType type) : type(type)
 {
 	alGenSources(1, &source);
 	alSourcef(source, AL_PITCH, pitch);
@@ -19,11 +19,6 @@ void SoundSource::Delete()
 	}
 }
 
-//SoundSource::~SoundSource()
-//{
-//	alDeleteSources(1, &source);
-//}
-
 void SoundSource::Play(const ALuint newBuffer)
 {
 	if (newBuffer != buffer)
@@ -31,14 +26,6 @@ void SoundSource::Play(const ALuint newBuffer)
 		buffer = newBuffer;
 		alSourcei(source, AL_BUFFER, static_cast<ALint>(buffer));
 	}
-	isPlaying = true;
-	alSourcePlay(source);
-	isPlaying = false;
 
-	//ALint state = AL_PLAYING;
-	//while (state == AL_PLAYING && alGetError() == AL_NO_ERROR)
-	//{
-	//	std::cout << "Currently playing sound" << std::endl;
-	//	alGetSourcei(source, AL_SOURCE_STATE, &state);
-	//}
+	alSourcePlay(source);
 }

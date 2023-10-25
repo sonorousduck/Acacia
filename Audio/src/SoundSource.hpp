@@ -2,16 +2,18 @@
 
 #include <al.h>
 #include <iostream>
+#include "AudioType.hpp"
 
 class SoundSource
 {
 public:
-	SoundSource();
+	SoundSource(EbonyAudio::AudioType type = EbonyAudio::AudioType::ENTITY);
 	
 	void Delete();
 	void Play(const ALuint buffer);
 	bool isPlaying = false;
 	ALuint source = 0;
+	EbonyAudio::AudioType type;
 
 private:
 	float pitch = 1.0f;

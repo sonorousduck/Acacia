@@ -12,7 +12,7 @@ std::unique_ptr<SoundSource> EbonyAudio::SourcePool::GetSource()
 {
 	if (this->sources.empty())
 	{
-		std::cout << "TODO: Change this so I can return an optional and it may not have a value instead" << std::endl;
+		return nullptr;
 	}
 
 	std::unique_ptr<SoundSource> source = std::move(this->sources.back());
@@ -21,11 +21,11 @@ std::unique_ptr<SoundSource> EbonyAudio::SourcePool::GetSource()
 	return std::move(source);
 }
 
-void EbonyAudio::SourcePool::Init()
+void EbonyAudio::SourcePool::Init(AudioType type)
 {
 	for (std::uint16_t i = 0; i < sourceCount; i++)
 	{
-		this->sources.push_back(std::move(std::make_unique<SoundSource>(SoundSource())));
+		this->sources.push_back(std::move(std::make_unique<SoundSource>(SoundSource(type))));
 	}
 
 }

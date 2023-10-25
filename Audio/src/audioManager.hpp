@@ -6,7 +6,7 @@
 #include "SourcePool.hpp"
 #include "AudioType.hpp"
 #include <unordered_map>
-
+#include "SoundStream.hpp"
 
 // ==============================================================
 // 
@@ -26,6 +26,8 @@ namespace EbonyAudio
 		
 		static SoundSource createSoundSourceObject(SoundSource sound, AudioType type);
 
+		static void Update();
+
 
 		static std::unique_ptr<SoundSource> GetSource(AudioType type);
 		static void ReturnSource(std::unique_ptr<SoundSource> source, AudioType type);
@@ -38,7 +40,7 @@ namespace EbonyAudio
 		static void SetPlaylist();
 		static void PlayPlaylist();
 
-		static void PlaySound();
+		static void PlaySound(ALuint sound, AudioType type);
 
 		static ALuint LoadSound(const std::string& name, const char* filename);
 
@@ -73,6 +75,8 @@ namespace EbonyAudio
 		static SourcePool MusicSourcePool;
 		static std::unordered_map<std::string, ALuint> SoundEffectBuffers;
 		//static std::vector<ALuint> SoundEffectBuffers;
+
+		static std::vector<std::unique_ptr<SoundStream>> sourcesPlaying;
 
 		static SoundDevice* device;
 

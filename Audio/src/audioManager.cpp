@@ -2,6 +2,7 @@
 #include "EmptySoundDevice.hpp"
 #include <alext.h>
 #include <inttypes.h>
+#include "SoundStream.hpp"
 
 
 // NOTE: It looks like 256 is a good amount of sources to allow playing at one time
@@ -17,6 +18,7 @@ namespace EbonyAudio
     SourcePool AudioManager::EntitySourcePool{ SourcePool(AudioType::ENTITY, 8) };
     SourcePool AudioManager::MusicSourcePool{ SourcePool(AudioType::MUSIC, 2) };
     std::unordered_map<std::string, ALuint> AudioManager::SoundEffectBuffers;
+    std::vector<std::unique_ptr<SoundStream>> AudioManager::sourcesPlaying{};
     //std::vector<ALuint> AudioManager::SoundEffectBuffers;
     SoundDevice* AudioManager::device{ SoundDevice::get() };
 
@@ -26,9 +28,9 @@ namespace EbonyAudio
 
     AudioManager EbonyAudio::AudioManager::Init()
     {
-        AudioManager::UISourcePool.Init();
-        AudioManager::EntitySourcePool.Init();
-        AudioManager::MusicSourcePool.Init();
+        AudioManager::UISourcePool.Init(AudioType::UI);
+        AudioManager::EntitySourcePool.Init(AudioType::ENTITY);
+        AudioManager::MusicSourcePool.Init(AudioType::MUSIC);
 
 
 	    return AudioManager();
@@ -38,6 +40,46 @@ namespace EbonyAudio
     SoundSource AudioManager::createSoundSourceObject(SoundSource sound, AudioType type)
     {
 	    return SoundSource();
+    }
+
+    void AudioManager::Update()
+    {
+        AudioManager::sourcesPlaying.erase(
+            std::remove_if(
+                AudioManager::sourcesPlaying.begin(),
+                AudioManager::sourcesPlaying.end(),
+                [&](const auto& source)
+                {
+                    ALint state = AL_PLAYING;
+                    alGetSourcei(source->sound, AL_SOURCE_STATE, &state);
+
+                    std::cout << source->speaker << std::endl;
+                    if (state == AL_INITIAL)
+                    {
+                        std::cout << state << std::endl;
+                        AudioManager::ReturnSource(std::move(source->speaker), source->speaker->type);
+                        
+                    }
+
+                    return (state != AL_PLAYING);
+                }
+            ),
+            AudioManager::sourcesPlaying.end()
+        );
+
+
+        /*for (auto i = 0; i < AudioManager::sourcesPlaying.size(); i++)
+        {
+            ALint state = AL_PLAYING;
+            alGetSourcei(AudioManager::sourcesPlaying[i], AL_SOURCE_STATE, &state);
+
+            if (state != AL_PLAYING)
+            {
+
+            }
+
+        }*/
+
     }
 
     ALuint AudioManager::LoadSound(const std::string& name, const char* filename)
@@ -162,7 +204,9 @@ namespace EbonyAudio
 	    }
 	    else if (type & AudioType::UI)
 	    {
+            std::cout << UISourcePool.GetSize() << std::endl;
 		    UISourcePool.ReleaseSource(std::move(source));
+            std::cout << UISourcePool.GetSize() << std::endl;
 
 	    }
 	    else if (type & AudioType::MUSIC)
@@ -219,11 +263,18 @@ namespace EbonyAudio
     {
     }
 
-    void EbonyAudio::AudioManager::PlaySound()
+    void EbonyAudio::AudioManager::PlaySound(ALuint sound, AudioType type)
     {
+        std::unique_ptr<SoundSource> speaker = GetSource(type);
 
-
-
+        if (speaker != nullptr)
+        {
+            std::unique_ptr<SoundStream> test = std::make_unique<SoundStream>(std::move(speaker), sound);
+            sourcesPlaying.push_back(std::move(test));
+        }
+        else
+        {
+            std::cout << "Not enough sources in " << type << " to play the sound effect" << std::endl;
+        }
     }
-
 }

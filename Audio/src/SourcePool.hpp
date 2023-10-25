@@ -14,7 +14,7 @@ namespace EbonyAudio
 		// Requests a source from the source list. May return nothing if no sources available... (TODO: Implement this)
 		std::unique_ptr<SoundSource> GetSource();
 
-		void Init();
+		void Init(AudioType type);
 
 		// Returns a source back to the source list
 		void ReleaseSource(std::unique_ptr<SoundSource> source);
@@ -36,6 +36,11 @@ namespace EbonyAudio
 			}
 		}
 
+
+		size_t GetSize()
+		{
+			return this->sources.size();
+		}
 
 		std::uint16_t sourceCount;
 
