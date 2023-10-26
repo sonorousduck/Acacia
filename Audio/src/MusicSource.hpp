@@ -4,6 +4,7 @@
 #include "alhelpers.hpp"
 #include <iostream>
 #include <utility>
+//#include "../ThirdParty/minimp3/minimp3_ex.h"
 
 
 namespace EbonyAudio
@@ -60,14 +61,19 @@ namespace EbonyAudio
 
 		friend class Music;
 
-		// These are used if it isn't an MP3
 		static const int NUM_BUFFERS = 4;
 		static const int BUFFER_SAMPLES = 8192;
 		ALuint source{};
 		ALuint buffers[NUM_BUFFERS]{};
+		
 		SNDFILE* sndFile{};
 		SF_INFO sfInfo{};
+
+		//FILE* mp3File{};
+		//mp3dec_file_info_t mp3Info{};
+
 		short* memBuf{};
+		//short pcm[MINIMP3_MAX_SAMPLES_PER_FRAME];
 		ALenum format{};
 
 
@@ -81,10 +87,10 @@ namespace EbonyAudio
 		static void Init();
 
 		static MusicSource LoadMusicSource(const std::string& filename);
-		static void Play(const MusicSource& source);
+		static void Play(MusicSource& source);
 
 	private:
 		static MusicSource LoadMusicSourceOther(const std::string& filename);
-		static MusicSource LoadMusicSourceMP3(const std::string& filename);
+		//static MusicSource LoadMusicSourceMP3(const std::string& filename);
 	};
 }

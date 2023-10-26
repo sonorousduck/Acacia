@@ -39,13 +39,13 @@ int main()
    // SoundDevice::init();
    // EbonyAudio::Music::Init();
 
+   auto source1 = EbonyAudio::MusicSource::LoadFromFile("Music/meyou.wav");
    //auto source = EbonyAudio::MusicSource::LoadFromFile("Music/song18.mp3");
-   // auto source1 = EbonyAudio::MusicSource::LoadFromFile("Music/TownTheme.wav");
 
    //source.SetLoop(true);
 
-   // EbonyAudio::Music::Play(source);
-   //EbonyAudio::Music::Play(source1);
+   EbonyAudio::Music::Play(source1);
+   //EbonyAudio::Music::Play(source);
 
    //uint32_t sound1 = SoundBuffer::get()->addSoundEffect("SoundEffects/wall.wav");
 
@@ -63,6 +63,8 @@ int main()
     while (true)
     {
         audioManager.Update();
+        source1.UpdateBufferStream();
+
     }
 
     /*ALint state = AL_PLAYING;

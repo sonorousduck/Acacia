@@ -5,14 +5,14 @@
 #include <string>
 #include <iostream>
 
-#define MINIMP3_IMPLEMENTATION
-#include "../ThirdParty/minimp3/minimp3.h"
-#include "../ThirdParty/minimp3/minimp3_ex.h"
+//#define MINIMP3_IMPLEMENTATION
+//#include "../ThirdParty/minimp3/minimp3.h"
+//#include "../ThirdParty/minimp3/minimp3_ex.h"
 
 #include <filesystem>
 
 
-static mp3dec_t s_Mp3d;
+//static mp3dec_t s_Mp3d;
 static ALCdevice* s_AudioDevice = nullptr;
 
 static uint8_t* s_AudioScratchBuffer;
@@ -25,8 +25,8 @@ static EbonyAudio::AudioFileFormat GetFileFormat(const std::string& filename)
 	std::filesystem::path path = filename;
 	std::string extension = path.extension().string();
 
-	if (extension == ".ogg" || extension == ".wav")  return EbonyAudio::AudioFileFormat::OTHER;
-	if (extension == ".mp3")  return EbonyAudio::AudioFileFormat::MP3;
+	if (extension == ".ogg" || extension == ".wav" || extension == ".mp3")  return EbonyAudio::AudioFileFormat::OTHER;
+	//if (extension == ".mp3")  return EbonyAudio::AudioFileFormat::MP3;
 
 	return EbonyAudio::AudioFileFormat::NONE;
 }
@@ -96,9 +96,56 @@ EbonyAudio::MusicSource EbonyAudio::Music::LoadMusicSourceOther(const std::strin
 	return musicSource;
 }
 
-EbonyAudio::MusicSource EbonyAudio::Music::LoadMusicSourceMP3(const std::string& filename)
-{
+//EbonyAudio::MusicSource EbonyAudio::Music::LoadMusicSourceMP3(const std::string& filename)
+//{
+	//EbonyAudio::MusicSource musicSource{};
+	/*musicSource.fileFormat = EbonyAudio::AudioFileFormat::MP3;
 	mp3dec_file_info_t info{};
+
+	alGenSources(1, &musicSource.source);
+	alGenBuffers(musicSource.NUM_BUFFERS, musicSource.buffers);
+
+	musicSource.mp3File = fopen(filename.c_str(), "r");
+
+	int loadResult = mp3dec_load(&s_Mp3d, filename.c_str(), &info, NULL, NULL);
+	musicSource.mp3Info = info;
+
+	switch (info.channels)
+	{
+	case 1:
+		musicSource.format = AL_FORMAT_MONO16;
+		break;
+	case 2:
+		musicSource.format = AL_FORMAT_STEREO16;
+		break;
+	case 3:
+		if (sf_command(musicSource.sndFile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
+		{
+			musicSource.format = AL_FORMAT_BFORMAT3D_16;
+		}
+		break;
+	case 4:
+		if (sf_command(musicSource.sndFile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
+		{
+			musicSource.format = AL_FORMAT_BFORMAT3D_16;
+		}
+		break;
+	default:
+		break;
+	}
+	
+	if (!musicSource.format)
+	{
+		throw("Unsupported channel count from file");
+	}
+
+	std::size_t frame_size = ((static_cast<size_t>(musicSource.BUFFER_SAMPLES) * static_cast<size_t>(musicSource.mp3Info.channels))) * sizeof(short);
+	musicSource.memBuf = static_cast<short*>(malloc(frame_size));*/
+
+	//return musicSource;
+
+
+	/*mp3dec_file_info_t info{};
 
 	int loadResult = mp3dec_load(&s_Mp3d, filename.c_str(), &info, NULL, NULL);
 	uint32_t size = info.samples * sizeof(mp3d_sample_t);
@@ -120,8 +167,8 @@ EbonyAudio::MusicSource EbonyAudio::Music::LoadMusicSourceMP3(const std::string&
 	if (alGetError() != AL_NO_ERROR)
 		std::cout << "Failed to setup sound source" << std::endl;
 
-	return result;
-}
+	return result;*/
+//}
 
 void EbonyAudio::Music::Init()
 {
@@ -129,7 +176,7 @@ void EbonyAudio::Music::Init()
 	{
 		std::cout << "Audio Device error!" << std::endl;
 	}
-	mp3dec_init(&s_Mp3d);
+	//mp3dec_init(&s_Mp3d);
 	
 	s_AudioScratchBuffer = new uint8_t[s_AudioScratchBufferSize];
 
@@ -149,12 +196,12 @@ EbonyAudio::MusicSource EbonyAudio::Music::LoadMusicSource(const std::string& fi
 	switch (format)
 	{
 	case AudioFileFormat::OTHER: return LoadMusicSourceOther(filename);
-	case AudioFileFormat::MP3: return LoadMusicSourceMP3(filename);
+	//case AudioFileFormat::MP3: return LoadMusicSourceMP3(filename);
 	}
 }
 
 
-void EbonyAudio::Music::Play(const EbonyAudio::MusicSource& musicSource)
+void EbonyAudio::Music::Play(EbonyAudio::MusicSource& musicSource)
 {
 	if (musicSource.fileFormat == AudioFileFormat::OTHER)
 	{
@@ -190,7 +237,45 @@ void EbonyAudio::Music::Play(const EbonyAudio::MusicSource& musicSource)
 	}
 	else if (musicSource.fileFormat == AudioFileFormat::MP3)
 	{
-		alSourcePlay(musicSource.source);
+		////Clear any AL errors
+		//alGetError();
+
+		//// Rewind the source position and clear the buffer queue
+		//alSourceRewind(musicSource.source);
+		//alSourcei(musicSource.source, AL_BUFFER, 0);
+		//for (ALsizei i = 0; i < musicSource.NUM_BUFFERS; i++)
+		//{
+		//	size_t n = fread(musicSource.inputBuf, 1, 16384, musicSource.mp3File);
+
+		//	if (n == 0) break;
+
+		//	
+
+		//	//mp3dec_decode_frame(&s_Mp3d, musicSource.memBuf, musicSource.BUFFER_SAMPLES, NULL, NULL, NULL);
+
+		//	//sf_count_t slen = sf_readf_short(musicSource.sndFile, musicSource.memBuf, musicSource.BUFFER_SAMPLES);
+		//	//if (slen < 1) break;
+
+		//	//slen *= musicSource.sfInfo.channels * static_cast<sf_count_t>(sizeof(short));
+		//	//alBufferData(musicSource.buffers[i], musicSource.format, musicSource.memBuf, static_cast<ALsizei>(slen), musicSource.sfInfo.samplerate);
+		//}
+		//if (alGetError() != AL_NO_ERROR)
+		//{
+		//	throw("Error Buffering for playback");
+		//}
+
+		///* Now queue and start playback! */
+		//alSourceQueueBuffers(musicSource.source, musicSource.NUM_BUFFERS, musicSource.buffers);
+		//alSourcePlay(musicSource.source);
+		//if (alGetError() != AL_NO_ERROR)
+		//{
+		//	throw("Error starting playback");
+		//}
+
+
+
+
+		//alSourcePlay(musicSource.source);
 	}
 }
 
@@ -331,221 +416,3 @@ void EbonyAudio::MusicSource::UpdateBufferStream()
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-//MusicBuffer::MusicBuffer(const char* filename)
-//{
-//
-//	std::filesystem::path path = filename;
-//	std::string extension = path.extension().string();
-//
-//	if (extension == ".mp3")
-//	{
-//		mp3dec_init(&s_Mp3d);
-//		LoadAudioSourceMP3(filename);
-//	}
-//	else
-//	{
-//		LoadAudioSource(filename);
-//	}
-//}
-//
-//void MusicBuffer::LoadAudioSource(const char* filename)
-//{
-//	alGenSources(1, &source);
-//	alGenBuffers(NUM_BUFFERS, buffers);
-//
-//	std::size_t frame_size{};
-//
-//	sndFile = sf_open(filename, SFM_READ, &sfInfo);
-//
-//	if (!sndFile)
-//	{
-//		throw("Could not open provided music file. Check path");
-//	}
-//
-//	// Get the sound format and figure out the OpenAL format
-//	if (sfInfo.channels == 1)
-//	{
-//		format = AL_FORMAT_MONO16;
-//	}
-//	else if (sfInfo.channels == 2)
-//	{
-//		format = AL_FORMAT_STEREO16;
-//	}
-//	else if (sfInfo.channels == 3)
-//	{
-//		if (sf_command(sndFile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
-//		{
-//			format = AL_FORMAT_BFORMAT3D_16;
-//		}
-//	}
-//	else if (sfInfo.channels == 4)
-//	{
-//		if (sf_command(sndFile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
-//		{
-//			format = AL_FORMAT_BFORMAT3D_16;
-//		}
-//	}
-//
-//	if (!format)
-//	{
-//		sf_close(sndFile);
-//		sndFile = NULL;
-//		throw("Unsupported channel count from file");
-//	}
-//
-//	frame_size = ((static_cast<size_t>(BUFFER_SAMPLES) * static_cast<size_t>(sfInfo.channels))) * sizeof(short);
-//	memBuf = static_cast<short*>(malloc(frame_size));
-//}
-//
-//void MusicBuffer::LoadAudioSourceMP3(const char* filename)
-//{
-//	mp3dec_file_info_t info{};
-//
-//	int loadResult = mp3dec_load(&s_Mp3d, filename, &info, NULL, NULL);
-//	uint32_t size = info.samples * sizeof(mp3d_sample_t);
-//
-//	auto sampleRate = info.hz;
-//	auto channels = info.channels;
-//	
-//	if (info.channels == 1)
-//	{
-//		format = AL_FORMAT_MONO16;
-//	}
-//	else if (info.channels == 2)
-//	{
-//		format = AL_FORMAT_STEREO16;
-//	}
-//
-//	float lengthSeconds = size / (info.avg_bitrate_kbps * 1024.0f);
-//
-//	alGenSources(1, &source);
-//	alGenBuffers(NUM_BUFFERS, buffers);
-//	
-//	std::size_t frame_size{};
-//
-//	frame_size = ((static_cast<size_t>(BUFFER_SAMPLES) * static_cast<size_t>(info.channels))) * sizeof(short);
-//	memBuf = static_cast<short*>(malloc(frame_size));
-//}
-//
-//MusicBuffer::~MusicBuffer()
-//{
-//	alDeleteSources(1, &source);
-//
-//	if (sndFile)
-//	{
-//		sf_close(sndFile);
-//	}
-//
-//	sndFile = nullptr;
-//	free(memBuf);
-//	alDeleteBuffers(NUM_BUFFERS, buffers);
-//}
-//
-//
-//ALint MusicBuffer::getSource()
-//{
-//	return source;
-//}
-//
-//void MusicBuffer::Play()
-//{
-//
-//	// Clear any AL errors
-//	alGetError();
-//
-//	// Rewind the source position and clear the buffer queue
-//	alSourceRewind(source);
-//	alSourcei(source, AL_BUFFER, 0);
-//
-//
-//	for (ALsizei i = 0; i < NUM_BUFFERS; i++)
-//	{
-//		sf_count_t slen = sf_readf_short(sndFile, memBuf, BUFFER_SAMPLES);
-//		if (slen < 1) break;
-//
-//		slen *= sfInfo.channels * static_cast<sf_count_t>(sizeof(short));
-//		alBufferData(buffers[i], format, memBuf, static_cast<ALsizei>(slen), sfInfo.samplerate);
-//	}
-//	if (alGetError() != AL_NO_ERROR)
-//	{
-//		throw("Error Buffering for playback");
-//	}
-//
-//	/* Now queue and start playback! */
-//	alSourceQueueBuffers(source, NUM_BUFFERS, buffers);
-//	alSourcePlay(source);
-//	if (alGetError() != AL_NO_ERROR)
-//	{
-//		throw("Error starting playback");
-//	}
-//}
-//
-//void MusicBuffer::UpdateBufferStream()
-//{
-//	ALint processed = 0, state = 0;
-//
-//	// Clear errors
-//	alGetError();
-//
-//	// Get relevant source info
-//	alGetSourcei(source, AL_SOURCE_STATE, &state);
-//	alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
-//
-//	if (alGetError() != AL_NO_ERROR)
-//	{
-//		throw("error checking music source state");
-//	}
-//
-//	// Unqueue and handle each processed buffer
-//	while (processed > 0)
-//	{
-//		ALuint bufid = 0;
-//		sf_count_t slen = 0;
-//
-//		alSourceUnqueueBuffers(source, 1, &bufid);
-//		processed--;
-//
-//		/* Read the next chunk of data, refill the buffer, and queue it
-//		 * back on the source */
-//		slen = sf_readf_short(sndFile, memBuf, BUFFER_SAMPLES);
-//		if (slen > 0)
-//		{
-//			slen *= sfInfo.channels * (sf_count_t)sizeof(short);
-//			alBufferData(bufid, format, memBuf, (ALsizei)slen,
-//				sfInfo.samplerate);
-//			alSourceQueueBuffers(source, 1, &bufid);
-//		}
-//		if (alGetError() != AL_NO_ERROR)
-//		{
-//			throw("error buffering music data");
-//		}
-//	}
-//
-//	/* Make sure the source hasn't underrun */
-//	if (state != AL_PLAYING && state != AL_PAUSED)
-//	{
-//		ALint queued;
-//
-//		/* If no buffers are queued, playback is finished */
-//		alGetSourcei(source, AL_BUFFERS_QUEUED, &queued);
-//		if (queued == 0)
-//			return;
-//
-//		alSourcePlay(source);
-//		if (alGetError() != AL_NO_ERROR)
-//		{
-//			throw("error restarting music playback");
-//		}
-//	}
-//
-//}
