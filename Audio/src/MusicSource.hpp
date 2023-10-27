@@ -8,6 +8,11 @@
 //#include "../ThirdParty/minimp3/minimp3_ex.h"
 
 
+namespace Ebony
+{
+	class ResourceManager;
+}
+
 namespace EbonyAudio
 {
 	enum class AudioFileFormat
@@ -63,6 +68,7 @@ namespace EbonyAudio
 
 		friend class Music;
 		friend class AudioManager;
+		friend class Ebony::ResourceManager;
 
 		static const int NUM_BUFFERS = 4;
 		static const int BUFFER_SAMPLES = 8192;

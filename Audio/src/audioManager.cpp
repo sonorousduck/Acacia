@@ -68,6 +68,7 @@ namespace EbonyAudio
 
                     if (state == AL_INITIAL)
                     {
+                        std::cout << "Returning source" << std::endl;
                         ReturnSource(std::move(source->speaker), source->speaker->type);
                     }
 

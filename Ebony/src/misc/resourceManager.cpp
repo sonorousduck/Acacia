@@ -16,7 +16,7 @@ namespace Ebony
 	std::unordered_map<std::string, Texture2D> ResourceManager::Textures;
 	std::unordered_map<std::string, Shader> ResourceManager::Shaders;
 	std::unordered_map<std::string, ALuint> ResourceManager::SoundEffectBuffers;
-	std::unordered_map<std::string, EbonyAudio::MusicSource> ResourceManager::Music;
+	std::unordered_map<std::string, std::shared_ptr<EbonyAudio::MusicSource>> ResourceManager::MusicSources;
 	std::atomic_uint16_t ResourceManager::tasksRemaining{ 0 };
 
 	Shader& ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name)
@@ -230,37 +230,183 @@ namespace Ebony
 		return texture;
 	}
 
-	ALuint ResourceManager::LoadSoundEffect(const std::string& file, const std::string& name)
+	ALuint ResourceManager::LoadSoundEffect(const std::string& name, const std::string& filename)
 	{
-		return EbonyAudio::AudioManager::LoadSound(name, ("../Audio/" + file).c_str());
+		ALenum err = 0, format = 0;
+		ALuint buffer = 0;
+		SNDFILE* sndfile = nullptr;
+		SF_INFO sfinfo{};
+		short* membuf = nullptr;
+		sf_count_t num_frames = 0;
+		ALsizei num_bytes = 0;
+
+		/* Open the audio file and check that it's usable. */
+		sndfile = sf_open(filename.c_str(), SFM_READ, &sfinfo);
+		if (!sndfile)
+		{
+			std::cerr << "Could not open audio in " << filename << ":\n" << sf_strerror(sndfile) << "\n";
+			//fprintf(stderr, "Could not open audio in %s: %s\n", filename, sf_strerror(sndfile));
+			return 0;
+		}
+		if (sfinfo.frames < 1)
+		{
+			std::cerr << "Bad sample count in " << filename << "(" << sfinfo.frames << ")\n";
+			//fprintf(stderr, "Bad sample count in %s (%" PRId64 ")\n", filename, sfinfo.frames);
+			sf_close(sndfile);
+			return 0;
+		}
+
+		/* Figure out the OpenAL format from the file and desired sample type. */
+		format = AL_NONE;
+		if (sfinfo.channels == 1)
+		{
+			format = AL_FORMAT_MONO16;
+		}
+		else if (sfinfo.channels == 2)
+		{
+			format = AL_FORMAT_STEREO16;
+		}
+		else if (sfinfo.channels == 3)
+		{
+			if (sf_command(sndfile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
+			{
+				format = AL_FORMAT_BFORMAT2D_16;
+			}
+		}
+		else if (sfinfo.channels == 4)
+		{
+			if (sf_command(sndfile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
+			{
+				format = AL_FORMAT_BFORMAT3D_16;
+			}
+		}
+		if (!format)
+		{
+			std::cerr << "Unsupported channel count: " << sfinfo.channels << "\n";
+			//fprintf(stderr, "Unsupported channel count: %d\n", sfinfo.channels);
+			sf_close(sndfile);
+			return 0;
+		}
+		/* Decode the whole audio file to a buffer. */
+		membuf = static_cast<short*>(malloc((size_t)(sfinfo.frames * sfinfo.channels) * sizeof(short)));
+		num_frames = sf_readf_short(sndfile, membuf, sfinfo.frames);
+
+		if (num_frames < 1)
+		{
+			free(membuf);
+			sf_close(sndfile);
+			std::cerr << "Failed to read samples in " << filename << "(" << num_frames << ")\n";
+			//fprintf(stderr, "Failed to read samples in %s (%" PRId64 ")\n", filename, num_frames);
+			return 0;
+		}
+		num_bytes = (ALsizei)(num_frames * sfinfo.channels) * (ALsizei)sizeof(short);
+
+
+		/* Buffer the audio data into a new buffer object, then free the data and
+		 * close the file.
+		 */
+		buffer = 0;
+		alGenBuffers(1, &buffer);
+		alBufferData(buffer, format, membuf, num_bytes, sfinfo.samplerate);
+
+		free(membuf);
+		sf_close(sndfile);
+
+		/* Check if an error occurred, and clean up if so. */
+		err = alGetError();
+		if (err != AL_NO_ERROR)
+		{
+			fprintf(stderr, "OpenAL Error: %s\n", alGetString(err));
+			if (buffer && alIsBuffer(buffer))
+				alDeleteBuffers(1, &buffer);
+			return 0;
+		}
+
+		SoundEffectBuffers[name] = buffer;
+
+		return buffer;
 	}
 
-	//void  ResourceManager::UnloadSoundEffect(const char* name)
-	//{
-	//	SoundEffectBuffers.erase(name);
-	//}
+	void  ResourceManager::UnloadSoundEffect(const std::string& name)
+	{
+		SoundEffectBuffers.erase(name);
+	}
 
 	ALuint ResourceManager::GetSoundEffect(const std::string& name)
 	{
-		return EbonyAudio::AudioManager::GetSound(name);
+		return SoundEffectBuffers[name];
 	}
 
-	//EbonyAudio::MusicSource& ResourceManager::LoadMusic(const std::string& file, const char* name)
-	//{
-	//	auto test = EbonyAudio::MusicSource::LoadFromFile("../Audio/" + file);
-	//	Music[name] = test;
-	//	return Music[name];
-	//}
+	std::shared_ptr<EbonyAudio::MusicSource> ResourceManager::LoadMusic(const std::string& name, const char* filename)
+	{
+		std::shared_ptr<EbonyAudio::MusicSource> musicSource = std::make_shared<EbonyAudio::MusicSource>();
+		musicSource->fileFormat = EbonyAudio::AudioFileFormat::OTHER;
 
-	//void  ResourceManager::UnloadMusic(const char* name)
-	//{
-	//	Music.erase(name);
-	//}
+		//alGenSources(1, &musicSource->source);
+		alGenBuffers(musicSource->NUM_BUFFERS, musicSource->buffers);
 
-	//EbonyAudio::MusicSource& ResourceManager::GetMusic(const char* name)
-	//{
-	//	return Music[name];
-	//}
+		std::size_t frame_size{};
+
+		musicSource->sndFile = sf_open(filename, SFM_READ, &musicSource->sfInfo);
+
+		if (!musicSource->sndFile)
+		{
+			throw("Could not open provided music file. Check path");
+		}
+
+		// Get the sound format and figure out the OpenAL format
+
+		switch (musicSource->sfInfo.channels)
+		{
+		case 1:
+			musicSource->format = AL_FORMAT_MONO16;
+			break;
+		case 2:
+			musicSource->format = AL_FORMAT_STEREO16;
+			break;
+		case 3:
+			if (sf_command(musicSource->sndFile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
+			{
+				musicSource->format = AL_FORMAT_BFORMAT3D_16;
+			}
+			break;
+		case 4:
+			if (sf_command(musicSource->sndFile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
+			{
+				musicSource->format = AL_FORMAT_BFORMAT3D_16;
+			}
+			break;
+		default:
+			throw("Unsupported number of channels");
+			break;
+		}
+
+
+		if (!musicSource->format)
+		{
+			sf_close(musicSource->sndFile);
+			musicSource->sndFile = NULL;
+			throw("Unsupported channel count from file");
+		}
+
+		frame_size = ((static_cast<size_t>(musicSource->BUFFER_SAMPLES) * static_cast<size_t>(musicSource->sfInfo.channels))) * sizeof(short);
+		musicSource->memBuf = static_cast<short*>(malloc(frame_size));
+
+
+		MusicSources[name] = musicSource;
+
+		return musicSource;
+	}
+
+	void  ResourceManager::UnloadMusic(const char* name)
+	{
+		MusicSources.erase(name);
+	}
+
+	std::shared_ptr<EbonyAudio::MusicSource> ResourceManager::GetMusic(const char* name)
+	{
+		return MusicSources[name];
+	}
 
 	void ResourceManager::LoadTextureAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete)
 	{

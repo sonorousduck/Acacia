@@ -65,8 +65,8 @@ namespace Ebony {
 			ResourceManager::LoadAtlas("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1);
 			ResourceManager::LoadAtlas("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
 
-			EbonyAudio::AudioManager::LoadSound("wall", "../Audio/SoundEffects/wall.wav");
-
+			ResourceManager::LoadSoundEffect("wall", "../Audio/SoundEffects/wall.wav");
+			ResourceManager::LoadMusic("song18", "../Audio/Music/song18.wav");
 
 
 			//contentLoaded.wait();
@@ -123,7 +123,7 @@ namespace Ebony {
 			//ResourceManager::LoadMusic("Music/song18.mp3", "song18");
 			//ResourceManager::LoadMusic("Music/TownTheme.wav", "TownTheme");
 
-			ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
+			//ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
 			ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
 			ResourceManager::LoadAtlas("textures/Better_Character_Animation.tx", "Better_Character_Animation", 44, 1);
 
@@ -140,7 +140,7 @@ namespace Ebony {
 
 			ALuint sound = ResourceManager::GetSoundEffect("wall");
 			EbonyAudio::AudioManager::PlaySound(sound, EbonyAudio::ENTITY);
-
+			EbonyAudio::AudioManager::PlayMusic(ResourceManager::GetMusic("song18"));
 			
 
 

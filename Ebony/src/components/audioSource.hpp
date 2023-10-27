@@ -33,16 +33,10 @@ namespace components
 
 		std::string_view previousSong;
 		std::string_view currentSong;
-		//EbonyAudio::MusicSource source;
-
-		bool repeat;
-
+		std::shared_ptr<EbonyAudio::MusicSource> source;
 		std::deque<ALuint> soundEffectQueue{};
 
-		// This should contain a few speakers (that can grow) so you can just reuse them instead of creating new ones everytime.
-		// Maybe just contain one in the beginning, but if it ever needs more sound sources, it can expand
-		std::vector<SoundSource> soundSources{SoundSource()};
-
+		bool repeat;
 		std::uint16_t useableSoundIndex = 0;
 
 

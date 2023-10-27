@@ -38,12 +38,12 @@ namespace Ebony
 		//static void LoadMusicAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
 
 		static ALuint LoadSoundEffect(const std::string& file, const std::string& name);
-		//static void UnloadSoundEffect(const char* name);
+		static void UnloadSoundEffect(const std::string& name);
 		static ALuint GetSoundEffect(const std::string& name);
 
-		//static EbonyAudio::MusicSource& LoadMusic(const std::string& file, const char* name);
-		//static void UnloadMusic(const char* name);
-		//static EbonyAudio::MusicSource& GetMusic(const char* name);
+		static std::shared_ptr<EbonyAudio::MusicSource> LoadMusic(const std::string& file, const char* name);
+		static void UnloadMusic(const char* name);
+		static std::shared_ptr<EbonyAudio::MusicSource> GetMusic(const char* name);
 		
 		static void loadComplete(const std::string& file, std::function<void(std::string)> onComplete);
 
@@ -64,8 +64,8 @@ namespace Ebony
 		static std::unordered_map<std::string, Shader> Shaders;
 		static std::unordered_map<std::string, Texture2D> Textures;
 		static std::unordered_map<std::string, std::uint32_t> SoundEffectBuffers;
-		static std::unordered_map<std::string, EbonyAudio::MusicSource> Music;
-		
+		static std::unordered_map<std::string, std::shared_ptr<EbonyAudio::MusicSource>> MusicSources;
+
 		static std::atomic_uint16_t tasksRemaining; // We need this so we are guarenteed not to start a level while content is loading
 
 	};
