@@ -29,7 +29,7 @@ namespace EbonyAudio
     std::vector<std::uint8_t> AudioManager::volumes{ 100, 100, 100 };
 
 
-    AudioManager EbonyAudio::AudioManager::Init()
+    void EbonyAudio::AudioManager::Init()
     {
         AudioManager::UISourcePool.Init(AudioType::UI);
         AudioManager::EntitySourcePool.Init(AudioType::ENTITY);
@@ -52,7 +52,7 @@ namespace EbonyAudio
         //alListenerfv(AL_ORIENTATION, listenerOri);
         // =============================================================
 
-	    return AudioManager();
+	    //return AudioManager();
     }
 
     void AudioManager::Update()

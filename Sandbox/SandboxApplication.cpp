@@ -40,7 +40,6 @@ namespace Ebony {
 		void LoadContent()
 		{
 
-			audioManager = EbonyAudio::AudioManager::Init();
 			//std::atomic_bool success{ true };
 			//std::latch contentLoaded{ 1 };
 
@@ -66,7 +65,7 @@ namespace Ebony {
 			ResourceManager::LoadAtlas("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1);
 			ResourceManager::LoadAtlas("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
 
-			ResourceManager::LoadSoundEffect("wall", "SoundEffects/wall.wav");
+			EbonyAudio::AudioManager::LoadSound("wall", "../Audio/SoundEffects/wall.wav");
 
 
 
@@ -80,7 +79,7 @@ namespace Ebony {
 			Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 
 			graphics.Initialize("Ebony", 800, 600);
-			
+			EbonyAudio::AudioManager::Init();
 			
 			LoadContent();
 
@@ -140,7 +139,7 @@ namespace Ebony {
 			clearColor = Colors::CornflowerBlue;
 
 			ALuint sound = ResourceManager::GetSoundEffect("wall");
-			audioManager.PlaySound(sound, EbonyAudio::ENTITY);
+			EbonyAudio::AudioManager::PlaySound(sound, EbonyAudio::ENTITY);
 
 			
 
@@ -633,7 +632,6 @@ namespace Ebony {
 		systems::AudioSystem audioSystem;
 		systems::FontRenderer fontRenderer;
 		systems::PhysicsSystem physicsSystem;
-		EbonyAudio::AudioManager audioManager;
 
 
 

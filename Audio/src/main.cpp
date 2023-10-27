@@ -12,25 +12,25 @@
 int main()
 {
     // First, we need to create an audio manager
-    EbonyAudio::AudioManager audioManager = EbonyAudio::AudioManager::Init();
+    EbonyAudio::AudioManager::Init();
 
-    audioManager.LoadSound("wall", "SoundEffects/wall.wav");
-    audioManager.LoadSound("magnet", "SoundEffects/magnet_action.wav");
+    EbonyAudio::AudioManager::LoadSound("wall", "SoundEffects/wall.wav");
+    EbonyAudio::AudioManager::LoadSound("magnet", "SoundEffects/magnet_action.wav");
 
 
-    auto sound = audioManager.GetSound("wall");
-    auto sound1 = audioManager.GetSound("magnet");
+    auto sound = EbonyAudio::AudioManager::GetSound("wall");
+    auto sound1 = EbonyAudio::AudioManager::GetSound("magnet");
 
-    std::shared_ptr<EbonyAudio::SoundStream> stream = audioManager.PlaySound(sound, EbonyAudio::UI);
+    std::shared_ptr<EbonyAudio::SoundStream> stream = EbonyAudio::AudioManager::PlaySound(sound, EbonyAudio::UI);
 
-    audioManager.LoadMusic("song18", "Music/song18.wav");
-    std::shared_ptr<EbonyAudio::MusicSource> source = audioManager.GetMusic("song18");
+    EbonyAudio::AudioManager::LoadMusic("song18", "Music/song18.wav");
+    std::shared_ptr<EbonyAudio::MusicSource> source = EbonyAudio::AudioManager::GetMusic("song18");
 
-    audioManager.PlayMusic(source);
+    EbonyAudio::AudioManager::PlayMusic(source);
 
     while (true)
     {
-        audioManager.Update();
+        EbonyAudio::AudioManager::Update();
     }
 
     return 0;

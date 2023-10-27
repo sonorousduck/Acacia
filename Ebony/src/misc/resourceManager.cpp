@@ -232,7 +232,7 @@ namespace Ebony
 
 	ALuint ResourceManager::LoadSoundEffect(const std::string& file, const std::string& name)
 	{
-		return EbonyAudio::AudioManager::LoadSound(file, ("../Audio/" + name).c_str());
+		return EbonyAudio::AudioManager::LoadSound(name, ("../Audio/" + file).c_str());
 	}
 
 	//void  ResourceManager::UnloadSoundEffect(const char* name)

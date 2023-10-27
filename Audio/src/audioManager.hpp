@@ -22,7 +22,7 @@ namespace EbonyAudio
 	public:
 
 
-		static AudioManager Init();
+		static void Init();
 		
 		static void Update();
 
@@ -71,10 +71,10 @@ namespace EbonyAudio
 
 		}
 
-		AudioManager() {}
+		
 	private:
 		
-
+		AudioManager() {}
 
 		static SourcePool UISourcePool;
 		static SourcePool EntitySourcePool;
