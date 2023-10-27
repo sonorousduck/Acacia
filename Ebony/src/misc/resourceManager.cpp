@@ -9,6 +9,7 @@
 #include <alext.h>
 #include "ThreadPool.hpp"
 #include "../../Audio/src/SoundBuffer.hpp"
+#include "../../../Audio/src/audioManager.hpp"
 
 namespace Ebony
 {
@@ -229,39 +230,37 @@ namespace Ebony
 		return texture;
 	}
 
-	std::uint32_t ResourceManager::LoadSoundEffect(const std::string& file, const char* name)
+	ALuint ResourceManager::LoadSoundEffect(const std::string& file, const std::string& name)
 	{
-		std::uint32_t sound = SoundBuffer::get()->addSoundEffect(("../Audio/" + file).c_str());
-		SoundEffectBuffers[name] = sound;
-		return sound;
+		return EbonyAudio::AudioManager::LoadSound(file, ("../Audio/" + name).c_str());
 	}
 
-	void  ResourceManager::UnloadSoundEffect(const char* name)
+	//void  ResourceManager::UnloadSoundEffect(const char* name)
+	//{
+	//	SoundEffectBuffers.erase(name);
+	//}
+
+	ALuint ResourceManager::GetSoundEffect(const std::string& name)
 	{
-		SoundEffectBuffers.erase(name);
+		return EbonyAudio::AudioManager::GetSound(name);
 	}
 
-	ALuint ResourceManager::GetSoundEffect(const char* name)
-	{
-		return SoundEffectBuffers[name];
-	}
+	//EbonyAudio::MusicSource& ResourceManager::LoadMusic(const std::string& file, const char* name)
+	//{
+	//	auto test = EbonyAudio::MusicSource::LoadFromFile("../Audio/" + file);
+	//	Music[name] = test;
+	//	return Music[name];
+	//}
 
-	EbonyAudio::MusicSource& ResourceManager::LoadMusic(const std::string& file, const char* name)
-	{
-		auto test = EbonyAudio::MusicSource::LoadFromFile("../Audio/" + file);
-		Music[name] = test;
-		return Music[name];
-	}
+	//void  ResourceManager::UnloadMusic(const char* name)
+	//{
+	//	Music.erase(name);
+	//}
 
-	void  ResourceManager::UnloadMusic(const char* name)
-	{
-		Music.erase(name);
-	}
-
-	EbonyAudio::MusicSource& ResourceManager::GetMusic(const char* name)
-	{
-		return Music[name];
-	}
+	//EbonyAudio::MusicSource& ResourceManager::GetMusic(const char* name)
+	//{
+	//	return Music[name];
+	//}
 
 	void ResourceManager::LoadTextureAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete)
 	{
@@ -297,7 +296,7 @@ namespace Ebony
 
 	}
 
-	void ResourceManager::LoadSoundEffectAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete)
+	/*void ResourceManager::LoadSoundEffectAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete)
 	{
 		auto task = [=]()
 		{
@@ -310,9 +309,9 @@ namespace Ebony
 		ResourceManager::tasksRemaining++;
 		auto threadTask = ThreadPool::instance().createTask(task);
 		ThreadPool::instance().enqueueTask(threadTask);
-	}
+	}*/
 
-	void ResourceManager::LoadMusicAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete)
+	/*void ResourceManager::LoadMusicAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete)
 	{
 		auto task = [=]()
 		{
@@ -323,7 +322,7 @@ namespace Ebony
 		ResourceManager::tasksRemaining++;
 		auto threadTask = ThreadPool::instance().createIOTask(task);
 		ThreadPool::instance().enqueueTask(threadTask);
-	}
+	}*/
 
 	void ResourceManager::loadComplete(const std::string& file, std::function<void(std::string)> onComplete)
 	{

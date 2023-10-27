@@ -67,11 +67,13 @@ namespace EbonyAudio
 
 			delete device;
 
+
+
 		}
 
-	private:
-		// SoundDevice, Volume Levels, Sound Loader, Streaming, Source Pools, sounds
 		AudioManager() {}
+	private:
+		
 
 
 		static SourcePool UISourcePool;

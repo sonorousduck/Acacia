@@ -29,7 +29,7 @@ namespace Ebony {
 	public:
 		Sandbox()
 		{
-
+			
 		}
 
 		~Sandbox()
@@ -39,6 +39,8 @@ namespace Ebony {
 
 		void LoadContent()
 		{
+
+			audioManager = EbonyAudio::AudioManager::Init();
 			//std::atomic_bool success{ true };
 			//std::latch contentLoaded{ 1 };
 
@@ -64,6 +66,10 @@ namespace Ebony {
 			ResourceManager::LoadAtlas("textures/sampleSpriteSheet.tx", "sampleSpritesheet", 6, 1);
 			ResourceManager::LoadAtlas("textures/massiveTextureAtlas.tx", "massiveTextureAtlas", 32, 24); // Actually has 64 x 48 but you can't have that many images in a 3D array. Need to enforce size limits
 
+			ResourceManager::LoadSoundEffect("wall", "SoundEffects/wall.wav");
+
+
+
 			//contentLoaded.wait();
 
 		}
@@ -74,8 +80,8 @@ namespace Ebony {
 			Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 
 			graphics.Initialize("Ebony", 800, 600);
-			SoundDevice::init();
-			audioManager = EbonyAudio::AudioManager::Init();
+			
+			
 			LoadContent();
 
 
@@ -133,7 +139,10 @@ namespace Ebony {
             s.setMat4("projection", graphics.projection);
 			clearColor = Colors::CornflowerBlue;
 
-			mySpeaker.Play(ResourceManager::GetSoundEffect("wall"));
+			ALuint sound = ResourceManager::GetSoundEffect("wall");
+			audioManager.PlaySound(sound, EbonyAudio::ENTITY);
+
+			
 
 
 
@@ -212,7 +221,7 @@ namespace Ebony {
 				animationController->animationTree.emplace_back(node1);
 				animationController->animationTree.emplace_back(node2);
 
-
+				
 				components::Subcollider aabb = components::Subcollider(
 					glm::vec2(0.0f, 0.0f), 
 					glm::vec2(30.0f, 1.0f), 
@@ -418,6 +427,14 @@ namespace Ebony {
 				}
 			);
 
+			auto task4 = ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					EbonyAudio::AudioManager::Update();
+				}
+			);
+
 			//auto task3 = ThreadPool::instance().createTask(
 			//	taskGraph,
 			//	[this, elapsedTime]()
@@ -618,6 +635,8 @@ namespace Ebony {
 		systems::PhysicsSystem physicsSystem;
 		EbonyAudio::AudioManager audioManager;
 
+
+
 		entities::EntityMap allEntities;
 		std::vector<entities::EntityPtr> newEntities;
 		std::unordered_set<entities::Entity::IdType> removeEntities;
@@ -634,8 +653,8 @@ namespace Ebony {
 		std::chrono::microseconds averageUpdateTime = std::chrono::microseconds::zero();
 
 		std::uint64_t totalFrames = 0;
-
-
+		// SoundDevice, Volume Levels, Sound Loader, Streaming, Source Pools, sounds
+		
 		std::string fps = "";
 		RenderTarget2D main;
 		entities::EntityPtr testParticles;
@@ -643,7 +662,6 @@ namespace Ebony {
 		entities::EntityPtr animationsTest;
 		entities::EntityPtr testEntity;
 		
-
 	
 	};
 

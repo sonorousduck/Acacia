@@ -34,16 +34,16 @@ namespace Ebony
 		static void LoadTextureAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
 		static void LoadAtlasAsync(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY, std::function<void(std::string)> onComplete);
 		static void LoadShaderAsync(const std::string& vShaderFile, const std::string& fShaderFile, const char* name, std::function<void(std::string)> onComplete);
-		static void LoadSoundEffectAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
-		static void LoadMusicAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
+		//static void LoadSoundEffectAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
+		//static void LoadMusicAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
 
-		static std::uint32_t LoadSoundEffect(const std::string& file, const char* name);
-		static void UnloadSoundEffect(const char* name);
-		static std::uint32_t GetSoundEffect(const char* name);
+		static ALuint LoadSoundEffect(const std::string& file, const std::string& name);
+		//static void UnloadSoundEffect(const char* name);
+		static ALuint GetSoundEffect(const std::string& name);
 
-		static EbonyAudio::MusicSource& LoadMusic(const std::string& file, const char* name);
-		static void UnloadMusic(const char* name);
-		static EbonyAudio::MusicSource& GetMusic(const char* name);
+		//static EbonyAudio::MusicSource& LoadMusic(const std::string& file, const char* name);
+		//static void UnloadMusic(const char* name);
+		//static EbonyAudio::MusicSource& GetMusic(const char* name);
 		
 		static void loadComplete(const std::string& file, std::function<void(std::string)> onComplete);
 
