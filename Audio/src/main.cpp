@@ -11,100 +11,27 @@
 
 int main()
 {
-    //SoundSource mySpeaker{};
-
-
     // First, we need to create an audio manager
     EbonyAudio::AudioManager audioManager = EbonyAudio::AudioManager::Init();
 
     audioManager.LoadSound("wall", "SoundEffects/wall.wav");
     audioManager.LoadSound("magnet", "SoundEffects/magnet_action.wav");
 
-    //std::unique_ptr<SoundSource> speaker = audioManager.GetSource(EbonyAudio::UI);
-    //std::unique_ptr<SoundSource> speaker1 = audioManager.GetSource(EbonyAudio::UI);
 
     auto sound = audioManager.GetSound("wall");
     auto sound1 = audioManager.GetSound("magnet");
 
     std::shared_ptr<EbonyAudio::SoundStream> stream = audioManager.PlaySound(sound, EbonyAudio::UI);
-    //speaker->Play(sound);
 
-    //std::cout << "Beep Beep" << std::endl;
-    //std::unique_ptr<SoundSource> soundSource = audioManager.GetSource(EbonyAudio::AudioType::UI);
-    //soundSource->Play(sound1);
+    audioManager.LoadMusic("song18", "Music/song18.wav");
+    std::shared_ptr<EbonyAudio::MusicSource> source = audioManager.GetMusic("song18");
 
-
-
-
-   // SoundDevice::init();
-   // EbonyAudio::Music::Init();
-
-   auto source1 = EbonyAudio::MusicSource::LoadFromFile("Music/meyou.wav");
-   //auto source = EbonyAudio::MusicSource::LoadFromFile("Music/song18.mp3");
-
-   //source.SetLoop(true);
-
-   EbonyAudio::Music::Play(source1);
-   //EbonyAudio::Music::Play(source);
-
-   //uint32_t sound1 = SoundBuffer::get()->addSoundEffect("SoundEffects/wall.wav");
-
-   // SoundSource anotherSpeaker{};
-
-
-   //mySpeaker.Play(sound1);
-
-    //speaker->Play(sound);
-    //speaker1->Play(sound1);
-    //mySpeaker.Play(sound1);
-    //mySpeaker.Play(sound1);
-
+    audioManager.PlayMusic(source);
 
     while (true)
     {
         audioManager.Update();
-        source1.UpdateBufferStream();
-
     }
-
-    /*ALint state = AL_PLAYING;
-    while (state == AL_PLAYING && alGetError() == AL_NO_ERROR)
-    {
-    	std::cout << "Currently playing sound" << std::endl;
-    	alGetSourcei(speaker1->source, AL_SOURCE_STATE, &state);
-    }*/
-
-    //audioManager.ReturnSource(std::move(speaker), EbonyAudio::UI);
-    //audioManager.ReturnSource(std::move(speaker1), EbonyAudio::UI);
-
-
-   /*while (true)
-   {
-
-   }*/
-   // anotherSpeaker.Play(sound2);
-
-    //MusicSource myMusic("Music/song18.mp3");
-    //MusicBuffer myMusic("Music/TownTheme.wav");
-
-    //myMusic.Play();
-
-   /* ALint state = AL_PLAYING;
-
-    while (state == AL_PLAYING && alGetError() == AL_NO_ERROR)
-    {
-        myMusic.UpdateBufferStream();
-        alGetSourcei(myMusic.getSource(), AL_SOURCE_STATE, &state);
-    }
-
-    std::cout << "Got here" << std::endl;*/
-
-	/*while (true)
-	{
-        source.UpdateBufferStream();
-        source1.UpdateBufferStream();
-	}*/
-
 
     return 0;
 }

@@ -24,8 +24,6 @@ namespace EbonyAudio
 
 		static AudioManager Init();
 		
-		static SoundSource createSoundSourceObject(SoundSource sound, AudioType type);
-
 		static void Update();
 
 
@@ -43,8 +41,16 @@ namespace EbonyAudio
 		static std::shared_ptr<SoundStream> PlaySound(ALuint sound, AudioType type);
 
 		static ALuint LoadSound(const std::string& name, const char* filename);
+		static std::shared_ptr<MusicSource> LoadMusic(const std::string& name, const char* filename);
+
+		static void PlayMusic(std::shared_ptr<MusicSource> source);
+
 
 		static ALuint GetSound(const std::string& name);
+		static std::shared_ptr<EbonyAudio::MusicSource> GetMusic(const std::string& name);
+
+		//static void PauseAll();
+		//static void UnpauseAll();
 
 
 		~AudioManager()
@@ -68,14 +74,15 @@ namespace EbonyAudio
 		AudioManager() {}
 
 
-
-
 		static SourcePool UISourcePool;
 		static SourcePool EntitySourcePool;
 		static SourcePool MusicSourcePool;
 		static std::unordered_map<std::string, ALuint> SoundEffectBuffers;
+		static std::unordered_map<std::string, std::shared_ptr<MusicSource>> MusicSources;
 		//static std::vector<ALuint> SoundEffectBuffers;
+		static ALCdevice* s_AudioDevice;
 
+		static std::vector<std::shared_ptr<MusicSource>> musicPlaying;
 		static std::vector<std::shared_ptr<SoundStream>> sourcesPlaying;
 
 		static SoundDevice* device;

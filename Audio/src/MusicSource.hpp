@@ -4,6 +4,7 @@
 #include "alhelpers.hpp"
 #include <iostream>
 #include <utility>
+#include "SoundSource.hpp"
 //#include "../ThirdParty/minimp3/minimp3_ex.h"
 
 
@@ -24,8 +25,9 @@ namespace EbonyAudio
 
 		MusicSource() = default;
 		MusicSource(uint32_t handle, bool loaded, float length);
-		//void Pause();
-		//void Stop();
+		void Pause();
+		void Resume();
+		void Stop();
 
 		bool IsLoaded() const { return m_Loaded; }
 
@@ -40,7 +42,7 @@ namespace EbonyAudio
 
 		std::pair<uint32_t, uint32_t> GetLengthMinutesAndSeconds() const;
 
-		static MusicSource LoadFromFile(const std::string& file, bool spatial = false);
+		//static MusicSource LoadFromFile(const std::string& file, bool spatial = false);
 
 		AudioFileFormat fileFormat;
 
@@ -60,10 +62,12 @@ namespace EbonyAudio
 		bool m_Loop = false;
 
 		friend class Music;
+		friend class AudioManager;
 
 		static const int NUM_BUFFERS = 4;
 		static const int BUFFER_SAMPLES = 8192;
-		ALuint source{};
+		std::unique_ptr<SoundSource> speaker = nullptr;
+		//ALuint source{};
 		ALuint buffers[NUM_BUFFERS]{};
 		
 		SNDFILE* sndFile{};
@@ -84,13 +88,13 @@ namespace EbonyAudio
 	class Music
 	{
 	public:
-		static void Init();
+		//static void Init();
 
-		static MusicSource LoadMusicSource(const std::string& filename);
-		static void Play(MusicSource& source);
+		//static MusicSource LoadMusicSource(const std::string& filename);
+		//static void Play(MusicSource& source);
 
 	private:
-		static MusicSource LoadMusicSourceOther(const std::string& filename);
+		//static MusicSource LoadMusicSourceOther(const std::string& filename);
 		//static MusicSource LoadMusicSourceMP3(const std::string& filename);
 	};
 }

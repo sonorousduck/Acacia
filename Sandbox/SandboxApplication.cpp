@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <systems/audioSystem.hpp>
 #include "../Audio/src/SoundBuffer.hpp"
+#include "../Audio/src/audioManager.hpp"
 #include <components/text.hpp>
 #include <systems/fontRenderer.hpp>
 #include <components/mouseInputComponent.hpp>
@@ -74,7 +75,7 @@ namespace Ebony {
 
 			graphics.Initialize("Ebony", 800, 600);
 			SoundDevice::init();
-			EbonyAudio::Music::Init();
+			audioManager = EbonyAudio::AudioManager::Init();
 			LoadContent();
 
 
@@ -108,8 +109,6 @@ namespace Ebony {
 			audioSystem = systems::AudioSystem();
 			physicsSystem = systems::PhysicsSystem();
 
-
-			mySpeaker = SoundSource();
 
 
 
@@ -617,6 +616,7 @@ namespace Ebony {
 		systems::AudioSystem audioSystem;
 		systems::FontRenderer fontRenderer;
 		systems::PhysicsSystem physicsSystem;
+		EbonyAudio::AudioManager audioManager;
 
 		entities::EntityMap allEntities;
 		std::vector<entities::EntityPtr> newEntities;
@@ -642,7 +642,7 @@ namespace Ebony {
 		entities::EntityPtr keyboardInput;
 		entities::EntityPtr animationsTest;
 		entities::EntityPtr testEntity;
-		SoundSource mySpeaker{};
+		
 
 	
 	};
