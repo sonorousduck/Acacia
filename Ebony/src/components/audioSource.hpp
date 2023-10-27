@@ -37,6 +37,11 @@ namespace components
 		std::deque<ALuint> soundEffectQueue{};
 
 		bool repeat;
+
+		// This should contain a few speakers (that can grow) so you can just reuse them instead of creating new ones everytime.
+		// Maybe just contain one in the beginning, but if it ever needs more sound sources, it can expand
+		std::vector<SoundSource> soundSources{SoundSource()};
+
 		std::uint16_t useableSoundIndex = 0;
 
 
