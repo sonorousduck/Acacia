@@ -670,7 +670,9 @@ int main(int argc, char* argv[])
 	//	std::cout << "You need to put the path to the info file";
 	//	return -1;
 	//}
-	std::filesystem::path directoryTextures = "../../../Graphics/textures";
+	//std::filesystem::path directoryTextures = "../../../Graphics/textures";
+	std::filesystem::path directoryTextures = "../../../BrickBreaker/assets/textures";
+
 	std::filesystem::path directoryModels = "../../../Graphics/models";
 
 	std::filesystem::path cwd = std::filesystem::current_path();

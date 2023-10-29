@@ -48,6 +48,7 @@ endif()
 
 # Include sub-projects.
 add_subdirectory ("Ebony")
+add_subdirectory ("BrickBreaker")
 add_subdirectory ("Sandbox")
 add_subdirectory ("Graphics")
 add_subdirectory ("AssetLib")

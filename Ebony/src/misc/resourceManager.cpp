@@ -36,8 +36,13 @@ namespace Ebony
 	}
 
 
-	Texture2D& ResourceManager::LoadTexture(const std::string& file, const char* name)
+	Texture2D& ResourceManager::LoadTexture(const std::string& file, const char* name, bool currentFolder, const std::string& otherFolder)
 	{
+		if (currentFolder)
+		{
+			Textures[name] = loadTextureFromFile("../BrickBreaker/textures/" + file);
+			return Textures[name];
+		}
 		Textures[name] = loadTextureFromFile("../Graphics/" + file);
 		return Textures[name];
 	}

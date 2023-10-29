@@ -25,7 +25,7 @@ namespace Ebony
 		static void UnloadShader(const char* name);
 
 
-		static Texture2D& LoadTexture(const std::string& file, const char* name);
+		static Texture2D& LoadTexture(const std::string& file, const char* name, bool currentFolder = true, const std::string& otherFolder = "../Graphics");
 		static Texture2D& LoadAtlas(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY);
 		static Texture2D& GetTexture(const char* name);
 		static void UnloadTexture(const char* name);
