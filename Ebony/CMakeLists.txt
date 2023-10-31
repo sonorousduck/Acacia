@@ -38,6 +38,7 @@ set(ComponentHeaders
 	src/components/subcolliderClass.hpp
 	src/components/rigidbodyComponent.hpp
 	src/components/transform.hpp
+	src/components/sprite.hpp
 )
 
 set(SystemHeaders
@@ -52,6 +53,7 @@ set(SystemHeaders
 	src/systems/fontRenderer.hpp
 	src/systems/collisionSystem.hpp
 	src/systems/physicsSystem.hpp
+	src/systems/renderingSystem.hpp
 )
 
 set(SystemSources
@@ -66,7 +68,7 @@ set(SystemSources
 	src/systems/fontRenderer.cpp
 	src/systems/collisionSystem.cpp
 	src/systems/physicsSystem.cpp
-
+	src/systems/renderingSystem.cpp
 )
 
 set(EntityHeaders
