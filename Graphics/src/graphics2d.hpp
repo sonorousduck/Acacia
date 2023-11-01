@@ -66,7 +66,7 @@ namespace Ebony
 
 		void BeginImgui();
 		void DrawWindow(std::string_view windowName);
-		void ImguiSlider();
+		//void ImguiSlider();
 		void CompleteWindow();
 		void ImguiText(std::string_view text);
 		void EndImgui();

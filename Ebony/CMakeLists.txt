@@ -53,7 +53,7 @@ set(SystemHeaders
 	src/systems/fontRenderer.hpp
 	src/systems/collisionSystem.hpp
 	src/systems/physicsSystem.hpp
-	src/systems/renderingSystem.hpp
+	src/systems/spriteRenderer.hpp
 )
 
 set(SystemSources
@@ -68,7 +68,7 @@ set(SystemSources
 	src/systems/fontRenderer.cpp
 	src/systems/collisionSystem.cpp
 	src/systems/physicsSystem.cpp
-	src/systems/renderingSystem.cpp
+	src/systems/spriteRenderer.cpp
 )
 
 set(EntityHeaders
