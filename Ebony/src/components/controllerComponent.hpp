@@ -10,6 +10,7 @@
 #include <fstream>
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/istreamwrapper.h>
+#include "../entity.hpp"
 
 namespace components
 {
@@ -21,9 +22,9 @@ namespace components
 		ControllerInput(int joystickId) : joystickId(joystickId) {};
 
 		std::unordered_map<int, std::string> bindings{}; // This is what defines our controller bindings. i.e. pressing space gives the string_view "jump"
-		std::unordered_map<std::string_view, std::function<void()>> onPressActions{}; // This defines our on initial press actions. i.e. "jump" causes the player to... jump...
-		std::unordered_map<std::string_view, std::function<void()>> onHeldActions{}; // This defines our on held actions. i.e. holding w keeps going forward
-		std::unordered_map<std::string_view, std::function<void()>> onReleaseActions{}; // This defines our on released actions. i.e. releasing at the correct time to time something
+		std::unordered_map<std::string_view, std::function<void([[maybe_unused]] entities::EntityPtr& entity)>> onPressActions{}; // This defines our on initial press actions. i.e. "jump" causes the player to... jump...
+		std::unordered_map<std::string_view, std::function<void([[maybe_unused]] entities::EntityPtr& entity)>> onHeldActions{}; // This defines our on held actions. i.e. holding w keeps going forward
+		std::unordered_map<std::string_view, std::function<void([[maybe_unused]] entities::EntityPtr& entity)>> onReleaseActions{}; // This defines our on released actions. i.e. releasing at the correct time to time something
 
 
 		//std::unordered_map<int, std::function<void()>> controllerActionKeyPairs{};

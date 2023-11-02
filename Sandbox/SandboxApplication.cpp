@@ -20,6 +20,7 @@
 #include <systems/fontRenderer.hpp>
 #include <components/mouseInputComponent.hpp>
 #include <systems/physicsSystem.hpp>
+#include <systems/spriteRenderer.hpp>
 
 
 namespace Ebony {
@@ -113,6 +114,7 @@ namespace Ebony {
 			fontRenderer = systems::FontRenderer();
 			audioSystem = systems::AudioSystem();
 			physicsSystem = systems::PhysicsSystem();
+			spriteRenderer = systems::SpriteRenderer();
 
 
 
@@ -124,7 +126,7 @@ namespace Ebony {
 			//ResourceManager::LoadMusic("Music/TownTheme.wav", "TownTheme");
 
 			//ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
-			ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
+			ResourceManager::LoadTexture("textures/awesomeface.tx", "face", false);
 			ResourceManager::LoadAtlas("textures/Better_Character_Animation.tx", "Better_Character_Animation", 44, 1);
 
 
@@ -364,10 +366,12 @@ namespace Ebony {
 			//auto rigidbody = std::make_unique<components::RigidBody>();
 			//auto collider = std::make_unique<components::Collider>(aabbcollider, 0);
 			auto transform = std::make_unique<components::Transform>(glm::vec2(100.0f, 100.0f), 0.0f, glm::vec2(1.0f, 1.0f));
+			auto sprite = std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("face"), Ebony::Colors::Red);
 
 			//anotherEntity->addComponent(std::move(rigidbody));
 			//anotherEntity->addComponent(std::move(collider));
 			anotherEntity->addComponent(std::move(transform));
+			anotherEntity->addComponent(std::move(sprite));
 
 			//keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keyBindings.json");
 			//keyboardInput->getComponent<components::ControllerInput>()->saveControllerBindings("../controllerBindings.json", "../joystickBindings.json");
@@ -478,6 +482,7 @@ namespace Ebony {
 			graphics.SetRenderTarget(main, clearColor);
 			
 			animationRenderer.Update(graphics);
+			spriteRenderer.Update(graphics);
 
 			auto previousTime = std::chrono::system_clock::now();
 			particleRenderer.Update(graphics);
@@ -590,7 +595,7 @@ namespace Ebony {
 				audioSystem.AddEntity(entity);
 				fontRenderer.AddEntity(entity);
 				physicsSystem.AddEntity(entity);
-
+				spriteRenderer.AddEntity(entity);
 
 				allEntities[entity->getId()] = entity;
 			}
@@ -612,6 +617,8 @@ namespace Ebony {
 				audioSystem.RemoveEntity(entityId);
 				fontRenderer.RemoveEntity(entityId);
 				physicsSystem.RemoveEntity(entityId);
+				spriteRenderer.RemoveEntity(entityId);
+
 			}
 		}
 
@@ -632,6 +639,7 @@ namespace Ebony {
 		systems::AudioSystem audioSystem;
 		systems::FontRenderer fontRenderer;
 		systems::PhysicsSystem physicsSystem;
+		systems::SpriteRenderer spriteRenderer;
 
 
 

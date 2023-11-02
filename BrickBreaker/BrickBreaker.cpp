@@ -91,7 +91,7 @@ namespace Ebony {
 		{
 			Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 
-			graphics.Initialize("Ebony", 800, 600);
+			graphics.Initialize("Ebony", windowWidth, windowHeight);
 			EbonyAudio::AudioManager::Init();
 			
 			LoadContent();
@@ -102,7 +102,7 @@ namespace Ebony {
 			Ebony::MouseInput::setupMouseInputs(graphics.window);
 
 
-			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT };
+			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_A, GLFW_KEY_D };
 			keyInput.setKeysToMonitorInit(keys);
 
 			// All buttons defined here: https://www.glfw.org/docs/3.3/group__buttons.html
@@ -134,13 +134,6 @@ namespace Ebony {
             Shader& s = ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 			ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
 
-			//ResourceManager::LoadMusic("Music/song18.mp3", "song18");
-			//ResourceManager::LoadMusic("Music/TownTheme.wav", "TownTheme");
-
-			//ResourceManager::LoadSoundEffect("SoundEffects/wall.wav", "wall");
-			//ResourceManager::LoadTexture("textures/awesomeface.tx", "face");
-			//ResourceManager::LoadAtlas("textures/Better_Character_Animation.tx", "Better_Character_Animation", 44, 1);
-
 
 
 			graphics.InitializeTextDrawing(ResourceManager::GetShader("text"));
@@ -158,27 +151,11 @@ namespace Ebony {
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
 
-			//controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_START, "quit" });
-			//controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, "print" });
-			//controllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, "printRelease" });
 
 
-
-			controllerInputComponent->onPressActions.insert({ "quit", [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
-			controllerInputComponent->onHeldActions.insert({ "print", [=]() {std::cout << "Circle was called (OnHeld)" << std::endl; } });
-			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=]() {std::cout << "Triangle was called" << std::endl; } });
-
-			/*controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_START, [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
-			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CIRCLE, [=]() { std::cout << "Circle was called" << std::endl; } });
-			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_CROSS, [=]() { std::cout << "Cross was called" << std::endl; } });
-			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_SQUARE, [=]() { std::cout << "Square was called" << std::endl; } });
-			controllerInputComponent->controllerActionKeyPairs.insert({ GLFW_GAMEPAD_BUTTON_TRIANGLE, [=]() { std::cout << "Triangle was called" << std::endl; } });*/
-
-			//controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, "left" });
-			//controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_Y, "right" });
-			//controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_X, "up" });
-			//controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_Y, "down" });
-			//controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, "shoot" });
+			controllerInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr) {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+			controllerInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) {std::cout << "Circle was called (OnHeld)" << std::endl; } });
+			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=](entities::EntityPtr) {std::cout << "Triangle was called" << std::endl; } });
 
 			controllerInputComponent->joystickActions.insert({ "left", [=](float value) {
 				if (abs(value) > 0.10)
@@ -225,25 +202,42 @@ namespace Ebony {
 			//} });
 
 
-			//keyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
-			keyboardInputComponent->onPressActions.insert({ "quit", [=]() {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
-
+			keyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
+			keyboardInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr entity) {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
 			//keyboardInputComponent->bindings.insert({ GLFW_KEY_E, "print" });
-			keyboardInputComponent->onReleaseActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
-			keyboardInputComponent->onHeldActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
+			keyboardInputComponent->onReleaseActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
+			keyboardInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
 
 			//keyboardInputComponent->bindings.insert({ GLFW_KEY_LEFT_SHIFT, "toggleRun" });
-			keyboardInputComponent->onReleaseActions.insert({ "toggleRun", [=]() { isRunning = false; } });
-			keyboardInputComponent->onPressActions.insert({ "toggleRun", [=]() { isRunning = true; } });
+			//keyboardInputComponent->onReleaseActions.insert({ "toggleRun", [=]() { isRunning = false; } });
+			//keyboardInputComponent->onPressActions.insert({ "toggleRun", [=]() { isRunning = true; } });
+			keyboardInputComponent->bindings.insert({ GLFW_KEY_A, "paddleLeft" });
+			keyboardInputComponent->bindings.insert({ GLFW_KEY_D, "paddleRight" });
+
+			keyboardInputComponent->onHeldActions.insert({ "paddleLeft", [=](entities::EntityPtr entity)
+			{
+				std::cout << "Moving Left" << std::endl;
+				auto rigidBody = entity->getComponent<components::RigidBody>();
+				rigidBody->addScriptedMovement(glm::vec2{ -300.0f, 0.0f });
+				
+			} });
+
+			keyboardInputComponent->onHeldActions.insert({ "paddleRight", [=](entities::EntityPtr entity)
+			{
+				std::cout << "Moving Right" << std::endl;
+				auto rigidBody = entity->getComponent<components::RigidBody>();
+				rigidBody->addScriptedMovement(glm::vec2{ 300.0f, 0.0f });
+				
+				} 
+				});
 
 
-			keyboardInputComponent->loadKeyBindings("../keyBindings.json");
+
+			//keyboardInputComponent->loadKeyBindings("../keyBindings.json");
 
 
-			keyboardInput->addComponent(std::move(controllerInputComponent));
-			keyboardInput->addComponent(std::move(keyboardInputComponent));
-
-			AddEntity(keyboardInput);
+			//keyboardInput->addComponent(std::move(controllerInputComponent));
+			//keyboardInput->addComponent(std::move(keyboardInputComponent));
 
 			auto textComponent = std::make_unique<components::Text>(fps, Ebony::Colors::Black, Ebony::Colors::White, spriteFont);
 			testEntity->addComponent(std::move(textComponent));
@@ -256,27 +250,28 @@ namespace Ebony {
 			auto mouseComponent = std::make_unique<components::MouseInput>();
 
 			//mouseComponent->bindings.insert({ GLFW_MOUSE_BUTTON_1, "mousePress" });
-			mouseComponent->onPressActions.insert({ "mousePress", [=]() {std::cout << "Button pressed!" << std::endl; }});
-			mouseComponent->onReleaseActions.insert({ "mousePress",[=]() {std::cout << "Mouse Button released!" << std::endl; }});
+			mouseComponent->onPressActions.insert({ "mousePress", [=](entities::EntityPtr) {std::cout << "Button pressed!" << std::endl; }});
+			mouseComponent->onReleaseActions.insert({ "mousePress",[=](entities::EntityPtr) {std::cout << "Mouse Button released!" << std::endl; }});
 			
 			mouseComponent->loadMouseBindings("../mouseBindings.json");
 			//mouseComponent->saveMouseBindings("../mouseBindings.json");
 			anotherEntity->addComponent(std::move(mouseComponent));
 			
 
-			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), true, true);
+			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(0.0f, 0.0f), glm::vec2(3.0f, 1.0f), true, true);
 
-			//auto rigidbody = std::make_unique<components::RigidBody>();
-			//auto collider = std::make_unique<components::Collider>(aabbcollider, 0);
-			auto transform = std::make_unique<components::Transform>(glm::vec2(300.0f, 200.0f), 0.0f, glm::vec2(1.0f, 1.0f));
-			auto sprite = std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("face"), Ebony::Colors::Red);
-			
+			auto collider = std::make_unique<components::Collider>(aabbcollider, 0);
+			auto transform = std::make_unique<components::Transform>(glm::vec2(400.0f, 500.0f), 0.0f, glm::vec2(3.0f, 1.0f));
+			auto sprite = std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White);
+			auto rigidbody = std::make_unique<components::RigidBody>();
 
 
-			//anotherEntity->addComponent(std::move(rigidbody));
-			//anotherEntity->addComponent(std::move(collider));
+			anotherEntity->addComponent(std::move(collider));
 			anotherEntity->addComponent(std::move(transform));
 			anotherEntity->addComponent(std::move(sprite));
+			anotherEntity->addComponent(std::move(keyboardInputComponent));
+			anotherEntity->addComponent(std::move(controllerInputComponent));
+			anotherEntity->addComponent(std::move(rigidbody));
 
 			//keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keyBindings.json");
 			//keyboardInput->getComponent<components::ControllerInput>()->saveControllerBindings("../controllerBindings.json", "../joystickBindings.json");
@@ -358,6 +353,8 @@ namespace Ebony {
 
 			ThreadPool::instance().submitTaskGraph(taskGraph);
 			graphDone.wait();
+
+
 			//physicsSystem.Update(elapsedTime);
 
 			//audioSystem.Update(elapsedTime);
@@ -367,7 +364,6 @@ namespace Ebony {
 			averageAnimationSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 
 			previousTime = std::chrono::system_clock::now();
-			particleSystem.Update(elapsedTime);
 			averageParticleSystemTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);*/
 
 			if (fpsUpdateDeltaTime <= 1.0f)
@@ -386,20 +382,20 @@ namespace Ebony {
 			graphics.BeginDraw(clearColor);
 			//graphics.BeginImgui();
 
-			//graphics.SetRenderTarget(main, clearColor);
+			graphics.SetRenderTarget(main, clearColor);
 			
-			//animationRenderer.Update(graphics);
+			animationRenderer.Update(graphics);
 			spriteRenderer.Update(graphics);
 
-			//auto previousTime = std::chrono::system_clock::now();
-			//particleRenderer.Update(graphics);
-			//averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
+			auto previousTime = std::chrono::system_clock::now();
+			particleRenderer.Update(graphics);
+			averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 			
-			//fontRenderer.Update(graphics);
+			fontRenderer.Update(graphics);
 			
-			//graphics.UnbindRenderTarget(clearColor);
+			graphics.UnbindRenderTarget(clearColor);
 
-			//graphics.DrawRenderTarget(ResourceManager::GetShader("screenTexture"), main);
+			graphics.DrawRenderTarget(ResourceManager::GetShader("screenTexture"), main);
 
 
 			
@@ -410,7 +406,6 @@ namespace Ebony {
 			//ImGui::ArrowButton("Left", ImGuiDir_Left);
 			//
 			//graphics.CompleteWindow();
-
 
 			//graphics.EndImgui();
 			graphics.EndDraw();
@@ -558,7 +553,8 @@ namespace Ebony {
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;
 		float fpsUpdateDeltaTime = 0.0f;
-		bool isRunning = false;
+		int windowWidth = 800;
+		int windowHeight = 600;
 		std::chrono::microseconds averageParticleRenderingTime = std::chrono::microseconds::zero();
 		std::chrono::microseconds averageParticleSystemTime = std::chrono::microseconds::zero();
 		std::chrono::microseconds averageAnimationSystemTime = std::chrono::microseconds::zero();

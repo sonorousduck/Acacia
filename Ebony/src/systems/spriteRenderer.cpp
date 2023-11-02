@@ -10,7 +10,7 @@ namespace systems
 			auto transform = entity->getComponent<components::Transform>();
 
 
-			graphics.Draw(sprite->shader, sprite->texture, transform->position, transform->scale * 100.0f, transform->rotation, sprite->spriteColor, sprite->depth);
+			graphics.Draw(sprite->shader, sprite->texture, transform->position, transform->scale * 50.0f, transform->rotation, sprite->spriteColor, sprite->depth);
 		}
 	}
 }

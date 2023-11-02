@@ -194,6 +194,7 @@ namespace Ebony
 
 	void Graphics2d::EndDraw()
 	{
+		activeTextureId = -1;
 		glfwSwapBuffers(window.getWindow());
 	}
 
@@ -270,6 +271,7 @@ namespace Ebony
 		}
 
 		s.setMat4("model", model);
+		s.setVec3("spriteColor", color.GetRGB());
 		//s.setVec3("spriteColor", Colors::White.GetRGB());
 		//s.setInt("spritesheet", texture.ID);
 

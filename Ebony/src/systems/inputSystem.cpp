@@ -30,15 +30,15 @@ namespace systems
 
 					if (pressedState == Ebony::PressedState::PRESSED && input->onPressActions.contains(iter->second))
 					{
-						input->onPressActions[iter->second]();
+						input->onPressActions[iter->second](entity);
 					}
-					else if (pressedState == Ebony::PressedState::HELD && input->onHeldActions.contains(iter->second))
+					if ((pressedState == Ebony::PressedState::PRESSED || pressedState == Ebony::PressedState::HELD) && input->onHeldActions.contains(iter->second))
 					{
-						input->onHeldActions[iter->second]();
+						input->onHeldActions[iter->second](entity);
 					}
 					else if (pressedState == Ebony::PressedState::RELEASED && input->onReleaseActions.contains(iter->second))
 					{
-						input->onReleaseActions[iter->second]();
+						input->onReleaseActions[iter->second](entity);
 					}
 				}
 			}
@@ -60,15 +60,15 @@ namespace systems
 
 							if (pressedState == Ebony::PressedState::PRESSED && input->onPressActions.contains(iter->second))
 							{
-								input->onPressActions[iter->second]();
+								input->onPressActions[iter->second](entity);
 							}
 							else if (pressedState == Ebony::PressedState::HELD && input->onHeldActions.contains(iter->second))
 							{
-								input->onHeldActions[iter->second]();
+								input->onHeldActions[iter->second](entity);
 							}
 							else if (pressedState == Ebony::PressedState::RELEASED && input->onReleaseActions.contains(iter->second))
 							{
-								input->onReleaseActions[iter->second]();
+								input->onReleaseActions[iter->second](entity);
 							}
 						}
 
@@ -120,15 +120,15 @@ namespace systems
 
 					if (pressedState == Ebony::PressedState::PRESSED && input->onPressActions.contains(iter->second))
 					{
-						input->onPressActions[iter->second]();
+						input->onPressActions[iter->second](entity);
 					}
 					else if (pressedState == Ebony::PressedState::HELD && input->onHeldActions.contains(iter->second))
 					{
-						input->onHeldActions[iter->second]();
+						input->onHeldActions[iter->second](entity);
 					}
 					else if (pressedState == Ebony::PressedState::RELEASED && input->onReleaseActions.contains(iter->second))
 					{
-						input->onReleaseActions[iter->second]();
+						input->onReleaseActions[iter->second](entity);
 					}
 				}
 			}

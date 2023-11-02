@@ -56,6 +56,8 @@ namespace systems
 			while (rigidBody->getNextScriptedMovementLength() > 0)
 			{
 				// Apply scripted movements
+				auto scriptedMovement = rigidBody->getNextScriptedMovement();
+				transform->position += scriptedMovement * time_ms;
 			}
 			
 
