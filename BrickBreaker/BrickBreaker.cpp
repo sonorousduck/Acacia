@@ -21,6 +21,7 @@
 #include <components/mouseInputComponent.hpp>
 #include <systems/physicsSystem.hpp>
 #include <systems/spriteRenderer.hpp>
+#include <singletons/time.hpp>
 
 
 namespace Ebony {
@@ -218,18 +219,29 @@ namespace Ebony {
 			{
 				std::cout << "Moving Left" << std::endl;
 				auto rigidBody = entity->getComponent<components::RigidBody>();
-				rigidBody->addScriptedMovement(glm::vec2{ -300.0f, 0.0f });
-				
+				auto transform = entity->getComponent<components::Transform>();
+
+				std::cout << transform->position.x << std::endl;
+				std::cout << transform->position.x - 500.0f * Ebony::Time::GetDeltaTimeFloatMilli() << std::endl;
+
+				if (transform->position.x - 500.0f * Ebony::Time::GetDeltaTimeFloatMilli() > -windowWidth)
+				{
+					rigidBody->addScriptedMovement(glm::vec2{ -500.0f * Ebony::Time::GetDeltaTimeFloatMilli(), 0.0f });
+				}				
 			} });
 
 			keyboardInputComponent->onHeldActions.insert({ "paddleRight", [=](entities::EntityPtr entity)
 			{
 				std::cout << "Moving Right" << std::endl;
 				auto rigidBody = entity->getComponent<components::RigidBody>();
-				rigidBody->addScriptedMovement(glm::vec2{ 300.0f, 0.0f });
+				auto transform = entity->getComponent<components::Transform>();
 				
-				} 
-				});
+				if (transform->position.x + 500.0f * Ebony::Time::GetDeltaTimeFloatMilli() < windowWidth)
+				{
+					rigidBody->addScriptedMovement(glm::vec2{ 500.0f * Ebony::Time::GetDeltaTimeFloatMilli(), 0.0f });
+				}
+			} 
+			});
 
 
 
@@ -446,6 +458,7 @@ namespace Ebony {
 			{
 				auto currentTime = std::chrono::system_clock::now();
 				auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
+				Ebony::Time::SetDeltaTime(elapsedTime);
 				previousTime = currentTime;
 
 
