@@ -1,4 +1,6 @@
 #include "spriteRenderer.hpp"
+#include "../misc/resourceManager.hpp"
+#include "../components/collider.hpp"
 
 namespace systems
 {
@@ -10,7 +12,14 @@ namespace systems
 			auto transform = entity->getComponent<components::Transform>();
 
 
-			graphics.Draw(sprite->shader, sprite->texture, transform->position, transform->scale * 50.0f, transform->rotation, sprite->spriteColor, sprite->depth);
+			graphics.Draw(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, sprite->spriteColor, sprite->depth);
+
+
+			if (debug && entity->hasComponent<components::Collider>())
+			{
+				graphics.Draw(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("collider"), transform->position, transform->scale, transform->rotation, Ebony::Colors::Red, sprite->depth + 0.1f);
+			}
+
 		}
 	}
 }

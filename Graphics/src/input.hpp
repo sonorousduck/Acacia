@@ -11,10 +11,10 @@ namespace Ebony
 {
 	enum class PressedState
 	{
-		NONE,
-		PRESSED,
-		HELD,
-		RELEASED
+		NONE = 0,
+		PRESSED = 1,
+		HELD = 2,
+		RELEASED = 4
 	};
 
 	struct Press
@@ -46,6 +46,7 @@ namespace Ebony
 		void setIsKeyDown(int key, PressedState isDown);
 
 		std::unordered_map<int, PressedState> m_keys;
+		std::unordered_map<int, PressedState> m_lastFrame;
 		bool m_isEnabled;
 
 

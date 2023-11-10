@@ -1,4 +1,5 @@
 #include "input.hpp"
+#include <iostream>
 
 namespace Ebony
 {
@@ -14,6 +15,7 @@ namespace Ebony
 		for (int i = 0; i < keysToMonitor.size(); i++)
 		{
 			m_keys[keysToMonitor[i]] = PressedState::NONE;
+			m_lastFrame[keysToMonitor[i]] = PressedState::NONE;
 		}
 
 		KeyInput::_instances.push_back(this);
@@ -36,6 +38,7 @@ namespace Ebony
 	PressedState KeyInput::getIsKeyDown(int key)
 	{
 		PressedState result = PressedState::NONE;
+		PressedState lastResult = PressedState::NONE;
 
 		if (m_isEnabled)
 		{
@@ -44,11 +47,19 @@ namespace Ebony
 			if (it != m_keys.end())
 			{
 				result = m_keys[key];
+				lastResult = m_lastFrame[key];
+				m_lastFrame[key] = result;
 
-				if (result == PressedState::RELEASED)
+				if (result == PressedState::PRESSED && lastResult == PressedState::PRESSED)
 				{
-					m_keys[key] = PressedState::NONE;
+					result = PressedState::HELD;
 				}
+				else if (result == PressedState::RELEASED && lastResult == PressedState::RELEASED)
+				{
+					result = PressedState::NONE;
+				}
+
+				m_keys[key] = result;
 			}
 		}
 		return result;
@@ -80,7 +91,6 @@ namespace Ebony
 		if (it != m_keys.end())
 		{
 			PressedState state = m_keys[key];
-			
 			if (isDown == PressedState::PRESSED && state == PressedState::PRESSED)
 			{
 				isDown = PressedState::HELD;

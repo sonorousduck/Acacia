@@ -19,5 +19,6 @@ namespace systems
 
 	private:
 		using System::Update;
+		bool debug = true;
 	};
 }

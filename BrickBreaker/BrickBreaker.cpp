@@ -82,6 +82,7 @@ namespace Ebony {
 			ResourceManager::LoadTexture("fast_powerup.tx", "fast_powerup");
 			ResourceManager::LoadTexture("slow_powerup.tx", "slow_powerup");
 			ResourceManager::LoadTexture("smaller_paddle_powerup.tx", "smaller_paddle_powerup");
+			ResourceManager::LoadTexture("box.tx", "collider");
 
 			//contentLoaded.wait();
 
@@ -157,41 +158,30 @@ namespace Ebony {
 			controllerInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr) {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
 			controllerInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) {std::cout << "Circle was called (OnHeld)" << std::endl; } });
 			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=](entities::EntityPtr) {std::cout << "Triangle was called" << std::endl; } });
+			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, "paddleMovement" });
 
-			controllerInputComponent->joystickActions.insert({ "left", [=](float value) {
+			controllerInputComponent->joystickActions.insert({ "paddleMovement", [=](entities::EntityPtr entity, float value) {
 				if (abs(value) > 0.10)
 				{
-					std::cout << "Left X: " << value << std::endl;
-				}
-				} });
+					auto rigidBody = entity->getComponent<components::RigidBody>();
+					auto transform = entity->getComponent<components::Transform>();
+					auto collider = entity->getComponent<components::Collider>();
 
-			controllerInputComponent->joystickActions.insert({ "right", [=](float value) {
-				if (abs(value) > 0.10)
-				{
-					std::cout << "Left Y: " << value << std::endl;
+					if (value < 0 && transform->position.x > 0)
+					{
+						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloatMilli() * value, 0.0f });
+					}
+					else if (value > 0 && transform->position.x < windowWidth)
+					{
+						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloatMilli() * value, 0.0f });
+					}
+					
 				}
+				
 			} });
-			
-			controllerInputComponent->joystickActions.insert({ "up", [=](float value) {
-				if (abs(value) > 0.10)
-				{
-					std::cout << "Right X: " << value << std::endl;
-				}
-				} });
-			
-			controllerInputComponent->joystickActions.insert({ "down", [=](float value) {
-				if (abs(value) > 0.10)
-				{
-					std::cout << "Right Y: " << value << std::endl;
-				}
-				} });
 
-			controllerInputComponent->joystickActions.insert({ "shoot", [=](float value) {
-				if (value > -0.25)
-				{
-					std::cout << "Right Trigger: " << value << std::endl;
-				}
-				} });
+
+
 
 			//controllerInputComponent->loadControllerBindings("../controllerBindings.json", "../joystickBindings.json");
 
@@ -214,35 +204,48 @@ namespace Ebony {
 			//keyboardInputComponent->onPressActions.insert({ "toggleRun", [=]() { isRunning = true; } });
 			keyboardInputComponent->bindings.insert({ GLFW_KEY_A, "paddleLeft" });
 			keyboardInputComponent->bindings.insert({ GLFW_KEY_D, "paddleRight" });
+			keyboardInputComponent->bindings.insert({ GLFW_KEY_E, "growShrink" });
 
 			keyboardInputComponent->onHeldActions.insert({ "paddleLeft", [=](entities::EntityPtr entity)
 			{
-				std::cout << "Moving Left" << std::endl;
 				auto rigidBody = entity->getComponent<components::RigidBody>();
 				auto transform = entity->getComponent<components::Transform>();
+				auto collider = entity->getComponent<components::Collider>();
 
-				std::cout << transform->position.x << std::endl;
-				std::cout << transform->position.x - 500.0f * Ebony::Time::GetDeltaTimeFloatMilli() << std::endl;
 
-				if (transform->position.x - 500.0f * Ebony::Time::GetDeltaTimeFloatMilli() > -windowWidth)
+				if (transform->position.x > 0)
 				{
-					rigidBody->addScriptedMovement(glm::vec2{ -500.0f * Ebony::Time::GetDeltaTimeFloatMilli(), 0.0f });
+					rigidBody->addScriptedMovement(glm::vec2{ -700.0f * Ebony::Time::GetDeltaTimeFloatMilli(), 0.0f });
 				}				
 			} });
 
 			keyboardInputComponent->onHeldActions.insert({ "paddleRight", [=](entities::EntityPtr entity)
 			{
-				std::cout << "Moving Right" << std::endl;
 				auto rigidBody = entity->getComponent<components::RigidBody>();
 				auto transform = entity->getComponent<components::Transform>();
-				
-				if (transform->position.x + 500.0f * Ebony::Time::GetDeltaTimeFloatMilli() < windowWidth)
+				auto collider = entity->getComponent<components::Collider>();
+				if (transform->position.x + transform->scale.x < windowWidth)
 				{
-					rigidBody->addScriptedMovement(glm::vec2{ 500.0f * Ebony::Time::GetDeltaTimeFloatMilli(), 0.0f });
+					rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloatMilli(), 0.0f });
 				}
 			} 
 			});
 
+
+			keyboardInputComponent->onPressActions.insert({ "growShrink", [=](entities::EntityPtr entity) 
+			{
+				auto transform = entity->getComponent<components::Transform>();
+
+				if (transform->scale.x == 150.0f)
+				{
+					transform->scale.x += 50.0f;
+				} 
+				else
+				{
+					transform->scale.x = 150.f;
+				}
+
+			} });
 
 
 			//keyboardInputComponent->loadKeyBindings("../keyBindings.json");
@@ -270,11 +273,11 @@ namespace Ebony {
 			anotherEntity->addComponent(std::move(mouseComponent));
 			
 
-			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(0.0f, 0.0f), glm::vec2(3.0f, 1.0f), true, true);
 
-			auto collider = std::make_unique<components::Collider>(aabbcollider, 0);
-			auto transform = std::make_unique<components::Transform>(glm::vec2(400.0f, 500.0f), 0.0f, glm::vec2(3.0f, 1.0f));
 			auto sprite = std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White);
+			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(0.0f, 0.0f), glm::vec2(sprite->texture.Width, sprite->texture.Height), true, true);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, 0);
+			auto transform = std::make_unique<components::Transform>(glm::vec2(400.0f, 500.0f), 0.0f, glm::vec2(150.0f, 50.0f));
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
 

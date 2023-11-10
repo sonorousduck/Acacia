@@ -39,6 +39,7 @@ set(ComponentHeaders
 	src/components/rigidbodyComponent.hpp
 	src/components/transform.hpp
 	src/components/sprite.hpp
+	src/components/colliderSprite.hpp
 )
 
 set(SystemHeaders
@@ -54,6 +55,7 @@ set(SystemHeaders
 	src/systems/collisionSystem.hpp
 	src/systems/physicsSystem.hpp
 	src/systems/spriteRenderer.hpp
+	src/systems/colliderRenderer.hpp
 )
 
 set(SystemSources
@@ -69,6 +71,7 @@ set(SystemSources
 	src/systems/collisionSystem.cpp
 	src/systems/physicsSystem.cpp
 	src/systems/spriteRenderer.cpp
+	src/systems/colliderRenderer.cpp
 )
 
 set(EntityHeaders

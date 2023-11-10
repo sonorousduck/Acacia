@@ -16,7 +16,6 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
-
 			// Handle Keyboard first
 			if (entity->hasComponent<components::KeyboardInput>())
 			{
@@ -32,7 +31,7 @@ namespace systems
 					{
 						input->onPressActions[iter->second](entity);
 					}
-					if ((pressedState == Ebony::PressedState::PRESSED || pressedState == Ebony::PressedState::HELD) && input->onHeldActions.contains(iter->second))
+					if (pressedState == Ebony::PressedState::HELD && input->onHeldActions.contains(iter->second))
 					{
 						input->onHeldActions[iter->second](entity);
 					}
@@ -79,7 +78,7 @@ namespace systems
 
 							if ((pressedState == Ebony::PressedState::PRESSED || pressedState == Ebony::PressedState::RELEASED) && input->joystickActions.contains(iter->second))
 							{
-								input->joystickActions[iter->second](state.axes[iter->first]);
+								input->joystickActions[iter->second](entity, state.axes[iter->first]);
 							}
 						}
 
