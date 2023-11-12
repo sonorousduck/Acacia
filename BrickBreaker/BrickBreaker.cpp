@@ -22,6 +22,8 @@
 #include <systems/physicsSystem.hpp>
 #include <systems/spriteRenderer.hpp>
 #include <singletons/time.hpp>
+#include "components/ballComponent.hpp"
+#include "systems/ballSystem.hpp"
 
 
 namespace Ebony {
@@ -129,7 +131,7 @@ namespace Ebony {
 			audioSystem = systems::AudioSystem();
 			physicsSystem = systems::PhysicsSystem();
 			spriteRenderer = systems::SpriteRenderer();
-
+			ballSystem = systems::BallSystem();
 
 
 
@@ -175,9 +177,7 @@ namespace Ebony {
 					{
 						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloatMilli() * value, 0.0f });
 					}
-					
 				}
-				
 			} });
 
 
@@ -281,7 +281,8 @@ namespace Ebony {
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
 
-			anotherEntity->addComponent(std::move(collider));
+			anotherEntity->addComponent(std::move(collider)); 
+
 			anotherEntity->addComponent(std::move(transform));
 			anotherEntity->addComponent(std::move(sprite));
 			anotherEntity->addComponent(std::move(keyboardInputComponent));
@@ -292,6 +293,25 @@ namespace Ebony {
 			//keyboardInput->getComponent<components::ControllerInput>()->saveControllerBindings("../controllerBindings.json", "../joystickBindings.json");
 
 			AddEntity(anotherEntity);
+
+
+			entities::EntityPtr ballEntity = std::make_shared<entities::Entity>();
+
+			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(400.0f, 450.0f), 0.0f, glm::vec2(20.0f, 20.0f))));
+			auto spriteBall = std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("ball"), Ebony::Colors::White);
+			components::Subcollider ballAABBCollider = components::Subcollider(glm::vec2(0.0f, 0.0f), glm::vec2(spriteBall->texture.Width, spriteBall->texture.Height), true, true);
+			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, 0);
+			auto ball = std::make_unique<components::Ball>(200.0f, glm::vec2(0.5f, -0.5f), 1.0, false);
+
+			ballEntity->addComponent(std::move(ballCollider));
+			ballEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));
+			ballEntity->addComponent(std::move(spriteBall));
+			ballEntity->addComponent(std::move(ball));
+
+			AddEntity(ballEntity);
+
+
+
 
 
 			AddNewEntities();
@@ -350,6 +370,14 @@ namespace Ebony {
 				[this, elapsedTime]()
 				{
 					EbonyAudio::AudioManager::Update();
+				}
+			);
+
+			auto task5 = ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					ballSystem.Update(elapsedTime);
 				}
 			);
 
@@ -513,6 +541,7 @@ namespace Ebony {
 				fontRenderer.AddEntity(entity);
 				physicsSystem.AddEntity(entity);
 				spriteRenderer.AddEntity(entity);
+				ballSystem.AddEntity(entity);
 
 
 				allEntities[entity->getId()] = entity;
@@ -536,6 +565,7 @@ namespace Ebony {
 				fontRenderer.RemoveEntity(entityId);
 				physicsSystem.RemoveEntity(entityId);
 				spriteRenderer.RemoveEntity(entityId);
+				ballSystem.RemoveEntity(entityId);
 			}
 		}
 
@@ -557,6 +587,7 @@ namespace Ebony {
 		systems::FontRenderer fontRenderer;
 		systems::PhysicsSystem physicsSystem;
 		systems::SpriteRenderer spriteRenderer;
+		systems::BallSystem ballSystem;
 
 
 

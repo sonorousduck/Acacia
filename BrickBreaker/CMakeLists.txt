@@ -13,6 +13,20 @@ set(SOURCE_FILES
 	BrickBreaker.cpp
 )
 
+set(SystemHeaders
+  systems/ballSystem.hpp
+
+)
+
+set(SystemSources
+  systems/ballSystem.cpp
+)
+
+set(ComponentHeaders
+  components/ballComponent.hpp
+
+)
+
 
 set(src_files_imgui
   ../Graphics/ThirdParty/imgui/imgui.cpp  
@@ -28,9 +42,22 @@ set(src_files_imgui
 source_group("ThirdParty\\ImGui" FILES ${src_files_imgui})
 source_group("Main\\Headers" FILES ${HEADER_FILES})
 source_group("Main\\Source Files" FILES ${SOURCE_FILES})
+source_group("Systems\\Header Files" FILES ${SystemHeaders})
+source_group("Systems\\Source Files" FILES ${SystemSources})
+source_group("Components" FILES ${ComponentHeaders})
 
 
-add_executable(BrickBreaker ${HEADER_FILES} ${SOURCE_FILES} ${src_files_imgui} "../Graphics/thirdparty/glad.c")
+set (CODE_FILES
+  ${HEADER_FILES} 
+  ${SOURCE_FILES}
+  ${ComponentHeaders}
+  ${SystemHeaders}
+	${SystemSources}
+)
+
+
+
+add_executable(BrickBreaker ${CODE_FILES} ${src_files_imgui} "../Graphics/thirdparty/glad.c")
 set_property(TARGET BrickBreaker PROPERTY CXX_STANDARD 20)
 set_target_properties(BrickBreaker PROPERTIES LINKER_LANGUAGE CXX)
 

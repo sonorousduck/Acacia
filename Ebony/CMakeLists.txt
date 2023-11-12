@@ -120,7 +120,7 @@ set (SingletonSources
 
 source_group("Main\\Header Files" FILES ${HEADER_FILES})
 source_group("Main\\Source Files" FILES ${SOURCE_FILES})
-source_group("Components\\Header Files" FILES ${ComponentHeaders})
+source_group("Components" FILES ${ComponentHeaders})
 # source_group("Components\\Source Files" FILES ${ComponentSources})
 source_group("Systems\\Header Files" FILES ${SystemHeaders})
 source_group("Systems\\Source Files" FILES ${SystemSources})
