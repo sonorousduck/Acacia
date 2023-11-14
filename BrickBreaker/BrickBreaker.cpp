@@ -106,7 +106,7 @@ namespace Ebony {
 			Ebony::MouseInput::setupMouseInputs(graphics.window);
 
 
-			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_A, GLFW_KEY_D };
+			std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE };
 			keyInput.setKeysToMonitorInit(keys);
 
 			// All buttons defined here: https://www.glfw.org/docs/3.3/group__buttons.html
@@ -154,6 +154,7 @@ namespace Ebony {
 
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
+
 
 
 
@@ -248,6 +249,36 @@ namespace Ebony {
 			} });
 
 
+			entities::EntityPtr ballEntity = std::make_shared<entities::Entity>();
+
+			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(400.0f, 450.0f), 0.0f, glm::vec2(20.0f, 20.0f))));
+			auto spriteBall = std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("ball"), Ebony::Colors::White);
+			components::Subcollider ballAABBCollider = components::Subcollider(glm::vec2(0.0f, 0.0f), glm::vec2(spriteBall->texture.Width, spriteBall->texture.Height), true, true);
+			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, 0);
+			auto ball = std::make_unique<components::Ball>(200.0f, glm::vec2(0.5f, -0.5f), 1.0, true);
+
+			ballEntity->addComponent(std::move(ballCollider));
+			ballEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));
+			ballEntity->addComponent(std::move(spriteBall));
+			ballEntity->addComponent(std::move(ball));
+
+
+
+			std::unique_ptr<components::KeyboardInput> keyboardInputComponentBall = std::make_unique<components::KeyboardInput>();
+			keyboardInputComponentBall->bindings.insert({ GLFW_KEY_SPACE, "launchBall" });
+			
+			keyboardInputComponentBall->onReleaseActions.insert({ "launchBall", [=](entities::EntityPtr entity) 
+			{
+				auto ball = entity->getComponent<components::Ball>();
+				ball->isAttachedToPaddle = false;
+				double random_x = ball->random_double(-0.8, 0.8);
+				double random_y = ball->random_double(-0.8, 0.8);
+				ball->direction = glm::vec2(random_x, -abs(random_y));
+			} });
+
+			ballEntity->addComponent(std::move(keyboardInputComponentBall));
+			AddEntity(ballEntity);
+
 			//keyboardInputComponent->loadKeyBindings("../keyBindings.json");
 
 
@@ -293,25 +324,6 @@ namespace Ebony {
 			//keyboardInput->getComponent<components::ControllerInput>()->saveControllerBindings("../controllerBindings.json", "../joystickBindings.json");
 
 			AddEntity(anotherEntity);
-
-
-			entities::EntityPtr ballEntity = std::make_shared<entities::Entity>();
-
-			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(400.0f, 450.0f), 0.0f, glm::vec2(20.0f, 20.0f))));
-			auto spriteBall = std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("ball"), Ebony::Colors::White);
-			components::Subcollider ballAABBCollider = components::Subcollider(glm::vec2(0.0f, 0.0f), glm::vec2(spriteBall->texture.Width, spriteBall->texture.Height), true, true);
-			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, 0);
-			auto ball = std::make_unique<components::Ball>(200.0f, glm::vec2(0.5f, -0.5f), 1.0, false);
-
-			ballEntity->addComponent(std::move(ballCollider));
-			ballEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));
-			ballEntity->addComponent(std::move(spriteBall));
-			ballEntity->addComponent(std::move(ball));
-
-			AddEntity(ballEntity);
-
-
-
 
 
 			AddNewEntities();
