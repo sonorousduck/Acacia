@@ -326,7 +326,7 @@ namespace Ebony {
 
 			
 			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::ALL);
-			auto ball = std::make_unique<components::Ball>(200.0f, glm::vec2(0.5f, -0.5f), 1.0, anotherEntity, true);
+			auto ball = std::make_unique<components::Ball>(200.0f, glm::vec2(0.5f, -0.5f), 1, anotherEntity, true);
 
 			ballEntity->addComponent(std::move(ballCollider));
 			ballEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));
@@ -362,6 +362,8 @@ namespace Ebony {
 					auto brick = self->getComponent<components::Brick>();
 
 					brick->strength -= ball->strength;
+					
+					std::cout << brick->strength << std::endl;
 
 					if (brick->strength <= 0)
 					{
@@ -375,7 +377,7 @@ namespace Ebony {
 			brickEntity->addComponent(std::move(std::make_unique<components::Collider>(brickCollider, BrickBreaker::CollisionLayers::BRICK)));
 			brickEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));
 			brickEntity->addComponent(std::move(std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("blue_tile"), Ebony::Colors::White)));
-			brickEntity->addComponent(std::move(std::make_unique<components::Brick>(1, 10.0f)));
+			brickEntity->addComponent(std::move(std::make_unique<components::Brick>(3, 10.0f)));
 			AddEntity(brickEntity);
 
 			//keyboardInputComponent->loadKeyBindings("../keyBindings.json");
