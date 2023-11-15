@@ -23,7 +23,12 @@ void systems::BallSystem::updateImpl(std::chrono::microseconds elapsedTime)
 
 			rigidBody->addScriptedMovement(direction * speed);
 		}
+		else
+		{
+			auto paddleTransform = ball->paddle->getComponent<components::Transform>();
+			transform->position.x = paddleTransform->position.x + (paddleTransform->scale.x / 2);
 
+		}
 
 
 

@@ -27,6 +27,11 @@ set(ComponentHeaders
 
 )
 
+set(MiscHeaders
+  misc/collisionLayers.hpp
+
+)
+
 
 set(src_files_imgui
   ../Graphics/ThirdParty/imgui/imgui.cpp  
@@ -45,6 +50,7 @@ source_group("Main\\Source Files" FILES ${SOURCE_FILES})
 source_group("Systems\\Header Files" FILES ${SystemHeaders})
 source_group("Systems\\Source Files" FILES ${SystemSources})
 source_group("Components" FILES ${ComponentHeaders})
+source_group("Misc\\Header Files" FILES ${MiscHeaders})
 
 
 set (CODE_FILES
@@ -53,6 +59,7 @@ set (CODE_FILES
   ${ComponentHeaders}
   ${SystemHeaders}
 	${SystemSources}
+  ${MiscHeaders}
 )
 
 

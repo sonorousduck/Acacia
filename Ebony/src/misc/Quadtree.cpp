@@ -122,6 +122,14 @@ namespace Ebony
 
 	void Quadtree::Clear()
 	{
+		if (children.size() > 0)
+		{
+			for (std::uint8_t i = 0; i < 4; i++)
+			{
+				children[i].Clear();
+			}
+		}
+
 		entitiesInLevel.clear();
 		children.clear();
 	}

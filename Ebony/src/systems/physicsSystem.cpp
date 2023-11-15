@@ -77,17 +77,19 @@ namespace systems
 
 				for (std::uint16_t i = 0; i < possibleCollisions.size(); i++)
 				{
-					if (entity->getId() != possibleCollisions[i]->getId() && HasAABBCollision(entity, possibleCollisions[i]))
+
+					if (entity->getId() != possibleCollisions[i]->getId() && (collider->layer & possibleCollisions[i]->getComponent<components::Collider>()->layer) && HasAABBCollision(entity, possibleCollisions[i]))
 					{
 						if (!collider->preciseSubcolliderDetection)
 						{
 							// On Collision Start
 							if (!collider->aabbCollider.isCollidingLastFrame && !collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
 							{
+								//collider->aabbCollider.isCollidingLastFrame = true;
+
 								if (collider->aabbCollider.onCollisionStart.has_value())
 								{
 									collider->aabbCollider.onCollisionStart.value()(entity, possibleCollisions[i], elapsedTime);
-									collider->aabbCollider.isCollidingLastFrame = true;
 
 									collider->currentlyCollidingWith.insert(possibleCollisions[i]->getId());
 								}
@@ -105,11 +107,14 @@ namespace systems
 							// On Collision End
 							else
 							{
+								//collider->aabbCollider.isCollidingLastFrame = false;
+
 								if (collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
 								{
 									if (collider->aabbCollider.onCollisionEnd.has_value())
 									{
 										collider->aabbCollider.onCollisionEnd.value()(entity, possibleCollisions[i], elapsedTime);
+										collider->currentlyCollidingWith.erase(possibleCollisions[i]->getId());
 									}
 								}
 							}
@@ -123,7 +128,7 @@ namespace systems
 					}
 				}
 
-
+				possibleCollisions.clear();
 				// TODO: Check collisions between the place it was and where it is now
 
 			}
@@ -153,11 +158,12 @@ namespace systems
 		auto test3 = transform->position.y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - otherAabbCollider.getSize().y / 2.0f;
 
 
+
 		return !(
-			transform->position.x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + otherAabbCollider.getSize().x / 2.0f || // aabb left is greater than otherAbb right
-			transform->position.x + aabbCollider.getSize().x / 2.0f < otherTransform->position.x - otherAabbCollider.getSize().x / 2.0f || // aabb right is less than otherAbb left
-			transform->position.y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + otherAabbCollider.getSize().y / 2.0f || // aabb top is below otherAbb bottom
-			transform->position.y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - otherAabbCollider.getSize().y / 2.0f    // aabb bottom is above otherAbb top
+			transform->position.x + aabbCollider.getCenter().x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + otherAabbCollider.getCenter().x + otherAabbCollider.getSize().x / 2.0f || // aabb left is greater than otherAbb right
+			transform->position.x + aabbCollider.getCenter().x +  aabbCollider.getSize().x / 2.0f < otherTransform->position.x + otherAabbCollider.getCenter().x - otherAabbCollider.getSize().x / 2.0f || // aabb right is less than otherAbb left
+			transform->position.y + aabbCollider.getCenter().y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + otherAabbCollider.getCenter().y + otherAabbCollider.getSize().y / 2.0f || // aabb top is below otherAbb bottom
+			transform->position.y + aabbCollider.getCenter().y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y + otherAabbCollider.getCenter().y - otherAabbCollider.getSize().y / 2.0f    // aabb bottom is above otherAbb top
 			);
 	}
 
