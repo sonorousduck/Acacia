@@ -83,7 +83,7 @@ namespace systems
 						if (!collider->preciseSubcolliderDetection)
 						{
 							// On Collision Start
-							if (!collider->aabbCollider.isCollidingLastFrame && !collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
+							if (!collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
 							{
 								//collider->aabbCollider.isCollidingLastFrame = true;
 
@@ -114,8 +114,8 @@ namespace systems
 									if (collider->aabbCollider.onCollisionEnd.has_value())
 									{
 										collider->aabbCollider.onCollisionEnd.value()(entity, possibleCollisions[i], elapsedTime);
-										collider->currentlyCollidingWith.erase(possibleCollisions[i]->getId());
 									}
+									collider->currentlyCollidingWith.erase(possibleCollisions[i]->getId());
 								}
 							}
 						}
@@ -150,12 +150,12 @@ namespace systems
 		components::Transform* transform = entity->getComponent<components::Transform>();
 		components::Transform* otherTransform = otherEntity->getComponent<components::Transform>();
 
-		auto check = aabbCollider.getSize();
+		//auto check = aabbCollider.getSize();
 
-		auto test = transform->position.x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + otherAabbCollider.getSize().x / 2.0f;
-		auto test1 = transform->position.x + aabbCollider.getSize().x / 2.0f < otherTransform->position.x - otherAabbCollider.getSize().x / 2.0f;
-		auto test2 = transform->position.y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + otherAabbCollider.getSize().y / 2.0f;
-		auto test3 = transform->position.y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - otherAabbCollider.getSize().y / 2.0f;
+		//auto test = transform->position.x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + otherAabbCollider.getSize().x / 2.0f;
+		//auto test1 = transform->position.x + aabbCollider.getSize().x / 2.0f < otherTransform->position.x - otherAabbCollider.getSize().x / 2.0f;
+		//auto test2 = transform->position.y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + otherAabbCollider.getSize().y / 2.0f;
+		//auto test3 = transform->position.y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - otherAabbCollider.getSize().y / 2.0f;
 
 
 

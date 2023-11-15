@@ -24,11 +24,18 @@ set(SystemSources
 
 set(ComponentHeaders
   components/ballComponent.hpp
-
+  components/brickComponent.hpp
 )
 
 set(MiscHeaders
   misc/collisionLayers.hpp
+
+)
+
+set(Prefabs
+  prefabs/ballPrefab.hpp
+  prefabs/paddlePrefab.hpp
+  prefabs/wallPrefab.hpp
 
 )
 
@@ -51,7 +58,7 @@ source_group("Systems\\Header Files" FILES ${SystemHeaders})
 source_group("Systems\\Source Files" FILES ${SystemSources})
 source_group("Components" FILES ${ComponentHeaders})
 source_group("Misc\\Header Files" FILES ${MiscHeaders})
-
+source_group("Prefabs" FILES ${Prefabs})
 
 set (CODE_FILES
   ${HEADER_FILES} 
@@ -60,6 +67,7 @@ set (CODE_FILES
   ${SystemHeaders}
 	${SystemSources}
   ${MiscHeaders}
+  ${Prefabs}
 )
 
 

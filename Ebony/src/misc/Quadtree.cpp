@@ -33,11 +33,12 @@ namespace Ebony
 
 			glm::vec2 position = transform->position;
 			glm::vec2 colliderSize = collider->aabbCollider.getSize();
+			glm::vec2 center = collider->aabbCollider.getCenter();
 			
-			quadrants[i] = !(position.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f > children[i].position.x + children[i].size.x ||
-							 position.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f < children[i].position.x ||
-							 position.y + QUADTREE_MIDPOINT - colliderSize.y / 2.0f > children[i].position.y + children[i].size.y ||
-							 position.y + QUADTREE_MIDPOINT + colliderSize.y / 2.0f < children[i].position.y);
+			quadrants[i] = !(position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f > children[i].position.x + children[i].size.x ||
+							 position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f < children[i].position.x ||
+							 position.y + center.y + QUADTREE_MIDPOINT - colliderSize.y / 2.0f > children[i].position.y + children[i].size.y ||
+							 position.y + center.y + QUADTREE_MIDPOINT + colliderSize.y / 2.0f < children[i].position.y);
 
 		}
 
