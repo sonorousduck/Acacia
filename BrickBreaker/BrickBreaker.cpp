@@ -27,17 +27,23 @@
 #include "misc/collisionLayers.hpp"
 #include "components/brickComponent.hpp"
 
+#include "prefabs/ballPrefab.hpp"
+#include "prefabs/paddlePrefab.hpp"
+#include "prefabs/wallPrefab.hpp"
+#include "prefabs/brickPrefab.hpp"
+
+
 namespace Ebony {
 
-	class Sandbox : public Application
+	class BrickBreakerGame : public Application
 	{
 	public:
-		Sandbox()
+		BrickBreakerGame()
 		{
 			
 		}
 
-		~Sandbox()
+		~BrickBreakerGame()
 		{
 			graphics.Cleanup();
 		}
@@ -134,6 +140,7 @@ namespace Ebony {
 			physicsSystem = systems::PhysicsSystem();
 			spriteRenderer = systems::SpriteRenderer();
 			ballSystem = systems::BallSystem();
+			inputSystem = systems::InputSystem();
 
 
 
@@ -151,240 +158,36 @@ namespace Ebony {
             s.setMat4("projection", graphics.projection);
 			clearColor = Colors::CornflowerBlue;
 			
+			std::unique_ptr<components::ControllerInput> gameplayControllerInputComponent = std::make_unique<components::ControllerInput>(0);
+			std::unique_ptr<components::KeyboardInput> gameplayKeyboardInputComponent = std::make_unique<components::KeyboardInput>();
 
-			inputSystem = systems::InputSystem();
+			entities::EntityPtr gameplayEntity = std::make_shared<entities::Entity>();
 
-			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
-			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
+			gameplayControllerInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr) {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+			gameplayControllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_START, "quit" });
+			gameplayKeyboardInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr entity) {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
+			gameplayKeyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
 
+			gameplayEntity->addComponent(std::move(gameplayControllerInputComponent));
+			gameplayEntity->addComponent(std::move(gameplayKeyboardInputComponent));
 
+			AddEntity(gameplayEntity);
 
+			entities::EntityPtr paddleEntity = BrickBreaker::Paddle::Create(glm::vec2(400.0f, 500.0f), windowWidth);
+			AddEntity(paddleEntity);
 
-			controllerInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr) {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
-			controllerInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) {std::cout << "Circle was called (OnHeld)" << std::endl; } });
-			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=](entities::EntityPtr) {std::cout << "Triangle was called" << std::endl; } });
-			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, "paddleMovement" });
-
-			controllerInputComponent->joystickActions.insert({ "paddleMovement", [=](entities::EntityPtr entity, float value) {
-				if (abs(value) > 0.10)
-				{
-					auto rigidBody = entity->getComponent<components::RigidBody>();
-					auto transform = entity->getComponent<components::Transform>();
-					auto collider = entity->getComponent<components::Collider>();
-
-					if (value < 0 && transform->position.x > 0)
-					{
-						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloatMilli() * value, 0.0f });
-					}
-					else if (value > 0 && transform->position.x < windowWidth)
-					{
-						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloatMilli() * value, 0.0f });
-					}
-				}
-			} });
-
-
-
-
-			//controllerInputComponent->loadControllerBindings("../controllerBindings.json", "../joystickBindings.json");
-
-			//controllerInputComponent->controllerAxes.insert({ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, [=](float value) {
-			//if (value > -0.5)
-			//{
-			//	std::cout << "Right Trigger: " << value << std::endl;
-			//}
-			//} });
-
-
-			keyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
-			keyboardInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr entity) {glfwSetWindowShouldClose(graphics.window.getWindow(), true); } });
-			//keyboardInputComponent->bindings.insert({ GLFW_KEY_E, "print" });
-			keyboardInputComponent->onReleaseActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
-			keyboardInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
-
-			//keyboardInputComponent->bindings.insert({ GLFW_KEY_LEFT_SHIFT, "toggleRun" });
-			//keyboardInputComponent->onReleaseActions.insert({ "toggleRun", [=]() { isRunning = false; } });
-			//keyboardInputComponent->onPressActions.insert({ "toggleRun", [=]() { isRunning = true; } });
-			keyboardInputComponent->bindings.insert({ GLFW_KEY_A, "paddleLeft" });
-			keyboardInputComponent->bindings.insert({ GLFW_KEY_D, "paddleRight" });
-			keyboardInputComponent->bindings.insert({ GLFW_KEY_E, "growShrink" });
-
-			keyboardInputComponent->onHeldActions.insert({ "paddleLeft", [=](entities::EntityPtr entity)
-			{
-				auto rigidBody = entity->getComponent<components::RigidBody>();
-				auto transform = entity->getComponent<components::Transform>();
-				auto collider = entity->getComponent<components::Collider>();
-
-
-				if (transform->position.x > 0)
-				{
-					rigidBody->addScriptedMovement(glm::vec2{ -700.0f * Ebony::Time::GetDeltaTimeFloatMilli(), 0.0f });
-				}				
-			} });
-
-			keyboardInputComponent->onHeldActions.insert({ "paddleRight", [=](entities::EntityPtr entity)
-			{
-				auto rigidBody = entity->getComponent<components::RigidBody>();
-				auto transform = entity->getComponent<components::Transform>();
-				auto collider = entity->getComponent<components::Collider>();
-				if (transform->position.x + transform->scale.x < windowWidth)
-				{
-					rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloatMilli(), 0.0f });
-				}
-			} 
-			});
-
-
-			keyboardInputComponent->onPressActions.insert({ "growShrink", [=](entities::EntityPtr entity) 
-			{
-				auto transform = entity->getComponent<components::Transform>();
-
-				if (transform->scale.x == 150.0f)
-				{
-					transform->scale.x += 50.0f;
-				} 
-				else
-				{
-					transform->scale.x = 150.f;
-				}
-
-			} });
-
-
-
-			entities::EntityPtr anotherEntity = std::make_shared<entities::Entity>();
-			auto mouseComponent = std::make_unique<components::MouseInput>();
-
-			//mouseComponent->bindings.insert({ GLFW_MOUSE_BUTTON_1, "mousePress" });
-			mouseComponent->onPressActions.insert({ "mousePress", [=](entities::EntityPtr) {std::cout << "Button pressed!" << std::endl; } });
-			mouseComponent->onReleaseActions.insert({ "mousePress",[=](entities::EntityPtr) {std::cout << "Mouse Button released!" << std::endl; } });
-
-			mouseComponent->loadMouseBindings("../mouseBindings.json");
-			//mouseComponent->saveMouseBindings("../mouseBindings.json");
-			anotherEntity->addComponent(std::move(mouseComponent));
-
-
-
-			auto sprite = std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White);
-			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(75.0f, 25.0f), glm::vec2(150.0f, 50.0f), true, true);
-			auto collider = std::make_unique<components::Collider>(aabbcollider, BrickBreaker::CollisionLayers::PADDLE);
-			auto transform = std::make_unique<components::Transform>(glm::vec2(400.0f, 500.0f), 0.0f, glm::vec2(150.0f, 50.0f));
-			auto rigidbody = std::make_unique<components::RigidBody>();
-
-
-			anotherEntity->addComponent(std::move(collider));
-
-			anotherEntity->addComponent(std::move(transform));
-			anotherEntity->addComponent(std::move(sprite));
-			anotherEntity->addComponent(std::move(keyboardInputComponent));
-			anotherEntity->addComponent(std::move(controllerInputComponent));
-			anotherEntity->addComponent(std::move(rigidbody));
-
-
-			entities::EntityPtr ballEntity = std::make_shared<entities::Entity>();
-
-			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(400.0f, 475.0f), 0.0f, glm::vec2(20.0f, 20.0f))));
-			auto spriteBall = std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("ball"), Ebony::Colors::White);
-			components::Subcollider ballAABBCollider = components::Subcollider(glm::vec2(10.0f, 10.0f), glm::vec2(20.0f, 20.0f), true, true);
-			ballAABBCollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
-			{
-				BrickBreaker::CollisionLayers layer = BrickBreaker::CollisionLayers(other->getComponent<components::Collider>()->layer);
-
-				if (layer & BrickBreaker::CollisionLayers::WALL)
-				{
-					glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-					self->getComponent<components::Ball>()->direction = glm::vec2(-direction.x, direction.y);
-				}
-				else if (layer & BrickBreaker::CollisionLayers::TOP_WALL)
-				{
-					glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-					self->getComponent<components::Ball>()->direction = glm::vec2(direction.x, -direction.y);
-				}
-				else if (layer & BrickBreaker::CollisionLayers::PADDLE)
-				{
-					glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-					self->getComponent<components::Ball>()->direction = glm::vec2(direction.x, -direction.y);
-				}
-				else if (layer & BrickBreaker::CollisionLayers::BRICK)
-				{
-					glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-					self->getComponent<components::Ball>()->direction = glm::vec2(direction.x, -direction.y);
-				}
-			};
-			
-			//ballAABBCollider.onCollision = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
-			//	{
-			//		BrickBreaker::CollisionLayers layer = BrickBreaker::CollisionLayers(other->getComponent<components::Collider>()->layer);
-
-			//		if (layer & BrickBreaker::CollisionLayers::TOP_WALL)
-			//		{
-			//			glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-			//			self->getComponent<components::Ball>()->direction = glm::vec2(direction.x, -direction.y);
-			//		}
-			//	};
-
-
-			
-			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::ALL);
-			auto ball = std::make_unique<components::Ball>(200.0f, glm::vec2(0.5f, -0.5f), 1, anotherEntity, true);
-
-			ballEntity->addComponent(std::move(ballCollider));
-			ballEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));
-			ballEntity->addComponent(std::move(spriteBall));
-			ballEntity->addComponent(std::move(ball));
-			
-
-
-
-			std::unique_ptr<components::KeyboardInput> keyboardInputComponentBall = std::make_unique<components::KeyboardInput>();
-			keyboardInputComponentBall->bindings.insert({ GLFW_KEY_SPACE, "launchBall" });
-			
-			keyboardInputComponentBall->onReleaseActions.insert({ "launchBall", [=](entities::EntityPtr entity) 
-			{
-				auto ball = entity->getComponent<components::Ball>();
-				ball->isAttachedToPaddle = false;
-				double random_x = ball->random_double(-0.8, 0.8);
-				double random_y = ball->random_double(-0.8, 0.8);
-				ball->direction = glm::vec2(random_x, -abs(random_y));
-			} });
-
-			ballEntity->addComponent(std::move(keyboardInputComponentBall));
+			entities::EntityPtr ballEntity = BrickBreaker::Ball::Create(glm::vec2(400.0f, 475.0f), paddleEntity, true);
 			AddEntity(ballEntity);
 
-
-			entities::EntityPtr brickEntity = std::make_shared<entities::Entity>();
-			brickEntity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(30.0f, 15.0f), 0.0f, glm::vec2(35.0f, 20.0f))));
-			components::Subcollider brickCollider = components::Subcollider(glm::vec2(17.5f, 10.0f), glm::vec2(35.0f, 20.0f), true, true);
-
-			brickCollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+			for (std::uint8_t i = 0; i < 16; i++)
 			{
-					auto ball = other->getComponent<components::Ball>();
-					auto brick = self->getComponent<components::Brick>();
-
-					brick->strength -= ball->strength;
-					
-					std::cout << brick->strength << std::endl;
-
-					if (brick->strength <= 0)
-					{
-						// The brick should explode
-						std::cout << "BOOOM!" << std::endl;
-						RemoveEntity(self->getId());
-					}
-			};
+				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 15.0f, 35.0f, 20.0f, "blue_tile", 3, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); });
+				AddEntity(brickEntity);
+			}
 
 
-			brickEntity->addComponent(std::move(std::make_unique<components::Collider>(brickCollider, BrickBreaker::CollisionLayers::BRICK)));
-			brickEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));
-			brickEntity->addComponent(std::move(std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("blue_tile"), Ebony::Colors::White)));
-			brickEntity->addComponent(std::move(std::make_unique<components::Brick>(3, 10.0f)));
-			AddEntity(brickEntity);
 
 			//keyboardInputComponent->loadKeyBindings("../keyBindings.json");
-
-
-			//keyboardInput->addComponent(std::move(controllerInputComponent));
-			//keyboardInput->addComponent(std::move(keyboardInputComponent));
 
 			auto textComponent = std::make_unique<components::Text>(fps, Ebony::Colors::Black, Ebony::Colors::White, spriteFont);
 			testEntity->addComponent(std::move(textComponent));
@@ -397,40 +200,12 @@ namespace Ebony {
 			//keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keyBindings.json");
 			//keyboardInput->getComponent<components::ControllerInput>()->saveControllerBindings("../controllerBindings.json", "../joystickBindings.json");
 
-			AddEntity(anotherEntity);
 
 
-
-
-			// Add 3 walls
-			// Wall will have collider, transform, and rigidbody
-			entities::EntityPtr rightWall = std::make_shared<entities::Entity>();
-			rightWall->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(windowWidth - 5.0f, 0.0f), 0.0f, glm::vec2(10.0f, windowHeight))));
-			components::Subcollider rightWallCollider = components::Subcollider(glm::vec2(5.0f, windowHeight / 2), glm::vec2(10.0f, windowHeight), true, true);
-			rightWall->addComponent(std::move(std::make_unique<components::Collider>(rightWallCollider, BrickBreaker::CollisionLayers::WALL)));
-			rightWall->addComponent(std::move(std::make_unique<components::RigidBody>()));
-			rightWall->addComponent(std::move(std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("empty"), Ebony::Colors::White)));
-
-			entities::EntityPtr leftWall = std::make_shared<entities::Entity>();
-			leftWall->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(0.0f, 0.0f), 0.0f, glm::vec2(10.0f, windowHeight))));
-			components::Subcollider leftWallCollider = components::Subcollider(glm::vec2(5.0f, windowHeight / 2), glm::vec2(10.0f, windowHeight), true, true);
-			leftWall->addComponent(std::move(std::make_unique<components::Collider>(leftWallCollider, BrickBreaker::CollisionLayers::WALL)));
-			leftWall->addComponent(std::move(std::make_unique<components::RigidBody>()));
-			leftWall->addComponent(std::move(std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("empty"), Ebony::Colors::White)));
-
-			entities::EntityPtr topWall = std::make_shared<entities::Entity>();
-			topWall->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(0.0, 0.0f), 0.0f, glm::vec2(windowWidth, 10.0f))));
-			components::Subcollider topWallCollider = components::Subcollider(glm::vec2(windowWidth / 2, 5.0f), glm::vec2(windowWidth, 10.0f), true, true);
-			topWall->addComponent(std::move(std::make_unique<components::Collider>(topWallCollider, BrickBreaker::CollisionLayers::TOP_WALL)));
-			topWall->addComponent(std::move(std::make_unique<components::RigidBody>()));
-			topWall->addComponent(std::move(std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("empty"), Ebony::Colors::White)));
-
-			entities::EntityPtr bottomWall = std::make_shared<entities::Entity>();
-			bottomWall->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(0.0, windowHeight - 1.0f), 0.0f, glm::vec2(windowWidth, 5.0f))));
-			components::Subcollider bottomWallCollider = components::Subcollider(glm::vec2(windowWidth / 2, 15.0f), glm::vec2(windowWidth, 5.0f), true, true);
-			bottomWall->addComponent(std::move(std::make_unique<components::Collider>(bottomWallCollider, BrickBreaker::CollisionLayers::TOP_WALL)));
-			bottomWall->addComponent(std::move(std::make_unique<components::RigidBody>()));
-			bottomWall->addComponent(std::move(std::make_unique<components::Sprite>(ResourceManager::GetShader("default"), ResourceManager::GetTexture("empty"), Ebony::Colors::White)));
+			entities::EntityPtr rightWall = BrickBreaker::Wall::Create(static_cast<float>(windowWidth) - 5.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL);
+			entities::EntityPtr leftWall = BrickBreaker::Wall::Create(0.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL);
+			entities::EntityPtr topWall = BrickBreaker::Wall::Create(0.0f, 0.0f, static_cast<float>(windowWidth), 10.0f, BrickBreaker::CollisionLayers::TOP_WALL);
+			entities::EntityPtr bottomWall = BrickBreaker::Wall::Create(0.0f, static_cast<float>(windowHeight) - 1.0f, static_cast<float>(windowWidth), 5.0f, BrickBreaker::CollisionLayers::TOP_WALL);
 
 			AddEntity(rightWall);
 			AddEntity(leftWall);
@@ -746,7 +521,7 @@ namespace Ebony {
 
 	Ebony::Application* Ebony::CreateApplication()
 	{
-		return new Sandbox();
+		return new BrickBreakerGame();
 	}
 
 }

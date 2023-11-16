@@ -132,8 +132,6 @@ namespace systems
 				// TODO: Check collisions between the place it was and where it is now
 
 			}
-
-
 		}
 	}
 

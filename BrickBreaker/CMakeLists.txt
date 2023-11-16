@@ -36,7 +36,7 @@ set(Prefabs
   prefabs/ballPrefab.hpp
   prefabs/paddlePrefab.hpp
   prefabs/wallPrefab.hpp
-
+  prefabs/brickPrefab.hpp
 )
 
 

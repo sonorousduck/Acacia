@@ -16,5 +16,6 @@ namespace components
 
 		int strength;
 		float pointValue;
+		bool destroyed = false;
 	};
 }
