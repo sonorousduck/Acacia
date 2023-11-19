@@ -10,14 +10,14 @@ namespace Ebony
 		return elapsedTime;
 	}
 
-	float Time::GetDeltaTimeAsFloat()
+	float Time::GetDeltaTimeAsFloatMicroseconds()
 	{
 		return elapsedTime.count();
 	}
 
-	float Time::GetDeltaTimeFloatMilli()
+	float Time::GetDeltaTimeFloat()
 	{
-		return elapsedTime.count() / 1000.0f;
+		return elapsedTime.count() / 1000000.0f;
 	}
 
 	void Time::SetDeltaTime(std::chrono::microseconds newElapsedTime)

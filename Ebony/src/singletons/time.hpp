@@ -9,8 +9,8 @@ namespace Ebony
 	{
 	public:
 		static std::chrono::microseconds GetDeltaTime();
-		static float GetDeltaTimeAsFloat();
-		static float GetDeltaTimeFloatMilli();
+		static float GetDeltaTimeAsFloatMicroseconds();
+		static float GetDeltaTimeFloat();
 		static void SetDeltaTime(std::chrono::microseconds newElapsedTime);
 	private:
 		Time() {};

@@ -179,9 +179,21 @@ namespace Ebony {
 			entities::EntityPtr ballEntity = BrickBreaker::Ball::Create(glm::vec2(400.0f, 475.0f), paddleEntity, true);
 			AddEntity(ballEntity);
 
-			for (std::uint8_t i = 0; i < 16; i++)
+			for (std::uint8_t i = 0; i < 19; i++)
 			{
 				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 15.0f, 35.0f, 20.0f, "blue_tile", 3, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); });
+				AddEntity(brickEntity);
+			}
+
+			for (std::uint8_t i = 0; i < 19; i++)
+			{
+				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 40.0f, 35.0f, 20.0f, "green_tile", 3, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); });
+				AddEntity(brickEntity);
+			}
+
+			for (std::uint8_t i = 0; i < 19; i++)
+			{
+				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 65.0f, 35.0f, 20.0f, "red_tile", 3, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); });
 				AddEntity(brickEntity);
 			}
 
@@ -290,7 +302,10 @@ namespace Ebony {
 
 			// Declare predecessors here
 			//taskGraph->declarePredecessor(task1->getId(), task2->getId());
-			taskGraph->declarePredecessor(task5->getId(), task3->getId());
+			taskGraph->declarePredecessor(task3->getId(), task5->getId());
+			//taskGraph->declarePredecessor(task1->getId(), task3->getId());
+			//taskGraph->declarePredecessor(task5->getId(), task3->getId());
+
 
 			ThreadPool::instance().submitTaskGraph(taskGraph);
 			graphDone.wait();

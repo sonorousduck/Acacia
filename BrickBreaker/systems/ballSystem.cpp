@@ -1,4 +1,5 @@
 #include "ballSystem.hpp"
+#include <singletons/time.hpp>
 
 void systems::BallSystem::Update(std::chrono::microseconds elapsedTime)
 {
@@ -18,7 +19,7 @@ void systems::BallSystem::updateImpl(std::chrono::microseconds elapsedTime)
 		if (!ball->isAttachedToPaddle)
 		{
 			// Add forces for the physics engine to move the ball with
-			float speed = ball->speed;
+			float speed = ball->speed * Ebony::Time::GetDeltaTimeFloat();
 			glm::vec2 direction = ball->direction;
 
 			rigidBody->addScriptedMovement(direction * speed);
@@ -27,7 +28,6 @@ void systems::BallSystem::updateImpl(std::chrono::microseconds elapsedTime)
 		{
 			auto paddleTransform = ball->paddle->getComponent<components::Transform>();
 			transform->position.x = paddleTransform->position.x + (paddleTransform->scale.x / 2);
-
 		}
 
 

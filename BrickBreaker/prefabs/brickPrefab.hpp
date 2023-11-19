@@ -23,7 +23,7 @@ namespace BrickBreaker
 
 			entity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(transformWidth, transformHeight), 0.0f, glm::vec2(scaleX, scaleY))));
 			components::Subcollider subcollider = components::Subcollider(glm::vec2(scaleX / 2, scaleY / 2), glm::vec2(scaleX, scaleY), true, true);
-
+			
 			subcollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 					if (other->hasComponent<components::Ball>())
@@ -43,7 +43,7 @@ namespace BrickBreaker
 					}
 				};
 
-			entity->addComponent(std::move(std::make_unique<components::Collider>(subcollider, BrickBreaker::CollisionLayers::BRICK)));
+			entity->addComponent(std::move(std::make_unique<components::Collider>(subcollider, BrickBreaker::CollisionLayers::BRICK, false)));
 			entity->addComponent(std::move(std::make_unique<components::RigidBody>()));
 			entity->addComponent(std::move(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(tile_image), Ebony::Colors::White)));
 			entity->addComponent(std::move(std::make_unique<components::Brick>(brickStrength, pointValue)));

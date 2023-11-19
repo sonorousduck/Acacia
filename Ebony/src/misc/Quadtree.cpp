@@ -17,6 +17,10 @@ namespace Ebony
 		std::vector<bool> quadrants{};
 		quadrants.resize(4);
 
+		glm::vec2 position = transform->position;
+		glm::vec2 colliderSize = collider->aabbCollider.getSize();
+		glm::vec2 center = collider->aabbCollider.getCenter();
+
 		for (std::uint8_t i = 0; i < 4; i++)
 		{
 			if (children.size() - 1 < i || children.size() == 0)
@@ -24,21 +28,23 @@ namespace Ebony
 				quadrants.at(i) = false;
 				continue;
 			}
+			else
+			{
+				// This will always be a rectangle since the Quadtree is meant to check for AABB collisions only. Other collision detection will be handled
+				// by a more refined system. Quadtrees wouldn't help nor speed up that process at all
+
+				// Adapted from Dr. Mathias' lecture slides
+
+
+
+				quadrants[i] = !(position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f > children[i].position.x + children[i].size.x ||
+					position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f < children[i].position.x ||
+					position.y + center.y + QUADTREE_MIDPOINT - colliderSize.y / 2.0f > children[i].position.y + children[i].size.y ||
+					position.y + center.y + QUADTREE_MIDPOINT + colliderSize.y / 2.0f < children[i].position.y);
+			}
 
 			
-			// This will always be a rectangle since the Quadtree is meant to check for AABB collisions only. Other collision detection will be handled
-			// by a more refined system. Quadtrees wouldn't help nor speed up that process at all
-		
-			// Adapted from Dr. Mathias' lecture slides
 
-			glm::vec2 position = transform->position;
-			glm::vec2 colliderSize = collider->aabbCollider.getSize();
-			glm::vec2 center = collider->aabbCollider.getCenter();
-			
-			quadrants[i] = !(position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f > children[i].position.x + children[i].size.x ||
-							 position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f < children[i].position.x ||
-							 position.y + center.y + QUADTREE_MIDPOINT - colliderSize.y / 2.0f > children[i].position.y + children[i].size.y ||
-							 position.y + center.y + QUADTREE_MIDPOINT + colliderSize.y / 2.0f < children[i].position.y);
 
 		}
 
@@ -86,11 +92,11 @@ namespace Ebony
 		{
 			std::vector<bool> quadrants = GetQuadrants(entitiesInLevel[i]);
 
-			for (std::uint8_t i = 0; i < 4; i++)
+			for (std::uint8_t j = 0; j < 4; j++)
 			{
-				if (quadrants[i])
+				if (quadrants[j])
 				{
-					children[i].Insert(entitiesInLevel[i]);
+					children[j].Insert(entitiesInLevel[i]);
 				}
 			}
 		}
@@ -139,8 +145,25 @@ namespace Ebony
 	{
 		if (children.size() == 0)
 		{
+			auto entityLayer = entity->getComponent<components::Collider>()->layer;
+			
+			for (const auto& possibleCollision : entitiesInLevel)
+			{
+				auto result = possibleCollision->getComponent<components::Collider>();
+				
+				// If the layers match
+				if (result->layer & entityLayer)
+				{
+					// If it is not allowed to collide with its own layer and it is the same exact layer
+					if (result->collidesWithOwnLayer || result->layer != entityLayer)
+					{
+						results.insert(possibleCollision);
+					}
+				}
+			}
+
 			// Union the results with all entities in this level
-			results.insert(entitiesInLevel.begin(), entitiesInLevel.end());
+			//results.insert(entitiesInLevel.begin(), entitiesInLevel.end());
 		}
 
 		std::vector<bool> possibleRegions = GetQuadrants(entity);

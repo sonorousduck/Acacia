@@ -1,6 +1,7 @@
 #include "physicsSystem.hpp"
 #include <algorithm>
 #include <iostream>
+#include "../../../BrickBreaker/misc/collisionLayers.hpp"
 
 namespace systems
 {
@@ -57,7 +58,7 @@ namespace systems
 			{
 				// Apply scripted movements
 				auto scriptedMovement = rigidBody->getNextScriptedMovement();
-				transform->position += scriptedMovement * time_ms;
+				transform->position += scriptedMovement;
 			}
 			
 
@@ -68,62 +69,68 @@ namespace systems
 			{
 				auto collider = entity->getComponent<components::Collider>();
 
+				if (collider->layer == BrickBreaker::CollisionLayers::BRICK)
+				{
+					//std::cout << "Brick" << std::endl;
+				}
+
 				// Check for AABB collisions
 				std::vector<entities::EntityPtr> possibleCollisions = quadtree.GetPossibleCollisions(entity);
 				// TODO: Look into adding a static collisions
-
-				std::vector<std::uint16_t> currentCollisions{};
 
 
 				for (std::uint16_t i = 0; i < possibleCollisions.size(); i++)
 				{
 
-					if (entity->getId() != possibleCollisions[i]->getId() && (collider->layer & possibleCollisions[i]->getComponent<components::Collider>()->layer) && HasAABBCollision(entity, possibleCollisions[i]))
+					if (entity->getId() != possibleCollisions[i]->getId() && (collider->layer & possibleCollisions[i]->getComponent<components::Collider>()->layer))
 					{
-						if (!collider->preciseSubcolliderDetection)
+						if (HasAABBCollision(entity, possibleCollisions[i]))
 						{
-							// On Collision Start
-							if (!collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
+							if (!collider->preciseSubcolliderDetection)
 							{
-								//collider->aabbCollider.isCollidingLastFrame = true;
-
-								if (collider->aabbCollider.onCollisionStart.has_value())
+								// On Collision Start
+								if (!collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
 								{
-									collider->aabbCollider.onCollisionStart.value()(entity, possibleCollisions[i], elapsedTime);
+									//collider->aabbCollider.isCollidingLastFrame = true;
 
-									collider->currentlyCollidingWith.insert(possibleCollisions[i]->getId());
+									if (collider->aabbCollider.onCollisionStart.has_value())
+									{
+										collider->aabbCollider.onCollisionStart.value()(entity, possibleCollisions[i], elapsedTime);
+
+										collider->currentlyCollidingWith.insert(possibleCollisions[i]->getId());
+									}
+								}
+
+								// On Collision
+								else if (collider->aabbCollider.isCollidingLastFrame && collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
+								{
+									if (collider->aabbCollider.onCollision.has_value())
+									{
+										collider->aabbCollider.onCollision.value()(entity, possibleCollisions[i], elapsedTime);
+									}
+								}
+
+								// On Collision End
+								else
+								{
+									//collider->aabbCollider.isCollidingLastFrame = false;
+
+									if (collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
+									{
+										if (collider->aabbCollider.onCollisionEnd.has_value())
+										{
+											collider->aabbCollider.onCollisionEnd.value()(entity, possibleCollisions[i], elapsedTime);
+										}
+										collider->currentlyCollidingWith.erase(possibleCollisions[i]->getId());
+									}
 								}
 							}
-
-							// On Collision
-							else if (collider->aabbCollider.isCollidingLastFrame && collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
-							{
-								if (collider->aabbCollider.onCollision.has_value())
-								{
-									collider->aabbCollider.onCollision.value()(entity, possibleCollisions[i], elapsedTime);
-								}
-							}
-
-							// On Collision End
+							// If AABB collision, and preciseCollisions is enabled, check those as well for complete collision
 							else
 							{
-								//collider->aabbCollider.isCollidingLastFrame = false;
-
-								if (collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
-								{
-									if (collider->aabbCollider.onCollisionEnd.has_value())
-									{
-										collider->aabbCollider.onCollisionEnd.value()(entity, possibleCollisions[i], elapsedTime);
-									}
-									collider->currentlyCollidingWith.erase(possibleCollisions[i]->getId());
-								}
+								// Has collision will handle the Collision callbacks, since there will be specific callbacks for each subcollider
+								HasCollision(entity, possibleCollisions[i]);
 							}
-						}
-						// If AABB collision, and preciseCollisions is enabled, check those as well for complete collision
-						else
-						{
-							// Has collision will handle the Collision callbacks, since there will be specific callbacks for each subcollider
-							HasCollision(entity, possibleCollisions[i]);
 						}
 					}
 				}

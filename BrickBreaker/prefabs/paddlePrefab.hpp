@@ -36,11 +36,12 @@ namespace BrickBreaker
 
 					if (value < 0 && transform->position.x > 0)
 					{
-						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloatMilli() * value, 0.0f });
+						std::cout << Ebony::Time::GetDeltaTimeFloat() << std::endl;
+						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat() * value, 0.0f });
 					}
 					else if (value > 0 && transform->position.x + transform->scale.x < windowWidth)
 					{
-						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloatMilli() * value, 0.0f });
+						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat() * value, 0.0f });
 					}
 				}
 			} });
@@ -61,7 +62,7 @@ namespace BrickBreaker
 
 				if (transform->position.x > 0)
 				{
-					rigidBody->addScriptedMovement(glm::vec2{ -700.0f * Ebony::Time::GetDeltaTimeFloatMilli(), 0.0f });
+					rigidBody->addScriptedMovement(glm::vec2{ -700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
 				}
 			} });
 
@@ -72,7 +73,7 @@ namespace BrickBreaker
 				auto collider = entity->getComponent<components::Collider>();
 				if (transform->position.x + transform->scale.x < windowWidth)
 				{
-					rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloatMilli(), 0.0f });
+					rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
 				}
 			}
 				});
