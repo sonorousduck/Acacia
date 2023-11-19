@@ -43,7 +43,7 @@ namespace BrickBreaker
 					}
 				};
 
-			entity->addComponent(std::move(std::make_unique<components::Collider>(subcollider, BrickBreaker::CollisionLayers::BRICK, false)));
+			entity->addComponent(std::move(std::make_unique<components::Collider>(subcollider, BrickBreaker::CollisionLayers::BRICK, true, false)));
 			entity->addComponent(std::move(std::make_unique<components::RigidBody>()));
 			entity->addComponent(std::move(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(tile_image), Ebony::Colors::White)));
 			entity->addComponent(std::move(std::make_unique<components::Brick>(brickStrength, pointValue)));

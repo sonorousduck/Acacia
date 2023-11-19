@@ -110,7 +110,7 @@ namespace BrickBreaker
 
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White);
 			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(75.0f, 25.0f), glm::vec2(150.0f, 50.0f), true, true);
-			auto collider = std::make_unique<components::Collider>(aabbcollider, BrickBreaker::CollisionLayers::PADDLE);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, BrickBreaker::CollisionLayers::PADDLE, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(150.0f, 50.0f));
 			auto rigidbody = std::make_unique<components::RigidBody>();
 

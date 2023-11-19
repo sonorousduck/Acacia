@@ -411,10 +411,10 @@ namespace Ebony {
 				//int bufferHeight = 0;
 				//glfwGetFramebufferSize(graphics.window.getWindow(), &bufferWidth, &bufferHeight);
 				//glViewport(0, 0, bufferWidth, bufferHeight);
-				RemoveOldEntities();
 				ProcessInput(elapsedTime);
 				Update(elapsedTime);
 				Draw(elapsedTime);
+				RemoveOldEntities();
 				glfwPollEvents();
 				totalFrames++;
 			}
@@ -480,6 +480,8 @@ namespace Ebony {
 				spriteRenderer.RemoveEntity(entityId);
 				ballSystem.RemoveEntity(entityId);
 			}
+
+			removeEntities.clear();
 		}
 
 

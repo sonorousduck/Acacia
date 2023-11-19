@@ -21,7 +21,7 @@ namespace BrickBreaker
 
 			wall->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(transformWidth, transformHeight), 0.0f, glm::vec2(scaleX, scaleY))));
 			components::Subcollider wallCollider = components::Subcollider(glm::vec2(scaleX / 2, scaleY / 2), glm::vec2(scaleX, scaleY), true, true);
-			wall->addComponent(std::move(std::make_unique<components::Collider>(wallCollider, collisionType)));
+			wall->addComponent(std::move(std::make_unique<components::Collider>(wallCollider, collisionType, true, false)));
 			wall->addComponent(std::move(std::make_unique<components::RigidBody>()));
 			wall->addComponent(std::move(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("empty"), Ebony::Colors::White)));
 

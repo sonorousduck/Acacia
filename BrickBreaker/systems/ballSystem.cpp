@@ -21,8 +21,8 @@ void systems::BallSystem::updateImpl(std::chrono::microseconds elapsedTime)
 			// Add forces for the physics engine to move the ball with
 			float speed = ball->speed * Ebony::Time::GetDeltaTimeFloat();
 			glm::vec2 direction = ball->direction;
-
 			rigidBody->addScriptedMovement(direction * speed);
+			ball->directionChangedThisFrame = false;
 		}
 		else
 		{

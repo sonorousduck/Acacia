@@ -39,13 +39,104 @@ namespace BrickBreaker
 					}
 					else if (layer & BrickBreaker::CollisionLayers::PADDLE)
 					{
-						glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-						self->getComponent<components::Ball>()->direction = glm::vec2(direction.x, -direction.y);
+						components::Transform* paddleTransform = other->getComponent<components::Transform>();
+						components::Ball* ball = self->getComponent<components::Ball>();
+						// Collision with paddle should take into account a bit of randomness, velocity at which the paddle is moving, and where it hit on the paddle
+						glm::vec2 direction = self->getComponent<components::Transform>()->position - paddleTransform->position;
+						glm::vec2 bounceDirection = glm::abs(ball->direction);
+						glm::vec2 paddleScale = paddleTransform->scale;
+
+						float halfpoint = paddleScale.x / 2.0f;
+						float oneTenth = paddleScale.x / 10.0f;
+
+						bool isMiddlePaddle = direction.x >= halfpoint - 1.25 * oneTenth && direction.x <= halfpoint + 1.25 * oneTenth;
+
+
+						if (isMiddlePaddle)
+						{
+							bounceDirection.x = static_cast<float>(ball->random_double(-0.5, 0.5));
+							
+						}
+						else
+						{
+							// Check right side
+							if (direction.x >= halfpoint)
+							{
+								if (direction.x <= paddleScale.x - 1.5 * oneTenth) // Just right side
+								{
+									bounceDirection.x = 1.25;
+								}
+								else // Right Edge
+								{
+									bounceDirection.x = 1.75;
+
+								}
+							}
+							else
+							{
+								if (direction.x >= 1.5 * oneTenth) // Left Side
+								{
+									bounceDirection.x = -1.25;
+								}
+								else // Left Edge
+								{
+									bounceDirection.x = -1.75;
+								}
+							}	
+						}
+
+						bounceDirection.y = -bounceDirection.y;
+
+						//glm::vec2 direction = self->getComponent<components::Ball>()->direction;
+						self->getComponent<components::Ball>()->direction = bounceDirection;
 					}
 					else if (layer & BrickBreaker::CollisionLayers::BRICK)
 					{
-						glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-						self->getComponent<components::Ball>()->direction = glm::vec2(direction.x, -direction.y);
+						// Much more intricate collision system is needed.
+						// First, subtracting the one position from the other should give us everything we need
+						// If direction.y > 0 -> hit the bottom, else top
+						// If direction.x > 0 -> hit the right, else left
+						if (!self->getComponent<components::Ball>()->directionChangedThisFrame)
+						{
+							glm::vec2 direction = self->getComponent<components::Transform>()->position - other->getComponent<components::Transform>()->position;
+							glm::vec2 bounceDirection = self->getComponent<components::Ball>()->direction;
+							// We need to detect whether it hit the left or the right side
+							// Then detect whether it hit the top or the bottom side
+
+							// We hit "directly" the side, handle this specifically
+
+
+
+							if (direction.y <= 7 && direction.y >= -7)
+							{
+								std::cout << "This happened" << std::endl;
+								bounceDirection.x = -bounceDirection.x;
+
+							}
+							else
+							{
+								bounceDirection.y = -bounceDirection.y;
+							}
+
+
+
+
+							// If it hit the right side, then the x velocity should negative
+							//if (direction.x > 0)
+							//{
+							//	bounceDirection.x = -bounceDirection.x;
+							//}
+							// If ball hit the bottom size, y velocity should be negative
+
+
+							//self->getComponent<components::Ball>()->SetNewDirection(bounceDirection);
+
+							self->getComponent<components::Ball>()->direction = bounceDirection;
+							self->getComponent<components::Ball>()->directionChangedThisFrame = true;
+						}
+
+
+						
 					}
 				};
 
@@ -65,8 +156,8 @@ namespace BrickBreaker
 
 			ballEntity->addComponent(std::move(keyboardInputComponentBall));
 
-			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::ALL);
-			auto ballComponent = std::make_unique<components::Ball>(200.0f, glm::vec2(0.5f, -0.5f), 1, ball, isStuckToPaddle);
+			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::ALL, false);
+			auto ballComponent = std::make_unique<components::Ball>(600.0f, glm::vec2(0.5f, -0.5f), 1, ball, isStuckToPaddle);
 
 			ballEntity->addComponent(std::move(ballCollider));
 			ballEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));

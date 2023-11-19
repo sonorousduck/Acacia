@@ -12,16 +12,18 @@ namespace Ebony
 	class Quadtree
 	{
 	public:
-		Quadtree(float x, float y) : position(glm::vec2(0.0f)), currentLevel(0) 
+		Quadtree(float x, float y, bool isStaticTree) : position(glm::vec2(0.0f)), currentLevel(0), isStaticQuadtree(isStaticTree), shouldRebuild(true) // Set rebuild to true, though if it is not static, this won't do anything
 		{
 			this->size = glm::vec2(x, y);
 			children.reserve(4);
 		};
 
-		Quadtree(glm::vec2 position, glm::vec2 size, std::uint16_t currentLevel) :
+		Quadtree(glm::vec2 position, glm::vec2 size, std::uint16_t currentLevel, bool isStaticTree) :
 			position(position),
 			size(size),
-			currentLevel(currentLevel)
+			currentLevel(currentLevel),
+			isStaticQuadtree(isStaticTree),
+			shouldRebuild(true) // Set true for the first time
 		{
 			children.reserve(4);
 		}
@@ -43,6 +45,9 @@ namespace Ebony
 
 		glm::vec2 position;
 		glm::vec2 size;
+
+		bool isStaticQuadtree;
+		bool shouldRebuild;
 
 
 		std::vector<bool> GetQuadrants(entities::EntityPtr entity);

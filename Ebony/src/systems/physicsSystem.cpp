@@ -10,19 +10,40 @@ namespace systems
 		this->updateImpl(elapsedTime);
 	}
 
+	// Overriding the remove to check if 
+	void PhysicsSystem::RemoveEntity(entities::Entity::IdType entityId)
+	{
+		if (!staticQuadtree.shouldRebuild && m_Entities[entityId]->getComponent<components::Collider>()->isStatic)
+		{
+			staticQuadtree.shouldRebuild = true;
+			staticQuadtree.Clear();
+		}
+
+		m_Entities.erase(entityId);
+	}
+
 
 	void PhysicsSystem::updateImpl(std::chrono::microseconds elapsedTime)
 	{
-		//quadtree = Ebony::Quadtree(QUADTREE_SIZE, QUADTREE_SIZE);
 		quadtree.Clear();
 
 		for (auto& [id, entity] : m_Entities)
 		{
-			if (entity->hasComponent<components::Collider>())
+
+			if (!entity->getComponent<components::Collider>()->isStatic)
 			{
 				quadtree.Insert(entity);
 			}
+			else
+			{
+				if (staticQuadtree.shouldRebuild)
+				{
+					staticQuadtree.Insert(entity);
+				}
+			}
 		}
+
+		staticQuadtree.shouldRebuild = false;
 
 
 		for (auto& [id, entity] : m_Entities)
@@ -76,12 +97,14 @@ namespace systems
 
 				// Check for AABB collisions
 				std::vector<entities::EntityPtr> possibleCollisions = quadtree.GetPossibleCollisions(entity);
+				std::vector<entities::EntityPtr> staticPossibleCollisions = staticQuadtree.GetPossibleCollisions(entity);
+				possibleCollisions.insert(possibleCollisions.end(), std::make_move_iterator(staticPossibleCollisions.begin()), std::make_move_iterator(staticPossibleCollisions.end()));
+
 				// TODO: Look into adding a static collisions
 
 
 				for (std::uint16_t i = 0; i < possibleCollisions.size(); i++)
 				{
-
 					if (entity->getId() != possibleCollisions[i]->getId() && (collider->layer & possibleCollisions[i]->getComponent<components::Collider>()->layer))
 					{
 						if (HasAABBCollision(entity, possibleCollisions[i]))

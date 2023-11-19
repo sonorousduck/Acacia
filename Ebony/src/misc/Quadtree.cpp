@@ -35,20 +35,12 @@ namespace Ebony
 
 				// Adapted from Dr. Mathias' lecture slides
 
-
-
 				quadrants[i] = !(position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f > children[i].position.x + children[i].size.x ||
 					position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f < children[i].position.x ||
 					position.y + center.y + QUADTREE_MIDPOINT - colliderSize.y / 2.0f > children[i].position.y + children[i].size.y ||
 					position.y + center.y + QUADTREE_MIDPOINT + colliderSize.y / 2.0f < children[i].position.y);
 			}
-
-			
-
-
 		}
-
-
 
 		return quadrants;
 	}
@@ -56,6 +48,7 @@ namespace Ebony
 	void Quadtree::Insert(entities::EntityPtr entity)
 	{
 		std::vector<bool> quadrantsToInsert = GetQuadrants(entity);
+
 
 		// No children yet, we should just insert this
 		if (children.size() == 0)
@@ -82,10 +75,10 @@ namespace Ebony
 
 	void Quadtree::Split()
 	{
-		children.push_back(Quadtree(position, size / 2.0f, currentLevel + 1));
-		children.push_back(Quadtree(glm::vec2(position.x + size.x / 2.0f, position.y), size / 2.0f, currentLevel + 1));
-		children.push_back(Quadtree(glm::vec2(position.x, position.y + size.y / 2.0f), size / 2.0f, currentLevel + 1));
-		children.push_back(Quadtree(position + size / 2.0f, size / 2.0f, currentLevel + 1));
+		children.push_back(Quadtree(position, size / 2.0f, currentLevel + 1, isStaticQuadtree));
+		children.push_back(Quadtree(glm::vec2(position.x + size.x / 2.0f, position.y), size / 2.0f, currentLevel + 1, isStaticQuadtree));
+		children.push_back(Quadtree(glm::vec2(position.x, position.y + size.y / 2.0f), size / 2.0f, currentLevel + 1, isStaticQuadtree));
+		children.push_back(Quadtree(position + size / 2.0f, size / 2.0f, currentLevel + 1, isStaticQuadtree));
 
 
 		for (auto i = 0; i < entitiesInLevel.size(); i++)

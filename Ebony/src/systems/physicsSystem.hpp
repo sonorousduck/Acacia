@@ -16,6 +16,9 @@ namespace systems
 
 		void Update(std::chrono::microseconds elapsedTime) override;
 
+		void RemoveEntity(entities::Entity::IdType entityId) override;
+
+
 	protected:
 		virtual bool isInterested(const entities::EntityPtr& entity);
 
@@ -28,8 +31,10 @@ namespace systems
 		std::uint16_t QUADTREE_SIZE = PHYSICS_DIMENSION_HEIGHT * 10;
 		std::uint16_t QUADTREE_MIDPOINT = QUADTREE_SIZE / 2;
 
-		// To avoid warnings, this has to be initialized... Which is unfortunate since it just gets initialized again later
-		Ebony::Quadtree quadtree = Ebony::Quadtree(QUADTREE_SIZE, QUADTREE_SIZE);
+		Ebony::Quadtree quadtree = Ebony::Quadtree(QUADTREE_SIZE, QUADTREE_SIZE, false);
+		Ebony::Quadtree staticQuadtree = Ebony::Quadtree(QUADTREE_SIZE, QUADTREE_SIZE, true);
+
+		
 
 		bool HasCollision(const entities::EntityPtr entity, const entities::EntityPtr otherEntity);
 		bool HasAABBCollision(const entities::EntityPtr& entity, const entities::EntityPtr& otherEntity);
