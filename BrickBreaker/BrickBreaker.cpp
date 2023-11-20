@@ -187,13 +187,13 @@ namespace Ebony {
 
 			for (std::uint8_t i = 0; i < 19; i++)
 			{
-				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 40.0f, 35.0f, 20.0f, "green_tile", 3, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); });
+				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 40.0f, 35.0f, 20.0f, "green_tile", 2, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); });
 				AddEntity(brickEntity);
 			}
 
 			for (std::uint8_t i = 0; i < 19; i++)
 			{
-				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 65.0f, 35.0f, 20.0f, "red_tile", 3, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); });
+				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 65.0f, 35.0f, 20.0f, "red_tile", 1, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); });
 				AddEntity(brickEntity);
 			}
 

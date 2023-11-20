@@ -23,7 +23,7 @@ int main()
 
     std::shared_ptr<EbonyAudio::SoundStream> stream = EbonyAudio::AudioManager::PlaySound(sound, EbonyAudio::UI);
 
-    EbonyAudio::AudioManager::LoadMusic("song18", "Music/song18.wav");
+    EbonyAudio::AudioManager::LoadMusic("song18", "Music/cavethemeb4.ogg");
     std::shared_ptr<EbonyAudio::MusicSource> source = EbonyAudio::AudioManager::GetMusic("song18");
 
     EbonyAudio::AudioManager::PlayMusic(source);
