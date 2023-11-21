@@ -37,11 +37,11 @@ namespace Ebony
 		//static void LoadSoundEffectAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
 		//static void LoadMusicAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
 
-		static ALuint LoadSoundEffect(const std::string& file, const std::string& name);
+		static ALuint LoadSoundEffect(const std::string& file, const std::string& name, bool currentFolder = true, const std::string& otherFolder = "../Audio");
 		static void UnloadSoundEffect(const std::string& name);
 		static ALuint GetSoundEffect(const std::string& name);
 
-		static std::shared_ptr<EbonyAudio::MusicSource> LoadMusic(const std::string& file, const char* name);
+		static std::shared_ptr<EbonyAudio::MusicSource> LoadMusic(const std::string& file, const std::string& name, bool currentFolder = true, const std::string& otherFolder = "../Audio");
 		static void UnloadMusic(const char* name);
 		static std::shared_ptr<EbonyAudio::MusicSource> GetMusic(const char* name);
 		

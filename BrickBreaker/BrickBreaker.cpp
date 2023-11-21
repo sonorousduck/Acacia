@@ -51,8 +51,16 @@ namespace Ebony {
 		void LoadContent()
 		{
 
-			ResourceManager::LoadSoundEffect("wall", "../Audio/SoundEffects/wall.wav");
-			ResourceManager::LoadMusic("song18", "../Audio/Music/song18.wav");
+			ResourceManager::LoadSoundEffect("wall", "/SoundEffects/wall.wav", false);
+			ResourceManager::LoadSoundEffect("click", "click.wav");
+			ResourceManager::LoadSoundEffect("ball_bounce", "ball_bounce.wav");
+			ResourceManager::LoadSoundEffect("menu_select", "Menu Selection Click.wav");
+			ResourceManager::LoadSoundEffect("negative", "negative.wav");
+			ResourceManager::LoadSoundEffect("positive", "positive.wav");
+			ResourceManager::LoadSoundEffect("powerup", "Powerup.wav");
+			ResourceManager::LoadSoundEffect("save", "save.wav");
+
+			ResourceManager::LoadMusic("song18", "/Music/song18.wav", false);
 			ResourceManager::LoadTexture("textures/awesomeface.tx", "face", false);
 			ResourceManager::LoadTexture("blue_tile.tx", "blue_tile");
 			ResourceManager::LoadTexture("blue_broken_tile.tx", "blue_broken_tile");
@@ -275,6 +283,14 @@ namespace Ebony {
 				}
 			);
 
+			auto task6 = ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					audioSystem.Update(elapsedTime);
+				}
+			);
+
 			auto task4 = ThreadPool::instance().createTask(
 				taskGraph,
 				[this, elapsedTime]()
@@ -303,6 +319,7 @@ namespace Ebony {
 			// Declare predecessors here
 			//taskGraph->declarePredecessor(task1->getId(), task2->getId());
 			taskGraph->declarePredecessor(task3->getId(), task5->getId());
+			taskGraph->declarePredecessor(task6->getId(), task4->getId());
 			//taskGraph->declarePredecessor(task1->getId(), task3->getId());
 			//taskGraph->declarePredecessor(task5->getId(), task3->getId());
 

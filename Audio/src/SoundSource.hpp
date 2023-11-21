@@ -4,6 +4,13 @@
 #include <iostream>
 #include "AudioType.hpp"
 
+enum State
+{
+	Stopped = 1,
+	Playing = 2,
+	Paused = 4,
+};
+
 class SoundSource
 {
 public:

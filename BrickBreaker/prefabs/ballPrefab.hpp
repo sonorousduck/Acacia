@@ -20,12 +20,17 @@ namespace BrickBreaker
 		{
 			entities::EntityPtr ballEntity = std::make_shared<entities::Entity>();
 
+			ballEntity->addComponent(std::move(std::make_unique<components::SoundEffect>(EbonyAudio::ENTITY)));
+
+
 			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(beginningTransform, 0.0f, glm::vec2(20.0f, 20.0f))));
 			auto spriteBall = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("ball"), Ebony::Colors::White);
 			components::Subcollider ballAABBCollider = components::Subcollider(glm::vec2(10.0f, 10.0f), glm::vec2(20.0f, 20.0f), true, true);
 			ballAABBCollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 					BrickBreaker::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
+
+					ballEntity->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::ResourceManager::GetSoundEffect("ball_bounce"));
 
 					if (layer & BrickBreaker::CollisionLayers::WALL)
 					{
@@ -98,6 +103,9 @@ namespace BrickBreaker
 						// If direction.x > 0 -> hit the right, else left
 						if (!self->getComponent<components::Ball>()->directionChangedThisFrame)
 						{
+
+
+
 							glm::vec2 direction = self->getComponent<components::Transform>()->position - other->getComponent<components::Transform>()->position;
 							glm::vec2 bounceDirection = self->getComponent<components::Ball>()->direction;
 							// We need to detect whether it hit the left or the right side

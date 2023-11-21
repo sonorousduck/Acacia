@@ -40,6 +40,8 @@ set(ComponentHeaders
 	src/components/transform.hpp
 	src/components/sprite.hpp
 	src/components/colliderSprite.hpp
+	src/components/soundEffectComponent.hpp
+	src/components/musicComponent.hpp
 )
 
 set(SystemHeaders

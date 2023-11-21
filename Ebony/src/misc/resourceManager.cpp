@@ -235,7 +235,7 @@ namespace Ebony
 		return texture;
 	}
 
-	ALuint ResourceManager::LoadSoundEffect(const std::string& name, const std::string& filename)
+	ALuint ResourceManager::LoadSoundEffect(const std::string& name, const std::string& filename, bool currentFolder, const std::string& otherFolder)
 	{
 		ALenum err = 0, format = 0;
 		ALuint buffer = 0;
@@ -246,7 +246,14 @@ namespace Ebony
 		ALsizei num_bytes = 0;
 
 		/* Open the audio file and check that it's usable. */
-		sndfile = sf_open(filename.c_str(), SFM_READ, &sfinfo);
+		if (currentFolder)
+		{
+			sndfile = sf_open(("../BrickBreaker/soundeffects/" + filename).c_str(), SFM_READ, &sfinfo);
+		}
+		else
+		{
+			sndfile = sf_open((otherFolder + filename).c_str(), SFM_READ, &sfinfo);
+		}
 		if (!sndfile)
 		{
 			std::cerr << "Could not open audio in " << filename << ":\n" << sf_strerror(sndfile) << "\n";
@@ -342,7 +349,7 @@ namespace Ebony
 		return SoundEffectBuffers[name];
 	}
 
-	std::shared_ptr<EbonyAudio::MusicSource> ResourceManager::LoadMusic(const std::string& name, const char* filename)
+	std::shared_ptr<EbonyAudio::MusicSource> ResourceManager::LoadMusic(const std::string& name, const std::string& filename, bool currentFolder, const std::string& otherFolder)
 	{
 		std::shared_ptr<EbonyAudio::MusicSource> musicSource = std::make_shared<EbonyAudio::MusicSource>();
 		musicSource->fileFormat = EbonyAudio::AudioFileFormat::OTHER;
@@ -352,7 +359,15 @@ namespace Ebony
 
 		std::size_t frame_size{};
 
-		musicSource->sndFile = sf_open(filename, SFM_READ, &musicSource->sfInfo);
+		if (currentFolder)
+		{
+			musicSource->sndFile = sf_open(("../BrickBreaker/music/" + filename).c_str(), SFM_READ, &musicSource->sfInfo);
+		}
+		else
+		{
+			musicSource->sndFile = sf_open((otherFolder + filename).c_str(), SFM_READ, &musicSource->sfInfo);
+
+		}
 
 		if (!musicSource->sndFile)
 		{
