@@ -516,6 +516,17 @@ namespace Ebony
 		{
 			glDeleteTextures(1, &iter.second.ID);
 		}
+
+
+		for (auto it = SoundEffectBuffers.begin(); it != SoundEffectBuffers.end(); it++)
+		{
+			alDeleteBuffers(1, &it->second);
+		}
+
+		SoundEffectBuffers.clear();
+
+
+
 	}
 
 

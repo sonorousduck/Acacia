@@ -323,8 +323,36 @@ namespace EbonyAudio
 	    default:
 		    break;
 	    }
+    }
 
+    void EbonyAudio::AudioManager::StopAll()
+    {
+        for (auto& source : musicPlaying)
+        {
+            source->Stop();
+        }
+    }
 
+    void EbonyAudio::AudioManager::PauseAll()
+    {
+        for (auto& source : musicPlaying)
+        {
+            if (source->currentState & Playing)
+            {
+                source->Pause();
+            }
+        }
+    }
+
+    void EbonyAudio::AudioManager::UnpauseAll()
+    {
+        for (auto& source : musicPlaying)
+        {
+            if (source->currentState & Paused)
+            {
+                source->Resume();
+            }
+        }
     }
 
     void EbonyAudio::AudioManager::SetPlaylist()
@@ -357,7 +385,7 @@ namespace EbonyAudio
     {
         std::unique_ptr<SoundSource> speaker = GetSource(AudioType::MUSIC);
         musicSource->speaker = std::move(speaker);
-
+        musicSource->currentState = Ebony::Playing;
         //Clear any AL errors
         alGetError();
 

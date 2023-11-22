@@ -46,6 +46,7 @@ namespace Ebony {
 		~BrickBreakerGame()
 		{
 			graphics.Cleanup();
+			
 		}
 
 		void LoadContent()
@@ -59,6 +60,8 @@ namespace Ebony {
 			ResourceManager::LoadSoundEffect("positive", "positive.wav");
 			ResourceManager::LoadSoundEffect("powerup", "Powerup.wav");
 			ResourceManager::LoadSoundEffect("save", "save.wav");
+
+			ResourceManager::LoadMusic("cyberpunk_moonlight_sonata", "Cyberpunk-Moonlight-Sonata.wav");
 
 			ResourceManager::LoadMusic("song18", "/Music/song18.wav", false);
 			ResourceManager::LoadTexture("textures/awesomeface.tx", "face", false);
@@ -178,6 +181,10 @@ namespace Ebony {
 
 			gameplayEntity->addComponent(std::move(gameplayControllerInputComponent));
 			gameplayEntity->addComponent(std::move(gameplayKeyboardInputComponent));
+
+
+			gameplayEntity->addComponent(std::move(std::make_unique<components::Music>(ResourceManager::GetMusic("cyberpunk_moonlight_sonata"))));
+
 
 			AddEntity(gameplayEntity);
 
@@ -441,6 +448,10 @@ namespace Ebony {
 
 			glfwTerminate();
 			ThreadPool::terminate();
+			EbonyAudio::AudioManager::StopAll();
+			//EbonyAudio::AudioManager::Cleanup();
+			//ResourceManager::Clear();
+			//EbonyAudio::AudioManager::DeleteDevice();
 		}
 
 		void AddEntity(entities::EntityPtr entity)

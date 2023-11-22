@@ -42,12 +42,10 @@ namespace systems
 			{
 				auto music = entity->getComponent<components::Music>();
 
-				if (music->currentState & Stopped)
+				if (music->musicSource->currentState & Stopped)
 				{
-					EbonyAudio::AudioManager::PlayMusic()
+					EbonyAudio::AudioManager::PlayMusic(music->musicSource);
 				}
-
-
 			}
 
 

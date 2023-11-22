@@ -8,9 +8,19 @@
 //#include "../ThirdParty/minimp3/minimp3_ex.h"
 
 
+
+
 namespace Ebony
 {
 	class ResourceManager;
+	
+	enum State
+	{
+		Stopped = 1,
+		Playing = 2,
+		Paused = 4,
+	};
+
 }
 
 namespace EbonyAudio
@@ -51,6 +61,11 @@ namespace EbonyAudio
 
 		AudioFileFormat fileFormat;
 
+
+		Ebony::State currentState = Ebony::Stopped;
+		Ebony::State previousState = Ebony::Stopped;
+
+
 	private:
 
 
@@ -86,6 +101,7 @@ namespace EbonyAudio
 		//short pcm[MINIMP3_MAX_SAMPLES_PER_FRAME];
 		ALenum format{};
 
+		
 
 		//MusicSource() = delete;
 	};

@@ -38,6 +38,10 @@ namespace EbonyAudio
 		static void SetPlaylist();
 		static void PlayPlaylist();
 
+		static void StopAll();
+		static void PauseAll();
+		static void UnpauseAll();
+
 		static std::shared_ptr<SoundStream> PlaySound(ALuint sound, AudioType type);
 
 		static ALuint LoadSound(const std::string& name, const char* filename);
@@ -52,6 +56,24 @@ namespace EbonyAudio
 		//static void PauseAll();
 		//static void UnpauseAll();
 
+		static void Cleanup()
+		{
+			UISourcePool.CleanUp();
+			EntitySourcePool.CleanUp();
+			MusicSourcePool.CleanUp();
+
+			for (auto it = AudioManager::SoundEffectBuffers.begin(); it != AudioManager::SoundEffectBuffers.end(); it++)
+			{
+				alDeleteBuffers(1, &it->second);
+			}
+
+
+		}
+
+		static void DeleteDevice()
+		{
+			delete device;
+		}
 
 		~AudioManager()
 		{

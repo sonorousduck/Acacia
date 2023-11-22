@@ -288,16 +288,24 @@ EbonyAudio::MusicSource::MusicSource(uint32_t handle, bool loaded, float length)
 void EbonyAudio::MusicSource::Pause()
 {
 	alSourcePause(speaker->source);
+	this->previousState = this->currentState;
+	this->currentState = Ebony::Paused;
 }
 
 void EbonyAudio::MusicSource::Resume()
 {
 	alSourcePlay(speaker->source);
+
+	this->previousState = this->currentState;
+	this->currentState = Ebony::Playing;
+
 }
 
 void EbonyAudio::MusicSource::Stop()
 {
 	alSourceStop(speaker->source);
+	this->previousState = this->currentState;
+	this->currentState = Ebony::Stopped;
 }
 
 EbonyAudio::MusicSource::~MusicSource()

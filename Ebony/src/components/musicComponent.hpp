@@ -4,6 +4,7 @@
 
 #include "component.hpp"
 #include "../Audio/src/SoundSource.hpp"
+#include "../../../Audio/src/MusicSource.hpp"
 
 namespace components
 {
@@ -14,17 +15,21 @@ namespace components
 	{
 	public:
 		Music() :
-			previousState(Stopped),
-			currentState(Stopped),
 			previousSong(""),
 			currentSong(""),
 			repeat(false)
 		{}
 
-		State previousState;
-		State currentState;
+		Music(std::shared_ptr<EbonyAudio::MusicSource> musicSource) :
+			previousSong(""),
+			currentSong(""),
+			repeat(false),
+			musicSource(musicSource)
+		{}
+
 		std::string_view previousSong;
 		std::string_view currentSong;
+		std::shared_ptr<EbonyAudio::MusicSource> musicSource;
 		bool repeat;
 
 	};

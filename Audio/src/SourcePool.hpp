@@ -34,6 +34,8 @@ namespace EbonyAudio
 			{
 				sources[i]->Delete();
 			}
+
+			sources.clear();
 		}
 
 

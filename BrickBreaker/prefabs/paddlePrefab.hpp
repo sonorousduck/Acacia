@@ -91,7 +91,6 @@ namespace BrickBreaker
 				{
 					transform->scale.x = 150.f;
 				}
-
 			} });
 
 
