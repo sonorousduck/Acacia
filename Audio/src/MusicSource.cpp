@@ -389,8 +389,15 @@ std::pair<uint32_t, uint32_t> EbonyAudio::MusicSource::GetLengthMinutesAndSecond
 //	return result;
 //}
 
-void EbonyAudio::MusicSource::UpdateBufferStream()
+// Returns false if the song is completed
+bool EbonyAudio::MusicSource::UpdateBufferStream()
 {
+		if (currentState == Ebony::Completed)
+		{
+			return false;
+		}
+
+
 		ALint processed = 0, state = 0;
 
 		// Clear errors
@@ -431,20 +438,25 @@ void EbonyAudio::MusicSource::UpdateBufferStream()
 		}
 
 		/* Make sure the source hasn't underrun */
-		if (state != AL_PLAYING && state != AL_PAUSED)
+		if (state != AL_PLAYING && state != AL_PAUSED && currentState != Ebony::Completed)
 		{
 			ALint queued;
 
 			/* If no buffers are queued, playback is finished */
 			alGetSourcei(speaker->source, AL_BUFFERS_QUEUED, &queued);
 			if (queued == 0)
-				return;
+			{
+				currentState = Ebony::Completed;
+				return false;
+			}
 
 			alSourcePlay(speaker->source);
 			if (alGetError() != AL_NO_ERROR)
 			{
 				throw("error restarting music playback");
 			}
+
 		}
-	
+
+		return true;
 }

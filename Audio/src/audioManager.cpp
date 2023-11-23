@@ -78,10 +78,25 @@ namespace EbonyAudio
             sourcesPlaying.end()
         );
 
-        for (std::size_t i = 0; i < musicPlaying.size(); i++)
-        {
-            musicPlaying[i]->UpdateBufferStream();
-        }
+        
+
+        // If the song has finished playing, it will get removed from the music playing automatically, else, it will just update the buffer stream.
+        // This makes it hard to tell what is going on.
+        musicPlaying.erase(std::remove_if(musicPlaying.begin(), musicPlaying.end(), [](std::shared_ptr<MusicSource> musicSource)
+            {
+                return !musicSource->UpdateBufferStream();
+            }), musicPlaying.end());
+
+
+        //for (std::size_t i = 0; i < musicPlaying.size(); i++)
+        //{
+        //    bool hasNotCompleted = musicPlaying[i]->UpdateBufferStream();
+        //    if (!hasNotCompleted)
+        //    {
+        //        // Do something eventually with this
+        //        //std::cout << "Song has completed" << std::endl;
+        //    }
+        //}
 
 
 

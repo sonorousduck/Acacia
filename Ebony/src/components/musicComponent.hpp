@@ -29,6 +29,7 @@ namespace components
 
 		std::string_view previousSong;
 		std::string_view currentSong;
+		std::vector<std::string_view> songQueue = {};
 		std::shared_ptr<EbonyAudio::MusicSource> musicSource;
 		bool repeat;
 

@@ -19,6 +19,7 @@ namespace Ebony
 		Stopped = 1,
 		Playing = 2,
 		Paused = 4,
+		Completed = 8
 	};
 
 }
@@ -51,7 +52,7 @@ namespace EbonyAudio
 		void SetPitch(float pitch);
 		void SetSpatial(bool spatial);
 		void SetLoop(bool loop);
-		void UpdateBufferStream();
+		bool UpdateBufferStream();
 
 		static ALenum GetOpenALFormat(uint32_t channels);
 
@@ -67,8 +68,6 @@ namespace EbonyAudio
 
 
 	private:
-
-
 		uint32_t m_BufferHandle = 0;
 		bool m_Loaded = false;
 		bool m_Spatial = false;

@@ -62,6 +62,7 @@ namespace Ebony {
 			ResourceManager::LoadSoundEffect("save", "save.wav");
 
 			ResourceManager::LoadMusic("cyberpunk_moonlight_sonata", "Cyberpunk-Moonlight-Sonata.wav");
+			ResourceManager::LoadMusic("cyberpunk_moonlight_sonata_short", "Cyberpunk-Moonlight-Sonata-editted.wav");
 
 			ResourceManager::LoadMusic("song18", "/Music/song18.wav", false);
 			ResourceManager::LoadTexture("textures/awesomeface.tx", "face", false);
@@ -183,7 +184,7 @@ namespace Ebony {
 			gameplayEntity->addComponent(std::move(gameplayKeyboardInputComponent));
 
 
-			gameplayEntity->addComponent(std::move(std::make_unique<components::Music>(ResourceManager::GetMusic("cyberpunk_moonlight_sonata"))));
+			gameplayEntity->addComponent(std::move(std::make_unique<components::Music>(ResourceManager::GetMusic("cyberpunk_moonlight_sonata_short"))));
 
 
 			AddEntity(gameplayEntity);
