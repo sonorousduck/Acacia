@@ -25,6 +25,7 @@ set(SystemSources
 set(ComponentHeaders
   components/ballComponent.hpp
   components/brickComponent.hpp
+  components/powerupComponent.hpp
 )
 
 set(MiscHeaders
@@ -37,6 +38,8 @@ set(Prefabs
   prefabs/paddlePrefab.hpp
   prefabs/wallPrefab.hpp
   prefabs/brickPrefab.hpp
+  prefabs/powerupPrefab.hpp
+
 )
 
 

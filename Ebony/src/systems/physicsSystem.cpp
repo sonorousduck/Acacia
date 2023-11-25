@@ -50,13 +50,18 @@ namespace systems
 		{
 			auto rigidBody = entity->getComponent<components::RigidBody>();
 			auto transform = entity->getComponent<components::Transform>();
+			transform->previousPosition = transform->position;
+			auto time_ms = elapsedTime.count() / 1000000.0f;
 
 			// Update physics
 			// TODO: Update gravity, and other things
 			if (rigidBody->usesGravity)
 			{
-				// TODO: Do something
+				rigidBody->setAcceleration(rigidBody->getAcceleration() + (glm::vec2(0.0f, GRAVITY_CONSTANT) * time_ms * time_ms));
 			}
+
+			transform->position = transform->position + rigidBody->getVelocity() * time_ms + rigidBody->getAcceleration() * time_ms * time_ms;
+			
 
 			// Apply forces
 			while (rigidBody->getForceLength() > 0)
@@ -65,11 +70,8 @@ namespace systems
 			}
 
 
-			auto time_ms = elapsedTime.count() / 1000000.0f;
 
 			// Apply velocity and acceleration to object position
-			transform->previousPosition = transform->position;
-			transform->position = transform->position + rigidBody->getVelocity() * time_ms + rigidBody->getAcceleration() * time_ms * time_ms;
 
 			// Update velocity as well
 			rigidBody->setVelocity(rigidBody->getVelocity() + rigidBody->getAcceleration() * time_ms);
@@ -90,7 +92,7 @@ namespace systems
 			{
 				auto collider = entity->getComponent<components::Collider>();
 
-				if (collider->layer == BrickBreaker::CollisionLayers::BRICK)
+				if (collider->layer & BrickBreaker::CollisionLayers::BRICK)
 				{
 					//std::cout << "Brick" << std::endl;
 				}

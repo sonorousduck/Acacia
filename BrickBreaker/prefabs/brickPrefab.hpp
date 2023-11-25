@@ -9,14 +9,14 @@
 #include <components/rigidbodyComponent.hpp>
 #include "../components/ballComponent.hpp"
 #include "../components/brickComponent.hpp"
-
+#include "../prefabs/powerupPrefab.hpp"
 
 namespace BrickBreaker
 {
 	class Brick
 	{
 	public:
-		static entities::EntityPtr Create(float transformWidth, float transformHeight, float scaleX, float scaleY, const char* tile_image, int brickStrength, float pointValue, std::function<void(entities::Entity::IdType)> RemoveEntity)
+		static entities::EntityPtr Create(float transformWidth, float transformHeight, float scaleX, float scaleY, const char* tile_image, int brickStrength, float pointValue, std::function<void(entities::Entity::IdType)> RemoveEntity, std::function<void(entities::EntityPtr)> AddEntity)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
@@ -39,6 +39,10 @@ namespace BrickBreaker
 							std::cout << "BOOOM!" << std::endl;
 							brick->destroyed = true;
 							RemoveEntity(self->getId());
+
+
+							// Spawn powerup entity
+							AddEntity(Powerup::Create(glm::vec2(transformWidth, transformHeight), Powerups::LARGER_PADDLE, "bigger_paddle_powerup", RemoveEntity));
 						}
 					}
 				};

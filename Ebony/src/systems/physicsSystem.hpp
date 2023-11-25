@@ -27,7 +27,7 @@ namespace systems
 	private:
 		std::uint16_t PHYSICS_DIMENSION_WIDTH = 1000;
 		std::uint16_t PHYSICS_DIMENSION_HEIGHT = 1000;
-		float GRAVITY_CONSTANT = -9.81f;
+		float GRAVITY_CONSTANT = 9810.0f;
 		std::uint16_t QUADTREE_SIZE = PHYSICS_DIMENSION_HEIGHT * 10;
 		std::uint16_t QUADTREE_MIDPOINT = QUADTREE_SIZE / 2;
 

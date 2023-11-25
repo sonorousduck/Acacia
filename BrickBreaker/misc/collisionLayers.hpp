@@ -10,7 +10,7 @@ namespace BrickBreaker
 		TOP_WALL = 2,
 		BRICK = 4,
 		PADDLE = 8,
-		ALL = 15,
-		TEST = 16
+		//ALL = 15,
+		POWERUP = 16
 	};
 }
