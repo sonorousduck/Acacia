@@ -10,6 +10,7 @@
 #include "../components/ballComponent.hpp"
 #include "../components/brickComponent.hpp"
 #include "../prefabs/powerupPrefab.hpp"
+#include "../singletons/GameManager.hpp"
 
 namespace BrickBreaker
 {
@@ -37,6 +38,9 @@ namespace BrickBreaker
 						{
 							// The brick should explode
 							std::cout << "BOOOM!" << std::endl;
+							GameManager::addPoints(brick->pointValue);
+
+
 							brick->destroyed = true;
 							RemoveEntity(self->getId());
 

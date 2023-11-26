@@ -42,6 +42,16 @@ set(Prefabs
 
 )
 
+set(SingletonHeaders
+  singletons/GameManager.hpp
+  
+)
+
+
+set(SingletonSources
+  singletons/GameManager.cpp
+  
+)
 
 set(src_files_imgui
   ../Graphics/ThirdParty/imgui/imgui.cpp  
@@ -62,6 +72,9 @@ source_group("Systems\\Source Files" FILES ${SystemSources})
 source_group("Components" FILES ${ComponentHeaders})
 source_group("Misc\\Header Files" FILES ${MiscHeaders})
 source_group("Prefabs" FILES ${Prefabs})
+source_group("Singletons\\Header Files" FILES ${SingletonHeaders})
+source_group("Singletons\\Source Files" FILES ${SingletonSources})
+
 
 set (CODE_FILES
   ${HEADER_FILES} 
@@ -71,6 +84,9 @@ set (CODE_FILES
 	${SystemSources}
   ${MiscHeaders}
   ${Prefabs}
+  ${SingletonHeaders}
+  ${SingletonSources}
+
 )
 
 
