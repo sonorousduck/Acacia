@@ -31,7 +31,9 @@
 #include "prefabs/paddlePrefab.hpp"
 #include "prefabs/wallPrefab.hpp"
 #include "prefabs/brickPrefab.hpp"
-
+#include "prefabs/lifePrefab.hpp"
+#include "prefabs/scorePrefab.hpp"
+#include "systems/lifePointSystem.hpp"
 
 namespace Ebony {
 
@@ -153,7 +155,7 @@ namespace Ebony {
 			spriteRenderer = systems::SpriteRenderer();
 			ballSystem = systems::BallSystem();
 			inputSystem = systems::InputSystem();
-
+			lifePointSystem = systems::LifePointSystem();
 
 
             Shader& s = ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
@@ -184,7 +186,7 @@ namespace Ebony {
 			gameplayEntity->addComponent(std::move(gameplayKeyboardInputComponent));
 
 
-			gameplayEntity->addComponent(std::move(std::make_unique<components::Music>(ResourceManager::GetMusic("cyberpunk_moonlight_sonata_short"))));
+			//gameplayEntity->addComponent(std::move(std::make_unique<components::Music>(ResourceManager::GetMusic("cyberpunk_moonlight_sonata_short"))));
 
 
 			AddEntity(gameplayEntity);
@@ -197,22 +199,29 @@ namespace Ebony {
 
 			for (std::uint8_t i = 0; i < 19; i++)
 			{
-				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 15.0f, 35.0f, 20.0f, "blue_tile", 3, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); }, [=](entities::EntityPtr entity) {AddEntity(entity); });
+				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 15.0f, 35.0f, 20.0f, "blue_tile", 3, 30, [=](entities::Entity::IdType id) {RemoveEntity(id); }, [=](entities::EntityPtr entity) {AddEntity(entity); });
 				AddEntity(brickEntity);
 			}
 
 			for (std::uint8_t i = 0; i < 19; i++)
 			{
-				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 40.0f, 35.0f, 20.0f, "green_tile", 2, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); }, [=](entities::EntityPtr entity) {AddEntity(entity); });
+				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 40.0f, 35.0f, 20.0f, "green_tile", 2, 20, [=](entities::Entity::IdType id) {RemoveEntity(id); }, [=](entities::EntityPtr entity) {AddEntity(entity); });
 				AddEntity(brickEntity);
 			}
 
 			for (std::uint8_t i = 0; i < 19; i++)
 			{
-				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 65.0f, 35.0f, 20.0f, "red_tile", 1, 10.0f, [=](entities::Entity::IdType id) {RemoveEntity(id); }, [=](entities::EntityPtr entity) {AddEntity(entity); });
+				entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 65.0f, 35.0f, 20.0f, "red_tile", 1, 10, [=](entities::Entity::IdType id) {RemoveEntity(id); }, [=](entities::EntityPtr entity) {AddEntity(entity); });
 				AddEntity(brickEntity);
 			}
 
+
+			//entities::EntityPtr lifeDisplay = BrickBreaker::LifePrefab::Create(glm::vec2(25.0f, 25.0f), spriteFont);
+			entities::EntityPtr scoreDisplay = BrickBreaker::ScorePrefab::Create(glm::vec2(windowWidth - 150.0f, 25.0f), spriteFont);
+
+
+			//AddEntity(lifeDisplay);
+			AddEntity(scoreDisplay);
 
 
 			//keyboardInputComponent->loadKeyBindings("../keyBindings.json");
@@ -315,6 +324,14 @@ namespace Ebony {
 				}
 			);
 
+
+			auto task7 = ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					lifePointSystem.Update(elapsedTime);
+				}
+			);
 			
 
 			//auto task3 = ThreadPool::instance().createTask(
@@ -485,7 +502,7 @@ namespace Ebony {
 				physicsSystem.AddEntity(entity);
 				spriteRenderer.AddEntity(entity);
 				ballSystem.AddEntity(entity);
-
+				lifePointSystem.AddEntity(entity);
 
 				allEntities[entity->getId()] = entity;
 			}
@@ -509,6 +526,7 @@ namespace Ebony {
 				physicsSystem.RemoveEntity(entityId);
 				spriteRenderer.RemoveEntity(entityId);
 				ballSystem.RemoveEntity(entityId);
+				lifePointSystem.RemoveEntity(entityId);
 			}
 
 			removeEntities.clear();
@@ -533,6 +551,7 @@ namespace Ebony {
 		systems::PhysicsSystem physicsSystem;
 		systems::SpriteRenderer spriteRenderer;
 		systems::BallSystem ballSystem;
+		systems::LifePointSystem lifePointSystem;
 
 
 

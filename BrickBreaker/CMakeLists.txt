@@ -15,23 +15,30 @@ set(SOURCE_FILES
 
 set(SystemHeaders
   systems/ballSystem.hpp
+  systems/lifePointSystem.hpp
 
 )
 
 set(SystemSources
   systems/ballSystem.cpp
+  systems/lifePointSystem.cpp
 )
 
 set(ComponentHeaders
   components/ballComponent.hpp
   components/brickComponent.hpp
   components/powerupComponent.hpp
+  components/lifeComponent.hpp
+  components/scoreComponent.hpp
 )
 
 set(MiscHeaders
   misc/collisionLayers.hpp
-
 )
+
+set(MiscSources
+)
+
 
 set(Prefabs
   prefabs/ballPrefab.hpp
@@ -39,7 +46,9 @@ set(Prefabs
   prefabs/wallPrefab.hpp
   prefabs/brickPrefab.hpp
   prefabs/powerupPrefab.hpp
-
+  prefabs/lifeDisplayPrefab.hpp
+  prefabs/lifePrefab.hpp
+  prefabs/scorePrefab.hpp
 )
 
 set(SingletonHeaders
@@ -71,6 +80,7 @@ source_group("Systems\\Header Files" FILES ${SystemHeaders})
 source_group("Systems\\Source Files" FILES ${SystemSources})
 source_group("Components" FILES ${ComponentHeaders})
 source_group("Misc\\Header Files" FILES ${MiscHeaders})
+source_group("Misc\\Sources Files" FILES ${MiscSources})
 source_group("Prefabs" FILES ${Prefabs})
 source_group("Singletons\\Header Files" FILES ${SingletonHeaders})
 source_group("Singletons\\Source Files" FILES ${SingletonSources})
@@ -83,6 +93,7 @@ set (CODE_FILES
   ${SystemHeaders}
 	${SystemSources}
   ${MiscHeaders}
+  ${MiscSources}
   ${Prefabs}
   ${SingletonHeaders}
   ${SingletonSources}

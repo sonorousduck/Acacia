@@ -9,7 +9,6 @@
 #include "../components/ballComponent.hpp"
 #include <components/rigidbodyComponent.hpp>
 #include <components/keyboardComponent.hpp>
-#include <window.hpp>
 
 namespace BrickBreaker
 {
