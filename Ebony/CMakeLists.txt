@@ -87,6 +87,11 @@ set(EntitySources
 
 )
 
+set(ScreenHeaders
+	src/screens/screen.hpp
+)
+
+
 set(MiscHeaders
 	src/misc/ThreadPool.hpp
 	src/misc/Task.hpp
@@ -132,7 +137,7 @@ source_group("Misc\\Header Files" FILES ${MiscHeaders})
 source_group("Misc\\Source Files" FILES ${MiscSources})
 source_group("Singleton\\Header Files" FILES ${SingletonHeaders})
 source_group("Singleton\\Source Files" FILES ${SingletonSources})
-
+source_group("Screens" FILES ${ScreenHeaders})
 
 source_group("Main\\Event Files" FILES ${HEADER_EVENTS})
 
@@ -151,6 +156,7 @@ set(CODE_FILES
 	${MiscSources}
 	${SingletonHeaders}
 	${SingletonSources}
+	${ScreenHeaders}
 )
 
 

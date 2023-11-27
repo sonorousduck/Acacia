@@ -34,6 +34,7 @@ set(ComponentHeaders
 
 set(MiscHeaders
   misc/collisionLayers.hpp
+  misc/screenEnums.hpp
 )
 
 set(MiscSources
@@ -62,6 +63,17 @@ set(SingletonSources
   
 )
 
+set(Screens
+  screens/controlsScreen.cpp
+  screens/gameOverScreen.cpp
+  screens/gameScreen.cpp
+  screens/highScoreScreen.cpp
+  screens/mainScreen.cpp
+  screens/optionsScreen.cpp
+  screens/pauseScreen.cpp
+  screens/quitScreen.cpp
+)
+
 set(src_files_imgui
   ../Graphics/ThirdParty/imgui/imgui.cpp  
   ../Graphics/ThirdParty/imgui/imgui_draw.cpp
@@ -84,7 +96,7 @@ source_group("Misc\\Sources Files" FILES ${MiscSources})
 source_group("Prefabs" FILES ${Prefabs})
 source_group("Singletons\\Header Files" FILES ${SingletonHeaders})
 source_group("Singletons\\Source Files" FILES ${SingletonSources})
-
+source_group("Screens" FILES ${ScreenHeaders} ${ScreenSources})
 
 set (CODE_FILES
   ${HEADER_FILES} 
