@@ -19,18 +19,18 @@ namespace Ebony {
 
 		~BrickBreakerGame()
 		{
-			graphics->Cleanup();
+			Ebony::Graphics2d::Cleanup();
 		}
 			
 		void Init() override
 		{
 			// Set up graphics here
-			graphics = std::make_shared<Graphics2d>();
-			graphics->Initialize("Brick Breaker", windowWidth, windowHeight);
+			Ebony::Graphics2d::Initialize("Brick Breaker", windowWidth, windowHeight);
 			EbonyAudio::AudioManager::Init();
 
 			// Add screens here as well
 			screens[BrickBreaker::ScreenEnum::GAME] = std::make_shared<BrickBreaker::GameScreen>();
+
 
 			currentScreen = screens[BrickBreaker::ScreenEnum::GAME];
 			nextScreenEnum = BrickBreaker::ScreenEnum::GAME;
@@ -39,7 +39,7 @@ namespace Ebony {
 
 			for (auto& screen : screens)
 			{
-				screen.second->Init(graphics);
+				screen.second->Init(windowWidth, windowHeight);
 			}
 
 
@@ -48,10 +48,10 @@ namespace Ebony {
 
 		void LoadContent() override
 		{
-			for (auto& screen : screens)
+			/*for (auto& screen : screens)
 			{
 				screen.second->LoadContent();
-			}
+			}*/
 		}
 
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
@@ -86,12 +86,13 @@ namespace Ebony {
 
 		void Draw(std::chrono::microseconds elapsedTime) override
 		{
-			graphics->BeginDraw(clearColor);
+			Ebony::Graphics2d::BeginDraw(clearColor);
 			currentScreen->Draw(elapsedTime);
 
 
 			Application::Draw(elapsedTime);
-			graphics->EndDraw();
+			Ebony::Graphics2d::EndImgui();
+			Ebony::Graphics2d::EndDraw();
 		}
 		
 		void ChangeScreens() override
@@ -113,12 +114,35 @@ namespace Ebony {
 		void Run() override
 		{
 			Init();
+
+			Shader& s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
+
+			s1.use();
+			s1.setInt("screenTexture", 0);
+
+
+			Shader& s = Ebony::ResourceManager::LoadShader("shaders/spritesheet3d.vert", "shaders/spritesheet3d.frag", "spritesheet");
+
+			s.use();
+			s.setInt("spritesheet", 0);
+			s.setMat4("projection", Ebony::Graphics2d::projection);
+
+			Shader& s2 = Ebony::ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
+
+			s2.use();
+			s2.setInt("particleTexture", 0);
+			s2.setMat4("projection", Ebony::Graphics2d::projection);
+
+
+
 			auto firstTime = std::chrono::system_clock::now();
 			float currentFrame = static_cast<float>(glfwGetTime());
 			auto previousTime = std::chrono::system_clock::now();
 
-			while (true)
+			while (!glfwWindowShouldClose(Ebony::Graphics2d::window.getWindow()))
 			{
+				glfwPollEvents();
+
 				auto currentTime = std::chrono::system_clock::now();
 				auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
 				Ebony::Time::SetDeltaTime(elapsedTime);
@@ -130,14 +154,17 @@ namespace Ebony {
 
 				RemoveOldEntities();
 				AddNewEntities();
-				glfwPollEvents();
 				ChangeScreens();
 			}
 			
+
+			glfwTerminate();
+			ThreadPool::terminate();
+			EbonyAudio::AudioManager::StopAll();
+			Ebony::ResourceManager::Clear();
 		}
 
 	public:
-		std::shared_ptr<Ebony::Graphics2d> graphics;
 
 		int windowWidth = 800;
 		int windowHeight = 600;

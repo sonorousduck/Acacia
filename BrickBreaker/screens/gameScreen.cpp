@@ -14,7 +14,8 @@ namespace BrickBreaker
 		Ebony::ResourceManager::LoadSoundEffect("positive", "positive.wav");
 		Ebony::ResourceManager::LoadSoundEffect("powerup", "Powerup.wav");
 		Ebony::ResourceManager::LoadSoundEffect("save", "save.wav");
-			
+		Ebony::ResourceManager::LoadSoundEffect("brick_break", "brick_break.wav");
+
 		Ebony::ResourceManager::LoadMusic("cyberpunk_moonlight_sonata", "Cyberpunk-Moonlight-Sonata.wav");
 		Ebony::ResourceManager::LoadMusic("cyberpunk_moonlight_sonata_short", "Cyberpunk-Moonlight-Sonata-editted.wav");
 			
@@ -62,18 +63,18 @@ namespace BrickBreaker
 
 	}
 
-	void GameScreen::Init(std::shared_ptr<Ebony::Graphics2d> graphics) 
+	void GameScreen::Init(int windowWidth, int windowHeight)
 	{
-		this->graphics = graphics;
 		Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
+		this->windowHeight = windowHeight;
+		this->windowWidth = windowWidth;
+		main = Ebony::RenderTarget2D::Create(Ebony::Graphics2d::screenWidth, Ebony::Graphics2d::screenHeight, GL_LINEAR, GL_NEAREST);
+		LoadContent();
 
 
-		//LoadContent();
-
-
-		graphics->SetMainCamera(camera);
-		Ebony::KeyInput::setupKeyInputs(graphics->window);
-		Ebony::MouseInput::setupMouseInputs(graphics->window);
+		Ebony::Graphics2d::SetMainCamera(camera);
+		Ebony::KeyInput::setupKeyInputs(Ebony::Graphics2d::window);
+		Ebony::MouseInput::setupMouseInputs(Ebony::Graphics2d::window);
 
 
 		std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE };
@@ -111,29 +112,38 @@ namespace BrickBreaker
 
 
 
-		graphics->InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
+		Ebony::Graphics2d::InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
 		spriteFont.LoadFont("fonts/super-indie-font/SuperIndie.ttf");
 
 
 		s.use();
 		s.setInt("image", 0);
-		s.setMat4("projection", graphics->projection);
+		s.setMat4("projection", Ebony::Graphics2d::projection);
 
 		std::unique_ptr<components::ControllerInput> gameplayControllerInputComponent = std::make_unique<components::ControllerInput>(0);
 		std::unique_ptr<components::KeyboardInput> gameplayKeyboardInputComponent = std::make_unique<components::KeyboardInput>();
 
 		entities::EntityPtr gameplayEntity = std::make_shared<entities::Entity>();
 
-		gameplayControllerInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr) {glfwSetWindowShouldClose(graphics->window.getWindow(), true); } });
+		gameplayControllerInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr) {
+			glfwSetWindowShouldClose(Ebony::Graphics2d::window.getWindow(), true); 
+			}
+		});
+		
 		gameplayControllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_START, "quit" });
-		gameplayKeyboardInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr entity) {glfwSetWindowShouldClose(graphics->window.getWindow(), true); } });
+		gameplayKeyboardInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr entity) 
+			{
+				glfwSetWindowShouldClose(Ebony::Graphics2d::window.getWindow(), true); 
+			} 
+		});
+		
 		gameplayKeyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
 
 		gameplayEntity->addComponent(std::move(gameplayControllerInputComponent));
 		gameplayEntity->addComponent(std::move(gameplayKeyboardInputComponent));
 
 
-		//gameplayEntity->addComponent(std::move(std::make_unique<components::Music>(ResourceManager::GetMusic("cyberpunk_moonlight_sonata_short"))));
+		//gameplayEntity->addComponent(std::make_unique<components::Music>(Ebony::ResourceManager::GetMusic("cyberpunk_moonlight_sonata_short")));
 
 
 		AddEntity(gameplayEntity);
@@ -320,6 +330,12 @@ namespace BrickBreaker
 		// Declare predecessors here
 		taskGraph->declarePredecessor(task3->getId(), task5->getId());
 		taskGraph->declarePredecessor(task6->getId(), task4->getId());
+		taskGraph->declarePredecessor(task7->getId(), task4->getId());
+		taskGraph->declarePredecessor(task5->getId(), task4->getId());
+		taskGraph->declarePredecessor(task3->getId(), task4->getId());
+		taskGraph->declarePredecessor(task2->getId(), task4->getId());
+		taskGraph->declarePredecessor(task1->getId(), task4->getId());
+
 
 
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
@@ -342,22 +358,22 @@ namespace BrickBreaker
 	void GameScreen::Draw(std::chrono::microseconds elapsedTime)
 	{
 			
-		//graphics->BeginImgui();
+		Ebony::Graphics2d::BeginImgui();
 
-		graphics->SetRenderTarget(main, clearColor);
+		Ebony::Graphics2d::SetRenderTarget(main, clearColor);
 
-		animationRenderer.Update(graphics);
-		spriteRenderer.Update(graphics);
+		animationRenderer.Update();
+		spriteRenderer.Update();
 
 		auto previousTime = std::chrono::system_clock::now();
-		particleRenderer.Update(graphics);
+		particleRenderer.Update();
 		averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 
-		fontRenderer.Update(graphics);
+		fontRenderer.Update();
 
-		graphics->UnbindRenderTarget(clearColor);
+		Ebony::Graphics2d::UnbindRenderTarget(clearColor);
 
-		graphics->DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), main);
+		Ebony::Graphics2d::DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), main);
 	}
 	void GameScreen::ProcessInput(std::chrono::microseconds elapsedTime)
 	{

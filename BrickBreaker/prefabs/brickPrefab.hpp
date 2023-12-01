@@ -11,6 +11,7 @@
 #include "../components/brickComponent.hpp"
 #include "../prefabs/powerupPrefab.hpp"
 #include "../singletons/GameManager.hpp"
+#include <Log.hpp>
 
 namespace BrickBreaker
 {
@@ -19,14 +20,14 @@ namespace BrickBreaker
 	public:
 		static entities::EntityPtr Create(float transformWidth, float transformHeight, float scaleX, float scaleY, const char* tile_image, int brickStrength, std::uint32_t pointValue, std::function<void(entities::Entity::IdType)> RemoveEntity, std::function<void(entities::EntityPtr)> AddEntity)
 		{
-			entities::EntityPtr entity = std::make_shared<entities::Entity>();
-
-
-			entity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2(transformWidth, transformHeight), 0.0f, glm::vec2(scaleX, scaleY))));
+			entities::EntityPtr brickEntity = std::make_shared<entities::Entity>();
+			brickEntity->addComponent(std::make_unique<components::Transform>(glm::vec2(transformWidth, transformHeight), 0.0f, glm::vec2(scaleX, scaleY)));
 			components::Subcollider subcollider = components::Subcollider(glm::vec2(scaleX / 2, scaleY / 2), glm::vec2(scaleX, scaleY), true, true);
-			
+			brickEntity->addComponent(std::make_unique<components::SoundEffect>(EbonyAudio::ENTITY));
+
 			subcollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
+
 					if (other->hasComponent<components::Ball>())
 					{
 						auto ball = other->getComponent<components::Ball>();
@@ -38,6 +39,8 @@ namespace BrickBreaker
 						{
 							// The brick should explode
 							std::cout << "BOOOM!" << std::endl;
+							
+							other->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::ResourceManager::GetSoundEffect("brick_break"));
 							GameManager::addPoints(brick->pointValue);
 
 
@@ -51,12 +54,12 @@ namespace BrickBreaker
 					}
 				};
 
-			entity->addComponent(std::move(std::make_unique<components::Collider>(subcollider, BrickBreaker::CollisionLayers::BRICK, true, false)));
-			entity->addComponent(std::move(std::make_unique<components::RigidBody>()));
-			entity->addComponent(std::move(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(tile_image), Ebony::Colors::White)));
-			entity->addComponent(std::move(std::make_unique<components::Brick>(brickStrength, pointValue)));
+			brickEntity->addComponent(std::make_unique<components::Collider>(subcollider, BrickBreaker::CollisionLayers::BRICK, true, false));
+			brickEntity->addComponent(std::make_unique<components::RigidBody>());
+			brickEntity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(tile_image), Ebony::Colors::White));
+			brickEntity->addComponent(std::make_unique<components::Brick>(brickStrength, pointValue));
 
-			return entity;
+			return brickEntity;
 		}
 
 	};

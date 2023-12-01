@@ -105,6 +105,7 @@ namespace BrickBreaker
 			//mouseComponent->saveMouseBindings("../mouseBindings.json");
 			paddle->addComponent(std::move(mouseComponent));
 
+			paddle->addComponent(std::make_unique<components::SoundEffect>(EbonyAudio::ENTITY));
 
 
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White);

@@ -51,7 +51,7 @@ namespace BrickBreaker
 	{
 	public:
 		void LoadContent() override;
-		void Init(std::shared_ptr<Ebony::Graphics2d> graphics) override;
+		void Init(int windowWidth, int windowHeight) override;
 		void AddNewEntities() override;
 		void RemoveOldEntities() override;
 		std::uint16_t Update(std::chrono::microseconds elapsedTime) override;
@@ -78,8 +78,6 @@ namespace BrickBreaker
 		systems::SpriteRenderer spriteRenderer;
 		systems::BallSystem ballSystem;
 		systems::LifePointSystem lifePointSystem;
-
-		std::shared_ptr<Ebony::Graphics2d> graphics;
 
 		Ebony::RenderTarget2D main;
 

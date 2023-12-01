@@ -40,84 +40,85 @@ namespace Ebony
 	class Graphics2d : Graphics
 	{
 	public:
-		Graphics2d();
+		// Graphics2d();
 
-		void Initialize(const char* windowName, int width, int height);
-		void Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion);
-		void InitializeTextDrawing(Shader& textShader);
+		static void Initialize(const char* windowName, int width, int height);
+		static void Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion);
+		static void InitializeTextDrawing(Shader& textShader);
 
 		//// Need to load fonts as well
 
-		void DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color, Color outlineColor, float depth = 0.0f);
+		static void DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color, Color outlineColor, float depth = 0.0f);
 		//void DrawString(SpriteFont& spriteFont, std::string text, float x, float y, float scale, glm::vec3 color);
 
-		void SetMainCamera(Camera& camera);
+		static void SetMainCamera(Camera& camera);
 
-		void BeginDraw(Color clearColor);
-		void EndDraw();
+		static void BeginDraw(Color clearColor);
+		static void EndDraw();
 
-		void InitializeImgui();
+		static void InitializeImgui();
 
-		void Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
-		void Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
-		void DrawAnimation(Shader& s, Texture2D& texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth);
-		void DrawInstanced(Shader& s, Texture2D& texture, unsigned int VAO, std::uint32_t count);
-		void DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget);
+		static void Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
+		static void Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
+		static void DrawAnimation(Shader& s, Texture2D& texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth);
+		static void DrawInstanced(Shader& s, Texture2D& texture, unsigned int VAO, std::uint32_t count);
+		static void DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget);
 
-		void BeginImgui();
-		void DrawWindow(std::string_view windowName);
+		static void BeginImgui();
+		static void DrawWindow(std::string_view windowName);
 		//void ImguiSlider();
-		void CompleteWindow();
-		void ImguiText(std::string_view text);
-		void EndImgui();
+		static void CompleteWindow();
+		static void ImguiText(std::string_view text);
+		static void EndImgui();
 
-		void Cleanup();
+		static void Cleanup();
 
 
 		//void InstancedDraw();
 		//void InstancedDraw(Shader& s);
 
-		void SetRenderTarget(RenderTarget2D& renderTarget, Color clearColor);
-		void UnbindRenderTarget(Color clearColor);
+		static void SetRenderTarget(RenderTarget2D& renderTarget, Color clearColor);
+		static void UnbindRenderTarget(Color clearColor);
 
-		void onFramebufferSizeChange(int width, int height);
+		static void onFramebufferSizeChange(int width, int height);
 
-		Window window;
-		int screenWidth;
-		int screenHeight;
-		bool firstMouse = true;
-		bool cursorDisabled = true;
+		static Window window;
+		static int screenWidth;
+		static int screenHeight;
+		static bool firstMouse;
+		static bool cursorDisabled;
 
-		float lastMosX;
-		float lastMosY;
-		Camera mainCamera;
-		unsigned int versionMajor;
-		unsigned int versionMinor;
-		const char* windowName;
+		static float lastMosX;
+		static float lastMosY;
+		static Camera mainCamera;
+		static unsigned int versionMajor;
+		static unsigned int versionMinor;
+		static const char* windowName;
 
-		int activeShaderId = -1;
-		int activeTextureId = -1;
-
-
-		unsigned int textVAO = 0, textVBO = 0;
+		static int activeShaderId;
+		static int activeTextureId;
 
 
-		glm::mat4 projection;
-		unsigned int quadVAO = 0;
-		unsigned int instancedVAO = 0;
-		unsigned int quadRenderTarget = 0;
-		unsigned int particlePositionBuffer = 0, particleColorBuffer = 0;
+		static unsigned int textVAO;
+		static unsigned int textVBO;
 
-		ImGuiIO io;
+
+		static glm::mat4 projection;
+		static unsigned int quadVAO;
+		static unsigned int instancedVAO;
+		static unsigned int quadRenderTarget;
+		static unsigned int particlePositionBuffer, particleColorBuffer;
+
+		static ImGuiIO io;
 
 
 
 	private:
-		void Initialize();
-		void initRenderData();
-		void SetupCallback();
+		static void Initialize();
+		static void initRenderData();
+		static void SetupCallback();
 
-		bool hasCamera = false;
+		static bool hasCamera;
 
 
 	};

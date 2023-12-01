@@ -6,7 +6,7 @@ namespace BrickBreaker
 {
 	// This will be implemented by other games mostly, just not DEFAULT of 0. This is to let the 
 	// screen declare the ScreenEnum type (Potentially circle back and just make this a std::uint16_t instead of the ScreenEnum)
-	enum ScreenEnum : std::uint16_t
+	enum ScreenEnum : std::uint64_t
 	{
 		GAME = 1,
 		MAIN_MENU = 2,

@@ -4,10 +4,32 @@
 // https://www.glfw.org/docs/3.3/input_guide.html
 namespace Ebony
 {
-	Graphics2d::Graphics2d()
-	{
+	int Graphics2d::activeShaderId{ -1 };
+	int Graphics2d::activeTextureId{ -1 };
 
-	}
+	Window Graphics2d::window;
+	float Graphics2d::lastMosX;
+	float Graphics2d::lastMosY;
+	Camera Graphics2d::mainCamera;
+	unsigned int Graphics2d::versionMajor;
+	unsigned int Graphics2d::versionMinor;
+	unsigned int Graphics2d::quadVAO{ 0 };
+	unsigned int Graphics2d::instancedVAO{ 0 };
+	unsigned int Graphics2d::quadRenderTarget{ 0 };
+	unsigned int Graphics2d::particlePositionBuffer{ 0 };
+	unsigned int Graphics2d::particleColorBuffer{ 0 };
+	unsigned int Graphics2d::textVAO{ 0 };
+	unsigned int Graphics2d::textVBO{ 0 };
+	bool Graphics2d::firstMouse{ true };
+	bool Graphics2d::cursorDisabled{ true };
+	bool Graphics2d::hasCamera{ false };
+
+	const char* Graphics2d::windowName;
+	int Graphics2d::screenWidth;
+	int Graphics2d::screenHeight;
+	ImGuiIO Graphics2d::io;
+	glm::mat4 Graphics2d::projection;
+
 
 	void Graphics2d::InitializeImgui()
 	{
@@ -30,8 +52,8 @@ namespace Ebony
 		window = Window();
 		window.createWindow(windowName, versionMajor, versionMinor);
 		Initialize();
-		InitializeImgui();
 		SetupCallback();
+		InitializeImgui();
 
 		projection = glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f, -1.0f, 1.0f);
 		initRenderData();
@@ -74,7 +96,7 @@ namespace Ebony
 		lastMosY = screenHeight / 2.0f;
 
 
-		glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+		glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 		glfwMakeContextCurrent(window.getWindow());
 
@@ -100,10 +122,10 @@ namespace Ebony
 			1.0f, 0.0f, 1.0f, 0.0f
 		};
 
-		glGenVertexArrays(1, &this->quadVAO);
+		glGenVertexArrays(1, &quadVAO);
 		glGenBuffers(1, &VBO);
 
-		glBindVertexArray(this->quadVAO);
+		glBindVertexArray(quadVAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
 
@@ -128,10 +150,10 @@ namespace Ebony
 			 1.0f,  1.0f,  1.0f, 1.0f
 		};
 
-		glGenVertexArrays(1, &this->quadRenderTarget);
+		glGenVertexArrays(1, &quadRenderTarget);
 		glGenBuffers(1, &VBORenderTarget);
 
-		glBindVertexArray(this->quadRenderTarget);
+		glBindVertexArray(quadRenderTarget);
 		
 		glBindBuffer(GL_ARRAY_BUFFER, VBORenderTarget);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(verticesRenderTarget), &verticesRenderTarget, GL_STATIC_DRAW);
@@ -164,6 +186,7 @@ namespace Ebony
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		//ImGui::ShowDemoWindow();
 	}
 
 	void Graphics2d::DrawWindow(std::string_view windowName)
@@ -235,7 +258,7 @@ namespace Ebony
 			activeTextureId = texture.ID;
 		}
 
-		glBindVertexArray(this->quadVAO);
+		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 		glDisable(GL_TEXTURE_2D_ARRAY);
@@ -280,7 +303,7 @@ namespace Ebony
 
 
 
-		glBindVertexArray(this->quadVAO);
+		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 	}
@@ -321,7 +344,7 @@ namespace Ebony
 
 
 
-		glBindVertexArray(this->quadVAO);
+		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 	}
@@ -360,7 +383,7 @@ namespace Ebony
 	void Graphics2d::DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget)
 	{
 		s.use();
-		glBindVertexArray(this->quadRenderTarget);
+		glBindVertexArray(quadRenderTarget);
 		glBindTexture(GL_TEXTURE_2D, renderTarget.GetTextureColorBuffer());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);

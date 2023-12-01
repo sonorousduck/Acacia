@@ -13,7 +13,7 @@ namespace systems
 	public:
 		FontRenderer() : System({ ctti::unnamed_type_id<components::Text>(), ctti::unnamed_type_id<components::Transform>()}) {};
 
-		void Update(std::shared_ptr<Ebony::Graphics2d> graphics);
+		void Update();
 
 	private:
 		using System::Update;

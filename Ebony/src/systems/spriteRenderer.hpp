@@ -15,7 +15,7 @@ namespace systems
 		}
 
 
-		void Update(std::shared_ptr<Ebony::Graphics2d>);
+		void Update();
 
 	private:
 		using System::Update;

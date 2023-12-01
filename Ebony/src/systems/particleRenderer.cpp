@@ -4,7 +4,7 @@
 
 namespace systems
 {
-	void ParticleRenderer::Update(std::shared_ptr<Ebony::Graphics2d> graphics)
+	void ParticleRenderer::Update()
 	{
 		glDepthMask(GL_FALSE);
 		for (auto&& [id, entity] : m_Entities)
@@ -33,7 +33,7 @@ namespace systems
 				glBufferData(GL_ARRAY_BUFFER, static_cast<unsigned long long>(particleEffect->getMaxParticles()) * 4 * sizeof(float), NULL, GL_STREAM_DRAW);
 				glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<unsigned long long>(particleEffect->particleCount) * 4 * sizeof(float), &particleEffect->particleColorData[0]);
 
-				graphics->DrawInstanced(s, particleEffect->texture, particleEffect->instancedVAO, particleEffect->particleCount);
+				Ebony::Graphics2d::DrawInstanced(s, particleEffect->texture, particleEffect->instancedVAO, particleEffect->particleCount);
 			}
 
 

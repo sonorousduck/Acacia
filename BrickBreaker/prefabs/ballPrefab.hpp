@@ -19,7 +19,7 @@ namespace BrickBreaker
 		{
 			entities::EntityPtr ballEntity = std::make_shared<entities::Entity>();
 
-			ballEntity->addComponent(std::move(std::make_unique<components::SoundEffect>(EbonyAudio::ENTITY)));
+			ballEntity->addComponent(std::make_unique<components::SoundEffect>(EbonyAudio::ENTITY));
 
 
 			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(beginningTransform, 0.0f, glm::vec2(20.0f, 20.0f))));

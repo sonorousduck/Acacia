@@ -36,6 +36,8 @@ namespace BrickBreaker
 						// Confer powers upon the user	
 						auto powerupComponent = self->getComponent<components::Powerup>();
 						
+						//other->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::ResourceManager::GetSoundEffect("powerup"));
+
 						if (powerupComponent->powerupType & Powerups::LARGER_PADDLE)
 						{
 							auto transform = other->getComponent<components::Transform>();
