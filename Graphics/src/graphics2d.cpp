@@ -1,9 +1,5 @@
 #include "graphics2d.hpp"
-#include "window.hpp"
 #include "../Ebony/src/misc/resourceManager.hpp"
-
-#include "spritefont.hpp"
-
 
 // https://www.glfw.org/docs/3.3/input_guide.html
 namespace Ebony

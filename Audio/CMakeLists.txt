@@ -19,7 +19,7 @@ set(HEADER_FILES
 )
 
 set(SOURCE_FILES
-    src/main.cpp
+    src/audioTestMain.cpp
     src/SoundDevice.cpp
     src/SoundBuffer.cpp
     src/SoundSource.cpp

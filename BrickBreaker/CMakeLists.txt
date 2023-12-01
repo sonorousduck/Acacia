@@ -63,7 +63,13 @@ set(SingletonSources
   
 )
 
-set(Screens
+set(ScreenHeaders
+  screens/screenEnums.hpp
+  screens/gameScreen.hpp
+)
+
+
+set(ScreenSources
   screens/controlsScreen.cpp
   screens/gameOverScreen.cpp
   screens/gameScreen.cpp
@@ -96,7 +102,8 @@ source_group("Misc\\Sources Files" FILES ${MiscSources})
 source_group("Prefabs" FILES ${Prefabs})
 source_group("Singletons\\Header Files" FILES ${SingletonHeaders})
 source_group("Singletons\\Source Files" FILES ${SingletonSources})
-source_group("Screens" FILES ${ScreenHeaders} ${ScreenSources})
+source_group("Screens\\Header Files" FILES ${ScreenHeaders})
+source_group("Screens\\Source Files" FILES ${ScreenSources})
 
 set (CODE_FILES
   ${HEADER_FILES} 
@@ -109,7 +116,8 @@ set (CODE_FILES
   ${Prefabs}
   ${SingletonHeaders}
   ${SingletonSources}
-
+  ${ScreenHeaders} 
+  ${ScreenSources}
 )
 
 

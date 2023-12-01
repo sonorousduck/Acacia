@@ -1,7 +1,6 @@
 #include "Application.hpp"
-#include "events/ApplicationEvent.hpp"
-#include <sstream>
-#include <iostream>
+//#include <sstream>
+//#include <iostream>
 
 namespace Ebony {
 	Application::Application()
@@ -16,12 +15,17 @@ namespace Ebony {
 
 	void Application::Init()
 	{
-
+		EB_TRACE("Running the parent's init function");
 	}
 
 	void Application::Update(std::chrono::microseconds elapsedTime)
 	{
 		
+	}
+
+	void Application::Run()
+	{
+
 	}
 
 	void Application::Draw(std::chrono::microseconds elapsedTime)
@@ -34,10 +38,14 @@ namespace Ebony {
 		
 	}
 
-	void Application::Run() 
+	void Application::LoadContent()
 	{
 
-		
+	}
+
+	void Application::ChangeScreens()
+	{
+
 	}
 
 	void Application::AddNewEntities()

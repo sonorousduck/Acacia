@@ -13,7 +13,7 @@ namespace systems
 	public:
 		AnimationRenderer() : System({ ctti::unnamed_type_id<components::AnimationController>(), ctti::unnamed_type_id<components::Transform>() }) {};
 
-		void Update(Ebony::Graphics2d& graphics);
+		void Update(std::shared_ptr<Ebony::Graphics2d>);
 
 	private:
 		using System::Update; // disables compiler warning from clang

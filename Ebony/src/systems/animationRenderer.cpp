@@ -3,7 +3,7 @@
 
 namespace systems
 {
-	void AnimationRenderer::Update(Ebony::Graphics2d& graphics)
+	void AnimationRenderer::Update(std::shared_ptr<Ebony::Graphics2d> graphics)
 	{
 
 		for (auto&& [id, entity] : m_Entities)
@@ -15,7 +15,7 @@ namespace systems
 			// Draw each Texture2D here
 			for (auto& animation : animationsToDraw)
 			{
-				graphics.DrawAnimation(Ebony::ResourceManager::GetShader("spritesheet"), animation.GetSprite().spritesheet, animation.GetCurrentSpriteFrame(), transform->position, transform->scale, transform->rotation, Ebony::Colors::Red, animation.GetDepth());
+				graphics->DrawAnimation(Ebony::ResourceManager::GetShader("spritesheet"), animation.GetSprite().spritesheet, animation.GetCurrentSpriteFrame(), transform->position, transform->scale, transform->rotation, Ebony::Colors::Red, animation.GetDepth());
 			}
 
 

@@ -12,12 +12,12 @@ namespace Ebony
 
 	float Time::GetDeltaTimeAsFloatMicroseconds()
 	{
-		return elapsedTime.count();
+		return static_cast<float>(elapsedTime.count());
 	}
 
 	float Time::GetDeltaTimeFloat()
 	{
-		return elapsedTime.count() / 1000000.0f;
+		return static_cast<float>(elapsedTime.count()) / 1000000.0f;
 	}
 
 	void Time::SetDeltaTime(std::chrono::microseconds newElapsedTime)

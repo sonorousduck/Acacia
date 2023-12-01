@@ -2,7 +2,7 @@
 
 namespace systems
 {
-	void ColliderRenderer::Update(Ebony::Graphics2d& graphics)
+	void ColliderRenderer::Update(std::shared_ptr<Ebony::Graphics2d> graphics)
 	{
 		for (auto&& [id, entity] : m_Entities)
 		{
@@ -10,7 +10,7 @@ namespace systems
 			auto transform = entity->getComponent<components::Transform>();
 
 
-			graphics.Draw(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, sprite->spriteColor, sprite->depth);
+			graphics->Draw(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, sprite->spriteColor, sprite->depth);
 		}
 	}
 }
