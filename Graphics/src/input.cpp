@@ -110,7 +110,7 @@ namespace Ebony
 
 	void KeyInput::setupKeyInputs(Window& window)
 	{
-		glfwSetKeyCallback(window.getWindow(), KeyInput::callback);
+		/*glfwSetKeyCallback(window.getWindow(), KeyInput::callback);
 		glfwSetJoystickCallback(KeyInput::joystick_callback);
 		
 		int i = 0;
@@ -118,7 +118,7 @@ namespace Ebony
 		{
 			joysticksConnected++;
 			i++;
-		}
+		}*/
 	}
 
 	void KeyInput::callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -283,8 +283,8 @@ namespace Ebony
 
 	void MouseInput::setupMouseInputs(Window& window)
 	{
-		glfwSetCursorPosCallback(window.getWindow(), mouse_position_callback);
-		glfwSetMouseButtonCallback(window.getWindow(), mouse_button_callback);
+		//glfwSetCursorPosCallback(window.getWindow(), mouse_position_callback);
+		//glfwSetMouseButtonCallback(window.getWindow(), mouse_button_callback);
 	}
 
 	ControllerInput::ControllerInput(std::vector<int> buttonsToMonitor) : m_isEnabled(true)

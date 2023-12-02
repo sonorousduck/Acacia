@@ -101,8 +101,6 @@ add_subdirectory(libsndfile)
 add_subdirectory(freetype)
 set(freetype_lib "${CMAKE_CURRENT_SOURCE_DIR}/freetype/build/Release/freetype.lib")
 
-# set(BOX2D_BUILD_TESTBED OFF CACHE BOOL)
-add_subdirectory(box2d)
 
 #target_include_directories(freetype INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/freetype/include")
 target_link_libraries(freetype INTERFACE ${freetype_lib})

@@ -3,70 +3,101 @@
 
 namespace Ebony
 {
-	void Window::createWindow(int versionMajor, int versionMinor)
+	void Window::createWindow(int versionMajor, int versionMinor, int screenWidth, int screenHeight)
 	{
-		if (!glfwInit())
+		if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		{
+			std::cerr << "Couldn't initialize SDL" << std::endl;
+			exit(2);
 			return;
 		}
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, versionMinor);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		atexit(SDL_Quit);
+		SDL_GL_LoadLibrary(NULL);
 
-#ifdef __APPLE__
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, versionMajor);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, versionMinor);
 
-		window = glfwCreateWindow(800, 600, "TEST", NULL, NULL);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-		if (!window)
+		// If fullscreen
+		// window = SDL_CreateWindow(windowName, EB_CRITICALEB_CRITICAL SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL);
+
+
+		window = SDL_CreateWindow("TEST", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
+
+		mainContext = SDL_GL_CreateContext(window);
+
+		if (mainContext == NULL)
 		{
-			std::cout << "Failed to create GLFW window" << std::endl;
-			glfwTerminate();
-			return;
+			std::cerr << "Failed to create OpenGL Context" << std::endl;
+			exit(2);
 		}
 
+		std::cout << "OpenGL Loaded" << std::endl;
+		gladLoadGLLoader(SDL_GL_GetProcAddress);
 
-		glfwSetWindowUserPointer(window, this);
-		glfwMakeContextCurrent(window);
+		//https://wiki.libsdl.org/SDL2/SDL_GL_SetSwapInterval
+		// 0 means immediate update, 1 means vsync, -1 is adaptive vsync
+		SDL_GL_SetSwapInterval(0);
+
+		int w, h;
+		SDL_GetWindowSize(window, &w, &h);
+		glViewport(0, 0, w, h);
 
 		return;
 	}
 
-	void Window::createWindow(const char* windowName, int versionMajor, int versionMinor)
+	void Window::createWindow(const char* windowName, int versionMajor, int versionMinor, int screenWidth, int screenHeight)
 	{
-		if (!glfwInit())
+		if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		{
+			std::cerr << "Couldn't initialize SDL" << std::endl;
+			exit(2);
 			return;
 		}
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, versionMinor);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		atexit(SDL_Quit);
+		SDL_GL_LoadLibrary(NULL);
+
+		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, versionMajor);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, versionMinor);
+
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+		// If fullscreen
+		// window = SDL_CreateWindow(windowName, EB_CRITICALEB_CRITICAL SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL);
+
+
+		window = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
+
+		mainContext = SDL_GL_CreateContext(window);
+
+		if (mainContext == NULL)
+		{
+			std::cerr << "Failed to create OpenGL Context" << std::endl;
+			exit(2);
+		}
+
+		std::cout << "OpenGL Loaded" << std::endl;
+		gladLoadGLLoader(SDL_GL_GetProcAddress);
 		
+		//https://wiki.libsdl.org/SDL2/SDL_GL_SetSwapInterval
+		// 0 means immediate update, 1 means vsync, -1 is adaptive vsync
+		SDL_GL_SetSwapInterval(0);
 
-#ifdef __APPLE__
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+		int w, h;
+		SDL_GetWindowSize(window, &w, &h);
+		glViewport(0, 0, w, h);
 
-		window = glfwCreateWindow(800, 600, windowName, NULL, NULL);
-
-		if (!window)
-		{
-			std::cout << "Failed to create GLFW window" << std::endl;
-			glfwTerminate();
-			return;
-		}
-
-
-		glfwSetWindowUserPointer(window, this);
-		glfwMakeContextCurrent(window);
-		glfwSwapInterval(0);
 		return;
 	}
 
-	GLFWwindow* Window::getWindow()
+	SDL_Window* Window::getWindow()
 	{
 		return window;
 	}

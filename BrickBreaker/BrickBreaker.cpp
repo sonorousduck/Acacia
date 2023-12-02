@@ -91,7 +91,7 @@ namespace Ebony {
 
 
 			Application::Draw(elapsedTime);
-			Ebony::Graphics2d::EndImgui();
+			//Ebony::Graphics2d::EndImgui();
 			Ebony::Graphics2d::EndDraw();
 		}
 		
@@ -139,9 +139,19 @@ namespace Ebony {
 			float currentFrame = static_cast<float>(glfwGetTime());
 			auto previousTime = std::chrono::system_clock::now();
 
-			while (!glfwWindowShouldClose(Ebony::Graphics2d::window.getWindow()))
+			SDL_Event event;
+			bool quit = false;
+
+			//while (!glfwWindowShouldClose(Ebony::Graphics2d::window.getWindow()))
+			while (!quit)
 			{
-				glfwPollEvents();
+				while (SDL_PollEvent(&event))
+				{
+					if (event.type == SDL_QUIT)
+					{
+						quit = true;
+					}
+				}
 
 				auto currentTime = std::chrono::system_clock::now();
 				auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
@@ -158,7 +168,8 @@ namespace Ebony {
 			}
 			
 
-			glfwTerminate();
+			//glfwTerminate();
+
 			ThreadPool::terminate();
 			EbonyAudio::AudioManager::StopAll();
 			Ebony::ResourceManager::Clear();

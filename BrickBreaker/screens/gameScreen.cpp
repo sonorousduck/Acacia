@@ -124,18 +124,23 @@ namespace BrickBreaker
 		std::unique_ptr<components::KeyboardInput> gameplayKeyboardInputComponent = std::make_unique<components::KeyboardInput>();
 
 		entities::EntityPtr gameplayEntity = std::make_shared<entities::Entity>();
-
-		gameplayControllerInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr) {
+		// ================================================================================================================================================================
+		// TODO:
+		// ================================================================================================================================================================
+		/*gameplayControllerInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr) {
 			glfwSetWindowShouldClose(Ebony::Graphics2d::window.getWindow(), true); 
 			}
-		});
+		});*/
 		
 		gameplayControllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_START, "quit" });
-		gameplayKeyboardInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr entity) 
+		// ================================================================================================================================================================
+		// TODO:
+		// ================================================================================================================================================================
+		/*gameplayKeyboardInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr entity) 
 			{
 				glfwSetWindowShouldClose(Ebony::Graphics2d::window.getWindow(), true); 
 			} 
-		});
+		});*/
 		
 		gameplayKeyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
 
@@ -358,7 +363,7 @@ namespace BrickBreaker
 	void GameScreen::Draw(std::chrono::microseconds elapsedTime)
 	{
 			
-		Ebony::Graphics2d::BeginImgui();
+		//Ebony::Graphics2d::BeginImgui();
 
 		Ebony::Graphics2d::SetRenderTarget(main, clearColor);
 

@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <functional>
 #include "window.hpp"
+#include "GLFW/glfw3.h"
 
 namespace Ebony
 {

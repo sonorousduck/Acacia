@@ -1,6 +1,6 @@
 #pragma once
 #include "glad/glad.h"
-#include <GLFW/glfw3.h>
+#include <SDL.h>
 
 namespace Ebony 
 {
@@ -8,13 +8,15 @@ namespace Ebony
 	{
 	public:
 		Window() {};
-		void createWindow(int versionMajor, int versionMinor);
-		void createWindow(const char* windowName, int versionMajor, int versionMinor);
+		void createWindow(int versionMajor, int versionMinor, int screenWidth, int screenHeight);
+		void createWindow(const char* windowName, int versionMajor, int versionMinor, int screenWidth, int screenHeight);
 
-		GLFWwindow* getWindow();
+		SDL_Window* getWindow();
 
 	private:
-		GLFWwindow* window{};
+		/*GLFWwindow* window{};*/
+		SDL_Window* window{};
+		SDL_GLContext mainContext;
 	};
 
 }

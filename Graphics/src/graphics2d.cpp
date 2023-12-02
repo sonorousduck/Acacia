@@ -37,7 +37,8 @@ namespace Ebony
 		ImGui::CreateContext();
 		io = ImGui::GetIO(); (void)io;
 		ImGui::StyleColorsDark();
-		ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
+		//ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
+		
 		ImGui_ImplOpenGL3_Init("#version 330");
 	}
 
@@ -50,7 +51,7 @@ namespace Ebony
 		versionMinor = 3;
 
 		window = Window();
-		window.createWindow(windowName, versionMajor, versionMinor);
+		window.createWindow(windowName, versionMajor, versionMinor, screenWidth, screenHeight);
 		Initialize();
 		SetupCallback();
 		InitializeImgui();
@@ -68,20 +69,20 @@ namespace Ebony
 		versionMinor = minorVersion;
 
 		window = Window();
-		window.createWindow(versionMajor, versionMinor);
+		window.createWindow(versionMajor, versionMinor, screenWidth, screenHeight);
 		SetupCallback();
 		Initialize();
 	}
 
 	void Graphics2d::SetupCallback()
 	{
-		auto framebuffer_callback = [](GLFWwindow* window, int width, int height)
+		/*auto framebuffer_callback = [](GLFWwindow* window, int width, int height)
 		{
 			glViewport(0, 0, width, height);
 			static_cast<Graphics2d*>(glfwGetWindowUserPointer(window))->onFramebufferSizeChange(width, height);
 		};
 		
-		glfwSetFramebufferSizeCallback(window.getWindow(), framebuffer_callback);
+		glfwSetFramebufferSizeCallback(window.getWindow(), framebuffer_callback);*/
 	}
 
 	void Graphics2d::onFramebufferSizeChange(int width, int height)
@@ -96,15 +97,15 @@ namespace Ebony
 		lastMosY = screenHeight / 2.0f;
 
 
-		glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		/*glfwSetInputMode(window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
-		glfwMakeContextCurrent(window.getWindow());
+		glfwMakeContextCurrent(window.getWindow());*/
 
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		/*if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
 			std::cout << "Failed to initialize GLAD" << std::endl;
 			return;
-		}
+		}*/
 	}
 
 	void Graphics2d::initRenderData()
@@ -214,7 +215,8 @@ namespace Ebony
 	void Graphics2d::EndDraw()
 	{
 		activeTextureId = -1;
-		glfwSwapBuffers(window.getWindow());
+		SDL_GL_SwapWindow(window.getWindow());
+		//glfwSwapBuffers(window.getWindow());
 	}
 
 
