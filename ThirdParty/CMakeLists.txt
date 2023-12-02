@@ -9,7 +9,9 @@ add_library(rapidjson INTERFACE)
 add_library(tiny_obj_loader STATIC)
 # add_library(vk_mem_alloc INTERFACE)
 add_library(glm INTERFACE)
+add_library(sdl2 INTERFACE)
 # add_library(freetype INTERFACE)
+
 
 add_library(lz4 STATIC)
 
@@ -19,6 +21,12 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(glfw)
 add_subdirectory(spdlog)
+
+
+find_package(SDL2 REQUIRED)
+target_include_directories(sdl2 INTERFACE ${SDL2_INCLUDE_DIRS})
+target_link_libraries(sdl2 INTERFACE ${SDL2_LIBRARIES})
+
 
 # target_sources(vkbootstrap PRIVATE 
 #     "${CMAKE_CURRENT_SOURCE_DIR}/vkbootstrap/VkBootstrap.h"

@@ -106,7 +106,7 @@ target_include_directories(Graphics PRIVATE include/ include/glm)
 
 target_include_directories(Graphics PRIVATE ThirdParty/imgui)
 
-target_link_libraries(Graphics glfw stb_image assetlib assimp rapidjson ctti freetype Audio)
+target_link_libraries(Graphics glfw stb_image assetlib assimp rapidjson ctti sdl2 freetype Audio)
 set_property(TARGET Graphics PROPERTY CXX_STANDARD 20)
 
 
@@ -116,24 +116,3 @@ add_custom_target(copy_assets
 
 add_dependencies(Graphics copy_assets)
    
-
-# Create virtual folders to make it look nicer in VS
-#if(MSVC_IDE)
-	# Macro to preserve source files hierarchy in the IDE
-#	macro(GroupSources curdir)
-#		file(GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir} ${PROJECT_SOURCE_DIR}/${curdir}/*)
-#
-#		foreach(child ${children})
-#			if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${curdir}/${child})
-#				GroupSources(${curdir}/${child})
-#			else()
-#				string(REPLACE "/" "\\" groupname ${curdir})
-#				string(REPLACE "src" "Sources" groupname ${groupname})
-#				source_group(${groupname} FILES ${PROJECT_SOURCE_DIR}/${curdir}/${child})
-#			endif()
-#		endforeach()
-#	endmacro()
-#
-#	# Run macro
-#	GroupSources(src)
-#endif()

@@ -5,6 +5,8 @@
 #include "../Graphics/ThirdParty/imgui/imgui_impl_opengl3.h"
 
 
+#include <SDL.h>
+
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <cmath>
