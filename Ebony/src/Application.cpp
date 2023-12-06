@@ -16,6 +16,8 @@ namespace Ebony {
 	void Application::Init()
 	{
 		EB_TRACE("Running the parent's init function");
+
+		
 	}
 
 	void Application::Update(std::chrono::microseconds elapsedTime)

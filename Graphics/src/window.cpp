@@ -52,7 +52,7 @@ namespace Ebony
 
 	void Window::createWindow(const char* windowName, int versionMajor, int versionMinor, int screenWidth, int screenHeight)
 	{
-		if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		{
 			std::cerr << "Couldn't initialize SDL" << std::endl;
 			exit(2);
@@ -73,7 +73,7 @@ namespace Ebony
 		// window = SDL_CreateWindow(windowName, EB_CRITICALEB_CRITICAL SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL);
 
 
-		window = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
+		window = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
 		mainContext = SDL_GL_CreateContext(window);
 

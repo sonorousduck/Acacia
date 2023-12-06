@@ -94,6 +94,9 @@ namespace entities
 		template <typename T>
 		T* getComponent();
 
+		template <typename T>
+		bool tryGetComponent(T*& component);
+
 		auto& getComponents() { return m_Components; }
 
 		//std::shared_ptr<Entity> clone();
@@ -153,6 +156,28 @@ namespace entities
 
 		return static_cast<T*>(m_Components[ctti::unnamed_type_id<T>()].get());
 	}
+
+	// --------------------------------------------------------------
+	//
+	// This method is returning a raw pointer, because ownership is
+	// not an issue.  The calling object can only use/mutate the state
+	// of the component, not destroy it.
+	//
+	// --------------------------------------------------------------
+	template <typename T>
+	bool Entity::tryGetComponent(T*& component)
+	{
+		if (hasComponent<T>())
+		{
+			component = static_cast<T*>(m_Components[ctti::unnamed_type_id<T>()].get());
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 }
 
 namespace std

@@ -6,6 +6,7 @@
 #include "screens/gameScreen.hpp"
 #include <singletons/time.hpp>
 #include "../Audio/src/audioManager.hpp"
+#include <singletons/inputManager.hpp>
 
 namespace Ebony {
 
@@ -27,6 +28,9 @@ namespace Ebony {
 			// Set up graphics here
 			Ebony::Graphics2d::Initialize("Brick Breaker", windowWidth, windowHeight);
 			EbonyAudio::AudioManager::Init();
+
+			InputManager::Initialize();
+
 
 			// Add screens here as well
 			screens[BrickBreaker::ScreenEnum::GAME] = std::make_shared<BrickBreaker::GameScreen>();
@@ -56,6 +60,9 @@ namespace Ebony {
 
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
 		{
+			// Update the SDL information here
+			quit = InputManager::HandleInput();
+
 			currentScreen->ProcessInput(elapsedTime);
 		}
 
@@ -139,20 +146,8 @@ namespace Ebony {
 			float currentFrame = static_cast<float>(glfwGetTime());
 			auto previousTime = std::chrono::system_clock::now();
 
-			SDL_Event event;
-			bool quit = false;
-
-			//while (!glfwWindowShouldClose(Ebony::Graphics2d::window.getWindow()))
 			while (!quit)
 			{
-				while (SDL_PollEvent(&event))
-				{
-					if (event.type == SDL_QUIT)
-					{
-						quit = true;
-					}
-				}
-
 				auto currentTime = std::chrono::system_clock::now();
 				auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
 				Ebony::Time::SetDeltaTime(elapsedTime);
@@ -179,6 +174,7 @@ namespace Ebony {
 
 		int windowWidth = 800;
 		int windowHeight = 600;
+		bool quit = false;
 
 		bool newScreenFocused = false;
 

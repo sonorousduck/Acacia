@@ -23,10 +23,11 @@ namespace Ebony
 	bool Graphics2d::firstMouse{ true };
 	bool Graphics2d::cursorDisabled{ true };
 	bool Graphics2d::hasCamera{ false };
-
+	bool Graphics2d::resized{ false };
 	const char* Graphics2d::windowName;
 	int Graphics2d::screenWidth;
 	int Graphics2d::screenHeight;
+	
 	ImGuiIO Graphics2d::io;
 	glm::mat4 Graphics2d::projection;
 
@@ -89,6 +90,15 @@ namespace Ebony
 	{
 		screenWidth = width;
 		screenHeight = height;
+	}
+
+	void Graphics2d::setNewWindowSize(int width, int height)
+	{
+		screenHeight = height;
+		screenWidth = width;
+		SDL_SetWindowSize(window.getWindow(), width, height);
+		glViewport(0, 0, width, height);
+		resized = true;
 	}
 
 	void Graphics2d::Initialize()
@@ -216,6 +226,7 @@ namespace Ebony
 	{
 		activeTextureId = -1;
 		SDL_GL_SwapWindow(window.getWindow());
+		resized = false;
 		//glfwSwapBuffers(window.getWindow());
 	}
 
@@ -475,7 +486,7 @@ namespace Ebony
 	{
 		// This probably won't be where IMGUI ends up, since we will want to be able to disable it when it is running a game
 		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
+		//ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
 
 
@@ -490,6 +501,11 @@ namespace Ebony
 
 	void Graphics2d::SetRenderTarget(RenderTarget2D& renderTarget, Color clearColor)
 	{
+		if (Graphics2d::resized)
+		{
+			renderTarget.Resize(Graphics2d::screenWidth, Graphics2d::screenHeight);
+		}
+
 		glBindFramebuffer(GL_FRAMEBUFFER, renderTarget.GetFramebuffer());
 		glClearColor(clearColor.r(), clearColor.g(), clearColor.b(), clearColor.a());
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

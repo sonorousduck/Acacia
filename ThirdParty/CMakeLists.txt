@@ -23,10 +23,18 @@ add_subdirectory(glfw)
 add_subdirectory(spdlog)
 
 
+
 find_package(SDL2 REQUIRED)
 target_include_directories(sdl2 INTERFACE ${SDL2_INCLUDE_DIRS})
 target_link_libraries(sdl2 INTERFACE ${SDL2_LIBRARIES})
 
+if (WIN32)
+    file(COPY ${SDL2_DIR}/../lib/x64/SDL2.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)
+endif()
+
+if (WIN64)
+    file(COPY ${SDL2_DIR}/../lib/x64/SDL2.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)
+endif()
 
 # target_sources(vkbootstrap PRIVATE 
 #     "${CMAKE_CURRENT_SOURCE_DIR}/vkbootstrap/VkBootstrap.h"

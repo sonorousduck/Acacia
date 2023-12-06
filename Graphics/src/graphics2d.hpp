@@ -84,6 +84,8 @@ namespace Ebony
 
 		static void onFramebufferSizeChange(int width, int height);
 
+		static void setNewWindowSize(int width, int height);
+
 		static Window window;
 		static int screenWidth;
 		static int screenHeight;
@@ -113,6 +115,7 @@ namespace Ebony
 
 		static ImGuiIO io;
 
+		static bool resized;
 
 
 	private:

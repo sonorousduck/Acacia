@@ -68,24 +68,24 @@ namespace BrickBreaker
 		Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
-		main = Ebony::RenderTarget2D::Create(Ebony::Graphics2d::screenWidth, Ebony::Graphics2d::screenHeight, GL_LINEAR, GL_NEAREST);
+		mainRenderTarget = Ebony::RenderTarget2D::Create(Ebony::Graphics2d::screenWidth, Ebony::Graphics2d::screenHeight, GL_LINEAR, GL_NEAREST);
 		LoadContent();
 
 
 		Ebony::Graphics2d::SetMainCamera(camera);
-		Ebony::KeyInput::setupKeyInputs(Ebony::Graphics2d::window);
-		Ebony::MouseInput::setupMouseInputs(Ebony::Graphics2d::window);
+		//Ebony::KeyInput::setupKeyInputs(Ebony::Graphics2d::window);
+		//Ebony::MouseInput::setupMouseInputs(Ebony::Graphics2d::window);
 
 
-		std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE };
-		keyInput.setKeysToMonitorInit(keys);
+		//std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE };
+		//keyInput.setKeysToMonitorInit(keys);
 
 		// All buttons defined here: https://www.glfw.org/docs/3.3/group__buttons.html
-		std::vector<int> buttons = { GLFW_MOUSE_BUTTON_1 };
-		mouseInput.setButtonsToMonitor(buttons);
+		//std::vector<int> buttons = { GLFW_MOUSE_BUTTON_1 };
+		//mouseInput.setButtonsToMonitor(buttons);
 
-		std::vector<int> controllerButtons = { GLFW_GAMEPAD_BUTTON_CROSS, GLFW_GAMEPAD_BUTTON_CIRCLE, GLFW_GAMEPAD_BUTTON_TRIANGLE, GLFW_GAMEPAD_BUTTON_SQUARE, GLFW_GAMEPAD_BUTTON_START };
-		controllerInput.setButtonsToMonitorInit(controllerButtons);
+		//std::vector<int> controllerButtons = { GLFW_GAMEPAD_BUTTON_CROSS, GLFW_GAMEPAD_BUTTON_CIRCLE, GLFW_GAMEPAD_BUTTON_TRIANGLE, GLFW_GAMEPAD_BUTTON_SQUARE, GLFW_GAMEPAD_BUTTON_START };
+		//controllerInput.setButtonsToMonitorInit(controllerButtons);
 
 
 
@@ -259,12 +259,7 @@ namespace BrickBreaker
 	std::uint16_t GameScreen::Update(std::chrono::microseconds elapsedTime)
 	{
 		auto firstTime = std::chrono::system_clock::now();
-		float currentFrame = static_cast<float>(glfwGetTime());
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-		fpsUpdateDeltaTime -= deltaTime;
-
-			
+		
 
 		std::latch graphDone{ 1 };
 
@@ -349,9 +344,13 @@ namespace BrickBreaker
 
 		if (fpsUpdateDeltaTime <= 1.0f)
 		{
-			fps = std::to_string(static_cast<int>(std::round(1 / deltaTime))) + " fps";
+			fps = std::to_string(static_cast<int>(std::round(1 / (elapsedTime.count() / 1000000.0f) ))) + " fps";
 			fpsUpdateDeltaTime += 0.16f;
 			fpsEntity->getComponent<components::Text>()->text = fps;
+		}
+		else
+		{
+			fpsUpdateDeltaTime -= (elapsedTime.count() / 1000000.0f);
 		}
 
 		averageUpdateTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - firstTime);
@@ -365,7 +364,7 @@ namespace BrickBreaker
 			
 		//Ebony::Graphics2d::BeginImgui();
 
-		Ebony::Graphics2d::SetRenderTarget(main, clearColor);
+		Ebony::Graphics2d::SetRenderTarget(mainRenderTarget, clearColor);
 
 		animationRenderer.Update();
 		spriteRenderer.Update();
@@ -378,11 +377,11 @@ namespace BrickBreaker
 
 		Ebony::Graphics2d::UnbindRenderTarget(clearColor);
 
-		Ebony::Graphics2d::DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), main);
+		Ebony::Graphics2d::DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), mainRenderTarget);
 	}
 	void GameScreen::ProcessInput(std::chrono::microseconds elapsedTime)
 	{
-		inputSystem.Update(keyInput, mouseInput, controllerInput);
+		inputSystem.Update();
 	}
 
 	void GameScreen::AddEntity(entities::EntityPtr entity)

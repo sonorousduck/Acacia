@@ -19,13 +19,13 @@ namespace systems
 		{
 		}
 
-		void Update(Ebony::KeyInput& keyInput, Ebony::MouseInput& mouseInput, Ebony::ControllerInput& controllerInput);
+		void Update();
 		
 	protected:
 		virtual bool isInterested(const entities::EntityPtr& entity);
 
 	private:
 		using System::Update;
-		void updateImpl(Ebony::KeyInput& keyInput, Ebony::MouseInput& mouseInput, Ebony::ControllerInput& controllerInput);
+		void updateImpl();
 	};
 }

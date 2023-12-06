@@ -23,4 +23,5 @@ Download SDL2 from here https://www.libsdl.org/
 Extract the package into a directory
 In the CMake GUI, you will need to set the variable SDL2_DIR to the cmake of that extracted folder, wherever that may be
 It should generate and build correctly after that point! :)
+If you are on windows, you will also need to grab the dll from the lib/x64 folder (SDL2.dll) and copy it into the build folder as well (Until I write something to automatically do this)
 ```

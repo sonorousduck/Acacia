@@ -62,9 +62,9 @@ namespace BrickBreaker
 
 
 		std::string fps = "";
-		Ebony::KeyInput keyInput;
-		Ebony::MouseInput mouseInput;
-		Ebony::ControllerInput controllerInput;
+		//Ebony::KeyInput keyInput;
+		//Ebony::MouseInput mouseInput;
+		//Ebony::ControllerInput controllerInput;
 		Ebony::Color clearColor;
 		Ebony::SpriteFont spriteFont;
 		systems::ParticleSystem particleSystem;
@@ -79,7 +79,7 @@ namespace BrickBreaker
 		systems::BallSystem ballSystem;
 		systems::LifePointSystem lifePointSystem;
 
-		Ebony::RenderTarget2D main;
+		Ebony::RenderTarget2D mainRenderTarget;
 
 		std::chrono::microseconds averageParticleRenderingTime = std::chrono::microseconds::zero();
 		std::chrono::microseconds averageParticleSystemTime = std::chrono::microseconds::zero();
