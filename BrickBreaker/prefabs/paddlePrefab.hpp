@@ -7,7 +7,8 @@
 #include "../misc/collisionLayers.hpp"
 #include <components/collider.hpp>
 #include <graphics2d.hpp>
-
+#include <SDL.h>
+#include <Log.hpp>
 
 namespace BrickBreaker
 {
@@ -46,12 +47,11 @@ namespace BrickBreaker
 				}
 			} });
 		
-		
 			keyboardInputComponent->onReleaseActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
 			keyboardInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
-			keyboardInputComponent->bindings.insert({ GLFW_KEY_A, "paddleLeft" });
-			keyboardInputComponent->bindings.insert({ GLFW_KEY_D, "paddleRight" });
-			keyboardInputComponent->bindings.insert({ GLFW_KEY_E, "growShrink" });
+			keyboardInputComponent->bindings.insert({ SDLK_a, "paddleLeft" });
+			keyboardInputComponent->bindings.insert({ SDLK_d, "paddleRight" });
+			keyboardInputComponent->bindings.insert({ SDLK_e, "growShrink" });
 
 			keyboardInputComponent->onHeldActions.insert({ "paddleLeft", [=](entities::EntityPtr entity)
 			{
@@ -73,6 +73,7 @@ namespace BrickBreaker
 				auto collider = entity->getComponent<components::Collider>();
 				if (transform->position.x + transform->scale.x < windowWidth)
 				{
+					EB_TRACE(Ebony::Time::GetDeltaTimeFloat());
 					rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
 				}
 			}

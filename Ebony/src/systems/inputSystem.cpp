@@ -1,6 +1,7 @@
 #include "inputSystem.hpp"
 
 #include <algorithm>
+#include "../singletons/inputManager.hpp"
 
 namespace systems
 {
@@ -24,10 +25,10 @@ namespace systems
 			if (entity->tryGetComponent<components::KeyboardInput>(keyInputComponent))
 			{
 				// We have all our bindings, so we need to determine which state each is in
-				/*for (auto iter = keyInputComponent->bindings.begin(); iter != keyInputComponent->bindings.end(); iter++)
+				for (auto iter = keyInputComponent->bindings.begin(); iter != keyInputComponent->bindings.end(); iter++)
 				{
-					Ebony::PressedState pressedState = keyInput.getIsKeyDown(iter->first);
-
+					Ebony::PressedState pressedState = Ebony::InputManager::keyboardInstance->getKeyState(iter->first);
+					
 					if (pressedState & Ebony::PressedState::PRESSED && keyInputComponent->onPressActions.contains(iter->second))
 					{
 						keyInputComponent->onPressActions[iter->second](entity);
@@ -40,7 +41,7 @@ namespace systems
 					{
 						keyInputComponent->onReleaseActions[iter->second](entity);
 					}
-				}*/
+				}
 			}
 
 

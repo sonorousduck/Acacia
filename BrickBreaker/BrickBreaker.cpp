@@ -143,7 +143,6 @@ namespace Ebony {
 
 
 			auto firstTime = std::chrono::system_clock::now();
-			float currentFrame = static_cast<float>(glfwGetTime());
 			auto previousTime = std::chrono::system_clock::now();
 
 			while (!quit)
@@ -162,9 +161,6 @@ namespace Ebony {
 				ChangeScreens();
 			}
 			
-
-			//glfwTerminate();
-
 			ThreadPool::terminate();
 			EbonyAudio::AudioManager::StopAll();
 			Ebony::ResourceManager::Clear();

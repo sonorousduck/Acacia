@@ -72,10 +72,10 @@ namespace Ebony
 		void static Initialize();
 
 
-		static std::unordered_map<SDL_JoystickID, SDL_GameController* > controllers;
-		static std::vector<KeyInputManager*> keyboardInstances;
+		static std::unordered_map<SDL_JoystickID, SDL_GameController*> controllers;
 		static std::unordered_map<SDL_JoystickID, std::shared_ptr<ControllerInputManager>> controllerInstances;
-		static std::vector<MouseInputManager*> mouseInstances;
-		static std::vector<AIInputManager*> aiInstances;
+		static std::shared_ptr<KeyInputManager> keyboardInstance;
+		static std::shared_ptr<MouseInputManager> mouseInstance;
+		static std::vector<std::shared_ptr<AIInputManager>> aiInstances;
 	};
 }

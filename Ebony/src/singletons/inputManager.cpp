@@ -3,20 +3,18 @@
 
 namespace Ebony
 {
-	std::vector<KeyInputManager*> InputManager::keyboardInstances;
-	std::unordered_map<SDL_JoystickID, std::shared_ptr<ControllerInputManager>> InputManager::controllerInstances;
-	std::vector<MouseInputManager*> InputManager::mouseInstances;
-	std::vector<AIInputManager*> InputManager::aiInstances;
-	std::unordered_map<SDL_JoystickID, SDL_GameController*> InputManager::controllers;
+	std::shared_ptr<KeyInputManager> InputManager::keyboardInstance{};
+	std::unordered_map<SDL_JoystickID, std::shared_ptr<ControllerInputManager>> InputManager::controllerInstances{};
+	std::shared_ptr<MouseInputManager> InputManager::mouseInstance{};
+	std::vector<std::shared_ptr<AIInputManager>> InputManager::aiInstances{};
+	std::unordered_map<SDL_JoystickID, SDL_GameController*> InputManager::controllers{};
 
 	KeyInputManager::KeyInputManager() : isEnabled(true)
 	{
-		InputManager::keyboardInstances.push_back(this);
 	}
 
 	KeyInputManager::~KeyInputManager()
 	{
-		InputManager::keyboardInstances.erase(std::remove(InputManager::keyboardInstances.begin(), InputManager::keyboardInstances.end(), this), InputManager::keyboardInstances.end());
 	}
 
 	PressedState KeyInputManager::getKeyState(SDL_Keycode key)
@@ -33,13 +31,15 @@ namespace Ebony
 
 				if (result.current & PRESSED && result.previous & PRESSED)
 				{
-					//EB_TRACE("IF I WROTE THIS RIGHT, I SHOULDN'T SEE THIS! (inputManager.cpp)");
 					result.current = HELD;
 				}
 				else if (result.current & RELEASED && result.previous & RELEASED)
 				{
-					//EB_TRACE("IF I WROTE THIS RIGHT, I SHOULDN'T SEE THIS! (inputManager.cpp)");
 					result.current = NONE;
+				}
+				else
+				{
+					result.previous = result.current;
 				}
 
 				keys[key] = result;
@@ -50,6 +50,7 @@ namespace Ebony
 			}
 		}
 		return result.current;
+		//return PRESSED;
 	}
 
 	void KeyInputManager::setIsKeyDown(SDL_Keycode key, PressedState pressedState)
@@ -66,13 +67,13 @@ namespace Ebony
 			{
 				result.current = HELD;
 			}
-			else if (pressedState & PRESSED && result.current & HELD)
-			{
-				result.previous = HELD;
-			}
 			else if (pressedState & RELEASED && result.current & RELEASED)
 			{
 				result.current = NONE;
+			}
+			else
+			{
+				result.current = pressedState;
 			}
 
 			keys[key] = result;
@@ -97,8 +98,14 @@ namespace Ebony
 				return true;
 				break;
 			case SDL_KEYDOWN:
+				InputManager::keyboardInstance->setIsKeyDown(event.key.keysym.sym, PRESSED);
+				
+				EB_TRACE(event.key.keysym.sym);
+				break;
 			case SDL_KEYUP:
 
+				InputManager::keyboardInstance->setIsKeyDown(event.key.keysym.sym, RELEASED);
+				
 				EB_TRACE(SDL_GetKeyName(event.key.keysym.sym));
 				break;
 
@@ -154,17 +161,21 @@ namespace Ebony
 
 	void InputManager::Initialize()
 	{
+		InputManager::controllers.reserve(SDL_NumHaptics());
+		InputManager::controllerInstances.reserve(SDL_NumHaptics());
+
 		for (int i = 0; i < SDL_NumJoysticks(); i++)
 		{
 			if (SDL_IsGameController(i))
 			{
-
 				InputManager::controllers[i] = SDL_GameControllerOpen(i);
 				InputManager::controllerInstances[i] = std::move(std::make_shared<ControllerInputManager>(i));
-
-				
 			}
 		}
+
+		InputManager::keyboardInstance = std::make_shared<KeyInputManager>();
+		InputManager::mouseInstance = std::make_shared<MouseInputManager>();
+
 	}
 
 	ControllerInputManager::ControllerInputManager(int joystickId) : joystickId(joystickId)
