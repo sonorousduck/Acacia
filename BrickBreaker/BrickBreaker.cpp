@@ -144,6 +144,7 @@ namespace Ebony {
 
 			auto firstTime = std::chrono::system_clock::now();
 			auto previousTime = std::chrono::system_clock::now();
+			int frame = 0;
 
 			while (!quit)
 			{
@@ -152,6 +153,9 @@ namespace Ebony {
 				Ebony::Time::SetDeltaTime(elapsedTime);
 				previousTime = currentTime;
 
+				Ebony::InputManager::ResetInput();
+
+				//EB_TRACE(frame);
 				ProcessInput(elapsedTime);
 				Update(elapsedTime);
 				Draw(elapsedTime);
@@ -159,6 +163,7 @@ namespace Ebony {
 				RemoveOldEntities();
 				AddNewEntities();
 				ChangeScreens();
+				frame++;
 			}
 			
 			ThreadPool::terminate();

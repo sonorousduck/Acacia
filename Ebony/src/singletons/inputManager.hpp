@@ -8,6 +8,7 @@
 
 #include "../Core.hpp"
 #include <SDL.h>
+#include <glm/glm.hpp>
 
 namespace Ebony
 {
@@ -35,6 +36,36 @@ namespace Ebony
 
 		Press pressedState;
 	};
+
+	struct MouseEvent
+	{
+		Uint8 button;
+		Uint16 clicks;
+		int x;
+		int y;
+	};
+
+
+	struct MousePress
+	{
+		MouseEvent mouseClick;
+		MouseEvent mouseRelease;
+		
+		Press pressInfo;
+	};
+
+	struct MouseScroll
+	{
+		int xPos;
+		int yPos;
+		int mouseScrollX;
+		int mouseScrollY;
+	};
+
+
+
+	
+
 
 	class KeyInputManager
 	{
@@ -80,7 +111,36 @@ namespace Ebony
 
 	class MouseInputManager
 	{
+	public:
+		MouseInputManager();
+		~MouseInputManager();
 
+		PressedState getMouseState();
+		void setMouseState();
+		void setMousePosition(int x, int y, int xRel, int yRel);
+
+		int getMouseRelativeX();
+		int getMouseRelativeY();
+		glm::vec2 getMouseRelative();
+
+		int getMouseAbsoluteX();
+		int getMouseAbsoluteY();
+		glm::vec2 getMouseAbsolute();
+
+		void resetScroll();
+		void setMouseScroll(int x, int y, int mouseScrollX, int mouseScrollY);
+		MouseScroll getMouseScroll();
+
+	private:
+		std::unordered_map<Uint8, MousePress> buttons;
+
+		int absoluteX = 0;
+		int absoluteY = 0;
+
+		int relativeX = 0;
+		int relativeY = 0;
+
+		MouseScroll mouseScroll;
 	};
 
 	class AIInputManager
@@ -94,6 +154,8 @@ namespace Ebony
 		bool static HandleInput();
 		void static Initialize();
 		void static Vibrate(std::uint8_t joystickId, float left, float right, Uint32 ms, bool vibrateTriggers);
+		void static ResetInput();
+
 
 		static std::unordered_map<SDL_JoystickID, SDL_GameController*> controllers;
 		static std::unordered_map<SDL_JoystickID, std::shared_ptr<ControllerInputManager>> controllerInstances;

@@ -144,18 +144,26 @@ namespace Ebony
 				EB_TRACE("REMOVING CONTROLLER (inputManager.cpp)");
 				break;
 
+			case SDL_MOUSEBUTTONDOWN:
+				//InputManager::mouseInstance->setState();
+				break;
+
+			case SDL_MOUSEBUTTONUP:
+				break;
+			
+			case SDL_MOUSEWHEEL:
+				EB_TRACE(event.wheel.preciseY);
+				break;
+
+			case SDL_MOUSEMOTION:
+
+				InputManager::mouseInstance->setMousePosition(event.motion.x, event.motion.y, event.motion.xrel, event.motion.yrel);
+
+				//std::cout << "X: " << InputManager::mouseInstance->getMouseAbsoluteX() << ", Y: " << InputManager::mouseInstance->getMouseAbsoluteY() << std::endl;;
+				break;
+
 			case SDL_CONTROLLERTOUCHPADMOTION:
 				EB_TRACE(event.type);
-				EB_TRACE("RUMBLE RUMBLE!");
-
-				if (event.ctouchpad.x < 0.5)
-				{
-					SDL_JoystickRumble(SDL_GameControllerGetJoystick(InputManager::controllers[0]), 65535, 0, 100);
-				}
-				else
-				{
-					SDL_JoystickRumble(SDL_GameControllerGetJoystick(InputManager::controllers[0]), 0, 65535, 100);
-				}
 				break;
 
 			case SDL_JOYBATTERYUPDATED:
@@ -163,10 +171,7 @@ namespace Ebony
 
 			case SDL_WINDOWEVENT:
 				if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-					// data1 is width
-					// data2 is height	
-
-
+					// data1 is width, data2 is height	
 					Graphics2d::setNewWindowSize(event.window.data1, event.window.data2);
 				}
 				break;
@@ -200,6 +205,12 @@ namespace Ebony
 	void InputManager::Vibrate(std::uint8_t joystickId, float left, float right, Uint32 ms, bool vibrateTriggers)
 	{
 		Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[joystickId]]->Vibrate(left, right, ms, vibrateTriggers);
+	}
+
+
+	void InputManager::ResetInput()
+	{
+		Ebony::InputManager::mouseInstance->resetScroll();
 	}
 
 	ControllerInputManager::ControllerInputManager(int joystickId) : joystickId(joystickId)
@@ -337,10 +348,6 @@ namespace Ebony
 
 
 			joysticksAndTriggers[button] = press;
-
-
-			//press.current = abs(value) > 0.10;
-			//buttons[button] = press;
 		}
 	}
 
@@ -378,4 +385,81 @@ namespace Ebony
 
 
 
+	MouseInputManager::MouseInputManager()
+	{
+	}
+
+	MouseInputManager::~MouseInputManager()
+	{
+	}
+
+	PressedState MouseInputManager::getMouseState()
+	{
+		return PressedState();
+	}
+
+	void MouseInputManager::setMouseState()
+	{
+
+	}
+
+	void MouseInputManager::setMousePosition(int x, int y, int xRel, int yRel)
+	{
+		absoluteX = x;
+		absoluteY = y;
+		relativeX += xRel;
+		relativeY += yRel;
+	}
+
+	int MouseInputManager::getMouseRelativeX()
+	{
+		return relativeX;
+	}
+
+	int MouseInputManager::getMouseRelativeY()
+	{
+		return relativeY;
+	}
+
+	glm::vec2 MouseInputManager::getMouseRelative()
+	{
+		return glm::vec2(relativeX, relativeY);
+	}
+
+	int MouseInputManager::getMouseAbsoluteX()
+	{
+		return absoluteX;
+	}
+
+	int MouseInputManager::getMouseAbsoluteY()
+	{
+		return absoluteY;
+	}
+
+	glm::vec2 MouseInputManager::getMouseAbsolute()
+	{
+		return glm::vec2(absoluteX, absoluteY);
+	}
+
+	void MouseInputManager::resetScroll()
+	{
+		mouseScroll.mouseScrollX = 0;
+		mouseScroll.mouseScrollY = 0;
+	}
+
+	void MouseInputManager::setMouseScroll(int x, int y, int mouseScrollX, int mouseScrollY)
+	{
+		mouseScroll.xPos = x;
+		mouseScroll.yPos = y;
+		mouseScroll.mouseScrollX = mouseScrollX;
+		mouseScroll.mouseScrollY = mouseScrollY;
+	}
+
+	MouseScroll MouseInputManager::getMouseScroll()
+	{
+		MouseScroll mouseScrollReturn = mouseScroll;
+
+		return mouseScrollReturn;
+	}
+	
 }
