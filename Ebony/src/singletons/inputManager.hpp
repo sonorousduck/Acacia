@@ -50,8 +50,17 @@ namespace Ebony
 		ControllerInputManager(int joystickId);
 		~ControllerInputManager();
 
+		PressedState getButtonState(Uint8 button);
+		PressedState getTriggerJoystickState(Uint8 trigger);
+		
+		void setIsButtonDown(Uint8 button, PressedState pressedState);
+		void setIsTriggerDown(Uint8 button, float value);
 
 		int joystickId;
+
+	private:
+		std::unordered_map<Uint8, Press> buttons;
+		std::unordered_map<Uint8, Press> joysticksAndTriggers;
 
 	};
 
@@ -74,7 +83,9 @@ namespace Ebony
 
 		static std::unordered_map<SDL_JoystickID, SDL_GameController*> controllers;
 		static std::unordered_map<SDL_JoystickID, std::shared_ptr<ControllerInputManager>> controllerInstances;
+		static std::unordered_map<SDL_JoystickID, std::uint8_t> sdlJoystickToJoystickConversion;
 		static std::shared_ptr<KeyInputManager> keyboardInstance;
+		static std::uint8_t controllersConnected;
 		static std::shared_ptr<MouseInputManager> mouseInstance;
 		static std::vector<std::shared_ptr<AIInputManager>> aiInstances;
 	};

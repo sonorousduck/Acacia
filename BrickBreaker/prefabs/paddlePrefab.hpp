@@ -23,10 +23,13 @@ namespace BrickBreaker
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
 
+			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_B, "print" });
+			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_Y, "printRelease" });
+
 
 			controllerInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) {std::cout << "Circle was called (OnHeld)" << std::endl; } });
 			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=](entities::EntityPtr) {std::cout << "Triangle was called" << std::endl; } });
-			controllerInputComponent->joystickBindings.insert({ GLFW_GAMEPAD_AXIS_LEFT_X, "paddleMovement" });
+			controllerInputComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_LEFTX, "paddleMovement" });
 
 			controllerInputComponent->joystickActions.insert({ "paddleMovement", [=](entities::EntityPtr entity, float value) {
 				if (abs(value) > 0.10)

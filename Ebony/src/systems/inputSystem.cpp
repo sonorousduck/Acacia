@@ -50,67 +50,85 @@ namespace systems
 			components::ControllerInput* controllerInputComponent{};
 			if (entity->tryGetComponent(controllerInputComponent))
 			{
-				
 
-				//if (Ebony::KeyInput::joysticksConnected > 0)
-				//{
-				//	GLFWgamepadstate state{};
-				//	if (glfwGetGamepadState(controllerInputComponent->joystickId, &state))
-				//	{
-				//		for (auto iter = controllerInputComponent->bindings.begin(); iter != controllerInputComponent->bindings.end(); iter++)
-				//		{
-				//			// Update bindings information and get it as well
-				//			Ebony::PressedState pressedState = controllerInput.setIsButtonDown(iter->first, state.buttons[iter->first]);
+				if (Ebony::InputManager::controllersConnected > controllerInputComponent->joystickId)
+				{
+					std::shared_ptr controllerInstance = Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[controllerInputComponent->joystickId]];
 
-				//			if (pressedState & Ebony::PressedState::PRESSED && controllerInputComponent->onPressActions.contains(iter->second))
-				//			{
-				//				controllerInputComponent->onPressActions[iter->second](entity);
-				//			}
-				//			else if (pressedState & Ebony::PressedState::HELD && controllerInputComponent->onHeldActions.contains(iter->second))
-				//			{
-				//				controllerInputComponent->onHeldActions[iter->second](entity);
-				//			}
-				//			else if (pressedState & Ebony::PressedState::RELEASED && controllerInputComponent->onReleaseActions.contains(iter->second))
-				//			{
-				//				controllerInputComponent->onReleaseActions[iter->second](entity);
-				//			}
-				//		}
+					// Look for button inputs
+					for (auto iter = controllerInputComponent->bindings.begin(); iter != controllerInputComponent->bindings.end(); iter++)
+					{
+						Ebony::PressedState pressedState = controllerInstance->getButtonState(iter->first);
 
-				//		for (auto iter = controllerInputComponent->joystickBindings.begin(); iter != controllerInputComponent->joystickBindings.end(); iter++)
-				//		{
-				//			// Update the joystick (and trigger) information
-				//			Ebony::PressedState pressedState = controllerInput.setIsTriggerDown(iter->first, state.axes[iter->first]);
-
-				//			if ((pressedState & Ebony::PressedState::PRESSED || pressedState & Ebony::PressedState::RELEASED) && controllerInputComponent->joystickActions.contains(iter->second))
-				//			{
-				//				controllerInputComponent->joystickActions[iter->second](entity, state.axes[iter->first]);
-				//			}
-				//		}
+						if (pressedState & Ebony::PressedState::PRESSED && controllerInputComponent->onPressActions.contains(iter->second))
+						{
+							controllerInputComponent->onPressActions[iter->second](entity);
+						}
+						else if (pressedState & Ebony::PressedState::HELD && controllerInputComponent->onHeldActions.contains(iter->second))
+						{
+							controllerInputComponent->onHeldActions[iter->second](entity);
+						}
+						else if (pressedState & Ebony::PressedState::RELEASED && controllerInputComponent->onReleaseActions.contains(iter->second))
+						{
+							controllerInputComponent->onReleaseActions[iter->second](entity);
+						}
+					}
 
 
+					// Look for Joystick/Trigger inputs
+					for (auto iter = controllerInputComponent->joystickBindings.begin(); iter != controllerInputComponent->joystickBindings.end(); iter++)
+					{
+						Ebony::PressedState pressedState = controllerInstance->getTriggerJoystickState(iter->first);
 
-				//		//for (auto iter = input->controllerActionKeyPairs.begin(); iter != input->controllerActionKeyPairs.end(); iter++)
-				//		//{
-				//		//if (state.buttons[iter->first] && input->previousActions[iter->first] != GLFW_PRESS)
-				//		//	{
-				//		//		iter->second();
-				//		//	}
-				//		//	// TODO: Potentially, I will want this to have onPress, onRelease, and onHold callbacks. But for now, suffices to just have on press
-				//		//	input->previousActions[iter->first] = state.buttons[iter->first];
+						/*if (pressedState & Ebony::PressedState::PRESSED && controllerInputComponent->onPressActions.contains(iter->second))
+						{
+							controllerInputComponent->joystickActions[iter->second](entity, );
+						}
+						else if (pressedState & Ebony::PressedState::HELD && controllerInputComponent->onHeldActions.contains(iter->second))
+						{
+							controllerInputComponent->onHeldActions[iter->second](entity);
+						}
+						else if (pressedState & Ebony::PressedState::RELEASED && controllerInputComponent->onReleaseActions.contains(iter->second))
+						{
+							controllerInputComponent->onReleaseActions[iter->second](entity);
+						}*/
+					}
+				}
 
-				//		//	// There are also state.axes which are the joystick positions. This will need to be translated as well, but might have its own callbacks since you need to take in a float
-				//		//	// The axis indices are GLFW_GAMEPAD_AXIS_LEFT_X, GLFW_GAMEPAD_AXIS_LEFT_Y, GLFW_GAMEPAD_AXIS_RIGHT_X, GLFW_GAMEPAD_AXIS_RIGHT_Y, GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER
-				//		//}
 
-				//		//for (auto iter = input->controllerAxes.begin(); iter != input->controllerAxes.end(); iter++)
-				//		//{
-				//		//	if (state.axes[iter->first])
-				//		//	{
-				//		//		iter->second(state.axes[iter->first]);
-				//		//	}
-				//		//}
-				//	}
-				//}
+					//	for (auto iter = controllerInputComponent->joystickBindings.begin(); iter != controllerInputComponent->joystickBindings.end(); iter++)
+					//	{
+					//		// Update the joystick (and trigger) information
+					//		Ebony::PressedState pressedState = controllerInput.setIsTriggerDown(iter->first, state.axes[iter->first]);
+
+					//		if ((pressedState & Ebony::PressedState::PRESSED || pressedState & Ebony::PressedState::RELEASED) && controllerInputComponent->joystickActions.contains(iter->second))
+					//		{
+					//			controllerInputComponent->joystickActions[iter->second](entity, state.axes[iter->first]);
+					//		}
+					//	}
+
+
+
+						//for (auto iter = input->controllerActionKeyPairs.begin(); iter != input->controllerActionKeyPairs.end(); iter++)
+						//{
+						//if (state.buttons[iter->first] && input->previousActions[iter->first] != GLFW_PRESS)
+						//	{
+						//		iter->second();
+						//	}
+						//	// TODO: Potentially, I will want this to have onPress, onRelease, and onHold callbacks. But for now, suffices to just have on press
+						//	input->previousActions[iter->first] = state.buttons[iter->first];
+
+						//	// There are also state.axes which are the joystick positions. This will need to be translated as well, but might have its own callbacks since you need to take in a float
+						//	// The axis indices are GLFW_GAMEPAD_AXIS_LEFT_X, GLFW_GAMEPAD_AXIS_LEFT_Y, GLFW_GAMEPAD_AXIS_RIGHT_X, GLFW_GAMEPAD_AXIS_RIGHT_Y, GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER
+						//}
+
+						//for (auto iter = input->controllerAxes.begin(); iter != input->controllerAxes.end(); iter++)
+						//{
+						//	if (state.axes[iter->first])
+						//	{
+						//		iter->second(state.axes[iter->first]);
+						//	}
+						//}
 			}
 			
 			// Handle Mouse input
