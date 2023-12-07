@@ -78,20 +78,12 @@ namespace systems
 					// Look for Joystick/Trigger inputs
 					for (auto iter = controllerInputComponent->joystickBindings.begin(); iter != controllerInputComponent->joystickBindings.end(); iter++)
 					{
-						Ebony::PressedState pressedState = controllerInstance->getTriggerJoystickState(iter->first);
+						Ebony::JoystickAndTriggerPress pressedState = controllerInstance->getTriggerJoystickState(iter->first);
 
-						/*if (pressedState & Ebony::PressedState::PRESSED && controllerInputComponent->onPressActions.contains(iter->second))
+						if ((pressedState.pressedState.current & (Ebony::PressedState::PRESSED | Ebony::PressedState::HELD)) && controllerInputComponent->joystickActions.contains(iter->second))
 						{
-							controllerInputComponent->joystickActions[iter->second](entity, );
+							controllerInputComponent->joystickActions[iter->second](entity, pressedState.scaledCurrentValue);
 						}
-						else if (pressedState & Ebony::PressedState::HELD && controllerInputComponent->onHeldActions.contains(iter->second))
-						{
-							controllerInputComponent->onHeldActions[iter->second](entity);
-						}
-						else if (pressedState & Ebony::PressedState::RELEASED && controllerInputComponent->onReleaseActions.contains(iter->second))
-						{
-							controllerInputComponent->onReleaseActions[iter->second](entity);
-						}*/
 					}
 				}
 

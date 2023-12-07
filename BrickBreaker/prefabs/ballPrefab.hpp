@@ -9,6 +9,7 @@
 #include "../components/ballComponent.hpp"
 #include <components/rigidbodyComponent.hpp>
 #include <components/keyboardComponent.hpp>
+#include <singletons/inputManager.hpp>
 
 namespace BrickBreaker
 {
@@ -50,6 +51,8 @@ namespace BrickBreaker
 						glm::vec2 bounceDirection = glm::abs(ball->direction);
 						glm::vec2 paddleScale = paddleTransform->scale;
 
+
+
 						float halfpoint = paddleScale.x / 2.0f;
 						float oneTenth = paddleScale.x / 10.0f;
 
@@ -59,7 +62,9 @@ namespace BrickBreaker
 						if (isMiddlePaddle)
 						{
 							bounceDirection.x = static_cast<float>(ball->random_double(-0.5, 0.5));
-							
+							//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(1, 1, 100, false);
+							Ebony::InputManager::Vibrate(self->getComponent<components::ControllerInput>()->joystickId, 1, 1, 100, false);
+
 						}
 						else
 						{
@@ -68,10 +73,15 @@ namespace BrickBreaker
 							{
 								if (direction.x <= paddleScale.x - 1.5 * oneTenth) // Just right side
 								{
+									Ebony::InputManager::Vibrate(self->getComponent<components::ControllerInput>()->joystickId, 0, 0.5, 100, false);
+									//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(0, 0.5, 100, false);
 									bounceDirection.x = 1.25;
 								}
 								else // Right Edge
 								{
+									Ebony::InputManager::Vibrate(self->getComponent<components::ControllerInput>()->joystickId, 0, 1, 100, true);
+
+									//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(0, 1, 100, true);
 									bounceDirection.x = 1.75;
 
 								}
@@ -80,10 +90,16 @@ namespace BrickBreaker
 							{
 								if (direction.x >= 1.5 * oneTenth) // Left Side
 								{
+									Ebony::InputManager::Vibrate(self->getComponent<components::ControllerInput>()->joystickId, 0.5, 0, 100, false);
+
+									//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(0.5, 0, 100, false);
 									bounceDirection.x = -1.25;
 								}
 								else // Left Edge
 								{
+									Ebony::InputManager::Vibrate(self->getComponent<components::ControllerInput>()->joystickId, 1, 0, 100, true);
+
+									//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(1, 0, 100, true);
 									bounceDirection.x = -1.75;
 								}
 							}	
@@ -148,8 +164,10 @@ namespace BrickBreaker
 				};
 
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponentBall = std::make_unique<components::KeyboardInput>();
-			
-			keyboardInputComponentBall->bindings.insert({ GLFW_KEY_SPACE, "launchBall" });
+			std::unique_ptr<components::ControllerInput> controllerComponent = std::make_unique<components::ControllerInput>(0);
+
+
+			keyboardInputComponentBall->bindings.insert({ SDLK_SPACE, "launchBall" });
 
 			keyboardInputComponentBall->onReleaseActions.insert({ "launchBall", [=](entities::EntityPtr entity)
 			{
@@ -161,7 +179,19 @@ namespace BrickBreaker
 				ball->direction = glm::vec2(random_x, -abs(random_y));
 			} });
 
+			controllerComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_A, "launchBall" });
+			controllerComponent->onReleaseActions.insert({ "launchBall", [=](entities::EntityPtr entity)
+			{
+					//TODO: Make this only happen when isAttachedToPaddle is true. Right now, it is nice for debugging though :)
+					auto ball = entity->getComponent<components::Ball>();
+					ball->isAttachedToPaddle = false;
+					double random_x = ball->random_double(-0.8, 0.8);
+					double random_y = ball->random_double(-0.8, 0.8);
+					ball->direction = glm::vec2(random_x, -abs(random_y));
+				} });
+
 			ballEntity->addComponent(std::move(keyboardInputComponentBall));
+			ballEntity->addComponent(std::move(controllerComponent));
 
 			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::BRICK | BrickBreaker::CollisionLayers::WALL | BrickBreaker::CollisionLayers::TOP_WALL, false);
 			auto ballComponent = std::make_unique<components::Ball>(600.0f, glm::vec2(0.5f, -0.5f), 1, ball, isStuckToPaddle);

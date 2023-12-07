@@ -117,45 +117,20 @@ namespace Ebony
 				break;
 
 			case SDL_CONTROLLERAXISMOTION:
-
-				// event.caxis.value ranges from (-32768 to 32767)
-				switch (event.caxis.axis)
-				{
-				// Left X axis moved (Left is negative, right positive)
-				case 0:
-					EB_INFO(event.caxis.value);
-					break;
-
-				// Left Y axis moved (Down is positive, up is negative)
-				case 1:
-					break;
-
-				// Right X axis moved (Left is negative, right positive)
-				case 2:
-					break;
-
-				// Right Y axis moved (Down is positive, up is negative)
-				case 3:
-					break;
-
-				// Trigger Left axis moved
-				case 4:
-					break;
-
-				// Trigger Right axis moved
-				case 5:
-					break;
-				
-				// Controller Axis Max
-				case 6:
-					EB_TRACE("WHAT DID I JUST PRESS? I DON'T KNOW WHAT SDL_CONTROLLER_AXIS_MAX IS");
-				}
+				InputManager::controllerInstances[InputManager::sdlJoystickToJoystickConversion[event.cdevice.which]]->setIsTriggerDown(event.caxis.axis, event.caxis.value);
 				break;
 				
 			case SDL_CONTROLLERDEVICEADDED:
 				InputManager::controllers[event.cdevice.which] = SDL_GameControllerOpen(event.cdevice.which);
 				InputManager::controllerInstances[event.cdevice.which] = std::move(std::make_shared<ControllerInputManager>(event.cdevice.which));
 				InputManager::sdlJoystickToJoystickConversion[SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(InputManager::controllers[event.cdevice.which]))] = event.cdevice.which;
+
+
+				InputManager::controllerInstances[event.cdevice.which]->isXboxController = SDL_JoystickHasRumbleTriggers(SDL_GameControllerGetJoystick(InputManager::controllers[InputManager::sdlJoystickToJoystickConversion[event.cdevice.which]]));
+				
+				//std::cout << (SDL_JoystickGetVendor(SDL_GameControllerGetJoystick(InputManager::controllers[event.cdevice.which]))) << std::endl;
+				//EB_INFO(SDL_JoystickName(SDL_GameControllerGetJoystick(InputManager::controllers[event.cdevice.which])));
+
 				InputManager::controllersConnected++;
 				EB_TRACE("ADDING NEW CONTROLLER (inputManager.cpp)");
 				break;
@@ -222,6 +197,11 @@ namespace Ebony
 
 	}
 
+	void InputManager::Vibrate(std::uint8_t joystickId, float left, float right, Uint32 ms, bool vibrateTriggers)
+	{
+		Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[joystickId]]->Vibrate(left, right, ms, vibrateTriggers);
+	}
+
 	ControllerInputManager::ControllerInputManager(int joystickId) : joystickId(joystickId)
 	{
 	}
@@ -229,6 +209,18 @@ namespace Ebony
 
 	ControllerInputManager::~ControllerInputManager()
 	{
+	}
+
+	void ControllerInputManager::Vibrate(float left, float right, Uint32 ms, bool vibrateTriggers)
+	{
+		if (vibrateTriggers && this->isXboxController)
+		{
+			SDL_JoystickRumbleTriggers(SDL_GameControllerGetJoystick(InputManager::controllers[InputManager::sdlJoystickToJoystickConversion[joystickId]]), static_cast<Uint16>(left * 65535), static_cast<Uint16>(right * 65535), ms);
+		}
+		else
+		{
+			SDL_JoystickRumble(SDL_GameControllerGetJoystick(InputManager::controllers[InputManager::sdlJoystickToJoystickConversion[joystickId]]), static_cast<Uint16>(left * 65535), static_cast<Uint16>(right * 65535), ms);
+		}
 	}
 
 	void ControllerInputManager::setIsButtonDown(Uint8 button, PressedState pressedState)
@@ -262,11 +254,6 @@ namespace Ebony
 			pressed.current = pressedState;
 			buttons[button] = pressed;
 		}
-	}
-
-	PressedState ControllerInputManager::getTriggerJoystickState(Uint8 trigger)
-	{
-		return PressedState();
 	}
 
 
@@ -303,10 +290,91 @@ namespace Ebony
 		return result.current;
 	}
 
-	void ControllerInputManager::setIsTriggerDown(Uint8 button, float value)
+	void ControllerInputManager::setIsTriggerDown(Uint8 button, short value)
 	{
+		std::unordered_map<Uint8, JoystickAndTriggerPress>::iterator it = joysticksAndTriggers.find(button);
+
+		// event.caxis.value ranges from (-32768 to 32767)
+		// 0: Left X axis moved (Left is negative, right positive)
+		// 1: Left Y axis moved (Down is positive, up is negative)
+		// 2: Right X axis moved (Left is negative, right positive)
+		// 3: Right Y axis moved (Down is positive, up is negative)
+		// 4: Trigger Left axis moved
+		// 5: Trigger Right axis moved
+
+		if (it != joysticksAndTriggers.end())
+		{
+			JoystickAndTriggerPress press = joysticksAndTriggers[button];
+			press.lastValue = press.currentValue;
+			press.scaledLastValue = press.scaledCurrentValue;
+			press.pressedState.previous = press.pressedState.current;
+
+			press.currentValue = value;
+			press.scaledCurrentValue = static_cast<float>(value) / 32767.0f; // Technically, will allow for an less than -1, but will be close enough
+			
+			EB_TRACE(press.scaledCurrentValue);
+
+			press.pressedState.current = abs(press.scaledCurrentValue) > 0.01 ? Ebony::PRESSED : Ebony::NONE;
+
+			if (press.pressedState.previous & Ebony::PRESSED && press.pressedState.current & Ebony::NONE)
+			{
+				press.pressedState.current = Ebony::RELEASED;
+			}
+
+			joysticksAndTriggers[button] = press;
+
+		}
+		else
+		{
+			JoystickAndTriggerPress press = joysticksAndTriggers[button];
+			press.scaledLastValue = press.scaledCurrentValue;
+			press.pressedState.previous = press.pressedState.current;
+
+			press.currentValue = value;
+			press.scaledCurrentValue = static_cast<float>(value / 32767); // Technically, will allow for an less than -1, but will be close enough
+
+			press.pressedState.current = abs(press.scaledCurrentValue) > 0.01 ? Ebony::PRESSED : Ebony::NONE;
+
+
+			joysticksAndTriggers[button] = press;
+
+
+			//press.current = abs(value) > 0.10;
+			//buttons[button] = press;
+		}
 	}
 
+	JoystickAndTriggerPress ControllerInputManager::getTriggerJoystickState(Uint8 trigger)
+	{
+		std::unordered_map<Uint8, JoystickAndTriggerPress>::iterator it = joysticksAndTriggers.find(trigger);
+		JoystickAndTriggerPress press = JoystickAndTriggerPress();
+
+		if (it != joysticksAndTriggers.end())
+		{
+			press = joysticksAndTriggers[trigger];
+
+			if (press.pressedState.current & PRESSED && press.pressedState.previous & PRESSED)
+			{
+				press.pressedState.current = HELD;
+			}
+			else if (press.pressedState.current & RELEASED && press.pressedState.previous & RELEASED)
+			{
+				press.pressedState.current = NONE;
+			}
+			else
+			{
+				press.pressedState.previous = press.pressedState.current;
+			}
+
+			joysticksAndTriggers[trigger] = press;
+		}
+		else
+		{
+			joysticksAndTriggers[trigger] = press;
+		}
+
+		return press;
+	}
 
 
 

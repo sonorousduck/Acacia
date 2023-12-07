@@ -26,6 +26,16 @@ namespace Ebony
 		PressedState previous = NONE;
 	};
 
+	struct JoystickAndTriggerPress
+	{
+		short currentValue;
+		short lastValue;
+		float scaledCurrentValue;
+		float scaledLastValue;
+
+		Press pressedState;
+	};
+
 	class KeyInputManager
 	{
 	public:
@@ -51,16 +61,20 @@ namespace Ebony
 		~ControllerInputManager();
 
 		PressedState getButtonState(Uint8 button);
-		PressedState getTriggerJoystickState(Uint8 trigger);
+		JoystickAndTriggerPress getTriggerJoystickState(Uint8 trigger);
+
+		// Takes in left and right from 0.0 - 1.0, it manually converts it to the maximums for you
+		void Vibrate(float left, float right, Uint32 ms, bool vibrateTriggers);
 		
 		void setIsButtonDown(Uint8 button, PressedState pressedState);
-		void setIsTriggerDown(Uint8 button, float value);
+		void setIsTriggerDown(Uint8 button, short value);
 
 		int joystickId;
+		bool isXboxController = false;
 
 	private:
 		std::unordered_map<Uint8, Press> buttons;
-		std::unordered_map<Uint8, Press> joysticksAndTriggers;
+		std::unordered_map<Uint8, JoystickAndTriggerPress> joysticksAndTriggers;
 
 	};
 
@@ -79,7 +93,7 @@ namespace Ebony
 	public:
 		bool static HandleInput();
 		void static Initialize();
-
+		void static Vibrate(std::uint8_t joystickId, float left, float right, Uint32 ms, bool vibrateTriggers);
 
 		static std::unordered_map<SDL_JoystickID, SDL_GameController*> controllers;
 		static std::unordered_map<SDL_JoystickID, std::shared_ptr<ControllerInputManager>> controllerInstances;
