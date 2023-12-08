@@ -39,9 +39,9 @@ namespace Ebony
 
 	struct MouseEvent
 	{
-		Uint16 clicks;
-		int x;
-		int y;
+		Uint16 clicks = 0;
+		int x = 0;
+		int y = 0;
 	};
 
 
@@ -115,7 +115,7 @@ namespace Ebony
 		~MouseInputManager();
 
 		MousePress getMouseState(Uint8 button);
-		void setMouseState(Uint8 button, PressedState state);
+		void setMouseState(Uint8 button, PressedState state, int x, int y, int clicks);
 		void setMousePosition(int x, int y, int xRel, int yRel);
 
 		int getMouseRelativeX();

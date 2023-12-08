@@ -126,25 +126,25 @@ namespace systems
 			// Handle Mouse input
 			if (entity->hasComponent<components::MouseInput>())
 			{
-				/*auto input = entity->getComponent<components::MouseInput>();
+				auto input = entity->getComponent<components::MouseInput>();
 
 				for (auto iter = input->bindings.begin(); iter != input->bindings.end(); iter++)
 				{
-					Ebony::PressedState pressedState = mouseInput.getIsButtonDown(iter->first);
+					Ebony::MousePress mousePress = Ebony::InputManager::mouseInstance->getMouseState(iter->first);
 
-					if (pressedState == Ebony::PressedState::PRESSED && input->onPressActions.contains(iter->second))
+					if (mousePress.pressInfo.current & Ebony::PressedState::PRESSED && input->onPressActions.contains(iter->second))
 					{
-						input->onPressActions[iter->second](entity);
+						input->onPressActions[iter->second](entity, mousePress);
 					}
-					else if (pressedState == Ebony::PressedState::HELD && input->onHeldActions.contains(iter->second))
+					else if (mousePress.pressInfo.current & Ebony::PressedState::HELD && input->onHeldActions.contains(iter->second))
 					{
-						input->onHeldActions[iter->second](entity);
+						input->onHeldActions[iter->second](entity, mousePress);
 					}
-					else if (pressedState == Ebony::PressedState::RELEASED && input->onReleaseActions.contains(iter->second))
+					else if (mousePress.pressInfo.current & Ebony::PressedState::RELEASED && input->onReleaseActions.contains(iter->second))
 					{
-						input->onReleaseActions[iter->second](entity);
+						input->onReleaseActions[iter->second](entity, mousePress);
 					}
-				}*/
+				}
 			}
 		
 

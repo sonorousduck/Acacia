@@ -425,7 +425,7 @@ namespace Ebony
 		return buttons[button];
 	}
 
-	void MouseInputManager::setMouseState(Uint8 button, PressedState state)
+	void MouseInputManager::setMouseState(Uint8 button, PressedState state, int x, int y, int clicks)
 	{
 		std::unordered_map<Uint8, MousePress>::iterator it = buttons.find(button);
 
@@ -433,15 +433,48 @@ namespace Ebony
 		{
 			MousePress press = buttons[button];
 
+			press.pressInfo.previous = press.pressInfo.current;
+			
+			if (state & PRESSED)
+			{
+				press.mouseClick.x = x;
+				press.mouseClick.y = y;
+				press.mouseClick.clicks = clicks;
+				press.pressInfo.current = PRESSED;
+			}
 
+			else if (state & RELEASED)
+			{
+				press.mouseRelease.x = x;
+				press.mouseRelease.y = y;
+				press.mouseRelease.clicks = clicks;
+				press.pressInfo.current = RELEASED;
+			}
 
-
+			buttons[button] = press;
 		}
 		else
 		{
+			MousePress press = MousePress();
 
+			if (state & PRESSED)
+			{
+				press.mouseClick.x = x;
+				press.mouseClick.y = y;
+				press.mouseClick.clicks = clicks;
+				press.pressInfo.current = PRESSED;
+			}
+
+			else if (state & RELEASED)
+			{
+				press.mouseRelease.x = x;
+				press.mouseRelease.y = y;
+				press.mouseRelease.clicks = clicks;
+				press.pressInfo.current = RELEASED;
+			}
+
+			buttons[button] = press;
 		}
-
 	}
 
 	void MouseInputManager::setMousePosition(int x, int y, int xRel, int yRel)
