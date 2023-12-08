@@ -126,23 +126,23 @@ namespace systems
 			// Handle Mouse input
 			if (entity->hasComponent<components::MouseInput>())
 			{
-				auto input = entity->getComponent<components::MouseInput>();
+				auto mouseInputComponent = entity->getComponent<components::MouseInput>();
 
-				for (auto iter = input->bindings.begin(); iter != input->bindings.end(); iter++)
+				for (auto iter = mouseInputComponent->bindings.begin(); iter != mouseInputComponent->bindings.end(); iter++)
 				{
 					Ebony::MousePress mousePress = Ebony::InputManager::mouseInstance->getMouseState(iter->first);
 
-					if (mousePress.pressInfo.current & Ebony::PressedState::PRESSED && input->onPressActions.contains(iter->second))
+					if (mousePress.pressInfo.current & Ebony::PressedState::PRESSED && mouseInputComponent->onPressActions.contains(iter->second))
 					{
-						input->onPressActions[iter->second](entity, mousePress);
+						mouseInputComponent->onPressActions[iter->second](entity, mousePress);
 					}
-					else if (mousePress.pressInfo.current & Ebony::PressedState::HELD && input->onHeldActions.contains(iter->second))
+					else if (mousePress.pressInfo.current & Ebony::PressedState::HELD && mouseInputComponent->onHeldActions.contains(iter->second))
 					{
-						input->onHeldActions[iter->second](entity, mousePress);
+						mouseInputComponent->onHeldActions[iter->second](entity, mousePress);
 					}
-					else if (mousePress.pressInfo.current & Ebony::PressedState::RELEASED && input->onReleaseActions.contains(iter->second))
+					else if (mousePress.pressInfo.current & Ebony::PressedState::RELEASED && mouseInputComponent->onReleaseActions.contains(iter->second))
 					{
-						input->onReleaseActions[iter->second](entity, mousePress);
+						mouseInputComponent->onReleaseActions[iter->second](entity, mousePress);
 					}
 				}
 			}

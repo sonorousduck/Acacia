@@ -11,6 +11,7 @@
 #include <fstream>
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/istreamwrapper.h>
+#include "../Ebony/src/singletons/inputManager.hpp"
 
 namespace components
 {

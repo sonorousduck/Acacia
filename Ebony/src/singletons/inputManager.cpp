@@ -146,9 +146,12 @@ namespace Ebony
 
 			case SDL_MOUSEBUTTONDOWN:
 				//InputManager::mouseInstance->setState();
+				InputManager::mouseInstance->setMouseState(event.button.button, PRESSED, event.button.x, event.button.y, event.button.clicks);
 				break;
 
 			case SDL_MOUSEBUTTONUP:
+				InputManager::mouseInstance->setMouseState(event.button.button, RELEASED, event.button.x, event.button.y, event.button.clicks);
+
 				break;
 			
 			case SDL_MOUSEWHEEL:

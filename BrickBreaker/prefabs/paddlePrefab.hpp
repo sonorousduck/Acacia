@@ -101,11 +101,11 @@ namespace BrickBreaker
 
 			auto mouseComponent = std::make_unique<components::MouseInput>();
 
-			//mouseComponent->bindings.insert({ GLFW_MOUSE_BUTTON_1, "mousePress" });
-			mouseComponent->onPressActions.insert({ "mousePress", [=](entities::EntityPtr) {std::cout << "Button pressed!" << std::endl; } });
-			mouseComponent->onReleaseActions.insert({ "mousePress",[=](entities::EntityPtr) {std::cout << "Mouse Button released!" << std::endl; } });
+			mouseComponent->bindings.insert({SDL_BUTTON_LEFT, "mousePress" });
+			mouseComponent->onPressActions.insert({ "mousePress", [=](entities::EntityPtr, Ebony::MousePress& mousePress) {std::cout << "Button pressed at " << mousePress.mouseClick.x << ", " << mousePress.mouseClick.y << std::endl; }});
+			mouseComponent->onReleaseActions.insert({ "mousePress",[=](entities::EntityPtr, Ebony::MousePress&) {std::cout << "Mouse Button released!" << std::endl; } });
 
-			mouseComponent->loadMouseBindings("../mouseBindings.json");
+			//mouseComponent->loadMouseBindings("../mouseBindings.json");
 			//mouseComponent->saveMouseBindings("../mouseBindings.json");
 			paddle->addComponent(std::move(mouseComponent));
 
