@@ -39,7 +39,6 @@ namespace Ebony
 
 	struct MouseEvent
 	{
-		Uint8 button;
 		Uint16 clicks;
 		int x;
 		int y;
@@ -56,10 +55,10 @@ namespace Ebony
 
 	struct MouseScroll
 	{
-		int xPos;
-		int yPos;
-		int mouseScrollX;
-		int mouseScrollY;
+		int xPos = 0;
+		int yPos = 0;
+		int mouseScrollX = 0;
+		int mouseScrollY = 0;
 	};
 
 
@@ -115,8 +114,8 @@ namespace Ebony
 		MouseInputManager();
 		~MouseInputManager();
 
-		PressedState getMouseState();
-		void setMouseState();
+		MousePress getMouseState(Uint8 button);
+		void setMouseState(Uint8 button, PressedState state);
 		void setMousePosition(int x, int y, int xRel, int yRel);
 
 		int getMouseRelativeX();
@@ -132,7 +131,7 @@ namespace Ebony
 		MouseScroll getMouseScroll();
 
 	private:
-		std::unordered_map<Uint8, MousePress> buttons;
+		std::unordered_map<Uint8, MousePress> buttons = std::unordered_map<Uint8, MousePress>();
 
 		int absoluteX = 0;
 		int absoluteY = 0;
@@ -140,7 +139,7 @@ namespace Ebony
 		int relativeX = 0;
 		int relativeY = 0;
 
-		MouseScroll mouseScroll;
+		MouseScroll mouseScroll = MouseScroll();
 	};
 
 	class AIInputManager

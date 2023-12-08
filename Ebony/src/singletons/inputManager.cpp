@@ -342,7 +342,7 @@ namespace Ebony
 			press.pressedState.previous = press.pressedState.current;
 
 			press.currentValue = value;
-			press.scaledCurrentValue = static_cast<float>(value / 32767); // Technically, will allow for an less than -1, but will be close enough
+			press.scaledCurrentValue = static_cast<float>(value) / 32767.0f; // Technically, will allow for an less than -1, but will be close enough
 
 			press.pressedState.current = abs(press.scaledCurrentValue) > 0.01 ? Ebony::PRESSED : Ebony::NONE;
 
@@ -383,8 +383,6 @@ namespace Ebony
 		return press;
 	}
 
-
-
 	MouseInputManager::MouseInputManager()
 	{
 	}
@@ -393,13 +391,56 @@ namespace Ebony
 	{
 	}
 
-	PressedState MouseInputManager::getMouseState()
+	MousePress MouseInputManager::getMouseState(Uint8 button)
 	{
-		return PressedState();
+		std::unordered_map<Uint8, MousePress>::iterator it = buttons.find(button);
+
+		if (it != buttons.end())
+		{
+			MousePress press = buttons[button];
+
+			if (press.pressInfo.current & PRESSED && press.pressInfo.previous & PRESSED)
+			{
+				press.pressInfo.current = HELD;
+			}
+			else if (press.pressInfo.current & RELEASED && press.pressInfo.previous & RELEASED)
+			{
+				press.pressInfo.current = NONE;
+			}
+			else
+			{
+				press.pressInfo.previous = press.pressInfo.current;
+			}
+
+
+			buttons[button] = press;
+		}
+		else
+		{
+			buttons[button] = MousePress();
+
+		
+		}
+
+		return buttons[button];
 	}
 
-	void MouseInputManager::setMouseState()
+	void MouseInputManager::setMouseState(Uint8 button, PressedState state)
 	{
+		std::unordered_map<Uint8, MousePress>::iterator it = buttons.find(button);
+
+		if (it != buttons.end())
+		{
+			MousePress press = buttons[button];
+
+
+
+
+		}
+		else
+		{
+
+		}
 
 	}
 
