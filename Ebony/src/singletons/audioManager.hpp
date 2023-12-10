@@ -5,6 +5,11 @@
 #include "../Audio/src/SoundSource.hpp"
 #include "../Audio/src/SourcePool.hpp"
 
+#include "SDL_mixer.h"
+#include <cassert>
+#include <deque>
+#include <cstdint>
+
 
 namespace Ebony
 {
@@ -20,14 +25,31 @@ namespace Ebony
 	{
 	public:
 
+		static void Init(std::uint8_t channelCount = 32, std::uint8_t uiChannels = 6, std::uint8_t entityChannels = 26)
+		{
+			assert(uiChannels + entityChannels == channelCount);
 
-		static void Init();
+			Mix_AllocateChannels(channelCount);
+
+			sourceCount = channelCount;
+		}
 		
-		SoundSource createSoundSourceObject(SoundSource sound, AudioType type);
+		static void Cleanup()
+		{
+
+		}
+
 
 
 
 	private:
+		AudioManager() {};
+		static std::deque<std::uint8_t> UIChannelPool;
+		static std::deque<std::uint8_t> EntityChannelPool;
+		static int MusicSourcePool;
+
+		static std::uint8_t sourceCount;
+
 
 	};
 }

@@ -11,12 +11,13 @@
 #include "../../Audio/src/SoundBuffer.hpp"
 #include "../../../Audio/src/audioManager.hpp"
 
+
 namespace Ebony
 {
 	std::unordered_map<std::string, Texture2D> ResourceManager::Textures;
 	std::unordered_map<std::string, Shader> ResourceManager::Shaders;
-	std::unordered_map<std::string, ALuint> ResourceManager::SoundEffectBuffers;
-	std::unordered_map<std::string, std::shared_ptr<EbonyAudio::MusicSource>> ResourceManager::MusicSources;
+	std::unordered_map<std::string, Mix_Chunk*> ResourceManager::SoundEffectBuffers;
+	std::unordered_map<std::string, Mix_Music*> ResourceManager::MusicSources;
 	std::atomic_uint16_t ResourceManager::tasksRemaining{ 0 };
 
 	Shader& ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name)
@@ -235,195 +236,52 @@ namespace Ebony
 		return texture;
 	}
 
-	ALuint ResourceManager::LoadSoundEffect(const std::string& name, const std::string& filename, bool currentFolder, const std::string& otherFolder)
+	Mix_Chunk* ResourceManager::LoadSoundEffect(const std::string& name, const std::string& filename, bool currentFolder, const std::string& otherFolder)
 	{
-		ALenum err = 0, format = 0;
-		ALuint buffer = 0;
-		SNDFILE* sndfile = nullptr;
-		SF_INFO sfinfo{};
-		short* membuf = nullptr;
-		sf_count_t num_frames = 0;
-		ALsizei num_bytes = 0;
-
-		/* Open the audio file and check that it's usable. */
 		if (currentFolder)
 		{
-			sndfile = sf_open(("../BrickBreaker/soundeffects/" + filename).c_str(), SFM_READ, &sfinfo);
+			SoundEffectBuffers[name] = Mix_LoadWAV(("../BrickBreaker/soundeffects/" + filename).c_str());
 		}
 		else
 		{
-			sndfile = sf_open((otherFolder + filename).c_str(), SFM_READ, &sfinfo);
-		}
-		if (!sndfile)
-		{
-			std::cerr << "Could not open audio in " << filename << ":\n" << sf_strerror(sndfile) << "\n";
-			//fprintf(stderr, "Could not open audio in %s: %s\n", filename, sf_strerror(sndfile));
-			return 0;
-		}
-		if (sfinfo.frames < 1)
-		{
-			std::cerr << "Bad sample count in " << filename << "(" << sfinfo.frames << ")\n";
-			//fprintf(stderr, "Bad sample count in %s (%" PRId64 ")\n", filename, sfinfo.frames);
-			sf_close(sndfile);
-			return 0;
+			SoundEffectBuffers[name] = Mix_LoadWAV((otherFolder + filename).c_str());
 		}
 
-		/* Figure out the OpenAL format from the file and desired sample type. */
-		format = AL_NONE;
-		if (sfinfo.channels == 1)
-		{
-			format = AL_FORMAT_MONO16;
-		}
-		else if (sfinfo.channels == 2)
-		{
-			format = AL_FORMAT_STEREO16;
-		}
-		else if (sfinfo.channels == 3)
-		{
-			if (sf_command(sndfile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
-			{
-				format = AL_FORMAT_BFORMAT2D_16;
-			}
-		}
-		else if (sfinfo.channels == 4)
-		{
-			if (sf_command(sndfile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
-			{
-				format = AL_FORMAT_BFORMAT3D_16;
-			}
-		}
-		if (!format)
-		{
-			std::cerr << "Unsupported channel count: " << sfinfo.channels << "\n";
-			//fprintf(stderr, "Unsupported channel count: %d\n", sfinfo.channels);
-			sf_close(sndfile);
-			return 0;
-		}
-		/* Decode the whole audio file to a buffer. */
-		membuf = static_cast<short*>(malloc((size_t)(sfinfo.frames * sfinfo.channels) * sizeof(short)));
-		num_frames = sf_readf_short(sndfile, membuf, sfinfo.frames);
-
-		if (num_frames < 1)
-		{
-			free(membuf);
-			sf_close(sndfile);
-			std::cerr << "Failed to read samples in " << filename << "(" << num_frames << ")\n";
-			//fprintf(stderr, "Failed to read samples in %s (%" PRId64 ")\n", filename, num_frames);
-			return 0;
-		}
-		num_bytes = (ALsizei)(num_frames * sfinfo.channels) * (ALsizei)sizeof(short);
-
-
-		/* Buffer the audio data into a new buffer object, then free the data and
-		 * close the file.
-		 */
-		buffer = 0;
-		alGenBuffers(1, &buffer);
-		alBufferData(buffer, format, membuf, num_bytes, sfinfo.samplerate);
-
-		free(membuf);
-		sf_close(sndfile);
-
-		/* Check if an error occurred, and clean up if so. */
-		err = alGetError();
-		if (err != AL_NO_ERROR)
-		{
-			fprintf(stderr, "OpenAL Error: %s\n", alGetString(err));
-			if (buffer && alIsBuffer(buffer))
-				alDeleteBuffers(1, &buffer);
-			return 0;
-		}
-
-		SoundEffectBuffers[name] = buffer;
-
-		return buffer;
+		return SoundEffectBuffers[name];
 	}
 
 	void  ResourceManager::UnloadSoundEffect(const std::string& name)
 	{
+		Mix_FreeChunk(SoundEffectBuffers[name]);
+		SoundEffectBuffers[name] = NULL;
 		SoundEffectBuffers.erase(name);
 	}
 
-	ALuint ResourceManager::GetSoundEffect(const std::string& name)
+	Mix_Chunk* ResourceManager::GetSoundEffect(const std::string& name)
 	{
 		return SoundEffectBuffers[name];
 	}
 
-	std::shared_ptr<EbonyAudio::MusicSource> ResourceManager::LoadMusic(const std::string& name, const std::string& filename, bool currentFolder, const std::string& otherFolder)
+	void ResourceManager::LoadMusic(const std::string& name, const std::string& filename, bool currentFolder, const std::string& otherFolder)
 	{
-		std::shared_ptr<EbonyAudio::MusicSource> musicSource = std::make_shared<EbonyAudio::MusicSource>();
-		musicSource->fileFormat = EbonyAudio::AudioFileFormat::OTHER;
-
-		//alGenSources(1, &musicSource->source);
-		alGenBuffers(musicSource->NUM_BUFFERS, musicSource->buffers);
-
-		std::size_t frame_size{};
-
 		if (currentFolder)
 		{
-			musicSource->sndFile = sf_open(("../BrickBreaker/music/" + filename).c_str(), SFM_READ, &musicSource->sfInfo);
+			MusicSources[name] = Mix_LoadMUS(("../BrickBreaker/music/" + filename).c_str());
 		}
 		else
 		{
-			musicSource->sndFile = sf_open((otherFolder + filename).c_str(), SFM_READ, &musicSource->sfInfo);
-
+			MusicSources[name] = Mix_LoadMUS((otherFolder + filename).c_str());
 		}
-
-		if (!musicSource->sndFile)
-		{
-			throw("Could not open provided music file. Check path");
-		}
-
-		// Get the sound format and figure out the OpenAL format
-
-		switch (musicSource->sfInfo.channels)
-		{
-		case 1:
-			musicSource->format = AL_FORMAT_MONO16;
-			break;
-		case 2:
-			musicSource->format = AL_FORMAT_STEREO16;
-			break;
-		case 3:
-			if (sf_command(musicSource->sndFile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
-			{
-				musicSource->format = AL_FORMAT_BFORMAT3D_16;
-			}
-			break;
-		case 4:
-			if (sf_command(musicSource->sndFile, SFC_WAVEX_GET_AMBISONIC, NULL, 0) == SF_AMBISONIC_B_FORMAT)
-			{
-				musicSource->format = AL_FORMAT_BFORMAT3D_16;
-			}
-			break;
-		default:
-			throw("Unsupported number of channels");
-			break;
-		}
-
-
-		if (!musicSource->format)
-		{
-			sf_close(musicSource->sndFile);
-			musicSource->sndFile = NULL;
-			throw("Unsupported channel count from file");
-		}
-
-		frame_size = ((static_cast<size_t>(musicSource->BUFFER_SAMPLES) * static_cast<size_t>(musicSource->sfInfo.channels))) * sizeof(short);
-		musicSource->memBuf = static_cast<short*>(malloc(frame_size));
-
-
-		MusicSources[name] = musicSource;
-
-		return musicSource;
 	}
 
-	void  ResourceManager::UnloadMusic(const char* name)
+	void ResourceManager::UnloadMusic(const char* name)
 	{
+		Mix_FreeMusic(MusicSources[name]);
+		MusicSources[name] = NULL;
 		MusicSources.erase(name);
 	}
 
-	std::shared_ptr<EbonyAudio::MusicSource> ResourceManager::GetMusic(const char* name)
+	Mix_Music* ResourceManager::GetMusic(const char* name)
 	{
 		return MusicSources[name];
 	}
@@ -520,7 +378,15 @@ namespace Ebony
 
 		for (auto it = SoundEffectBuffers.begin(); it != SoundEffectBuffers.end(); it++)
 		{
-			alDeleteBuffers(1, &it->second);
+			//alDeleteBuffers(1, &it->second);
+			Mix_FreeChunk(it->second);
+			it->second = NULL;
+		}
+
+		for (auto it = MusicSources.begin(); it != MusicSources.end(); it++)
+		{
+			Mix_FreeMusic(it->second);
+			it->second = NULL;
 		}
 
 		SoundEffectBuffers.clear();
