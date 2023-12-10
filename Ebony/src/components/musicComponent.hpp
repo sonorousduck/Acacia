@@ -5,6 +5,7 @@
 #include "component.hpp"
 #include "../Audio/src/SoundSource.hpp"
 #include "../../../Audio/src/MusicSource.hpp"
+#include <SDL_mixer.h>
 
 namespace components
 {
@@ -20,7 +21,7 @@ namespace components
 			repeat(false)
 		{}
 
-		Music(std::shared_ptr<EbonyAudio::MusicSource> musicSource) :
+		Music(Mix_Music* musicSource) :
 			previousSong(""),
 			currentSong(""),
 			repeat(false),
@@ -30,8 +31,21 @@ namespace components
 		std::string_view previousSong;
 		std::string_view currentSong;
 		std::vector<std::string_view> songQueue = {};
-		std::shared_ptr<EbonyAudio::MusicSource> musicSource;
+		Mix_Music* musicSource = nullptr;
+		
 		bool repeat;
+		int repeatTimes = 1;
+
+		bool fadesIn = false;
+		bool fadesOut = false;
+
+		int fadeInTime = 10; // ms
+		int fadeOutTime = 10; // ms
+
+		Ebony::State currentState = Ebony::State::Stopped;
+		Ebony::State previousState = Ebony::State::Stopped;
+
+
 
 	};
 

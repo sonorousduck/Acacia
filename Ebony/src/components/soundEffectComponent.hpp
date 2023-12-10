@@ -4,6 +4,7 @@
 
 #include "component.hpp"
 #include "../Audio/src/SoundSource.hpp"
+#include <SDL_mixer.h>
 
 namespace components
 {
@@ -12,13 +13,21 @@ namespace components
 	class SoundEffect : public PolymorphicComparable<Component, SoundEffect>
 	{
 	public:
-		SoundEffect(EbonyAudio::AudioType soundEffectType) : soundEffectType(soundEffectType)
+		SoundEffect(Ebony::AudioType soundEffectType) : soundEffectType(soundEffectType)
 		{
 
 		}
 
-		std::deque<ALuint> soundEffectQueue{};
-		EbonyAudio::AudioType soundEffectType;
+		std::deque<Mix_Chunk*> soundEffectQueue{};
+		Ebony::AudioType soundEffectType;
+
+		bool fadesIn = false;
+		bool fadesOut = false;
+
+		int fadeInTime = 10; // ms
+		int fadeOutTime = 10; // ms
+
+		int volume = MIX_MAX_VOLUME;
 
 	};
 

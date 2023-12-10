@@ -1,6 +1,9 @@
 #include "audioSystem.hpp"
 #include <algorithm>
-#include "../../../Audio/src/audioManager.hpp"
+//#include "../../../Audio/src/audioManager.hpp"
+#include "../Ebony/src/singletons/audioManager.hpp"
+
+
 
 
 namespace systems
@@ -33,8 +36,10 @@ namespace systems
 
 				while (!soundEffect->soundEffectQueue.empty())
 				{
-					auto effect = EbonyAudio::AudioManager::PlaySound(soundEffect->soundEffectQueue.back(), soundEffect->soundEffectType);
-					soundEffect->soundEffectQueue.pop_back();
+
+
+					//auto effect = Ebony::AudioManager::PlaySoundEffect(soundEffect->soundEffectQueue.back(), soundEffect->soundEffectType);
+					//soundEffect->soundEffectQueue.pop_back();
 				}
 			}
 
@@ -42,9 +47,16 @@ namespace systems
 			{
 				auto music = entity->getComponent<components::Music>();
 
-				if (music->musicSource->currentState & Stopped)
+				if (music->currentState & Stopped && !Mix_PlayingMusic())
 				{
-					EbonyAudio::AudioManager::PlayMusic(music->musicSource);
+					if (music->fadesIn)
+					{
+						Mix_FadeInMusic(music->musicSource, music->repeatTimes, music->fadeInTime);
+					}
+					else
+					{
+						Mix_PlayMusic(music->musicSource, music->repeatTimes);
+					}
 				}
 			}
 		}
