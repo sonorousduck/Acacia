@@ -56,6 +56,8 @@ namespace Ebony {
 			{
 				screen.second->LoadContent();
 			}*/
+
+			Application::LoadContent();
 		}
 
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
@@ -64,6 +66,8 @@ namespace Ebony {
 			quit = InputManager::HandleInput();
 
 			currentScreen->ProcessInput(elapsedTime);
+
+			Application::ProcessInput(elapsedTime);
 		}
 
 		void Update(std::chrono::microseconds elapsedTime) override
