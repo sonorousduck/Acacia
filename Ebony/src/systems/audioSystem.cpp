@@ -36,10 +36,24 @@ namespace systems
 
 				while (!soundEffect->soundEffectQueue.empty())
 				{
+					int channel = Ebony::AudioManager::GetChannel(soundEffect->soundEffectType);
 
-
-					//auto effect = Ebony::AudioManager::PlaySoundEffect(soundEffect->soundEffectQueue.back(), soundEffect->soundEffectType);
-					//soundEffect->soundEffectQueue.pop_back();
+					if (channel != -2)
+					{
+						if (soundEffect->fadesIn)
+						{
+							Mix_FadeInChannel(channel, soundEffect->soundEffectQueue.front(), 1, soundEffect->fadeInTime);
+						}
+						else
+						{
+							Mix_PlayChannel(channel, soundEffect->soundEffectQueue.front(), 1);
+						}
+						soundEffect->soundEffectQueue.pop_front();
+					}
+					else
+					{
+						// TODO: Skip for now. This means there weren't enough sounds to play it. Should think about how to handle this in the future
+					}
 				}
 			}
 
