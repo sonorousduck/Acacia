@@ -1,14 +1,11 @@
 #pragma once
 
 #include "../Graphics/ThirdParty/imgui/imgui.h"
-#include "../Graphics/ThirdParty/imgui/imgui_impl_glfw.h"
 #include "../Graphics/ThirdParty/imgui/imgui_impl_opengl3.h"
 
 
 #include <SDL.h>
-
 #include "glad/glad.h"
-#include <GLFW/glfw3.h>
 #include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

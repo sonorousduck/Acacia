@@ -85,7 +85,7 @@ set(src_files_imgui
   ../Graphics/ThirdParty/imgui/imgui_draw.cpp
   ../Graphics/ThirdParty/imgui/imgui_tables.cpp
   ../Graphics/ThirdParty/imgui/imgui_widgets.cpp
-  ../Graphics/ThirdParty/imgui/imgui_impl_glfw.cpp
+  #../Graphics/ThirdParty/imgui/imgui_impl_glfw.cpp
   ../Graphics/ThirdParty/imgui/imgui_impl_opengl3.cpp
   ../Graphics/ThirdParty/imgui/imgui_demo.cpp
   ../Graphics/ThirdParty/imgui/imgui_impl_opengl3_loader.h
@@ -110,7 +110,7 @@ set (CODE_FILES
   ${SOURCE_FILES}
   ${ComponentHeaders}
   ${SystemHeaders}
-	${SystemSources}
+  ${SystemSources}
   ${MiscHeaders}
   ${MiscSources}
   ${Prefabs}

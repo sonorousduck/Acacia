@@ -86,41 +86,6 @@ namespace systems
 						}
 					}
 				}
-
-
-					//	for (auto iter = controllerInputComponent->joystickBindings.begin(); iter != controllerInputComponent->joystickBindings.end(); iter++)
-					//	{
-					//		// Update the joystick (and trigger) information
-					//		Ebony::PressedState pressedState = controllerInput.setIsTriggerDown(iter->first, state.axes[iter->first]);
-
-					//		if ((pressedState & Ebony::PressedState::PRESSED || pressedState & Ebony::PressedState::RELEASED) && controllerInputComponent->joystickActions.contains(iter->second))
-					//		{
-					//			controllerInputComponent->joystickActions[iter->second](entity, state.axes[iter->first]);
-					//		}
-					//	}
-
-
-
-						//for (auto iter = input->controllerActionKeyPairs.begin(); iter != input->controllerActionKeyPairs.end(); iter++)
-						//{
-						//if (state.buttons[iter->first] && input->previousActions[iter->first] != GLFW_PRESS)
-						//	{
-						//		iter->second();
-						//	}
-						//	// TODO: Potentially, I will want this to have onPress, onRelease, and onHold callbacks. But for now, suffices to just have on press
-						//	input->previousActions[iter->first] = state.buttons[iter->first];
-
-						//	// There are also state.axes which are the joystick positions. This will need to be translated as well, but might have its own callbacks since you need to take in a float
-						//	// The axis indices are GLFW_GAMEPAD_AXIS_LEFT_X, GLFW_GAMEPAD_AXIS_LEFT_Y, GLFW_GAMEPAD_AXIS_RIGHT_X, GLFW_GAMEPAD_AXIS_RIGHT_Y, GLFW_GAMEPAD_AXIS_LEFT_TRIGGER, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER
-						//}
-
-						//for (auto iter = input->controllerAxes.begin(); iter != input->controllerAxes.end(); iter++)
-						//{
-						//	if (state.axes[iter->first])
-						//	{
-						//		iter->second(state.axes[iter->first]);
-						//	}
-						//}
 			}
 			
 			// Handle Mouse input
@@ -146,21 +111,6 @@ namespace systems
 					}
 				}
 			}
-		
-
-			
-			/*if (entity->hasComponent<components::KeyboardInput>())
-			{
-				std::cout << "Found keyboard input" << std::endl;
-			}
-
-			if (entity->hasComponent<components::ControllerComponent>())
-			{
-				std::cout << "Found controller input" << std::endl;
-
-			}*/
-
-
 		}
 	}
 

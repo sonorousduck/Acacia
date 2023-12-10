@@ -132,7 +132,7 @@ namespace BrickBreaker
 			}
 		});*/
 		
-		gameplayControllerInputComponent->bindings.insert({ GLFW_GAMEPAD_BUTTON_START, "quit" });
+		gameplayControllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_START, "quit" });
 		// ================================================================================================================================================================
 		// TODO:
 		// ================================================================================================================================================================
@@ -142,7 +142,7 @@ namespace BrickBreaker
 			} 
 		});*/
 		
-		gameplayKeyboardInputComponent->bindings.insert({ GLFW_KEY_ESCAPE, "quit" });
+		gameplayKeyboardInputComponent->bindings.insert({ SDLK_ESCAPE, "quit" });
 
 		gameplayEntity->addComponent(std::move(gameplayControllerInputComponent));
 		gameplayEntity->addComponent(std::move(gameplayKeyboardInputComponent));

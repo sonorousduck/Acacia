@@ -10,6 +10,7 @@ add_library(tiny_obj_loader STATIC)
 # add_library(vk_mem_alloc INTERFACE)
 add_library(glm INTERFACE)
 add_library(sdl2 INTERFACE)
+add_library(sdl2_mixer INTERFACE)
 # add_library(freetype INTERFACE)
 
 
@@ -25,8 +26,20 @@ add_subdirectory(spdlog)
 
 
 find_package(SDL2 REQUIRED)
-target_include_directories(sdl2 INTERFACE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(sdl2 INTERFACE ${SDL2_LIBRARIES})
+target_link_libraries(sdl2 INTERFACE SDL2::SDL2 SDL2::SDL2main)
+# target_include_directories(sdl2 INTERFACE ${SDL2_INCLUDE_DIRS})
+# target_link_libraries(sdl2 INTERFACE ${SDL2_LIBRARIES})
+
+
+# set(SDL2_MIXER_INCLUDE_DIR ${SDL2_mixer_dir}../include)
+# set(SDL2_MIXER_LIBRARIES ${SDL2_mixer_dir}../lib/x64/SDL2_mixer.lib)
+
+
+find_package(SDL2_mixer REQUIRED)
+# target_include_directories(sdl2_mixer INTERFACE ${SDL2_MIXER_INCLUDE_DIR})
+target_link_libraries(sdl2_mixer INTERFACE SDL2_mixer::SDL2_mixer)
+
+
 
 if (WIN32)
     file(COPY ${SDL2_DIR}/../lib/x64/SDL2.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/Debug)

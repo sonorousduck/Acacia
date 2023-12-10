@@ -1,6 +1,7 @@
 #pragma once
 #include "glad/glad.h"
 #include <SDL.h>
+#include <SDL_mixer.h>
 
 namespace Ebony 
 {

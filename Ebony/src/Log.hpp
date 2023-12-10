@@ -36,6 +36,6 @@ namespace Ebony {
 #define EB_INFO(...)	      ::Ebony::Log::GetClientLogger()->info(__VA_ARGS__)
 #define EB_WARN(...)	      ::Ebony::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define EB_ERROR(...)	      ::Ebony::Log::GetClientLogger()->error(__VA_ARGS__)
-#define EB_CRITICAL(...)	      ::Ebony::Log::GetClientLogger()->critical(__VA_ARGS__)
+#define EB_CRITICAL(...)	  ::Ebony::Log::GetClientLogger()->critical(__VA_ARGS__)
 
 

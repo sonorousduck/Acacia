@@ -207,7 +207,13 @@ namespace Ebony
 
 	void InputManager::Vibrate(std::uint8_t joystickId, float left, float right, Uint32 ms, bool vibrateTriggers)
 	{
-		Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[joystickId]]->Vibrate(left, right, ms, vibrateTriggers);
+		if (InputManager::controllersConnected > 0)
+		{
+			if (Ebony::InputManager::controllerInstances.contains(Ebony::InputManager::sdlJoystickToJoystickConversion[joystickId]))
+			{
+				Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[joystickId]]->Vibrate(left, right, ms, vibrateTriggers);
+			}
+		}
 	}
 
 

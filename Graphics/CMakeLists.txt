@@ -13,7 +13,6 @@ set(HEADER_FILES
   src/graphics2d.hpp
   src/renderTarget2d.hpp
   src/window.hpp
-  src/input.hpp
   src/colors.hpp
   src/spritesheet.hpp
   src/graphics.hpp
@@ -34,7 +33,6 @@ set(SOURCE_FILES
   src/graphics2d.cpp
   src/renderTarget2d.cpp
   src/window.cpp
-  src/input.cpp
   src/colors.cpp
   src/testmain.cpp
   src/spritesheet.cpp
@@ -50,7 +48,6 @@ set(SHADERS
 	shaders/lightcube.vert
 	shaders/lightingTexture.vert
 	shaders/lightingTexture.vert
-
 )
 
 #Add source files
@@ -83,7 +80,7 @@ set(src_files_imgui
   ThirdParty/imgui/imgui_draw.cpp
   ThirdParty/imgui/imgui_tables.cpp
   ThirdParty/imgui/imgui_widgets.cpp
-  ThirdParty/imgui/imgui_impl_glfw.cpp
+  #ThirdParty/imgui/imgui_impl_glfw.cpp
   ThirdParty/imgui/imgui_impl_opengl3.cpp
   ThirdParty/imgui/imgui_demo.cpp
   ThirdParty/imgui/imgui_impl_opengl3_loader.h
@@ -106,7 +103,7 @@ target_include_directories(Graphics PRIVATE include/ include/glm)
 
 target_include_directories(Graphics PRIVATE ThirdParty/imgui)
 
-target_link_libraries(Graphics glfw stb_image assetlib assimp rapidjson ctti sdl2 freetype Audio)
+target_link_libraries(Graphics stb_image assetlib assimp rapidjson ctti sdl2 freetype Audio sdl2_mixer)
 set_property(TARGET Graphics PROPERTY CXX_STANDARD 20)
 
 

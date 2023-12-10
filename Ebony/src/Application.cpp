@@ -1,6 +1,7 @@
 #include "Application.hpp"
 //#include <sstream>
-//#include <iostream>
+#include <iostream>
+#include <SDL_mixer.h>
 
 namespace Ebony {
 	Application::Application()
@@ -17,6 +18,12 @@ namespace Ebony {
 	{
 		EB_TRACE("Running the parent's init function");
 
+		if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+		{
+			std::cerr << "SDL audio could not initialize! SDL Error: " << Mix_GetError() << std::endl;
+			exit(2);
+			return;
+		}
 		
 	}
 

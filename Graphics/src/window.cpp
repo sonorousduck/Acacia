@@ -1,16 +1,24 @@
 #include "window.hpp"
 #include "graphics2d.hpp"
 
+
 namespace Ebony
 {
 	void Window::createWindow(int versionMajor, int versionMinor, int screenWidth, int screenHeight)
 	{
-		if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 		{
 			std::cerr << "Couldn't initialize SDL" << std::endl;
 			exit(2);
 			return;
 		}
+
+		//if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+		//{
+		//	std::cerr << "SDL audio could not initialize! SDL Error: " << Mix_GetError() << std::endl;
+		//	exit(2);
+		//	return;
+		//}
 
 		atexit(SDL_Quit);
 		SDL_GL_LoadLibrary(NULL);
@@ -58,6 +66,10 @@ namespace Ebony
 			exit(2);
 			return;
 		}
+
+
+		
+		
 
 		atexit(SDL_Quit);
 		SDL_GL_LoadLibrary(NULL);
