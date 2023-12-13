@@ -37,7 +37,7 @@ namespace Ebony {
 
 			// Add screens here as well
 			screens[BrickBreaker::ScreenEnum::GAME] = std::make_shared<BrickBreaker::GameScreen>();
-			screens[BrickBreaker::ScreenEnum::MAIN_MENU] = std::make_shared<BrickBreaker::MainScreen>();
+			//screens[BrickBreaker::ScreenEnum::MAIN_MENU] = std::make_shared<BrickBreaker::MainScreen>();
 
 			currentScreen = screens[BrickBreaker::ScreenEnum::GAME];
 			nextScreenEnum = BrickBreaker::ScreenEnum::GAME;

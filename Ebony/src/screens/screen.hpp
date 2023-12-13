@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <entity.hpp>
 #include <graphics2d.hpp>
+#include <mutex>
 
 namespace Ebony
 {
