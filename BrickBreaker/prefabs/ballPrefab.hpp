@@ -20,8 +20,7 @@ namespace BrickBreaker
 		{
 			entities::EntityPtr ballEntity = std::make_shared<entities::Entity>();
 
-			ballEntity->addComponent(std::make_unique<components::SoundEffect>(EbonyAudio::ENTITY));
-
+			ballEntity->addComponent(std::make_unique<components::SoundEffect>(Ebony::ENTITY));
 
 			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(beginningTransform, 0.0f, glm::vec2(20.0f, 20.0f))));
 			auto spriteBall = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("ball"), Ebony::Colors::White);
@@ -30,7 +29,7 @@ namespace BrickBreaker
 				{
 					BrickBreaker::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
 
-					ballEntity->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::ResourceManager::GetSoundEffect("ball_bounce"));
+					ballEntity->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("ball_bounce"), 50));
 
 					if (layer & BrickBreaker::CollisionLayers::WALL)
 					{
@@ -132,9 +131,7 @@ namespace BrickBreaker
 
 							if (direction.y <= 7 && direction.y >= -7)
 							{
-								std::cout << "This happened" << std::endl;
 								bounceDirection.x = -bounceDirection.x;
-
 							}
 							else
 							{

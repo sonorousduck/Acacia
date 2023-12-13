@@ -148,7 +148,7 @@ namespace BrickBreaker
 		gameplayEntity->addComponent(std::move(gameplayKeyboardInputComponent));
 
 
-		//gameplayEntity->addComponent(std::make_unique<components::Music>(Ebony::ResourceManager::GetMusic("cyberpunk_moonlight_sonata_short")));
+		gameplayEntity->addComponent(std::make_unique<components::Music>(Ebony::IndividualMusicTrack(Ebony::ResourceManager::GetMusic("cyberpunk_moonlight_sonata_short"), 60)));
 
 
 		AddEntity(gameplayEntity);
@@ -301,13 +301,13 @@ namespace BrickBreaker
 			}
 		);
 
-		auto task4 = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				EbonyAudio::AudioManager::Update();
-			}
-		);
+		//auto task4 = Ebony::ThreadPool::instance().createTask(
+		//	taskGraph,
+		//	[this, elapsedTime]()
+		//	{
+		//		EbonyAudio::AudioManager::Update();
+		//	}
+		//);
 
 		auto task5 = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
@@ -329,12 +329,12 @@ namespace BrickBreaker
 
 		// Declare predecessors here
 		taskGraph->declarePredecessor(task3->getId(), task5->getId());
-		taskGraph->declarePredecessor(task6->getId(), task4->getId());
-		taskGraph->declarePredecessor(task7->getId(), task4->getId());
-		taskGraph->declarePredecessor(task5->getId(), task4->getId());
-		taskGraph->declarePredecessor(task3->getId(), task4->getId());
-		taskGraph->declarePredecessor(task2->getId(), task4->getId());
-		taskGraph->declarePredecessor(task1->getId(), task4->getId());
+		//taskGraph->declarePredecessor(task6->getId(), task4->getId());
+		//taskGraph->declarePredecessor(task7->getId(), task4->getId());
+		//taskGraph->declarePredecessor(task5->getId(), task4->getId());
+		//taskGraph->declarePredecessor(task3->getId(), task4->getId());
+		//taskGraph->declarePredecessor(task2->getId(), task4->getId());
+		//taskGraph->declarePredecessor(task1->getId(), task4->getId());
 
 
 

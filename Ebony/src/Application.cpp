@@ -24,7 +24,8 @@ namespace Ebony {
 			exit(2);
 			return;
 		}
-		
+
+		atexit(Mix_Quit);
 	}
 
 	void Application::Update(std::chrono::microseconds elapsedTime)

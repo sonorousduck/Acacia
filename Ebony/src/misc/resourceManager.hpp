@@ -8,8 +8,10 @@
 
 #include "texture.hpp"
 #include "shader.hpp"
-#include "../Audio/src/MusicSource.hpp"
-#include "../Audio/src/SoundSource.hpp"
+//#include "../Audio/src/MusicSource.hpp"
+//#include "../Audio/src/SoundSource.hpp"
+#include <SDL_mixer.h>
+
 
 namespace Ebony
 {
@@ -37,13 +39,13 @@ namespace Ebony
 		//static void LoadSoundEffectAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
 		//static void LoadMusicAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete);
 
-		static ALuint LoadSoundEffect(const std::string& file, const std::string& name, bool currentFolder = true, const std::string& otherFolder = "../Audio");
+		static Mix_Chunk* LoadSoundEffect(const std::string& file, const std::string& name, bool currentFolder = true, const std::string& otherFolder = "../Audio");
 		static void UnloadSoundEffect(const std::string& name);
-		static ALuint GetSoundEffect(const std::string& name);
+		static Mix_Chunk* GetSoundEffect(const std::string& name);
 
-		static std::shared_ptr<EbonyAudio::MusicSource> LoadMusic(const std::string& file, const std::string& name, bool currentFolder = true, const std::string& otherFolder = "../Audio");
+		static void LoadMusic(const std::string& file, const std::string& name, bool currentFolder = true, const std::string& otherFolder = "../Audio");
 		static void UnloadMusic(const char* name);
-		static std::shared_ptr<EbonyAudio::MusicSource> GetMusic(const char* name);
+		static Mix_Music* GetMusic(const char* name);
 		
 		static void loadComplete(const std::string& file, std::function<void(std::string)> onComplete);
 
@@ -63,8 +65,8 @@ namespace Ebony
 
 		static std::unordered_map<std::string, Shader> Shaders;
 		static std::unordered_map<std::string, Texture2D> Textures;
-		static std::unordered_map<std::string, std::uint32_t> SoundEffectBuffers;
-		static std::unordered_map<std::string, std::shared_ptr<EbonyAudio::MusicSource>> MusicSources;
+		static std::unordered_map<std::string, Mix_Chunk*> SoundEffectBuffers;
+		static std::unordered_map<std::string, Mix_Music*> MusicSources;
 
 		static std::atomic_uint16_t tasksRemaining; // We need this so we are guarenteed not to start a level while content is loading
 

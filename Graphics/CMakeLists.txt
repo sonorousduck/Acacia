@@ -103,7 +103,7 @@ target_include_directories(Graphics PRIVATE include/ include/glm)
 
 target_include_directories(Graphics PRIVATE ThirdParty/imgui)
 
-target_link_libraries(Graphics stb_image assetlib assimp rapidjson ctti sdl2 freetype Audio sdl2_mixer)
+target_link_libraries(Graphics stb_image assetlib assimp rapidjson ctti sdl2 freetype sdl2_mixer)
 set_property(TARGET Graphics PROPERTY CXX_STANDARD 20)
 
 

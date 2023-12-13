@@ -5,8 +5,8 @@
 #include "screens/screenEnums.hpp"
 #include "screens/gameScreen.hpp"
 #include <singletons/time.hpp>
-#include "../Audio/src/audioManager.hpp"
 #include <singletons/inputManager.hpp>
+#include "../Ebony/src/singletons/audioManager.hpp"
 
 namespace Ebony {
 
@@ -26,8 +26,10 @@ namespace Ebony {
 		void Init() override
 		{
 			// Set up graphics here
+			Application::Init();
+
 			Ebony::Graphics2d::Initialize("Brick Breaker", windowWidth, windowHeight);
-			EbonyAudio::AudioManager::Init();
+			Ebony::AudioManager::Init();
 
 			InputManager::Initialize();
 
@@ -47,7 +49,6 @@ namespace Ebony {
 			}
 
 
-			Application::Init();
 		}
 
 		void LoadContent() override
@@ -171,7 +172,7 @@ namespace Ebony {
 			}
 			
 			ThreadPool::terminate();
-			EbonyAudio::AudioManager::StopAll();
+			//EbonyAudio::AudioManager::StopAll();
 			Ebony::ResourceManager::Clear();
 		}
 
