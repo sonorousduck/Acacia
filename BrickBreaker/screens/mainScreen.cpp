@@ -12,7 +12,7 @@ namespace BrickBreaker
 		Ebony::ResourceManager::LoadTexture("Logo_BrickBreaker.tx", "logo_brickbreaker");
 		Ebony::ResourceManager::LoadTexture("Start_Text.tx", "start_text");
 		Ebony::ResourceManager::LoadTexture("Options_Text.tx", "options_text");
-		Ebony::ResourceManager::LoadTexture("Quit_Text_f.tx", "quit_text");
+		Ebony::ResourceManager::LoadTexture("Quit_Text.tx", "quit_text");
 	}
 
 	void MainScreen::Init(int windowWidth, int windowHeight)
@@ -65,13 +65,13 @@ namespace BrickBreaker
 	{
 		auto firstTime = std::chrono::system_clock::now();
 
-		std::latch graphDone{ 1 };
+		//std::latch graphDone{ 1 };
 
-		auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(
-			[&graphDone]()
-			{
-				graphDone.count_down();
-			});
+		//auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(
+		//	[&graphDone]()
+		//	{
+		//		graphDone.count_down();
+		//	});
 
 		// UI will need physics layer, input system, music, sprite
 
@@ -84,8 +84,8 @@ namespace BrickBreaker
 		//	}
 		//);
 
-		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
-		graphDone.wait();
+		//Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
+		//graphDone.wait();
 
 
 		return nextScreen;
