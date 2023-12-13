@@ -177,7 +177,7 @@ endif()
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-target_link_libraries(Ebony spdlog Audio Graphics rapidjson)
+target_link_libraries(Ebony spdlog Graphics rapidjson)
 
 # add_subdirectory(ThirdParty/rapidjson)
 # include_directories(ThirdParty/rapidjson/include)

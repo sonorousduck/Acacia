@@ -6,10 +6,7 @@
 #include <fstream>
 #include <asset_load.hpp>
 #include <texture_asset.hpp>
-#include <alext.h>
 #include "ThreadPool.hpp"
-#include "../../Audio/src/SoundBuffer.hpp"
-#include "../../../Audio/src/audioManager.hpp"
 
 
 namespace Ebony

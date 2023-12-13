@@ -1,8 +1,24 @@
 #include "audioManager.hpp"
+#include <iostream>
 
 
 namespace Ebony
 {
+	std::uint8_t AudioManager::uiChannelCount{ 0 };
+	std::uint8_t AudioManager::entityChannelCount{ 0 };
+
+	std::deque<int> AudioManager::UIChannelPool{};
+	std::deque<int> AudioManager::EntityChannelPool{};
+	int AudioManager::MusicSourcePool{ 0 }; // This might actually become a bool, since you can only have one song playing
+
+	std::uint8_t AudioManager::sourceCount{ 0 };
+	bool AudioManager::Muted{ false };
+
+
+	std::vector<int> AudioManager::previousUIVolumes{};
+	std::vector<int> AudioManager::previousEntityVolumes{};
+
+
 	void AudioManager::StopAll()
 	{
 		Mix_HaltChannel(-1);
@@ -38,12 +54,12 @@ namespace Ebony
 			}
 		}
 
-		Muted = true;
+		AudioManager::Muted = true;
 	}
 
 	void AudioManager::Unmute(AudioType audioType)
 	{
-		if (Muted)
+		if (AudioManager::Muted)
 		{
 			if (audioType & UI)
 			{
@@ -59,7 +75,7 @@ namespace Ebony
 					Mix_Volume(i + uiChannelCount, previousEntityVolumes[i]);
 				}
 			}
-			Muted = false;
+			AudioManager::Muted = false;
 		}
 		else
 		{

@@ -1,6 +1,5 @@
 #include "audioSystem.hpp"
 #include <algorithm>
-//#include "../../../Audio/src/audioManager.hpp"
 #include "../Ebony/src/singletons/audioManager.hpp"
 
 
@@ -38,15 +37,19 @@ namespace systems
 				{
 					int channel = Ebony::AudioManager::GetChannel(soundEffect->soundEffectType);
 
+					auto& nextSoundEffect = soundEffect->soundEffectQueue.front();
+
 					if (channel != -2)
 					{
-						if (soundEffect->fadesIn)
+						Mix_Volume(channel, nextSoundEffect.volume);
+						if (nextSoundEffect.fadesIn)
 						{
-							Mix_FadeInChannel(channel, soundEffect->soundEffectQueue.front(), 1, soundEffect->fadeInTime);
+							Mix_FadeInChannel(channel, nextSoundEffect.soundEffect, 0, nextSoundEffect.fadeInTime);
 						}
 						else
 						{
-							Mix_PlayChannel(channel, soundEffect->soundEffectQueue.front(), 1);
+							
+							Mix_PlayChannel(channel, nextSoundEffect.soundEffect, 0);
 						}
 						soundEffect->soundEffectQueue.pop_front();
 					}
@@ -60,16 +63,27 @@ namespace systems
 			if (entity->hasComponent<components::Music>())
 			{
 				auto music = entity->getComponent<components::Music>();
+				auto& song = music->songQueue.front();
 
-				if (music->currentState & Stopped && !Mix_PlayingMusic())
+
+				Mix_VolumeMusic(song.volume);
+
+				if (music->currentState & Ebony::Stopped && !Mix_PlayingMusic() && !music->songQueue.empty())
 				{
-					if (music->fadesIn)
+					music->songQueue.pop_front();
+
+					if (song.fadesIn)
 					{
-						Mix_FadeInMusic(music->musicSource, music->repeatTimes, music->fadeInTime);
+						Mix_FadeInMusic(song.musicTrack, song.repeatTimes, song.fadeInTime);
 					}
 					else
 					{
-						Mix_PlayMusic(music->musicSource, music->repeatTimes);
+						Mix_PlayMusic(song.musicTrack, song.repeatTimes);
+					}
+
+					if (music->repeatPlaylist)
+					{
+						music->songQueue.push_back(song);
 					}
 				}
 			}

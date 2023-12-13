@@ -23,7 +23,7 @@ namespace BrickBreaker
 			entities::EntityPtr brickEntity = std::make_shared<entities::Entity>();
 			brickEntity->addComponent(std::make_unique<components::Transform>(glm::vec2(transformWidth, transformHeight), 0.0f, glm::vec2(scaleX, scaleY)));
 			components::Subcollider subcollider = components::Subcollider(glm::vec2(scaleX / 2, scaleY / 2), glm::vec2(scaleX, scaleY), true, true);
-			brickEntity->addComponent(std::make_unique<components::SoundEffect>(EbonyAudio::ENTITY));
+			brickEntity->addComponent(std::make_unique<components::SoundEffect>(Ebony::ENTITY));
 
 			subcollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
@@ -40,7 +40,7 @@ namespace BrickBreaker
 							// The brick should explode
 							std::cout << "BOOOM!" << std::endl;
 							
-							other->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::ResourceManager::GetSoundEffect("brick_break"));
+							other->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("brick_break"), 30));
 							GameManager::addPoints(brick->pointValue);
 
 

@@ -101,7 +101,6 @@ namespace Ebony
 
 			case SDL_KEYDOWN:
 				InputManager::keyboardInstance->setIsKeyDown(event.key.keysym.sym, PRESSED);
-				EB_TRACE(event.key.keysym.sym);
 				break;
 
 			case SDL_KEYUP:
@@ -332,8 +331,6 @@ namespace Ebony
 			press.currentValue = value;
 			press.scaledCurrentValue = static_cast<float>(value) / 32767.0f; // Technically, will allow for an less than -1, but will be close enough
 			
-			EB_TRACE(press.scaledCurrentValue);
-
 			press.pressedState.current = abs(press.scaledCurrentValue) > 0.01 ? Ebony::PRESSED : Ebony::NONE;
 
 			if (press.pressedState.previous & Ebony::PRESSED && press.pressedState.current & Ebony::NONE)

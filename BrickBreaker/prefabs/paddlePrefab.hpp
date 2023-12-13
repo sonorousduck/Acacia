@@ -76,7 +76,6 @@ namespace BrickBreaker
 				auto collider = entity->getComponent<components::Collider>();
 				if (transform->position.x + transform->scale.x < windowWidth)
 				{
-					EB_TRACE(Ebony::Time::GetDeltaTimeFloat());
 					rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
 				}
 			}
@@ -109,7 +108,7 @@ namespace BrickBreaker
 			//mouseComponent->saveMouseBindings("../mouseBindings.json");
 			paddle->addComponent(std::move(mouseComponent));
 
-			paddle->addComponent(std::make_unique<components::SoundEffect>(EbonyAudio::ENTITY));
+			paddle->addComponent(std::make_unique<components::SoundEffect>(Ebony::ENTITY));
 
 
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White);
