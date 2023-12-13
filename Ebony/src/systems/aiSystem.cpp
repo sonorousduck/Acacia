@@ -11,14 +11,14 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
-			auto test = entity->getComponents();
+			auto& test = entity->getComponents();
 			auto aiComponent = entity->getComponent<components::AIComponent>();
 
-			if (aiComponent & Ebony::AIType::STATE)
+			if (aiComponent->aiType & Ebony::AIType::STATE)
 			{
 				// Then the information will go here
 			}
-			else if (aiComponent & Ebony::AIType::REWARD)
+			else if (aiComponent->aiType & Ebony::AIType::REWARD)
 			{
 				// This is the reward information
 			}

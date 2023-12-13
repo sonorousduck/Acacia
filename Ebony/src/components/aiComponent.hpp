@@ -1,7 +1,7 @@
 #pragma once
 
 #include "component.hpp"
-#include "../Log.hpp"
+#include "../Core.hpp"
 
 
 namespace Ebony

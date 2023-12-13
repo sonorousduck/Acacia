@@ -7,6 +7,7 @@
 #include <singletons/time.hpp>
 #include <singletons/inputManager.hpp>
 #include "../Ebony/src/singletons/audioManager.hpp"
+#include "screens/mainScreen.cpp"
 
 namespace Ebony {
 
@@ -36,7 +37,7 @@ namespace Ebony {
 
 			// Add screens here as well
 			screens[BrickBreaker::ScreenEnum::GAME] = std::make_shared<BrickBreaker::GameScreen>();
-
+			screens[BrickBreaker::ScreenEnum::MAIN_MENU] = std::make_shared<BrickBreaker::MainScreen>();
 
 			currentScreen = screens[BrickBreaker::ScreenEnum::GAME];
 			nextScreenEnum = BrickBreaker::ScreenEnum::GAME;
