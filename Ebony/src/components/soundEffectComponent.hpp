@@ -5,7 +5,7 @@
 #include "component.hpp"
 //#include "../Audio/src/SoundSource.hpp"
 #include <SDL_mixer.h>
-#include "../Ebony/src/singletons/audioManager.hpp"
+#include "../singletons/audioManager.hpp"
 
 namespace Ebony
 {
