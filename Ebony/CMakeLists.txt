@@ -42,6 +42,7 @@ set(ComponentHeaders
 	src/components/colliderSprite.hpp
 	src/components/soundEffectComponent.hpp
 	src/components/musicComponent.hpp
+	src/components/aiComponent.hpp
 )
 
 set(SystemHeaders
@@ -54,10 +55,11 @@ set(SystemHeaders
 	src/systems/inputSystem.hpp
 	src/systems/audioSystem.hpp
 	src/systems/fontRenderer.hpp
-	src/systems/collisionSystem.hpp
 	src/systems/physicsSystem.hpp
 	src/systems/spriteRenderer.hpp
 	src/systems/colliderRenderer.hpp
+	src/systems/aiSystem.hpp
+
 )
 
 set(SystemSources
@@ -70,10 +72,10 @@ set(SystemSources
 	src/systems/inputSystem.cpp
 	src/systems/audioSystem.cpp
 	src/systems/fontRenderer.cpp
-	src/systems/collisionSystem.cpp
 	src/systems/physicsSystem.cpp
 	src/systems/spriteRenderer.cpp
 	src/systems/colliderRenderer.cpp
+	src/systems/aiSystem.cpp
 )
 
 set(EntityHeaders

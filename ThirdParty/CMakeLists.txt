@@ -20,7 +20,7 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-add_subdirectory(glfw)
+# add_subdirectory(glfw)
 add_subdirectory(spdlog)
 
 
@@ -71,7 +71,6 @@ target_include_directories(glm INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/glm")
 # add_subdirectory(box2d)
 
 add_subdirectory(gltf)
-add_subdirectory(openal-soft)
 
 add_subdirectory(ctti)
 include_directories(ctti/include)
@@ -118,7 +117,6 @@ target_link_libraries(assimp INTERFACE ${assimp_lib} )
 # list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # find_package(SndFile REQUIRED)
 
-add_subdirectory(libsndfile)
 add_subdirectory(freetype)
 set(freetype_lib "${CMAKE_CURRENT_SOURCE_DIR}/freetype/build/Release/freetype.lib")
 
