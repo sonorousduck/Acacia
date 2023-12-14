@@ -40,11 +40,17 @@ namespace BrickBreaker
 		void AddEntity(entities::EntityPtr entity);
 		void RemoveEntity(entities::Entity::IdType id);
 
+		systems::SpriteRenderer spriteRenderer;
+		systems::PhysicsSystem physicsSystem;
+		systems::InputSystem inputSystem;
+		systems::AudioSystem audioSystem;
+
+
 
 		Ebony::RenderTarget2D mainRenderTarget;
 		std::uint16_t screen = BrickBreaker::ScreenEnum::MAIN_MENU;
 		std::uint16_t nextScreen = BrickBreaker::ScreenEnum::MAIN_MENU;
-		Ebony::Color clearColor = Ebony::Colors::White;
+		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
 
 		int windowWidth;
 		int windowHeight;

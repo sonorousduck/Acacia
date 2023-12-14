@@ -61,6 +61,12 @@ namespace BrickBreaker
 		Ebony::ResourceManager::LoadTexture("box.tx", "collider");
 		Ebony::ResourceManager::LoadTexture("empty.tx", "empty");
 
+
+		Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed");
+		Ebony::ResourceManager::LoadTexture("Button_Pressed.tx", "button_pressed");
+		Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed");
+		Ebony::ResourceManager::LoadTexture("Button_Hovered.tx", "button_hovered");
+		Ebony::ResourceManager::LoadTexture("Logo_BrickBreaker.tx", "logo_brickbreaker");
 	}
 
 	void GameScreen::Init(int windowWidth, int windowHeight)
@@ -71,6 +77,7 @@ namespace BrickBreaker
 		mainRenderTarget = Ebony::RenderTarget2D::Create(Ebony::Graphics2d::screenWidth, Ebony::Graphics2d::screenHeight, GL_LINEAR, GL_NEAREST);
 		LoadContent();
 
+		clearColor = Ebony::Colors::CornflowerBlue;
 
 		Ebony::Graphics2d::SetMainCamera(camera);
 		//Ebony::KeyInput::setupKeyInputs(Ebony::Graphics2d::window);
@@ -206,6 +213,10 @@ namespace BrickBreaker
 		AddEntity(leftWall);
 		AddEntity(topWall);
 		AddEntity(bottomWall);
+
+		entities::EntityPtr startButton = BrickBreaker::StartButton::Create(0, 50, 1.0f, 1.0f, "logo_brickbreaker", "button_hovered", "logo_brickbreaker");
+
+		AddEntity(startButton);
 
 		AddNewEntities();
 		EB_TRACE("Added all entities");
@@ -372,8 +383,8 @@ namespace BrickBreaker
 		auto previousTime = std::chrono::system_clock::now();
 		particleRenderer.Update();
 		averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
-
 		fontRenderer.Update();
+
 
 		Ebony::Graphics2d::UnbindRenderTarget(clearColor);
 

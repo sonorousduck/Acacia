@@ -23,8 +23,6 @@
 #include <filesystem>
 #include <latch>
 #include <algorithm>
-//#include "../Audio/src/SoundBuffer.hpp"
-//#include "../Audio/src/audioManager.hpp"
 #include <components/text.hpp>
 #include <components/mouseInputComponent.hpp>
 #include <singletons/time.hpp>
@@ -33,6 +31,8 @@
 #include "../systems/ballSystem.hpp"
 #include "../misc/collisionLayers.hpp"
 #include "../components/brickComponent.hpp"
+
+#include "../prefabs/startButtonPrefab.hpp"
 
 #include "../prefabs/ballPrefab.hpp"
 #include "../prefabs/paddlePrefab.hpp"

@@ -43,6 +43,11 @@ set(Prefabs
   prefabs/lifeDisplayPrefab.hpp
   prefabs/lifePrefab.hpp
   prefabs/scorePrefab.hpp
+  prefabs/startButtonPrefab.hpp
+  prefabs/optionsButtonPrefab.hpp
+  prefabs/quitButtonPrefab.hpp
+  prefabs/logoPrefab.hpp
+
 )
 
 set(SingletonHeaders

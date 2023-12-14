@@ -225,6 +225,7 @@ namespace Ebony
 	void Graphics2d::EndDraw()
 	{
 		activeTextureId = -1;
+		activeShaderId = -1;
 		SDL_GL_SwapWindow(window.getWindow());
 		resized = false;
 		//glfwSwapBuffers(window.getWindow());
