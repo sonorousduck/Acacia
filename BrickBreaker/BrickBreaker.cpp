@@ -39,7 +39,7 @@ namespace Ebony {
 			screens[BrickBreaker::ScreenEnum::GAME] = std::make_shared<BrickBreaker::GameScreen>();
 			screens[BrickBreaker::ScreenEnum::MAIN_MENU] = std::make_shared<BrickBreaker::MainScreen>();
 
-			currentScreen = screens[BrickBreaker::ScreenEnum::GAME];
+			currentScreen = screens[BrickBreaker::ScreenEnum::MAIN_MENU];
 			nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
 			// TODO: Get ResourceManager to register fonts in a good way, but for now, use the graphics.LoadFont way
 			// Also, register any default fonts that I want to include throughout all the project

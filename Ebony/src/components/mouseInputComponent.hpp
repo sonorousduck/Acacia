@@ -20,6 +20,9 @@ namespace components
 	public:
 		MouseInput() {};
 
+		float relativeX = 0;
+		float relativeY = 0;
+
 		float positionX = 0;
 		float positionY = 0;
 		float previousX = 0;
@@ -27,10 +30,28 @@ namespace components
 
 
 
+
+
 		std::unordered_map<int, std::string> bindings{}; // This is what defines our key bindings. i.e. pressing space gives the string_view "jump"
 		std::unordered_map<std::string_view, std::function<void([[maybe_unused]] entities::EntityPtr& entity, Ebony::MousePress& mousePress)>> onPressActions{}; // This defines our on initial press actions. i.e. "jump" causes the player to... jump...
 		std::unordered_map<std::string_view, std::function<void([[maybe_unused]] entities::EntityPtr& entity, Ebony::MousePress& mousePress)>> onHeldActions{}; // This defines our on held actions. i.e. holding w keeps going forward
 		std::unordered_map<std::string_view, std::function<void([[maybe_unused]] entities::EntityPtr& entity, Ebony::MousePress& mousePress)>> onReleaseActions{}; // This defines our on released actions. i.e. releasing at the correct time to time something
+
+		std::optional<std::function<void([[maybe_unused]] entities::EntityPtr)>> onMove;
+
+
+		void setMousePosition(glm::vec2 absolutePosition, glm::vec2 relativePosition)
+		{
+			previousX = positionX;
+			previousY = positionY;
+
+			positionX = absolutePosition.x;
+			positionY = absolutePosition.y;
+
+			relativeX = relativePosition.x;
+			relativeY = relativePosition.y;
+
+		}
 
 
 		void saveMouseBindings(std::string_view filepathBindings)

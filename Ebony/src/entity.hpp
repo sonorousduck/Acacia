@@ -107,6 +107,7 @@ namespace entities
 	private:
 		IdType m_Id;
 		std::unordered_map<ctti::unnamed_type_id_t, std::unique_ptr<components::Component>> m_Components;
+		//std::weak_ptr<Entity> parent; // TODO: Add scene graph
 	};
 
 	// Convenience type aliases for use throughout the framework
@@ -118,8 +119,7 @@ namespace entities
 	// --------------------------------------------------------------
 	//
 	// Components are stored by their compile-time unnamed_type_id, because
-	// only one of each type can ever exist on an entity. Violating this gives
-	// violating the Bible vibes from the interwebs. So uhhh we don't need to die :)
+	// only one of each type can ever exist on an entity. 
 	//
 	// --------------------------------------------------------------
 	template <typename T>

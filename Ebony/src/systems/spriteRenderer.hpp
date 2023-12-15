@@ -16,9 +16,9 @@ namespace systems
 
 
 		void Update();
+		bool debug = true;
 
 	private:
 		using System::Update;
-		bool debug = true;
 	};
 }

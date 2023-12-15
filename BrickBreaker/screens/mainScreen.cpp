@@ -1,7 +1,9 @@
 #include "mainScreen.hpp"
 
-#include "../prefabs/startButtonPrefab.hpp"
-
+#include "../prefabs/buttonTextPrefab.hpp"
+#include "../prefabs/logoPrefab.hpp"
+#include "../prefabs/buttonPrefab.hpp"
+#include "../prefabs/menuCursorPrefab.hpp"
 
 namespace BrickBreaker
 {
@@ -24,7 +26,7 @@ namespace BrickBreaker
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
 		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
-		clearColor = Ebony::Colors::CornflowerBlue;
+		clearColor = Ebony::Colors::Black;
 
 		LoadContent();
 
@@ -42,13 +44,28 @@ namespace BrickBreaker
 
 		physicsSystem = systems::PhysicsSystem();
 		spriteRenderer = systems::SpriteRenderer();
+
+		spriteRenderer.debug = true;
+
 		inputSystem = systems::InputSystem();
 		audioSystem = systems::AudioSystem();
 
 		// Create prefabs
 
-		AddEntity(BrickBreaker::StartButton::Create(0.0f, 50.0f, 1.0f, 1.0f, "logo_brickbreaker", "button_hovered", "button_pressed"));
+		auto button = BrickBreaker::Button::Create(40.0f, 250.0f, "button_unpressed", "button_hovered", "button_pressed");
+		auto buttonWidth = button->getComponent<components::Sprite>()->texture.Width / 2.0f;
+		auto buttonHeight = button->getComponent<components::Sprite>()->texture.Height / 4.0f;
 
+		AddEntity(BrickBreaker::MenuCursor::Create());
+
+
+		AddEntity(BrickBreaker::Logo::Create(0.0f, 0.0f, "logo_brickbreaker"));
+		AddEntity(button);
+		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 250.0f + buttonHeight, "start_text"));
+		//AddEntity(BrickBreaker::Button::Create(40.0f, 360.0f, "button_unpressed", "button_hovered", "button_pressed"));
+		//AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 360.0f + buttonHeight, "options_text"));
+		//AddEntity(BrickBreaker::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed"));
+		//AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 470.0f + buttonHeight, "quit_text"));
 
 		AddNewEntities();
 
@@ -110,6 +127,14 @@ namespace BrickBreaker
 			[this, elapsedTime]()
 			{
 				audioSystem.Update(elapsedTime);
+			}
+		);
+
+		auto inputTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				inputSystem.Update();
 			}
 		);
 

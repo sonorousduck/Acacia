@@ -62,11 +62,11 @@ namespace BrickBreaker
 		Ebony::ResourceManager::LoadTexture("empty.tx", "empty");
 
 
-		Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed");
-		Ebony::ResourceManager::LoadTexture("Button_Pressed.tx", "button_pressed");
-		Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed");
-		Ebony::ResourceManager::LoadTexture("Button_Hovered.tx", "button_hovered");
-		Ebony::ResourceManager::LoadTexture("Logo_BrickBreaker.tx", "logo_brickbreaker");
+		//Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed");
+		//Ebony::ResourceManager::LoadTexture("Button_Pressed.tx", "button_pressed");
+		//Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed");
+		//Ebony::ResourceManager::LoadTexture("Button_Hovered.tx", "button_hovered");
+		//Ebony::ResourceManager::LoadTexture("Logo_BrickBreaker.tx", "logo_brickbreaker");
 	}
 
 	void GameScreen::Init(int windowWidth, int windowHeight)
@@ -213,10 +213,6 @@ namespace BrickBreaker
 		AddEntity(leftWall);
 		AddEntity(topWall);
 		AddEntity(bottomWall);
-
-		entities::EntityPtr startButton = BrickBreaker::StartButton::Create(0, 50, 1.0f, 1.0f, "logo_brickbreaker", "button_hovered", "logo_brickbreaker");
-
-		AddEntity(startButton);
 
 		AddNewEntities();
 		EB_TRACE("Added all entities");

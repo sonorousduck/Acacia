@@ -89,10 +89,9 @@ namespace systems
 			}
 			
 			// Handle Mouse input
-			if (entity->hasComponent<components::MouseInput>())
+			components::MouseInput* mouseInputComponent{};
+			if (entity->tryGetComponent<components::MouseInput>(mouseInputComponent))
 			{
-				auto mouseInputComponent = entity->getComponent<components::MouseInput>();
-
 				for (auto iter = mouseInputComponent->bindings.begin(); iter != mouseInputComponent->bindings.end(); iter++)
 				{
 					Ebony::MousePress mousePress = Ebony::InputManager::mouseInstance->getMouseState(iter->first);
@@ -109,6 +108,13 @@ namespace systems
 					{
 						mouseInputComponent->onReleaseActions[iter->second](entity, mousePress);
 					}
+				}
+
+				mouseInputComponent->setMousePosition(Ebony::InputManager::mouseInstance->getMouseAbsolute(), Ebony::InputManager::mouseInstance->getMouseAbsolute());
+
+				if (mouseInputComponent->onMove.has_value())
+				{
+					mouseInputComponent->onMove.value()(entity);
 				}
 			}
 		}

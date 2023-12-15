@@ -32,8 +32,6 @@
 #include "../misc/collisionLayers.hpp"
 #include "../components/brickComponent.hpp"
 
-#include "../prefabs/startButtonPrefab.hpp"
-
 #include "../prefabs/ballPrefab.hpp"
 #include "../prefabs/paddlePrefab.hpp"
 #include "../prefabs/wallPrefab.hpp"
