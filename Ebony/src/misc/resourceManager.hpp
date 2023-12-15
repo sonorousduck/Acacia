@@ -27,9 +27,9 @@ namespace Ebony
 		static void UnloadShader(const char* name);
 
 
-		static Texture2D& LoadTexture(const std::string& file, const char* name, bool currentFolder = true, const std::string& otherFolder = "../Graphics");
-		static Texture2D& LoadAtlas(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY);
-		static Texture2D& GetTexture(const char* name);
+		static std::shared_ptr<Texture2D> LoadTexture(const std::string& file, const char* name, bool currentFolder = true, const std::string& otherFolder = "../Graphics");
+		static std::shared_ptr<Texture2D> LoadAtlas(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY);
+		static std::shared_ptr<Texture2D> GetTexture(const char* name);
 		static void UnloadTexture(const char* name);
 
 
@@ -59,12 +59,12 @@ namespace Ebony
 
 		//static Shader& loadShaderFromFile();
 
-		static Texture2D loadTextureFromFile(const std::string& path);
-		static Texture2D loadAtlasFromFile(char const* path, std::uint16_t tilesX, std::uint16_t tilesY);
-		static Texture2D loadAtlasFromFileAs3D(const std::string& path, std::uint16_t tilesX, std::uint16_t tilesY);
+		static std::shared_ptr<Texture2D> loadTextureFromFile(const std::string& path);
+		static std::shared_ptr<Texture2D> loadAtlasFromFile(char const* path, std::uint16_t tilesX, std::uint16_t tilesY);
+		static std::shared_ptr<Texture2D> loadAtlasFromFileAs3D(const std::string& path, std::uint16_t tilesX, std::uint16_t tilesY);
 
 		static std::unordered_map<std::string, Shader> Shaders;
-		static std::unordered_map<std::string, Texture2D> Textures;
+		static std::unordered_map<std::string, std::shared_ptr<Texture2D>> Textures;
 		static std::unordered_map<std::string, Mix_Chunk*> SoundEffectBuffers;
 		static std::unordered_map<std::string, Mix_Music*> MusicSources;
 

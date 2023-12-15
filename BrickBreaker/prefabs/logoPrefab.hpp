@@ -18,11 +18,11 @@ namespace BrickBreaker
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
 
-			Texture2D& texture = Ebony::ResourceManager::GetTexture(logo);
+			std::shared_ptr<Texture2D> texture = Ebony::ResourceManager::GetTexture(logo);
 
-			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width, height), 0.0f, glm::vec2(texture.Width, texture.Height)));
+			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width, height), 0.0f, glm::vec2(texture->Width, texture->Height)));
 
-			components::Subcollider subcollider = components::Subcollider(glm::vec2(texture.Width / 2, texture.Height / 2), glm::vec2(texture.Width, texture.Height), true, true);
+			components::Subcollider subcollider = components::Subcollider(glm::vec2(texture->Width / 2, texture->Height / 2), glm::vec2(texture->Width, texture->Height), true, true);
 
 
 			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White));

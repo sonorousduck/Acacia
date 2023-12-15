@@ -10,6 +10,7 @@
 
 #include <random>
 #include <numbers>
+#include <memory>
 //struct Shape
 //{
 //
@@ -18,16 +19,16 @@
 
 struct Particle
 {
-	Particle(Texture2D& texture, std::chrono::microseconds lifetime, std::chrono::microseconds alive) : texture(texture), lifetime(lifetime), alive(alive) {};
+	Particle(std::shared_ptr<Texture2D> texture, std::chrono::microseconds lifetime, std::chrono::microseconds alive) : texture(texture), lifetime(lifetime), alive(alive) {};
 
-	Particle(Texture2D& texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha) : texture(texture), lifetime(lifetime), startSize(startSize),
+	Particle(std::shared_ptr<Texture2D> texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha) : texture(texture), lifetime(lifetime), startSize(startSize),
 		endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(Ebony::Colors::White)
 	{
 		lerpColor = startColor != endColor;
 		lerpAlpha = startAlpha != endAlpha;
 		lerpSize = startSize != endSize;
 	};
-	Particle(Texture2D& texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha, Ebony::Color startColor, Ebony::Color endColor) : texture(texture), lifetime(lifetime), startSize(startSize),
+	Particle(std::shared_ptr<Texture2D> texture, std::chrono::microseconds lifetime, glm::vec2 startSize, glm::vec2 endSize, float startAlpha, float endAlpha, Ebony::Color startColor, Ebony::Color endColor) : texture(texture), lifetime(lifetime), startSize(startSize),
 		endSize(endSize), startAlpha(startAlpha), endAlpha(endAlpha), alive(std::chrono::microseconds::zero()), currentAlpha(startAlpha), currentSize(startSize), currentColor(startColor), startColor(startColor), endColor(endColor)
 	{
 		lerpColor = startColor != endColor;
@@ -102,7 +103,7 @@ struct Particle
 
 
 
-	Particle(Texture2D& texture, std::chrono::microseconds lifetime, std::chrono::microseconds alive, glm::vec2 position, glm::vec2 direction, glm::vec2 velocity) :
+	Particle(std::shared_ptr<Texture2D> texture, std::chrono::microseconds lifetime, std::chrono::microseconds alive, glm::vec2 position, glm::vec2 direction, glm::vec2 velocity) :
 		texture(texture), lifetime(lifetime), alive(alive), position(position), direction(direction), velocity(velocity) {};
 
 	std::optional<Shader> shader;
@@ -143,7 +144,7 @@ struct Particle
 	std::chrono::microseconds alive{ 0 };
 
 	// Particle texture
-	Texture2D texture;
+	std::shared_ptr<Texture2D> texture;
 };
 
 
@@ -154,7 +155,7 @@ namespace components
 	class ParticleGroup : public PolymorphicComparable<Component, ParticleGroup>
 	{
 	public:
-		ParticleGroup(Texture2D& texture, glm::vec2 velocity, float emissionArc, std::uint32_t maxParticles = 5000) : 
+		ParticleGroup(std::shared_ptr<Texture2D> texture, glm::vec2 velocity, float emissionArc, std::uint32_t maxParticles = 5000) :
 			texture(texture), 
 			maxParticles(maxParticles), 
 			startSpeed(velocity),
@@ -254,7 +255,7 @@ namespace components
 
 
 		// Enforcing maxParticles so we don't have to remake the buffers as often
-		ParticleGroup(Texture2D& texture, std::uint32_t maxParticles = 5000) : texture(texture), maxParticles(maxParticles) 
+		ParticleGroup(std::shared_ptr<Texture2D> texture, std::uint32_t maxParticles = 5000) : texture(texture), maxParticles(maxParticles)
 		{
 
 			//static const GLfloat g_vertex_buffer_data[] = {
@@ -423,7 +424,7 @@ namespace components
 		std::uint32_t particleCount{ 0 };
 
 		// Texture that will be used for the particles. This will be given I mto each particle (most likely as a reference, which means it can't die until all of its particles are dead)
-		Texture2D& texture;
+		std::shared_ptr<Texture2D> texture;
 
 		// How long it should wait to start generating particles after creating the particle group
 		std::chrono::microseconds startDelay{ 0 };
@@ -479,24 +480,24 @@ namespace components
 			return glm::vec2(distribution(generator), distribution(generator));
 		}
 
-		static std::unique_ptr<ParticleGroup> Line(Texture2D& texture, glm::vec2 emissionArea, glm::vec2 velocity = glm::vec2(0.0f, 10.0f), std::uint32_t maxParticles = 5000)
+		static std::unique_ptr<ParticleGroup> Line(std::shared_ptr<Texture2D> texture, glm::vec2 emissionArea, glm::vec2 velocity = glm::vec2(0.0f, 10.0f), std::uint32_t maxParticles = 5000)
 		{
 			auto particleGroup = std::make_unique<ParticleGroup>(texture, velocity, 0.0f, maxParticles);
 			particleGroup->emissionArea = emissionArea;
 			return particleGroup;
 		}
 
-		static std::unique_ptr<ParticleGroup> Point(Texture2D& texture, glm::vec2 velocity = glm::vec2(10.0f, 0.0f), std::uint32_t maxParticles = 5000)
+		static std::unique_ptr<ParticleGroup> Point(std::shared_ptr<Texture2D> texture, glm::vec2 velocity = glm::vec2(10.0f, 0.0f), std::uint32_t maxParticles = 5000)
 		{
 			return std::make_unique<ParticleGroup>(texture, velocity, 0.0f, maxParticles);
 		}
 
-		static std::unique_ptr<ParticleGroup> Box(Texture2D& texture, glm::vec2 velocity = glm::vec2(20.0f, 10.0f), std::uint32_t maxParticles = 5000)
+		static std::unique_ptr<ParticleGroup> Box(std::shared_ptr<Texture2D> texture, glm::vec2 velocity = glm::vec2(20.0f, 10.0f), std::uint32_t maxParticles = 5000)
 		{
 			return std::make_unique<ParticleGroup>(texture, glm::vec2(20.0f, 10.0f), 360.0f, maxParticles);
 		}
 
-		static std::unique_ptr<ParticleGroup> Circle(Texture2D& texture, glm::vec2 emissionArea, glm::vec2 velocity = glm::vec2(10.0f, 10.0f), std::uint32_t maxParticles = 5000)
+		static std::unique_ptr<ParticleGroup> Circle(std::shared_ptr<Texture2D> texture, glm::vec2 emissionArea, glm::vec2 velocity = glm::vec2(10.0f, 10.0f), std::uint32_t maxParticles = 5000)
 		{
 			auto particleGroup = std::make_unique<ParticleGroup>(texture, velocity, 360.0f, maxParticles);
 			particleGroup->volume = false;
@@ -504,7 +505,7 @@ namespace components
 			return particleGroup;
 		}
 
-		static std::unique_ptr<ParticleGroup> Cone(Texture2D& texture, glm::vec2 speed, float coneAngle, std::uint32_t maxParticles = 5000)
+		static std::unique_ptr<ParticleGroup> Cone(std::shared_ptr<Texture2D> texture, glm::vec2 speed, float coneAngle, std::uint32_t maxParticles = 5000)
 		{
 			return std::make_unique<ParticleGroup>(texture, speed, coneAngle, maxParticles);
 		}

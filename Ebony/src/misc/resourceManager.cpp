@@ -11,7 +11,7 @@
 
 namespace Ebony
 {
-	std::unordered_map<std::string, Texture2D> ResourceManager::Textures;
+	std::unordered_map<std::string, std::shared_ptr<Texture2D>> ResourceManager::Textures;
 	std::unordered_map<std::string, Shader> ResourceManager::Shaders;
 	std::unordered_map<std::string, Mix_Chunk*> ResourceManager::SoundEffectBuffers;
 	std::unordered_map<std::string, Mix_Music*> ResourceManager::MusicSources;
@@ -34,7 +34,7 @@ namespace Ebony
 	}
 
 
-	Texture2D& ResourceManager::LoadTexture(const std::string& file, const char* name, bool currentFolder, const std::string& otherFolder)
+	std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file, const char* name, bool currentFolder, const std::string& otherFolder)
 	{
 		if (currentFolder)
 		{
@@ -45,13 +45,13 @@ namespace Ebony
 		return Textures[name];
 	}
 
-	Texture2D& ResourceManager::LoadAtlas(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY)
+	std::shared_ptr<Texture2D> ResourceManager::LoadAtlas(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY)
 	{
 		Textures[name] = loadAtlasFromFileAs3D("../Graphics/" + file, tilesX, tilesY);
 		return Textures[name];
 	}
 
-	Texture2D& ResourceManager::GetTexture(const char* name)
+	std::shared_ptr<Texture2D> ResourceManager::GetTexture(const char* name)
 	{
 		return Textures[name];
 	}
@@ -61,12 +61,12 @@ namespace Ebony
 		Textures.erase(name);
 	}
 
-	Texture2D ResourceManager::loadTextureFromFile(const std::string& path)
+	std::shared_ptr<Texture2D> ResourceManager::loadTextureFromFile(const std::string& path)
 	{
 		unsigned int textureID = 0;
 		glGenTextures(1, &textureID);
 
-		Texture2D texture = Texture2D(textureID);
+		std::shared_ptr<Texture2D> texture = std::make_shared<Texture2D>(textureID);
 
 		assets::AssetFile file{};
 		bool loaded = assets::load_binaryfile(path.c_str(), file);
@@ -105,9 +105,9 @@ namespace Ebony
 			std::vector<char> data(textureInfo.textureSize);
 
 			assets::unpack_texture(&textureInfo, file.binaryBlob.data(), file.binaryBlob.size(), data.data());
-			texture.Internal_Format = format;
-			texture.Image_Format = format;
-			texture.Generate(width, height, data.data());
+			texture->Internal_Format = format;
+			texture->Image_Format = format;
+			texture->Generate(width, height, data.data());
 
 			return texture;
 		}
@@ -115,12 +115,12 @@ namespace Ebony
 		return texture;
 	}
 
-	Texture2D ResourceManager::loadAtlasFromFile(char const* path, std::uint16_t tilesX, std::uint16_t tilesY)
+	std::shared_ptr<Texture2D> ResourceManager::loadAtlasFromFile(char const* path, std::uint16_t tilesX, std::uint16_t tilesY)
 	{
 		unsigned int textureID = 0;
 		glGenTextures(1, &textureID);
 
-		Texture2D texture = Texture2D(textureID);
+		std::shared_ptr<Texture2D> texture = std::make_shared<Texture2D>(textureID);
 
 		assets::AssetFile file{};
 		bool loaded = assets::load_binaryfile(path, file);
@@ -159,15 +159,15 @@ namespace Ebony
 			std::vector<char> data(textureInfo.textureSize);
 
 			assets::unpack_texture(&textureInfo, file.binaryBlob.data(), file.binaryBlob.size(), data.data());
-			texture.Internal_Format = format;
-			texture.Image_Format = format;
+			texture->Internal_Format = format;
+			texture->Image_Format = format;
 
-			texture.Generate(width, height, data.data());
+			texture->Generate(width, height, data.data());
 
-			texture.isAtlas = true;
-			texture.imageCountX = tilesX;
-			texture.imageCountY = tilesY;
-			texture.Offset = { 1.0f / tilesX, 1.0f / tilesY };
+			texture->isAtlas = true;
+			texture->imageCountX = tilesX;
+			texture->imageCountY = tilesY;
+			texture->Offset = { 1.0f / tilesX, 1.0f / tilesY };
 			
 
 			return texture;
@@ -176,12 +176,12 @@ namespace Ebony
 		return texture;
 	}
 
-	Texture2D ResourceManager::loadAtlasFromFileAs3D(const std::string& path, std::uint16_t tilesX, std::uint16_t tilesY)
+	std::shared_ptr<Texture2D> ResourceManager::loadAtlasFromFileAs3D(const std::string& path, std::uint16_t tilesX, std::uint16_t tilesY)
 	{
 		unsigned int textureID = 0;
 		glGenTextures(1, &textureID);
 
-		Texture2D texture = Texture2D(textureID);
+		std::shared_ptr texture = std::make_shared<Texture2D>(textureID);
 
 		assets::AssetFile file{};
 		bool loaded = assets::load_binaryfile(path.c_str(), file);
@@ -220,12 +220,12 @@ namespace Ebony
 			std::vector<char> data(textureInfo.textureSize);
 
 			assets::unpack_texture(&textureInfo, file.binaryBlob.data(), file.binaryBlob.size(), data.data());
-			texture.Internal_Format = format;
-			texture.Image_Format = format;
+			texture->Internal_Format = format;
+			texture->Image_Format = format;
 			
 			
 			
-			texture.Generate3D(width, height, data.data(), tilesX, tilesY);
+			texture->Generate3D(width, height, data.data(), tilesX, tilesY);
 
 			return texture;
 		}
@@ -369,7 +369,7 @@ namespace Ebony
 
 		for (auto& iter : Textures)
 		{
-			glDeleteTextures(1, &iter.second.ID);
+			glDeleteTextures(1, &iter.second->ID);
 		}
 
 

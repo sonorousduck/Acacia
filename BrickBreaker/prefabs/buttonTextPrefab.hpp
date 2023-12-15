@@ -8,6 +8,7 @@
 #include <components/rigidbodyComponent.hpp>
 #include "../misc/collisionLayers.hpp"
 #include <iostream>
+#include <memory>
 
 namespace BrickBreaker
 {
@@ -18,10 +19,10 @@ namespace BrickBreaker
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
-			Texture2D& texture = Ebony::ResourceManager::GetTexture(spriteText);
+			std::shared_ptr<Texture2D> texture = Ebony::ResourceManager::GetTexture(spriteText);
 
 
-			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width - (texture.Width / 3.0f), height), 0.0f, glm::vec2(texture.Width, texture.Height)));
+			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width - (texture->Width / 3.0f), height), 0.0f, glm::vec2(texture->Width, texture->Height)));
 			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.02f));
 
 

@@ -232,7 +232,7 @@ namespace Ebony
 	}
 
 
-	void Graphics2d::Draw(const Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
+	void Graphics2d::Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
 	{
 		// This one will use a default shader that will already be loaded into graphics
 		Shader& s = ResourceManager::GetShader("default");
@@ -265,11 +265,11 @@ namespace Ebony
 		s.setMat4("model", model);
 		s.setVec3("spriteColor", Colors::White.GetRGB());
 
-		if (activeTextureId != texture.ID)
+		if (activeTextureId != texture->ID)
 		{
 			glActiveTexture(GL_TEXTURE0);
-			texture.Bind();
-			activeTextureId = texture.ID;
+			texture->Bind();
+			activeTextureId = texture->ID;
 		}
 
 		glBindVertexArray(quadVAO);
@@ -279,7 +279,7 @@ namespace Ebony
 
 	}
 
-	void Graphics2d::Draw(Shader& s, Texture2D& texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
+	void Graphics2d::Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
 	{
 		if (activeShaderId != s.ID) 
 		{
@@ -308,11 +308,11 @@ namespace Ebony
 		//s.setVec3("spriteColor", Colors::White.GetRGB());
 		//s.setInt("spritesheet", texture.ID);
 
-		if (activeTextureId != texture.ID)
+		if (activeTextureId != texture->ID)
 		{
 			glActiveTexture(GL_TEXTURE0);
-			texture.Bind();
-			activeTextureId = texture.ID;
+			texture->Bind();
+			activeTextureId = texture->ID;
 		}
 
 
@@ -322,7 +322,7 @@ namespace Ebony
 		glBindVertexArray(0);
 	}
 
-	void Graphics2d::DrawAnimation(Shader& s, Texture2D& texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
+	void Graphics2d::DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
 	{
 		if (activeShaderId != s.ID)
 		{
@@ -349,11 +349,11 @@ namespace Ebony
 		s.setMat4("model", model);
 		s.setInt("layer", layer);
 
-		if (activeTextureId != texture.ID)
+		if (activeTextureId != texture->ID)
 		{
 			glActiveTexture(GL_TEXTURE0);
-			texture.Bind();
-			activeTextureId = texture.ID;
+			texture->Bind();
+			activeTextureId = texture->ID;
 		}
 
 
@@ -364,18 +364,18 @@ namespace Ebony
 	}
 
 
-	void Graphics2d::DrawInstanced(Shader& s, Texture2D& texture, unsigned int VAO, std::uint32_t count)
+	void Graphics2d::DrawInstanced(Shader& s, std::shared_ptr<Texture2D> texture, unsigned int VAO, std::uint32_t count)
 	{
 		if (activeShaderId != s.ID)
 		{
 			s.use();
 			activeShaderId = s.ID;
 		}
-		if (activeTextureId != texture.ID)
+		if (activeTextureId != texture->ID)
 		{
 			glActiveTexture(GL_TEXTURE0);
-			texture.Bind();
-			activeTextureId = texture.ID;
+			texture->Bind();
+			activeTextureId = texture->ID;
 		}
 
 		if (hasCamera)

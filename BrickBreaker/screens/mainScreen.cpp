@@ -45,7 +45,7 @@ namespace BrickBreaker
 		physicsSystem = systems::PhysicsSystem();
 		spriteRenderer = systems::SpriteRenderer();
 
-		spriteRenderer.debug = true;
+		spriteRenderer.debug = false;
 
 		inputSystem = systems::InputSystem();
 		audioSystem = systems::AudioSystem();
@@ -53,8 +53,8 @@ namespace BrickBreaker
 		// Create prefabs
 
 		auto button = BrickBreaker::Button::Create(40.0f, 250.0f, "button_unpressed", "button_hovered", "button_pressed");
-		auto buttonWidth = button->getComponent<components::Sprite>()->texture.Width / 2.0f;
-		auto buttonHeight = button->getComponent<components::Sprite>()->texture.Height / 4.0f;
+		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 2.0f;
+		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 4.0f;
 
 		AddEntity(BrickBreaker::MenuCursor::Create());
 
@@ -62,10 +62,10 @@ namespace BrickBreaker
 		AddEntity(BrickBreaker::Logo::Create(0.0f, 0.0f, "logo_brickbreaker"));
 		AddEntity(button);
 		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 250.0f + buttonHeight, "start_text"));
-		//AddEntity(BrickBreaker::Button::Create(40.0f, 360.0f, "button_unpressed", "button_hovered", "button_pressed"));
-		//AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 360.0f + buttonHeight, "options_text"));
-		//AddEntity(BrickBreaker::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed"));
-		//AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 470.0f + buttonHeight, "quit_text"));
+		AddEntity(BrickBreaker::Button::Create(40.0f, 360.0f, "button_unpressed", "button_hovered", "button_pressed"));
+		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 360.0f + buttonHeight, "options_text"));
+		AddEntity(BrickBreaker::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed"));
+		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 470.0f + buttonHeight, "quit_text"));
 
 		AddNewEntities();
 
