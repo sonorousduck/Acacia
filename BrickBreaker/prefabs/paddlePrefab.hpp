@@ -9,6 +9,7 @@
 #include <graphics2d.hpp>
 #include <SDL.h>
 #include <Log.hpp>
+#include "../scripts/DeathScript.hpp"
 
 namespace BrickBreaker
 {
@@ -22,6 +23,10 @@ namespace BrickBreaker
 
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
+
+
+			
+
 
 			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_B, "print" });
 			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_Y, "printRelease" });
@@ -126,6 +131,7 @@ namespace BrickBreaker
 			paddle->addComponent(std::move(controllerInputComponent));
 			paddle->addComponent(std::move(rigidbody));
 			
+			paddle->addComponent(std::make_unique<components::DeathScript>());
 		
 		
 			return paddle;

@@ -45,6 +45,7 @@ set(ComponentHeaders
 	src/components/aiComponent.hpp
 	src/components/activeUICollisionComponent.hpp
 	src/components/buttonComponent.hpp
+	src/components/cppScriptComponent.hpp
 )
 
 set(SystemHeaders
@@ -61,6 +62,7 @@ set(SystemHeaders
 	src/systems/spriteRenderer.hpp
 	src/systems/colliderRenderer.hpp
 	src/systems/aiSystem.hpp
+	src/systems/cppScriptingSystem.hpp
 
 )
 
@@ -78,6 +80,7 @@ set(SystemSources
 	src/systems/spriteRenderer.cpp
 	src/systems/colliderRenderer.cpp
 	src/systems/aiSystem.cpp
+	src/systems/cppScriptingSystem.cpp
 )
 
 set(EntityHeaders
@@ -131,6 +134,8 @@ set (SingletonSources
 )
 
 
+
+
 source_group("Main\\Header Files" FILES ${HEADER_FILES})
 source_group("Main\\Source Files" FILES ${SOURCE_FILES})
 source_group("Components" FILES ${ComponentHeaders})
@@ -143,6 +148,8 @@ source_group("Misc\\Header Files" FILES ${MiscHeaders})
 source_group("Misc\\Source Files" FILES ${MiscSources})
 source_group("Singleton\\Header Files" FILES ${SingletonHeaders})
 source_group("Singleton\\Source Files" FILES ${SingletonSources})
+
+
 source_group("Screens" FILES ${ScreenHeaders})
 
 source_group("Main\\Event Files" FILES ${HEADER_EVENTS})
@@ -163,6 +170,7 @@ set(CODE_FILES
 	${SingletonHeaders}
 	${SingletonSources}
 	${ScreenHeaders}
+
 )
 
 

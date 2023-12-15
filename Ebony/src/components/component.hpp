@@ -45,6 +45,7 @@ Thanks to Dean Mathias for usage for his code for the base component
 #include <memory>
 #include <tuple>
 #include <typeinfo>
+#include <iostream>
 
 namespace components
 {
@@ -69,6 +70,45 @@ namespace components
             // clang prefer to have this, instead of "a == b", it throws a warning otherwise
             return a.operator==(b);
         }
+
+        ctti::unnamed_type_id_t GetParentType()
+        {
+            return ctti::unnamed_type_id<Base>();
+        }
+
+        Derived GetType()
+        {
+            return Derived;
+        }
+    };
+
+    template <typename Base, typename Parent, typename Derived>
+    struct PolymorphicComparableInherited : public Base
+    {
+        bool operator==(Base& rhs)
+        {
+            if (typeid(rhs) != typeid(Derived))
+            {
+                return false;
+            }
+
+            Derived& a = static_cast<Derived&>(*this);
+            Derived& b = static_cast<Derived&>(rhs);
+
+            // clang prefer to have this, instead of "a == b", it throws a warning otherwise
+            return a.operator==(b);
+        }
+
+        ctti::unnamed_type_id_t GetParentType()
+        {
+            return ctti::unnamed_type_id<Parent>();
+        }
+
+        Derived GetType()
+        {
+            return Derived;
+        }
+
     };
 
     class Component
@@ -77,6 +117,8 @@ namespace components
         virtual ~Component() {}
 
         virtual bool operator==([[maybe_unused]] Component& rhs) = 0;
+
+        virtual ctti::unnamed_type_id_t GetParentType() = 0;        
     };
 
 

@@ -112,7 +112,7 @@ namespace BrickBreaker
 		ballSystem = systems::BallSystem();
 		inputSystem = systems::InputSystem();
 		lifePointSystem = systems::LifePointSystem();
-
+		cppScriptingSystem = systems::CppScriptingSystem();
 
 		Shader& s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
@@ -234,6 +234,7 @@ namespace BrickBreaker
 			spriteRenderer.AddEntity(entity);
 			ballSystem.AddEntity(entity);
 			lifePointSystem.AddEntity(entity);
+			cppScriptingSystem.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -258,6 +259,7 @@ namespace BrickBreaker
 			spriteRenderer.RemoveEntity(entityId);
 			ballSystem.RemoveEntity(entityId);
 			lifePointSystem.RemoveEntity(entityId);
+			cppScriptingSystem.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();
@@ -333,6 +335,14 @@ namespace BrickBreaker
 			}
 		);
 
+
+		auto scriptingUpdate = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				cppScriptingSystem.Update(elapsedTime);
+			}
+		);
 
 		// Declare predecessors here
 		taskGraph->declarePredecessor(task3->getId(), task5->getId());

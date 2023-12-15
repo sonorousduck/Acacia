@@ -41,6 +41,7 @@
 #include "../systems/lifePointSystem.hpp"
 #include "screenEnums.hpp"
 #include <Log.hpp>
+#include <systems/cppScriptingSystem.hpp>
 
 
 namespace BrickBreaker
@@ -76,6 +77,7 @@ namespace BrickBreaker
 		systems::SpriteRenderer spriteRenderer;
 		systems::BallSystem ballSystem;
 		systems::LifePointSystem lifePointSystem;
+		systems::CppScriptingSystem cppScriptingSystem;
 
 		Ebony::RenderTarget2D mainRenderTarget;
 
