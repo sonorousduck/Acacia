@@ -43,6 +43,8 @@ set(ComponentHeaders
 	src/components/soundEffectComponent.hpp
 	src/components/musicComponent.hpp
 	src/components/aiComponent.hpp
+	src/components/activeUICollisionComponent.hpp
+	src/components/buttonComponent.hpp
 )
 
 set(SystemHeaders

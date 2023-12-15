@@ -33,6 +33,9 @@ namespace BrickBreaker
 		void LoadContent() override;
 		void Init(int windowWidth, int windowHeight) override;
 		void AddNewEntities() override;
+
+		void SetNextScreen(std::uint16_t nextScreen);
+
 		void RemoveOldEntities() override;
 		std::uint16_t Update(std::chrono::microseconds elapsedTime) override;
 		void Draw(std::chrono::microseconds elapsedTime) override;

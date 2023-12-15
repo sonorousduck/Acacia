@@ -25,6 +25,7 @@ namespace BrickBreaker
 			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(beginningTransform, 0.0f, glm::vec2(20.0f, 20.0f))));
 			auto spriteBall = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("ball"), Ebony::Colors::White);
 			components::Subcollider ballAABBCollider = components::Subcollider(glm::vec2(10.0f, 10.0f), glm::vec2(20.0f, 20.0f), true, true);
+			
 			ballAABBCollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 					BrickBreaker::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
@@ -56,7 +57,7 @@ namespace BrickBreaker
 						float oneTenth = paddleScale.x / 10.0f;
 
 						bool isMiddlePaddle = direction.x >= halfpoint - 1.25 * oneTenth && direction.x <= halfpoint + 1.25 * oneTenth;
-
+						
 
 						if (isMiddlePaddle)
 						{

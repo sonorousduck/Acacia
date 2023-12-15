@@ -36,7 +36,7 @@ namespace BrickBreaker
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
 
 		Ebony::Graphics2d::InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
-
+		
 
 		s.use();
 		s.setInt("image", 0);
@@ -52,7 +52,7 @@ namespace BrickBreaker
 
 		// Create prefabs
 
-		auto button = BrickBreaker::Button::Create(40.0f, 250.0f, "button_unpressed", "button_hovered", "button_pressed");
+		auto button = BrickBreaker::Button::Create(40.0f, 250.0f, "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
 		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 2.0f;
 		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 4.0f;
 
@@ -62,14 +62,25 @@ namespace BrickBreaker
 		AddEntity(BrickBreaker::Logo::Create(0.0f, 0.0f, "logo_brickbreaker"));
 		AddEntity(button);
 		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 250.0f + buttonHeight, "start_text"));
-		AddEntity(BrickBreaker::Button::Create(40.0f, 360.0f, "button_unpressed", "button_hovered", "button_pressed"));
+		AddEntity(BrickBreaker::Button::Create(40.0f, 360.0f, "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::MAIN_MENU, [=](std::uint16_t nextScreen) {
+			EB_TRACE("OPTIONS WAS PRESSED!");
+			SetNextScreen(nextScreen); }));
 		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 360.0f + buttonHeight, "options_text"));
-		AddEntity(BrickBreaker::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed"));
+		AddEntity(BrickBreaker::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
+
+
+
 		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 470.0f + buttonHeight, "quit_text"));
 
 		AddNewEntities();
 
 	}
+
+	void MainScreen::SetNextScreen(std::uint16_t nextScreenIncoming)
+	{
+		nextScreen = nextScreenIncoming;
+	}
+
 
 	void MainScreen::AddNewEntities()
 	{
@@ -141,7 +152,6 @@ namespace BrickBreaker
 
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
 		graphDone.wait();
-
 
 		return nextScreen;
 

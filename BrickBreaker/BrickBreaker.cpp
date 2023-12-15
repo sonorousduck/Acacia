@@ -38,6 +38,7 @@ namespace Ebony {
 			// Add screens here as well
 			screens[BrickBreaker::ScreenEnum::GAME] = std::make_shared<BrickBreaker::GameScreen>();
 			screens[BrickBreaker::ScreenEnum::MAIN_MENU] = std::make_shared<BrickBreaker::MainScreen>();
+			
 
 			currentScreen = screens[BrickBreaker::ScreenEnum::MAIN_MENU];
 			nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
@@ -111,6 +112,11 @@ namespace Ebony {
 		void ChangeScreens() override
 		{
 			currentScreen = screens[nextScreenEnum];
+
+			if (nextScreenEnum == BrickBreaker::QUIT)
+			{
+				quit = true;
+			}
 		}
 
 		void AddNewEntities() override
