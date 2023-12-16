@@ -78,6 +78,12 @@ set(ScreenSources
   screens/quitScreen.cpp
 )
 
+set(ScriptHeaders
+  scripts/DeathScript.hpp
+
+)
+
+
 set(src_files_imgui
   ../Graphics/ThirdParty/imgui/imgui.cpp  
   ../Graphics/ThirdParty/imgui/imgui_draw.cpp
@@ -101,6 +107,7 @@ source_group("Singletons\\Header Files" FILES ${SingletonHeaders})
 source_group("Singletons\\Source Files" FILES ${SingletonSources})
 source_group("Screens\\Header Files" FILES ${ScreenHeaders})
 source_group("Screens\\Source Files" FILES ${ScreenSources})
+source_group("Scripts\\Header Files" FILES ${ScriptHeaders})
 
 set (CODE_FILES
   ${HEADER_FILES} 
@@ -115,6 +122,7 @@ set (CODE_FILES
   ${SingletonSources}
   ${ScreenHeaders} 
   ${ScreenSources}
+  ${ScriptHeaders}
 )
 
 

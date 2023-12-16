@@ -83,7 +83,6 @@ namespace BrickBreaker
 
 									//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(0, 1, 100, true);
 									bounceDirection.x = 1.75;
-
 								}
 							}
 							else

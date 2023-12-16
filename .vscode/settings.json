@@ -4,6 +4,8 @@
         "filesystem": "cpp",
         "fstream": "cpp",
         "sstream": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "atomic": "cpp",
+        "bitset": "cpp"
     }
 }
