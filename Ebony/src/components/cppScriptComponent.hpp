@@ -19,9 +19,9 @@ namespace components
 		virtual void Update(std::chrono::microseconds elapsedTime) { };
 
 		virtual void OnDestroy() {};
-		virtual void OnCollision(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime) {};
-		virtual void OnCollisionEnd(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime) {};
-		virtual void OnCollisionStart(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime) {};
+		virtual void OnCollision(entities::EntityPtr, std::chrono::microseconds elapsedTime) {};
+		virtual void OnCollisionEnd(entities::EntityPtr, std::chrono::microseconds elapsedTime) {};
+		virtual void OnCollisionStart(entities::EntityPtr, std::chrono::microseconds elapsedTime) {};
 		virtual void OnMouseDown() {};
 		virtual void OnMouseUp() {};
 		virtual void OnMouseEnter() {};

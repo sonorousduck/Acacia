@@ -26,7 +26,7 @@ namespace BrickBreaker
 			auto spriteBall = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("ball"), Ebony::Colors::White);
 			components::Subcollider ballAABBCollider = components::Subcollider(glm::vec2(10.0f, 10.0f), glm::vec2(20.0f, 20.0f), true, true);
 			
-			ballAABBCollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+			ballAABBCollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 					BrickBreaker::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
 
@@ -34,20 +34,20 @@ namespace BrickBreaker
 
 					if (layer & BrickBreaker::CollisionLayers::WALL)
 					{
-						glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-						self->getComponent<components::Ball>()->direction = glm::vec2(-direction.x, direction.y);
+						glm::vec2 direction = ballEntity->getComponent<components::Ball>()->direction;
+						ballEntity->getComponent<components::Ball>()->direction = glm::vec2(-direction.x, direction.y);
 					}
 					else if (layer & BrickBreaker::CollisionLayers::TOP_WALL)
 					{
-						glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-						self->getComponent<components::Ball>()->direction = glm::vec2(direction.x, -direction.y);
+						glm::vec2 direction = ballEntity->getComponent<components::Ball>()->direction;
+						ballEntity->getComponent<components::Ball>()->direction = glm::vec2(direction.x, -direction.y);
 					}
 					else if (layer & BrickBreaker::CollisionLayers::PADDLE)
 					{
 						components::Transform* paddleTransform = other->getComponent<components::Transform>();
-						components::Ball* ball = self->getComponent<components::Ball>();
+						components::Ball* ball = ballEntity->getComponent<components::Ball>();
 						// Collision with paddle should take into account a bit of randomness, velocity at which the paddle is moving, and where it hit on the paddle
-						glm::vec2 direction = self->getComponent<components::Transform>()->position - paddleTransform->position;
+						glm::vec2 direction = ballEntity->getComponent<components::Transform>()->position - paddleTransform->position;
 						glm::vec2 bounceDirection = glm::abs(ball->direction);
 						glm::vec2 paddleScale = paddleTransform->scale;
 
@@ -63,7 +63,7 @@ namespace BrickBreaker
 						{
 							bounceDirection.x = static_cast<float>(ball->random_double(-0.5, 0.5));
 							//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(1, 1, 100, false);
-							Ebony::InputManager::Vibrate(self->getComponent<components::ControllerInput>()->joystickId, 1, 1, 100, false);
+							Ebony::InputManager::Vibrate(ballEntity->getComponent<components::ControllerInput>()->joystickId, 1, 1, 100, false);
 
 						}
 						else
@@ -73,13 +73,13 @@ namespace BrickBreaker
 							{
 								if (direction.x <= paddleScale.x - 1.5 * oneTenth) // Just right side
 								{
-									Ebony::InputManager::Vibrate(self->getComponent<components::ControllerInput>()->joystickId, 0, 0.5, 100, false);
+									Ebony::InputManager::Vibrate(ballEntity->getComponent<components::ControllerInput>()->joystickId, 0, 0.5, 100, false);
 									//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(0, 0.5, 100, false);
 									bounceDirection.x = 1.25;
 								}
 								else // Right Edge
 								{
-									Ebony::InputManager::Vibrate(self->getComponent<components::ControllerInput>()->joystickId, 0, 1, 100, true);
+									Ebony::InputManager::Vibrate(ballEntity->getComponent<components::ControllerInput>()->joystickId, 0, 1, 100, true);
 
 									//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(0, 1, 100, true);
 									bounceDirection.x = 1.75;
@@ -89,14 +89,14 @@ namespace BrickBreaker
 							{
 								if (direction.x >= 1.5 * oneTenth) // Left Side
 								{
-									Ebony::InputManager::Vibrate(self->getComponent<components::ControllerInput>()->joystickId, 0.5, 0, 100, false);
+									Ebony::InputManager::Vibrate(ballEntity->getComponent<components::ControllerInput>()->joystickId, 0.5, 0, 100, false);
 
 									//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(0.5, 0, 100, false);
 									bounceDirection.x = -1.25;
 								}
 								else // Left Edge
 								{
-									Ebony::InputManager::Vibrate(self->getComponent<components::ControllerInput>()->joystickId, 1, 0, 100, true);
+									Ebony::InputManager::Vibrate(ballEntity->getComponent<components::ControllerInput>()->joystickId, 1, 0, 100, true);
 
 									//Ebony::InputManager::controllerInstances[Ebony::InputManager::sdlJoystickToJoystickConversion[self->getComponent<components::ControllerInput>()->joystickId]]->Vibrate(1, 0, 100, true);
 									bounceDirection.x = -1.75;
@@ -107,7 +107,7 @@ namespace BrickBreaker
 						bounceDirection.y = -bounceDirection.y;
 
 						//glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-						self->getComponent<components::Ball>()->direction = bounceDirection;
+						ballEntity->getComponent<components::Ball>()->direction = bounceDirection;
 					}
 					else if (layer & BrickBreaker::CollisionLayers::BRICK)
 					{
@@ -115,13 +115,13 @@ namespace BrickBreaker
 						// First, subtracting the one position from the other should give us everything we need
 						// If direction.y > 0 -> hit the bottom, else top
 						// If direction.x > 0 -> hit the right, else left
-						if (!self->getComponent<components::Ball>()->directionChangedThisFrame)
+						if (!ballEntity->getComponent<components::Ball>()->directionChangedThisFrame)
 						{
 
 
 
-							glm::vec2 direction = self->getComponent<components::Transform>()->position - other->getComponent<components::Transform>()->position;
-							glm::vec2 bounceDirection = self->getComponent<components::Ball>()->direction;
+							glm::vec2 direction = ballEntity->getComponent<components::Transform>()->position - other->getComponent<components::Transform>()->position;
+							glm::vec2 bounceDirection = ballEntity->getComponent<components::Ball>()->direction;
 							// We need to detect whether it hit the left or the right side
 							// Then detect whether it hit the top or the bottom side
 
@@ -151,8 +151,8 @@ namespace BrickBreaker
 
 							//self->getComponent<components::Ball>()->SetNewDirection(bounceDirection);
 
-							self->getComponent<components::Ball>()->direction = bounceDirection;
-							self->getComponent<components::Ball>()->directionChangedThisFrame = true;
+							ballEntity->getComponent<components::Ball>()->direction = bounceDirection;
+							ballEntity->getComponent<components::Ball>()->directionChangedThisFrame = true;
 						}
 
 

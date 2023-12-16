@@ -18,7 +18,7 @@ namespace scripts
 			nextScreen = BrickBreaker::ScreenEnum::MAIN_MENU;
 		}
 
-		void OnCollisionStart(entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime) override
+		void OnCollisionStart(entities::EntityPtr other, std::chrono::microseconds elapsedTime) override
 		{
 			Die();
 		}

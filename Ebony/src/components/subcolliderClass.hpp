@@ -32,9 +32,9 @@ namespace components
 			glm::vec2 size, 
 			bool isRect,
 			bool isAABB, 
-			std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollisionStart,
-			std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollision,
-			std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollisionEnd
+			std::optional<std::function<void(entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollisionStart,
+			std::optional<std::function<void(entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollision,
+			std::optional<std::function<void(entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollisionEnd
 		) :
 			center(center),
 			size(size),
@@ -59,9 +59,9 @@ namespace components
 		bool isCollidingLastFrame = false;
 
 		// Basically, the callback will take itself and the object with which it collided
-		std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollisionStart;
-		std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollision;
-		std::optional<std::function<void(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollisionEnd;
+		std::optional<std::function<void(entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollisionStart;
+		std::optional<std::function<void(entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollision;
+		std::optional<std::function<void(entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollisionEnd;
 
 		glm::vec2 getSize()
 		{

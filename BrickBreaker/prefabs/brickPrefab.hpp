@@ -25,13 +25,13 @@ namespace BrickBreaker
 			components::Subcollider subcollider = components::Subcollider(glm::vec2(scaleX / 2, scaleY / 2), glm::vec2(scaleX, scaleY), true, true);
 			brickEntity->addComponent(std::make_unique<components::SoundEffect>(Ebony::ENTITY));
 
-			subcollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+			subcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 
 					if (other->hasComponent<components::Ball>())
 					{
 						auto ball = other->getComponent<components::Ball>();
-						auto brick = self->getComponent<components::Brick>();
+						auto brick = brickEntity->getComponent<components::Brick>();
 
 						brick->strength -= ball->strength;
 
@@ -45,7 +45,7 @@ namespace BrickBreaker
 
 
 							brick->destroyed = true;
-							RemoveEntity(self->getId());
+							RemoveEntity(brickEntity->getId());
 
 
 							// Spawn powerup entity

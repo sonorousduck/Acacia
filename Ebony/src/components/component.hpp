@@ -46,6 +46,11 @@ Thanks to Dean Mathias for usage for his code for the base component
 #include <tuple>
 #include <typeinfo>
 
+namespace entities
+{
+    class Entity;
+}
+
 namespace components
 {
 
@@ -77,6 +82,8 @@ namespace components
         virtual ~Component() {}
 
         virtual bool operator==([[maybe_unused]] Component& rhs) = 0;
+
+        entities::Entity* entity;
     };
 
 

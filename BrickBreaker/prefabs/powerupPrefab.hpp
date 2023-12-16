@@ -27,14 +27,14 @@ namespace BrickBreaker
 			powerup->addComponent(std::make_unique<components::RigidBody>(glm::vec2(0.0f, 250.0f), glm::vec2(0.0f, 0.0f), false));
 
 			components::Subcollider aabbCollider = components::Subcollider(glm::vec2(13.5f, 13.5f), glm::vec2(25.0f, 25.0f), true, true);
-			aabbCollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+			aabbCollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 					BrickBreaker::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
 
 					if (layer & BrickBreaker::CollisionLayers::PADDLE)
 					{
 						// Confer powers upon the user	
-						auto powerupComponent = self->getComponent<components::Powerup>();
+						auto powerupComponent = powerup->getComponent<components::Powerup>();
 						
 						//other->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::ResourceManager::GetSoundEffect("powerup"));
 
@@ -62,7 +62,7 @@ namespace BrickBreaker
 						}
 
 
-						RemoveEntity(self->getId());
+						RemoveEntity(powerup->getId());
 					}
 
 				};

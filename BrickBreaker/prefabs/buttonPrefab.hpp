@@ -40,20 +40,20 @@ namespace BrickBreaker
 			entity->addComponent(std::move(button));
 
 			// Create the onCollisionStart
-			subcollider.onCollisionStart = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+			subcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
-					self->getComponent<components::Sprite>()->SetTexture(Ebony::ResourceManager::GetTexture(spriteImageHover));
-					other->getComponent<components::ActiveUICollision>()->collidingWith = self;
+					entity->getComponent<components::Sprite>()->SetTexture(Ebony::ResourceManager::GetTexture(spriteImageHover));
+					other->getComponent<components::ActiveUICollision>()->collidingWith = entity;
 					//other->getComponent<components::
 					// If it is clicked while onCollision though, I need to switch to the pressed version
 				};
 			
 			// Create the onCollisionEnd
-			subcollider.onCollisionEnd = [=](entities::EntityPtr self, entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+			subcollider.onCollisionEnd = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
-					self->getComponent<components::Sprite>()->SetTexture(Ebony::ResourceManager::GetTexture(spriteImageUnpressed));
+					entity->getComponent<components::Sprite>()->SetTexture(Ebony::ResourceManager::GetTexture(spriteImageUnpressed));
 
-					if (other->getComponent<components::ActiveUICollision>()->collidingWith == self)
+					if (other->getComponent<components::ActiveUICollision>()->collidingWith == entity)
 					{
 						other->getComponent<components::ActiveUICollision>()->collidingWith = nullptr;
 					}

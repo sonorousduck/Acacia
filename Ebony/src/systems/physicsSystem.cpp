@@ -123,11 +123,11 @@ namespace systems
 
 									if (collider->aabbCollider.onCollisionStart.has_value())
 									{
-										collider->aabbCollider.onCollisionStart.value()(entity, possibleCollisions[i], elapsedTime);
+										collider->aabbCollider.onCollisionStart.value()(possibleCollisions[i], elapsedTime);
 									}
 									if (hasScript)
 									{
-										script->OnCollisionStart(entity, possibleCollisions[i], elapsedTime);
+										script->OnCollisionStart(possibleCollisions[i], elapsedTime);
 									}
 
 									collider->currentlyCollidingWith.insert(possibleCollisions[i]->getId());
@@ -139,11 +139,11 @@ namespace systems
 								{
 									if (collider->aabbCollider.onCollision.has_value())
 									{
-										collider->aabbCollider.onCollision.value()(entity, possibleCollisions[i], elapsedTime);
+										collider->aabbCollider.onCollision.value()(possibleCollisions[i], elapsedTime);
 									}
 									if (hasScript)
 									{
-										script->OnCollision(entity, possibleCollisions[i], elapsedTime);
+										script->OnCollision(possibleCollisions[i], elapsedTime);
 									}
 								}
 							}
@@ -162,11 +162,11 @@ namespace systems
 								
 								if (collider->aabbCollider.onCollisionEnd.has_value())
 								{
-									collider->aabbCollider.onCollisionEnd.value()(entity, possibleCollisions[i], elapsedTime);
+									collider->aabbCollider.onCollisionEnd.value()(possibleCollisions[i], elapsedTime);
 								}
 								if (hasScript)
 								{
-									script->OnCollisionEnd(entity, possibleCollisions[i], elapsedTime);
+									script->OnCollisionEnd(possibleCollisions[i], elapsedTime);
 
 								}
 

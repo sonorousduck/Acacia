@@ -125,6 +125,7 @@ namespace entities
 	template <typename T>
 	void Entity::addComponent(std::unique_ptr<T> component)
 	{
+		component->entity = this;
 		m_Components[ctti::unnamed_type_id<T>()] = std::move(component);
 	}
 
