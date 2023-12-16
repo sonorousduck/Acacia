@@ -69,33 +69,23 @@ namespace BrickBreaker
 		//Ebony::ResourceManager::LoadTexture("Logo_BrickBreaker.tx", "logo_brickbreaker");
 	}
 
+	
+
+
 	void GameScreen::Init(int windowWidth, int windowHeight)
 	{
 		Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
 		mainRenderTarget = Ebony::RenderTarget2D::Create(Ebony::Graphics2d::screenWidth, Ebony::Graphics2d::screenHeight, GL_LINEAR, GL_NEAREST);
-		LoadContent();
 
 		clearColor = Ebony::Colors::CornflowerBlue;
 
 		Ebony::Graphics2d::SetMainCamera(camera);
-		//Ebony::KeyInput::setupKeyInputs(Ebony::Graphics2d::window);
-		//Ebony::MouseInput::setupMouseInputs(Ebony::Graphics2d::window);
+	}
 
-
-		//std::vector<int> keys = { GLFW_KEY_E, GLFW_KEY_ESCAPE, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_A, GLFW_KEY_D, GLFW_KEY_SPACE };
-		//keyInput.setKeysToMonitorInit(keys);
-
-		// All buttons defined here: https://www.glfw.org/docs/3.3/group__buttons.html
-		//std::vector<int> buttons = { GLFW_MOUSE_BUTTON_1 };
-		//mouseInput.setButtonsToMonitor(buttons);
-
-		//std::vector<int> controllerButtons = { GLFW_GAMEPAD_BUTTON_CROSS, GLFW_GAMEPAD_BUTTON_CIRCLE, GLFW_GAMEPAD_BUTTON_TRIANGLE, GLFW_GAMEPAD_BUTTON_SQUARE, GLFW_GAMEPAD_BUTTON_START };
-		//controllerInput.setButtonsToMonitorInit(controllerButtons);
-
-
-
+	void GameScreen::Start()
+	{
 		auto testParticles = std::make_shared<entities::Entity>();
 		auto keyboardInput = std::make_shared<entities::Entity>();
 		auto animationsTest = std::make_shared<entities::Entity>();
@@ -112,7 +102,7 @@ namespace BrickBreaker
 		ballSystem = systems::BallSystem();
 		inputSystem = systems::InputSystem();
 		lifePointSystem = systems::LifePointSystem();
-
+		cppScriptingSystem = systems::CppScriptingSystem();
 
 		Shader& s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
@@ -135,20 +125,20 @@ namespace BrickBreaker
 		// TODO:
 		// ================================================================================================================================================================
 		/*gameplayControllerInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr) {
-			glfwSetWindowShouldClose(Ebony::Graphics2d::window.getWindow(), true); 
+			glfwSetWindowShouldClose(Ebony::Graphics2d::window.getWindow(), true);
 			}
 		});*/
-		
+
 		gameplayControllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_START, "quit" });
 		// ================================================================================================================================================================
 		// TODO:
 		// ================================================================================================================================================================
-		/*gameplayKeyboardInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr entity) 
+		/*gameplayKeyboardInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr entity)
 			{
-				glfwSetWindowShouldClose(Ebony::Graphics2d::window.getWindow(), true); 
-			} 
+				glfwSetWindowShouldClose(Ebony::Graphics2d::window.getWindow(), true);
+			}
 		});*/
-		
+
 		gameplayKeyboardInputComponent->bindings.insert({ SDLK_ESCAPE, "quit" });
 
 		gameplayEntity->addComponent(std::move(gameplayControllerInputComponent));
@@ -204,10 +194,10 @@ namespace BrickBreaker
 
 
 
-		entities::EntityPtr rightWall = BrickBreaker::Wall::Create(static_cast<float>(windowWidth) - 5.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL);
-		entities::EntityPtr leftWall = BrickBreaker::Wall::Create(0.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL);
-		entities::EntityPtr topWall = BrickBreaker::Wall::Create(0.0f, 0.0f, static_cast<float>(windowWidth), 10.0f, BrickBreaker::CollisionLayers::TOP_WALL);
-		entities::EntityPtr bottomWall = BrickBreaker::Wall::Create(0.0f, static_cast<float>(windowHeight) - 1.0f, static_cast<float>(windowWidth), 5.0f, BrickBreaker::CollisionLayers::TOP_WALL);
+		entities::EntityPtr rightWall = BrickBreaker::Wall::Create(static_cast<float>(windowWidth) - 5.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL, nextScreen);
+		entities::EntityPtr leftWall = BrickBreaker::Wall::Create(0.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL, nextScreen);
+		entities::EntityPtr topWall = BrickBreaker::Wall::Create(0.0f, 0.0f, static_cast<float>(windowWidth), 10.0f, BrickBreaker::CollisionLayers::TOP_WALL, nextScreen);
+		entities::EntityPtr bottomWall = BrickBreaker::Wall::Create(0.0f, static_cast<float>(windowHeight) - 1.0f, static_cast<float>(windowWidth), 5.0f, BrickBreaker::CollisionLayers::TOP_WALL, nextScreen, true);
 
 		AddEntity(rightWall);
 		AddEntity(leftWall);
@@ -234,6 +224,7 @@ namespace BrickBreaker
 			spriteRenderer.AddEntity(entity);
 			ballSystem.AddEntity(entity);
 			lifePointSystem.AddEntity(entity);
+			cppScriptingSystem.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -258,6 +249,7 @@ namespace BrickBreaker
 			spriteRenderer.RemoveEntity(entityId);
 			ballSystem.RemoveEntity(entityId);
 			lifePointSystem.RemoveEntity(entityId);
+			cppScriptingSystem.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();
@@ -333,6 +325,14 @@ namespace BrickBreaker
 			}
 		);
 
+		auto scriptingUpdate = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				cppScriptingSystem.Update(elapsedTime);
+			}
+		);
+
 
 		// Declare predecessors here
 		taskGraph->declarePredecessor(task3->getId(), task5->getId());
@@ -403,6 +403,49 @@ namespace BrickBreaker
 		std::lock_guard<std::mutex> lock(mutexEntities);
 
 		removeEntities.insert(id);
+	}
+
+	void GameScreen::Reset()
+	{
+		// Delete all entities in play
+		RemoveAllEntities();
+		Start();
+	}
+
+	void GameScreen::RemoveAllEntities()
+	{
+		for (auto&& [entityId, entity] : allEntities)
+		{
+			particleSystem.RemoveEntity(entityId);
+			particleRenderer.RemoveEntity(entityId);
+			animationRenderer.RemoveEntity(entityId);
+			animationSystem.RemoveEntity(entityId);
+			inputSystem.RemoveEntity(entityId);
+			audioSystem.RemoveEntity(entityId);
+			fontRenderer.RemoveEntity(entityId);
+			physicsSystem.RemoveEntity(entityId);
+			spriteRenderer.RemoveEntity(entityId);
+			ballSystem.RemoveEntity(entityId);
+			lifePointSystem.RemoveEntity(entityId);
+			cppScriptingSystem.RemoveEntity(entityId);
+		}
+
+		allEntities.clear();
+	}
+
+
+	void GameScreen::OnScreenDefocus()
+	{
+		nextScreen = screen;
+
+		std::cout << "Defocusing Game Screen" << std::endl;
+		Ebony::AudioManager::StopAll();
+	}
+
+	void GameScreen::OnScreenFocus()
+	{
+		std::cout << "Focusing Game Screen" << std::endl;
+		Reset();
 	}
 
 }

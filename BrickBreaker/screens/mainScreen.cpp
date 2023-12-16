@@ -19,24 +19,13 @@ namespace BrickBreaker
 		Ebony::ResourceManager::LoadTexture("Quit_Text.tx", "quit_text");
 	}
 
-	void MainScreen::Init(int windowWidth, int windowHeight)
+	void MainScreen::Start()
 	{
-		Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
-
-		this->windowHeight = windowHeight;
-		this->windowWidth = windowWidth;
-		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
-		clearColor = Ebony::Colors::Black;
-
-		LoadContent();
-
-		Ebony::Graphics2d::SetMainCamera(camera);
-
 		Shader& s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
 
 		Ebony::Graphics2d::InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
-		
+
 
 		s.use();
 		s.setInt("image", 0);
@@ -73,6 +62,18 @@ namespace BrickBreaker
 		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 470.0f + buttonHeight, "quit_text"));
 
 		AddNewEntities();
+	}
+
+	void MainScreen::Init(int windowWidth, int windowHeight)
+	{
+		Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
+
+		this->windowHeight = windowHeight;
+		this->windowWidth = windowWidth;
+		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
+		clearColor = Ebony::Colors::Black;
+
+		Ebony::Graphics2d::SetMainCamera(camera);
 
 	}
 
@@ -186,6 +187,20 @@ namespace BrickBreaker
 		std::lock_guard<std::mutex> lock(mutexEntities);
 
 		removeEntities.insert(id);
+	}
+
+	void MainScreen::OnScreenDefocus()
+	{
+		nextScreen = screen;
+
+		std::cout << "Defocusing Main Screen" << std::endl;
+	}
+
+	void MainScreen::OnScreenFocus()
+	{
+		Start();
+
+		std::cout << "Focusing Main Screen" << std::endl;
 	}
 
 }

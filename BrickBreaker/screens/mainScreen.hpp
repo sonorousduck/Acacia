@@ -31,6 +31,7 @@ namespace BrickBreaker
 	{
 	public:
 		void LoadContent() override;
+		void Start() override;
 		void Init(int windowWidth, int windowHeight) override;
 		void AddNewEntities() override;
 
@@ -48,11 +49,12 @@ namespace BrickBreaker
 		systems::InputSystem inputSystem;
 		systems::AudioSystem audioSystem;
 
-
+		void OnScreenDefocus() override;
+		void OnScreenFocus() override;
 
 		Ebony::RenderTarget2D mainRenderTarget;
-		std::uint16_t screen = BrickBreaker::ScreenEnum::MAIN_MENU;
-		std::uint16_t nextScreen = BrickBreaker::ScreenEnum::MAIN_MENU;
+		std::uint64_t screen = BrickBreaker::ScreenEnum::MAIN_MENU;
+		std::uint64_t nextScreen = BrickBreaker::ScreenEnum::MAIN_MENU;
 		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
 
 		int windowWidth;

@@ -4,6 +4,15 @@
 
 namespace systems
 {
+	void CppScriptingSystem::Start()
+	{
+		for (auto& [id, entity] : m_Entities)
+		{
+			entity->getComponent<components::CppScript>()->Start();
+		}
+	}
+
+
 	void CppScriptingSystem::Update(std::chrono::microseconds elapsedTime)
 	{
 		this->updateImpl(elapsedTime);
@@ -13,6 +22,8 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
+			//auto test = 
+
 			auto script = entity->getComponent<components::CppScript>();
 
 
@@ -20,5 +31,7 @@ namespace systems
 		}
 
 	}
+
+
 }
 

@@ -43,6 +43,7 @@ namespace Ebony {
 
 		virtual void Init();
 		virtual void LoadContent();
+		virtual void Start();
 		virtual void AddNewEntities();
 		virtual void RemoveOldEntities();
 		virtual void Update(std::chrono::microseconds elapsedTime);

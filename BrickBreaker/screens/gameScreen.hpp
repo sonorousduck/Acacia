@@ -41,6 +41,7 @@
 #include "../systems/lifePointSystem.hpp"
 #include "screenEnums.hpp"
 #include <Log.hpp>
+#include <systems/cppScriptingSystem.hpp>
 
 
 namespace BrickBreaker
@@ -50,6 +51,7 @@ namespace BrickBreaker
 	public:
 		void LoadContent() override;
 		void Init(int windowWidth, int windowHeight) override;
+		void Start() override;
 		void AddNewEntities() override;
 		void RemoveOldEntities() override;
 		std::uint16_t Update(std::chrono::microseconds elapsedTime) override;
@@ -58,6 +60,11 @@ namespace BrickBreaker
 		void AddEntity(entities::EntityPtr entity);
 		void RemoveEntity(entities::Entity::IdType id);
 
+		void Reset();
+
+
+		void OnScreenDefocus() override;
+		void OnScreenFocus() override;
 
 		std::string fps = "";
 		//Ebony::KeyInput keyInput;
@@ -76,6 +83,7 @@ namespace BrickBreaker
 		systems::SpriteRenderer spriteRenderer;
 		systems::BallSystem ballSystem;
 		systems::LifePointSystem lifePointSystem;
+		systems::CppScriptingSystem cppScriptingSystem;
 
 		Ebony::RenderTarget2D mainRenderTarget;
 
@@ -87,11 +95,14 @@ namespace BrickBreaker
 		entities::EntityPtr fpsEntity;
 		float fpsUpdateDeltaTime = 0.0f;
 
-		std::uint16_t screen = BrickBreaker::ScreenEnum::GAME;
-		std::uint16_t nextScreen = BrickBreaker::ScreenEnum::GAME;
+		std::uint64_t screen = BrickBreaker::ScreenEnum::GAME;
+		std::uint64_t nextScreen = BrickBreaker::ScreenEnum::GAME;
 
 		int windowWidth;
 		int windowHeight;
+
+	private:
+		void RemoveAllEntities();
 
 	};
 }

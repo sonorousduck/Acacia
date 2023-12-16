@@ -2,6 +2,7 @@
 
 #include "component.hpp"
 #include "../entity.hpp"
+#include <iostream>
 
 namespace components
 {
@@ -13,17 +14,17 @@ namespace components
 		}
 
 		
-		void Start() {};
-		void Reset() {};
-		void Update(std::chrono::microseconds elapsedTime) {};
+		virtual void Start() {};
+		virtual void Reset() {};
+		virtual void Update(std::chrono::microseconds elapsedTime) { };
 
-		void OnDestroy() {};
-		void OnCollision() {};
-		void OnCollisionEnd() {};
-		void OnCollisionStart() {};
-		void OnMouseDown() {};
-		void OnMouseUp() {};
-		void OnMouseEnter() {};
-		void OnMouseOver() {};
+		virtual void OnDestroy() {};
+		virtual void OnCollision(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime) {};
+		virtual void OnCollisionEnd(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime) {};
+		virtual void OnCollisionStart(entities::EntityPtr, entities::EntityPtr, std::chrono::microseconds elapsedTime) {};
+		virtual void OnMouseDown() {};
+		virtual void OnMouseUp() {};
+		virtual void OnMouseEnter() {};
+		virtual void OnMouseOver() {};
 	};
 }

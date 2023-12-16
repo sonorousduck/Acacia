@@ -7,6 +7,8 @@
 #include "../misc/collisionLayers.hpp"
 #include <components/collider.hpp>
 #include <components/rigidbodyComponent.hpp>
+#include <components/cppScriptComponent.hpp>
+#include "../scripts/DeathScript.hpp"
 
 
 namespace BrickBreaker
@@ -14,7 +16,7 @@ namespace BrickBreaker
 	class Wall
 	{
 	public:
-		static entities::EntityPtr Create(float transformWidth, float transformHeight, float scaleX, float scaleY, BrickBreaker::CollisionLayers collisionType)
+		static entities::EntityPtr Create(float transformWidth, float transformHeight, float scaleX, float scaleY, BrickBreaker::CollisionLayers collisionType, std::uint64_t& nextScreen, bool isBottomWall = false)
 		{
 			entities::EntityPtr wall = std::make_shared<entities::Entity>();
 
@@ -24,6 +26,13 @@ namespace BrickBreaker
 			wall->addComponent(std::move(std::make_unique<components::Collider>(wallCollider, collisionType, true, false)));
 			wall->addComponent(std::move(std::make_unique<components::RigidBody>()));
 			wall->addComponent(std::move(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("empty"), Ebony::Colors::White)));
+
+			if (isBottomWall)
+			{
+				std::unique_ptr<components::CppScript> script = std::make_unique<scripts::DeathScript>(nextScreen);
+
+				wall->addComponent(std::move(script));
+			}
 
 
 			return wall;

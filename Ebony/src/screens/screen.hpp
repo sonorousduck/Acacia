@@ -22,6 +22,7 @@ namespace Ebony
 	public:
 		virtual void LoadContent() {}
 		//virtual void Run();
+		virtual void Start() {};
 		virtual void Init(int windowWidth, int windowHeight) {}
 		virtual void AddNewEntities() {}
 		virtual void RemoveOldEntities() {}
@@ -47,8 +48,8 @@ namespace Ebony
 		std::unordered_set<entities::Entity::IdType> updatedEntities;
 		std::mutex mutexEntities; // This is necessary so we can add to the newEntities vector even though it is multithreaded
 
-		std::uint64_t screen = 0;
-		std::uint64_t nextScreen = 0;
+		std::uint64_t screen;
+		std::uint64_t nextScreen;
 
 		int windowWidth = 800;
 		int windowHeight = 640;

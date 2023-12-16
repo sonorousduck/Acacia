@@ -10,6 +10,7 @@
 #include <SDL.h>
 #include <Log.hpp>
 
+
 namespace BrickBreaker
 {
 	class Paddle
@@ -125,8 +126,6 @@ namespace BrickBreaker
 			paddle->addComponent(std::move(keyboardInputComponent));
 			paddle->addComponent(std::move(controllerInputComponent));
 			paddle->addComponent(std::move(rigidbody));
-			
-		
 		
 			return paddle;
 		}

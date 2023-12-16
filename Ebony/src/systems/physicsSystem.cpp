@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include "../../../BrickBreaker/misc/collisionLayers.hpp"
+#include "../components/cppScriptComponent.hpp"
 
 namespace systems
 {
@@ -13,10 +14,14 @@ namespace systems
 	// Overriding the remove to check if 
 	void PhysicsSystem::RemoveEntity(entities::Entity::IdType entityId)
 	{
-		if (!staticQuadtree.shouldRebuild && m_Entities[entityId]->getComponent<components::Collider>()->isStatic)
+		if (!staticQuadtree.shouldRebuild)
 		{
-			staticQuadtree.shouldRebuild = true;
-			staticQuadtree.Clear();
+			components::Collider* collider;
+			if (m_Entities.find(entityId) != m_Entities.end() && m_Entities[entityId]->tryGetComponent<components::Collider>(collider) && collider->isStatic)
+			{
+				staticQuadtree.shouldRebuild = true;
+				staticQuadtree.Clear();
+			}
 		}
 
 		m_Entities.erase(entityId);
@@ -104,6 +109,9 @@ namespace systems
 				{
 					if (entity->getId() != possibleCollisions[i]->getId() && (collider->layer & possibleCollisions[i]->getComponent<components::Collider>()->layer))
 					{
+						components::CppScript* script;
+						bool hasScript = entity->tryGetComponent<components::CppScript>(script);
+
 						if (HasAABBCollision(entity, possibleCollisions[i]))
 						{
 							if (!collider->preciseSubcolliderDetection)
@@ -117,6 +125,11 @@ namespace systems
 									{
 										collider->aabbCollider.onCollisionStart.value()(entity, possibleCollisions[i], elapsedTime);
 									}
+									if (hasScript)
+									{
+										script->OnCollisionStart(entity, possibleCollisions[i], elapsedTime);
+									}
+
 									collider->currentlyCollidingWith.insert(possibleCollisions[i]->getId());
 
 								}
@@ -127,6 +140,10 @@ namespace systems
 									if (collider->aabbCollider.onCollision.has_value())
 									{
 										collider->aabbCollider.onCollision.value()(entity, possibleCollisions[i], elapsedTime);
+									}
+									if (hasScript)
+									{
+										script->OnCollision(entity, possibleCollisions[i], elapsedTime);
 									}
 								}
 							}
@@ -147,10 +164,16 @@ namespace systems
 								{
 									collider->aabbCollider.onCollisionEnd.value()(entity, possibleCollisions[i], elapsedTime);
 								}
-								
+								if (hasScript)
+								{
+									script->OnCollisionEnd(entity, possibleCollisions[i], elapsedTime);
+
+								}
+
 								collider->currentlyCollidingWith.erase(possibleCollisions[i]->getId());
+
 							}
-						}
+						}	
 					}
 				}
 

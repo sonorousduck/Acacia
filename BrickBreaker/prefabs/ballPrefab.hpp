@@ -198,6 +198,7 @@ namespace BrickBreaker
 			ballEntity->addComponent(std::move(spriteBall));
 			ballEntity->addComponent(std::move(ballComponent));
 
+
 			return ballEntity;
 		}
 	};

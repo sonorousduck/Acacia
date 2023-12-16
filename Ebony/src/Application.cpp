@@ -38,6 +38,11 @@ namespace Ebony {
 
 	}
 
+	void Application::Start()
+	{
+
+	}
+
 	void Application::Draw(std::chrono::microseconds elapsedTime)
 	{
 

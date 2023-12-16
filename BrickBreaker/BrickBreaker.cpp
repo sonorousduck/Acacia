@@ -49,16 +49,14 @@ namespace Ebony {
 			{
 				screen.second->Init(windowWidth, windowHeight);
 			}
-
-
 		}
 
 		void LoadContent() override
 		{
-			/*for (auto& screen : screens)
+			for (auto& screen : screens)
 			{
 				screen.second->LoadContent();
-			}*/
+			}
 
 			Application::LoadContent();
 		}
@@ -80,6 +78,7 @@ namespace Ebony {
 
 			if (newScreenFocused)
 			{
+				currentScreen->nextScreen = currentScreen->screen;
 				currentScreen->OnScreenFocus();
 				newScreenFocused = false;
 			}
@@ -111,6 +110,9 @@ namespace Ebony {
 		
 		void ChangeScreens() override
 		{
+			// Reset the screen to have the next screen of itself so it doesn't infinitely loop
+
+
 			currentScreen = screens[nextScreenEnum];
 
 			if (nextScreenEnum == BrickBreaker::QUIT)
@@ -133,6 +135,7 @@ namespace Ebony {
 		void Run() override
 		{
 			Init();
+			LoadContent();
 
 			Shader& s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
 
@@ -158,6 +161,8 @@ namespace Ebony {
 			auto previousTime = std::chrono::system_clock::now();
 			int frame = 0;
 
+			currentScreen->Start();
+
 			while (!quit)
 			{
 				auto currentTime = std::chrono::system_clock::now();
@@ -174,7 +179,12 @@ namespace Ebony {
 
 				RemoveOldEntities();
 				AddNewEntities();
-				ChangeScreens();
+
+				if (newScreenFocused)
+				{
+					ChangeScreens();
+				}
+
 				frame++;
 			}
 			
