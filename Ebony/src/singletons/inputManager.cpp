@@ -154,11 +154,10 @@ namespace Ebony
 				break;
 			
 			case SDL_MOUSEWHEEL:
-				EB_TRACE(event.wheel.preciseY);
+				InputManager::mouseInstance->setMouseScroll(event.wheel.mouseX, event.wheel.mouseY, event.wheel.x, event.wheel.y);
 				break;
 
 			case SDL_MOUSEMOTION:
-
 				InputManager::mouseInstance->setMousePosition(event.motion.x, event.motion.y, event.motion.xrel, event.motion.yrel);
 
 				//std::cout << "X: " << InputManager::mouseInstance->getMouseAbsoluteX() << ", Y: " << InputManager::mouseInstance->getMouseAbsoluteY() << std::endl;;
@@ -527,10 +526,10 @@ namespace Ebony
 		mouseScroll.mouseScrollY = 0;
 	}
 
-	void MouseInputManager::setMouseScroll(int x, int y, int mouseScrollX, int mouseScrollY)
+	void MouseInputManager::setMouseScroll(int xPos, int yPos, int mouseScrollX, int mouseScrollY)
 	{
-		mouseScroll.xPos = x;
-		mouseScroll.yPos = y;
+		mouseScroll.xPos = xPos;
+		mouseScroll.yPos = yPos;
 		mouseScroll.mouseScrollX = mouseScrollX;
 		mouseScroll.mouseScrollY = mouseScrollY;
 	}
