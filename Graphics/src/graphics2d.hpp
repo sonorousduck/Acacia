@@ -52,16 +52,16 @@ namespace Ebony
 		static void DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color, Color outlineColor, float depth = 0.0f);
 		//void DrawString(SpriteFont& spriteFont, std::string text, float x, float y, float scale, glm::vec3 color);
 
-		static void SetMainCamera(Camera& camera);
+		static void SetMainCamera(std::shared_ptr<Camera> camera);
 
 		static void BeginDraw(Color clearColor);
 		static void EndDraw();
 
 		static void InitializeImgui();
 
-		static void Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
-		static void Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth = 0.0f);
-		static void DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth);
+		static void Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f);
+		static void Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f);
+		static void DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth);
 		static void DrawInstanced(Shader& s, std::shared_ptr<Texture2D> texture, unsigned int VAO, std::uint32_t count);
 		static void DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget);
 
@@ -93,7 +93,7 @@ namespace Ebony
 
 		static float lastMosX;
 		static float lastMosY;
-		static Camera mainCamera;
+		static std::shared_ptr<Camera> mainCamera;
 		static unsigned int versionMajor;
 		static unsigned int versionMinor;
 		static const char* windowName;

@@ -53,6 +53,7 @@ namespace Crypt
 		std::uint64_t screen = Crypt::ScreenEnum::HIGH_SCORE;
 		std::uint64_t nextScreen = Crypt::ScreenEnum::HIGH_SCORE;
 		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
+		std::shared_ptr<Camera> camera;
 
 		int windowWidth;
 		int windowHeight;

@@ -10,15 +10,17 @@ namespace components
 	class Transform : public PolymorphicComparable<Component, Transform>
 	{
 	public:
-		Transform(glm::vec2 position, float rotation, glm::vec2 scale) :
+		Transform(glm::vec2 position, float rotation, glm::vec2 scale, glm::vec3 rotationAxis = glm::vec3(0.0f, 0.0f, 1.0f)) :
 			position(position),
 			rotation(rotation),
-			scale(scale)
+			scale(scale),
+			rotationAxis(rotationAxis)
 		{}
 
 		glm::vec2 position;
 		glm::vec2 previousPosition{};
 		float rotation;
+		glm::vec3 rotationAxis;
 		glm::vec2 scale;
 	};
 }

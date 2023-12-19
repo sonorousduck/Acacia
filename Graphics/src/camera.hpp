@@ -3,8 +3,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
-
+#include <chrono>
+#include <cmath>
 
 enum Camera_Movement
 {
@@ -42,7 +42,17 @@ public:
 	void ProcessKeyboard(Camera_Movement direction, float deltaTime);
 	void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
 	void ProcessMouseScroll(float yoffset);
-	void updateCameraVectors();
+
+	void TranslateCamera(glm::vec2 translation);
+	void SetCameraPosition(glm::vec2 position);
+	void SetCameraXPosition(float newXPosition);
+	void SetCameraXPositionSmooth(float newXPosition, float time, float totalTime);
+
+	void SetCameraYPosition(float newYPosition);
+
+
 
 private:
+	void updateCameraVectors();
+
 };

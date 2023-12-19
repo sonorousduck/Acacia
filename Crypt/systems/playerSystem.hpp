@@ -3,6 +3,8 @@
 #include "systems/system.hpp"
 
 #include "../components/playerComponent.hpp"
+#include <graphics2d.hpp>
+
 
 namespace systems
 {

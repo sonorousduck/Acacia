@@ -27,6 +27,8 @@ namespace Crypt
 		{
 			entities::EntityPtr player = std::make_shared<entities::Entity>();
 
+			glm::vec2 originalVelocity = glm::vec2(100.0f, 500.0f);
+			glm::vec2 originalVelocityWithoutY = glm::vec2(originalVelocity.x, 0.0f);
 
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
@@ -37,54 +39,111 @@ namespace Crypt
 
 			controllerInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) {std::cout << "Circle was called (OnHeld)" << std::endl; } });
 			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=](entities::EntityPtr) {std::cout << "Triangle was called" << std::endl; } });
-			controllerInputComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_LEFTX, "paddleMovement" });
+			controllerInputComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_LEFTX, "playerMovement" });
 
-			controllerInputComponent->joystickActions.insert({ "paddleMovement", [=](entities::EntityPtr entity, float value) {
-				/*if (abs(value) > 0.10)
+			controllerInputComponent->joystickActions.insert({ "playerMovement", [=](entities::EntityPtr entity, float value) {
+				if (abs(value) > 0.10)
 				{
 					auto rigidBody = entity->getComponent<components::RigidBody>();
 					auto transform = entity->getComponent<components::Transform>();
 					auto collider = entity->getComponent<components::Collider>();
 
-					if (value < 0 && transform->position.x > 0)
+					if (value < 0)
 					{
-						std::cout << Ebony::Time::GetDeltaTimeFloat() << std::endl;
-						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat() * value, 0.0f });
+						rigidBody->setVelocity(originalVelocityWithoutY + glm::vec2(60.0f * value, rigidBody->getVelocity().y));
 					}
-					else if (value > 0 && transform->position.x + transform->scale.x < windowWidth)
+					else if (value > 0)
 					{
-						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat() * value, 0.0f });
+						rigidBody->setVelocity(originalVelocityWithoutY + glm::vec2(150.0f * value, rigidBody->getVelocity().y));
 					}
-				}*/
-			} });
-
-			keyboardInputComponent->onReleaseActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
-			keyboardInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
-			keyboardInputComponent->bindings.insert({ SDLK_a, "paddleLeft" });
-			keyboardInputComponent->bindings.insert({ SDLK_d, "paddleRight" });
-
-			keyboardInputComponent->onHeldActions.insert({ "paddleLeft", [=](entities::EntityPtr entity)
-			{
-				auto rigidBody = entity->getComponent<components::RigidBody>();
-				auto transform = entity->getComponent<components::Transform>();
-				auto collider = entity->getComponent<components::Collider>();
-
-
-				if (transform->position.x > 0)
-				{
-					rigidBody->addScriptedMovement(glm::vec2{ -700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
 				}
 			} });
 
-			keyboardInputComponent->onHeldActions.insert({ "paddleRight", [=](entities::EntityPtr entity)
+			keyboardInputComponent->onReleaseActions.insert({ "playerLeft", [=](entities::EntityPtr) 
+			{ 
+				auto playerComponent = player->getComponent<components::Player>();
+				auto rigidBody = player->getComponent<components::RigidBody>();
+
+				if (playerComponent->isSlow)
+				{
+					playerComponent->isSlow = false;
+					rigidBody->setVelocity(rigidBody->getVelocity() + glm::vec2(60.0f, 0.0f));
+				}
+			} 
+			});
+
+			keyboardInputComponent->onReleaseActions.insert({ "playerRight", [=](entities::EntityPtr)
+			{
+				auto playerComponent = player->getComponent<components::Player>();
+				auto rigidBody = player->getComponent<components::RigidBody>();
+
+				if (playerComponent->isFast)
+				{
+					playerComponent->isFast = false;
+					rigidBody->setVelocity(rigidBody->getVelocity() - glm::vec2(150.0f, 0.0f));
+				}
+			}
+			});
+
+
+			keyboardInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
+			keyboardInputComponent->bindings.insert({ SDLK_a, "playerLeft" });
+			keyboardInputComponent->bindings.insert({ SDLK_d, "playerRight" });
+
+			keyboardInputComponent->onHeldActions.insert({ "playerLeft", [=](entities::EntityPtr entity)
 			{
 				auto rigidBody = entity->getComponent<components::RigidBody>();
 				auto transform = entity->getComponent<components::Transform>();
 				auto collider = entity->getComponent<components::Collider>();
-				//if (transform->position.x + transform->scale.x < windowWidth)
-				//{
-				//	rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
-				//}
+				auto playerComponent = player->getComponent<components::Player>();
+
+				if (!playerComponent->isSlow && !playerComponent->isFast)
+				{
+					playerComponent->isSlow = true;
+
+					rigidBody->setVelocity(rigidBody->getVelocity() - glm::vec2(60.0f, 0.0f));
+				}
+			} });
+
+			keyboardInputComponent->onHeldActions.insert({ "playerRight", [=](entities::EntityPtr entity)
+			{
+				auto rigidBody = entity->getComponent<components::RigidBody>();
+				auto transform = entity->getComponent<components::Transform>();
+				auto collider = entity->getComponent<components::Collider>();
+				auto playerComponent = player->getComponent<components::Player>();
+
+				if (!playerComponent->isFast && !playerComponent->isSlow)
+				{
+					playerComponent->isFast = true;
+
+					rigidBody->setVelocity(rigidBody->getVelocity() + glm::vec2(150.0f, 0.0f));
+				}
+			}
+				});
+
+			keyboardInputComponent->bindings.insert({ SDLK_w, "flipGravity" });
+			keyboardInputComponent->bindings.insert({ SDLK_SPACE, "flipGravity" });
+
+
+			keyboardInputComponent->onPressActions.insert({ "flipGravity", [=](entities::EntityPtr entity)
+				{
+				auto rigidBody = entity->getComponent<components::RigidBody>();
+				auto transform = entity->getComponent<components::Transform>();
+				auto collider = entity->getComponent<components::Collider>();
+				auto playerComponent = player->getComponent<components::Player>();
+
+				if (playerComponent->gravityCooldown <= 0.0f)
+				{
+					playerComponent->gravityCooldown = playerComponent->gravityUsageCooldownResetTime;
+					playerComponent->gravityDown = !playerComponent->gravityDown;
+
+					transform->rotation = fmod(transform->rotation + 180.0f, 360.0f);
+					//std::cout << (playerComponent->gravityDown ? "-1" : "1") << std::endl;
+					rigidBody->setVelocity(glm::vec2(rigidBody->getVelocity().x, originalVelocity.y * (playerComponent->gravityDown ? 1 : -1)));
+					playerComponent->isOnGround = false;
+
+					std::cout << rigidBody->getVelocity().y << std::endl;
+				}
 			}
 				});
 
@@ -104,7 +163,7 @@ namespace Crypt
 			player->addComponent(std::make_unique<components::Player>());
 
 			//auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White);
-			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(50.0f, 50.0f), glm::vec2(100.0f, 100.0f), true, true);
+			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(30.0f, 30.0f), glm::vec2(60.0f, 60.0f), true, true);
 
 			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
@@ -118,10 +177,10 @@ namespace Crypt
 
 
 			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::PLAYER | Crypt::CollisionLayers::GROUND, false);
-			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(100.0f, 100.0f));
+			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(60.0f, 60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 			
 			// Will use a separate system for controlling gravity and such
-			auto rigidbody = std::make_unique<components::RigidBody>(glm::vec2(100.0f, 500.0f), glm::vec2(0.0f, 200.0f));
+			auto rigidbody = std::make_unique<components::RigidBody>(originalVelocity, glm::vec2(0.0f, 200.0f));
 			auto animationController = std::make_unique<components::AnimationController>();
 
 

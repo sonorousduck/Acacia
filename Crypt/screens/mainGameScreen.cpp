@@ -42,15 +42,16 @@ namespace Crypt
 
 
 		// Create prefabs
-		AddEntity(Crypt::Player::Create(glm::vec2(0.0f, 0.0f), windowWidth));
-		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, windowHeight - 20.0f), windowWidth));
+		AddEntity(Crypt::Player::Create(glm::vec2(20.0f, 50.0f), windowWidth));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, windowHeight - 5.0f), windowWidth));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), windowWidth));
 
 		AddNewEntities();
 	}
 
 	void MainGameScreen::Init(int windowWidth, int windowHeight)
 	{
-		camera = Camera(glm::vec3(0.0f, 0.0f, 1.0f));
+		camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 1.0f));
 
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
@@ -66,8 +67,8 @@ namespace Crypt
 	std::uint16_t MainGameScreen::Update(std::chrono::microseconds elapsedTime)
 	{
 		auto firstTime = std::chrono::system_clock::now();
-		camera.Position = glm::vec3(camera.Position.x + 100, camera.Position.y, camera.Position.z);
-		camera.updateCameraVectors();
+		Ebony::Graphics2d::mainCamera->Position = glm::vec3(Ebony::Graphics2d::mainCamera->Position.x + 0.01f, Ebony::Graphics2d::mainCamera->Position.y, Ebony::Graphics2d::mainCamera->Position.z);
+		
 		std::latch graphDone{ 1 };
 
 		auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(

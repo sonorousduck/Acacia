@@ -59,7 +59,7 @@ namespace Crypt
 
 	void MainMenuScreen::Init(int windowWidth, int windowHeight)
 	{
-		Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
+		camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 1.0f));
 
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;

@@ -74,7 +74,7 @@ namespace BrickBreaker
 
 	void GameScreen::Init(int windowWidth, int windowHeight)
 	{
-		Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
+		camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 1.0f));
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
 		mainRenderTarget = Ebony::RenderTarget2D::Create(Ebony::Graphics2d::screenWidth, Ebony::Graphics2d::screenHeight, GL_LINEAR, GL_NEAREST);

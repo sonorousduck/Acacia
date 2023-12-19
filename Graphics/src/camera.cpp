@@ -83,6 +83,32 @@ void Camera::ProcessMouseScroll(float yOffset)
 	Zoom = std::clamp(Zoom, 1.0f, 90.0f);
 }
 
+void Camera::TranslateCamera(glm::vec2 translation)
+{
+	Position += glm::vec3(translation, 0.0f);
+}
+
+void Camera::SetCameraPosition(glm::vec2 position)
+{
+	Position = glm::vec3(position, 1.0f);
+}
+
+void Camera::SetCameraXPosition(float newXPosition)
+{
+	Position.x = newXPosition;
+}
+
+void Camera::SetCameraXPositionSmooth(float newXPosition, float time, float totalTime)
+{
+	//Position.x += (newXPosition - Position.x) * (1.0 - pow(0.1, (totalTime / time)));
+	Position.x = std::lerp(Position.x, newXPosition, time / totalTime);
+}
+
+void Camera::SetCameraYPosition(float newYPosition)
+{
+	Position.y = newYPosition;
+}
+
 void Camera::updateCameraVectors()
 {
 	// Calculate the new Front vector

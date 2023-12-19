@@ -56,6 +56,7 @@ namespace BrickBreaker
 		std::uint64_t screen = BrickBreaker::ScreenEnum::MAIN_MENU;
 		std::uint64_t nextScreen = BrickBreaker::ScreenEnum::MAIN_MENU;
 		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
+		std::shared_ptr<Camera> camera;
 
 		int windowWidth;
 		int windowHeight;

@@ -16,5 +16,16 @@ namespace components
 
 
 		bool isOnGround = false;
+		bool isSlow = false;
+		bool isFast = false;
+		bool switchedSpeeds = false;
+		float smoothingTime = 0.0f;
+		float totalCameraSmoothingTime = 50.0f;
+		float returnSmoothingTime = 20.0f;
+
+		bool gravityDown = true;
+
+		float gravityCooldown = 0.0f;
+		float gravityUsageCooldownResetTime = 1.0f; // This will be the reset time that the gravity cooldown gets set to when the player uses it 
 	};
 }

@@ -91,6 +91,7 @@ namespace BrickBreaker
 		std::chrono::microseconds averageParticleSystemTime = std::chrono::microseconds::zero();
 		std::chrono::microseconds averageAnimationSystemTime = std::chrono::microseconds::zero();
 		std::chrono::microseconds averageUpdateTime = std::chrono::microseconds::zero();
+		std::shared_ptr<Camera> camera;
 
 		entities::EntityPtr fpsEntity;
 		float fpsUpdateDeltaTime = 0.0f;

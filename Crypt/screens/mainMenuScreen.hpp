@@ -50,6 +50,9 @@ namespace Crypt
 		void OnScreenDefocus() override;
 		void OnScreenFocus() override;
 
+
+		std::shared_ptr<Camera> camera;
+
 		Ebony::RenderTarget2D mainRenderTarget;
 		std::uint64_t screen = Crypt::ScreenEnum::MAIN_MENU;
 		std::uint64_t nextScreen = Crypt::ScreenEnum::MAIN_MENU;

@@ -10,7 +10,7 @@ namespace systems
 	class AISystem : public System
 	{
 	public:
-		AISystem() : System({  })
+		AISystem() : System({ ctti::unnamed_type_id<components::AIComponent>() })
 		{}
 
 		void Update(std::chrono::microseconds elapsedTime) override;

@@ -30,6 +30,7 @@ set(Prefabs
   prefabs/menuCursorPrefab.hpp
   prefabs/playerPrefab.hpp
   prefabs/groundPrefab.hpp
+  prefabs/crosshair.hpp
 )
 
 set(UIPrefabs

@@ -10,7 +10,7 @@ namespace Ebony
 	Window Graphics2d::window;
 	float Graphics2d::lastMosX;
 	float Graphics2d::lastMosY;
-	Camera Graphics2d::mainCamera;
+	std::shared_ptr<Camera> Graphics2d::mainCamera;
 	unsigned int Graphics2d::versionMajor;
 	unsigned int Graphics2d::versionMinor;
 	unsigned int Graphics2d::quadVAO{ 0 };
@@ -232,7 +232,7 @@ namespace Ebony
 	}
 
 
-	void Graphics2d::Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
+	void Graphics2d::Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth)
 	{
 		// This one will use a default shader that will already be loaded into graphics
 		Shader& s = ResourceManager::GetShader("default");
@@ -248,13 +248,13 @@ namespace Ebony
 		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
 		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
-		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
+		model = glm::rotate(model, glm::radians(rotate), rotationAxis); // then rotate
 		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
 		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 
 		if (hasCamera)
 		{
-			s.setMat4("view", mainCamera.GetViewMatrix());
+			s.setMat4("view", mainCamera->GetViewMatrix());
 		}
 		else
 		{
@@ -279,7 +279,7 @@ namespace Ebony
 
 	}
 
-	void Graphics2d::Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
+	void Graphics2d::Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth)
 	{
 		if (activeShaderId != s.ID) 
 		{
@@ -290,13 +290,13 @@ namespace Ebony
 		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
 		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
-		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
+		model = glm::rotate(model, glm::radians(rotate), rotationAxis); // then rotate
 		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
 		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 
 		if (hasCamera)
 		{
-			s.setMat4("view", mainCamera.GetViewMatrix());
+			s.setMat4("view", mainCamera->GetViewMatrix());
 		}
 		else
 		{
@@ -322,7 +322,7 @@ namespace Ebony
 		glBindVertexArray(0);
 	}
 
-	void Graphics2d::DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, Color color, float depth)
+	void Graphics2d::DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth)
 	{
 		if (activeShaderId != s.ID)
 		{
@@ -333,13 +333,13 @@ namespace Ebony
 		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
 		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
-		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
+		model = glm::rotate(model, glm::radians(rotate), rotationAxis); // then rotate
 		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
 		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 
 		if (hasCamera)
 		{
-			s.setMat4("view", mainCamera.GetViewMatrix());
+			s.setMat4("view", mainCamera->GetViewMatrix());
 		}
 		else
 		{
@@ -380,7 +380,7 @@ namespace Ebony
 
 		if (hasCamera)
 		{
-			s.setMat4("view", mainCamera.GetViewMatrix());
+			s.setMat4("view", mainCamera->GetViewMatrix());
 		}
 		else
 		{
@@ -494,7 +494,7 @@ namespace Ebony
 		glDeleteVertexArrays(1, &quadVAO);
 	}
 
-	void Graphics2d::SetMainCamera(Camera& camera)
+	void Graphics2d::SetMainCamera(std::shared_ptr<Camera> camera)
 	{
 		mainCamera = camera;
 		hasCamera = true;
