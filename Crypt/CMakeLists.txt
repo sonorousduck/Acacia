@@ -30,7 +30,7 @@ set(Prefabs
   prefabs/menuCursorPrefab.hpp
   prefabs/playerPrefab.hpp
   prefabs/groundPrefab.hpp
-  prefabs/crosshair.hpp
+  prefabs/crosshairPrefab.hpp
 )
 
 set(UIPrefabs
@@ -70,7 +70,7 @@ set(ScreenSources
 )
 
 set(ScriptHeaders
-
+  scripts/crosshairPositionScript.hpp
 )
 
 

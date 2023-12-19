@@ -17,6 +17,12 @@ namespace components
 			rotationAxis(rotationAxis)
 		{}
 
+		void SetPosition(glm::vec2 newPosition)
+		{
+			previousPosition = position;
+			position = newPosition;
+		}
+
 		glm::vec2 position;
 		glm::vec2 previousPosition{};
 		float rotation;

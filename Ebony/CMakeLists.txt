@@ -109,6 +109,10 @@ set(MiscHeaders
 	src/misc/Quadtree.hpp
 )
 
+set(Prefabs
+	src/prefabs/templatePrefab.hpp
+)
+
 set(MiscSources
 	src/misc/ThreadPool.cpp
 	src/misc/Task.cpp
@@ -146,6 +150,7 @@ source_group("Misc\\Source Files" FILES ${MiscSources})
 source_group("Singleton\\Header Files" FILES ${SingletonHeaders})
 source_group("Singleton\\Source Files" FILES ${SingletonSources})
 source_group("Screens" FILES ${ScreenHeaders})
+source_group("Prefabs" FILES ${Prefabs})
 
 
 
@@ -167,6 +172,7 @@ set(CODE_FILES
 	${SingletonHeaders}
 	${SingletonSources}
 	${ScreenHeaders}
+	${Prefabs}
 )
 
 

@@ -23,6 +23,7 @@
 #include <systems/animationRenderer.hpp>
 #include <systems/animation2d.hpp>
 #include "../systems/playerSystem.hpp"
+#include <systems/cppScriptingSystem.hpp>
 
 
 namespace Crypt
@@ -51,6 +52,7 @@ namespace Crypt
 		systems::AnimationRenderer animationRenderer;
 		systems::Animation2d animationSystem;
 		systems::PlayerSystem playerSystem;
+		systems::CppScriptingSystem cppScriptingSystem;
 
 
 		void OnScreenDefocus() override;

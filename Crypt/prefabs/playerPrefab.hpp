@@ -147,19 +147,6 @@ namespace Crypt
 			}
 				});
 
-
-
-
-			auto mouseComponent = std::make_unique<components::MouseInput>();
-
-			mouseComponent->bindings.insert({ SDL_BUTTON_LEFT, "mousePress" });
-			mouseComponent->onPressActions.insert({ "mousePress", [=](entities::EntityPtr, Ebony::MousePress& mousePress) {std::cout << "Button pressed at " << mousePress.mouseClick.x << ", " << mousePress.mouseClick.y << std::endl; } });
-			mouseComponent->onReleaseActions.insert({ "mousePress",[=](entities::EntityPtr, Ebony::MousePress&) {std::cout << "Mouse Button released!" << std::endl; } });
-
-			//mouseComponent->loadMouseBindings("../mouseBindings.json");
-			//mouseComponent->saveMouseBindings("../mouseBindings.json");
-			player->addComponent(std::move(mouseComponent));
-
 			player->addComponent(std::make_unique<components::Player>());
 
 			//auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White);

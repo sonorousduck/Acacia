@@ -2,6 +2,7 @@
 
 #include "../prefabs/playerPrefab.hpp"
 #include "../prefabs/groundPrefab.hpp"
+#include "../prefabs/crosshairPrefab.hpp"
 
 namespace Crypt
 {
@@ -12,6 +13,7 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("Default.tx", "default", "Crypt");
 		Ebony::ResourceManager::LoadTexture("particle.tx", "collider", "Crypt");
 		Ebony::ResourceManager::LoadTexture("empty.tx", "empty", "Crypt");
+		Ebony::ResourceManager::LoadTexture("aim.tx", "aim", "Crypt");
 
 
 	}
@@ -36,16 +38,18 @@ namespace Crypt
 		playerSystem = systems::PlayerSystem();
 		inputSystem = systems::InputSystem();
 		audioSystem = systems::AudioSystem();
+		cppScriptingSystem = systems::CppScriptingSystem();
 
 		spriteRenderer.debug = true;
 
 
+		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), windowWidth);
 
 		// Create prefabs
-		AddEntity(Crypt::Player::Create(glm::vec2(20.0f, 50.0f), windowWidth));
+		AddEntity(player);
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, windowHeight - 5.0f), windowWidth));
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), windowWidth));
-
+		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player));
 		AddNewEntities();
 	}
 
@@ -116,6 +120,14 @@ namespace Crypt
 			[this, elapsedTime]()
 			{
 				playerSystem.Update(elapsedTime);
+			}
+		);
+
+		auto scriptingTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				cppScriptingSystem.Update(elapsedTime);
 			}
 		);
 
@@ -190,6 +202,7 @@ namespace Crypt
 			animationSystem.AddEntity(entity);
 			animationRenderer.AddEntity(entity);
 			playerSystem.AddEntity(entity);
+			cppScriptingSystem.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -208,6 +221,7 @@ namespace Crypt
 			animationSystem.RemoveEntity(entityId);
 			animationRenderer.RemoveEntity(entityId);
 			playerSystem.RemoveEntity(entityId);
+			cppScriptingSystem.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();
