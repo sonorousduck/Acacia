@@ -34,20 +34,20 @@ namespace Ebony
 	}
 
 
-	std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file, const char* name, bool currentFolder, const std::string& otherFolder)
+	std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file, const char* name, const std::string& nameOfGame, bool currentFolder, const std::string& otherFolder)
 	{
 		if (currentFolder)
 		{
-			Textures[name] = loadTextureFromFile("../BrickBreaker/textures/" + file);
+			Textures[name] = loadTextureFromFile("../" + nameOfGame + "/textures/" + file);
 			return Textures[name];
 		}
 		Textures[name] = loadTextureFromFile("../Graphics/" + file);
 		return Textures[name];
 	}
 
-	std::shared_ptr<Texture2D> ResourceManager::LoadAtlas(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY)
+	std::shared_ptr<Texture2D> ResourceManager::LoadAtlas(const std::string& file, const char* name, const std::string& nameOfGame, std::uint16_t tilesX, std::uint16_t tilesY)
 	{
-		Textures[name] = loadAtlasFromFileAs3D("../Graphics/" + file, tilesX, tilesY);
+		Textures[name] = loadAtlasFromFileAs3D("../" + nameOfGame + "/textures/" + file, tilesX, tilesY);
 		return Textures[name];
 	}
 

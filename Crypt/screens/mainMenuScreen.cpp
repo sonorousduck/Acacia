@@ -1,10 +1,21 @@
 #include "mainMenuScreen.hpp"
+#include "../prefabs/UI/buttonTextPrefab.hpp"
+#include "../prefabs/UI/buttonPrefab.hpp"
+#include "../prefabs/menuCursorPrefab.hpp"
+
 
 namespace Crypt
 {
 
 	void MainMenuScreen::LoadContent()
 	{
+		Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed");
+		Ebony::ResourceManager::LoadTexture("Button_Pressed.tx", "button_pressed");
+		Ebony::ResourceManager::LoadTexture("Button_Hovered.tx", "button_hovered");
+		Ebony::ResourceManager::LoadTexture("Logo_BrickBreaker.tx", "logo_brickbreaker");
+		Ebony::ResourceManager::LoadTexture("Start_Text.tx", "start_text");
+		Ebony::ResourceManager::LoadTexture("Options_Text.tx", "options_text");
+		Ebony::ResourceManager::LoadTexture("Quit_Text.tx", "quit_text");
 	}
 
 	void MainMenuScreen::Start()
@@ -13,7 +24,6 @@ namespace Crypt
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
 
 		Ebony::Graphics2d::InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
-
 
 		s.use();
 		s.setInt("image", 0);
@@ -28,6 +38,21 @@ namespace Crypt
 		audioSystem = systems::AudioSystem();
 
 		// Create prefabs
+
+		auto button = Crypt::Button::Create(40.0f, 250.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
+		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 2.0f;
+		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 4.0f;
+		AddEntity(button);
+
+		AddEntity(Crypt::MenuCursor::Create());
+		AddEntity(Crypt::ButtonText::Create(buttonWidth, 250.0f + buttonHeight, "start_text"));
+		AddEntity(Crypt::Button::Create(40.0f, 360.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::OPTIONS, [=](std::uint16_t nextScreen) { SetNextScreen(nextScreen); }));
+		AddEntity(Crypt::ButtonText::Create(buttonWidth, 360.0f + buttonHeight, "options_text"));
+		AddEntity(Crypt::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
+
+
+
+		AddEntity(Crypt::ButtonText::Create(buttonWidth, 470.0f + buttonHeight, "quit_text"));
 
 		AddNewEntities();
 	}
@@ -95,7 +120,7 @@ namespace Crypt
 
 	void MainMenuScreen::Draw(std::chrono::microseconds elapsedTime)
 	{
-		Ebony::Graphics2d::SetRenderTarget(mainRenderTarget, clearColor);
+		Ebony::Graphics2d::SetRenderTarget(mainRenderTarget, this->clearColor);
 
 		// Draw things!
 		spriteRenderer.Update();

@@ -7,7 +7,9 @@ namespace Crypt
 {
 	enum CollisionLayers : std::uint16_t
 	{
-		DEFAULT = BIT(0),
-		
+		GROUND = BIT(0),
+		UI = BIT(1),
+		PLAYER = BIT(2),
+
 	};
 }

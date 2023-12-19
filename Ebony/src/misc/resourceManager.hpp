@@ -27,8 +27,8 @@ namespace Ebony
 		static void UnloadShader(const char* name);
 
 
-		static std::shared_ptr<Texture2D> LoadTexture(const std::string& file, const char* name, bool currentFolder = true, const std::string& otherFolder = "../Graphics");
-		static std::shared_ptr<Texture2D> LoadAtlas(const std::string& file, const char* name, std::uint16_t tilesX, std::uint16_t tilesY);
+		static std::shared_ptr<Texture2D> LoadTexture(const std::string& file, const char* name, const std::string& nameOfGame = "BrickBreaker", bool currentFolder = true, const std::string& otherFolder = "");
+		static std::shared_ptr<Texture2D> LoadAtlas(const std::string& file, const char* name, const std::string& nameOfGame, std::uint16_t tilesX, std::uint16_t tilesY);
 		static std::shared_ptr<Texture2D> GetTexture(const char* name);
 		static void UnloadTexture(const char* name);
 

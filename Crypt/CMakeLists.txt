@@ -7,15 +7,15 @@ set(SOURCE_FILES
 )
 
 set(SystemHeaders
-
+  systems/playerSystem.hpp
 )
 
 set(SystemSources
-
+  systems/playerSystem.cpp
 )
 
 set(ComponentHeaders
-
+  components/playerComponent.hpp
 )
 
 set(MiscHeaders
@@ -27,7 +27,14 @@ set(MiscSources
 
 
 set(Prefabs
-  
+  prefabs/menuCursorPrefab.hpp
+  prefabs/playerPrefab.hpp
+  prefabs/groundPrefab.hpp
+)
+
+set(UIPrefabs
+  prefabs/UI/buttonPrefab.hpp
+  prefabs/UI/buttonTextPrefab.hpp
 )
 
 set(SingletonHeaders
@@ -85,6 +92,7 @@ source_group("Components" FILES ${ComponentHeaders})
 source_group("Misc\\Header Files" FILES ${MiscHeaders})
 source_group("Misc\\Sources Files" FILES ${MiscSources})
 source_group("Prefabs" FILES ${Prefabs})
+source_group("Prefabs\\UI" FILES ${UIPrefabs})
 source_group("Singletons\\Header Files" FILES ${SingletonHeaders})
 source_group("Singletons\\Source Files" FILES ${SingletonSources})
 source_group("Screens\\Header Files" FILES ${ScreenHeaders})
@@ -100,6 +108,7 @@ set (CODE_FILES
   ${MiscHeaders}
   ${MiscSources}
   ${Prefabs}
+  ${UIPrefabs}
   ${SingletonHeaders}
   ${SingletonSources}
   ${ScreenHeaders} 

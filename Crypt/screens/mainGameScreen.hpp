@@ -20,6 +20,9 @@
 
 #include "screenEnums.hpp"
 #include <Log.hpp>
+#include <systems/animationRenderer.hpp>
+#include <systems/animation2d.hpp>
+#include "../systems/playerSystem.hpp"
 
 
 namespace Crypt
@@ -45,6 +48,10 @@ namespace Crypt
 		systems::PhysicsSystem physicsSystem;
 		systems::InputSystem inputSystem;
 		systems::AudioSystem audioSystem;
+		systems::AnimationRenderer animationRenderer;
+		systems::Animation2d animationSystem;
+		systems::PlayerSystem playerSystem;
+
 
 		void OnScreenDefocus() override;
 		void OnScreenFocus() override;
@@ -53,6 +60,7 @@ namespace Crypt
 		std::uint64_t screen = Crypt::ScreenEnum::GAME;
 		std::uint64_t nextScreen = Crypt::ScreenEnum::GAME;
 		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
+		Camera camera;
 
 		int windowWidth;
 		int windowHeight;

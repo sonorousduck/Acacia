@@ -1,10 +1,19 @@
 #include "mainGameScreen.hpp"
 
+#include "../prefabs/playerPrefab.hpp"
+#include "../prefabs/groundPrefab.hpp"
+
 namespace Crypt
 {
 
 	void MainGameScreen::LoadContent()
 	{
+		Ebony::ResourceManager::LoadAtlas("character_run.tx", "character_run", "Crypt", 4, 1);
+		Ebony::ResourceManager::LoadTexture("Default.tx", "default", "Crypt");
+		Ebony::ResourceManager::LoadTexture("particle.tx", "collider", "Crypt");
+		Ebony::ResourceManager::LoadTexture("empty.tx", "empty", "Crypt");
+
+
 	}
 
 	void MainGameScreen::Start()
@@ -13,6 +22,7 @@ namespace Crypt
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
 
 		Ebony::Graphics2d::InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
+		this->clearColor = Ebony::Colors::CornflowerBlue;
 
 
 		s.use();
@@ -21,20 +31,26 @@ namespace Crypt
 
 		physicsSystem = systems::PhysicsSystem();
 		spriteRenderer = systems::SpriteRenderer();
-
-		spriteRenderer.debug = false;
-
+		animationSystem = systems::Animation2d();
+		animationRenderer = systems::AnimationRenderer();
+		playerSystem = systems::PlayerSystem();
 		inputSystem = systems::InputSystem();
 		audioSystem = systems::AudioSystem();
 
+		spriteRenderer.debug = true;
+
+
+
 		// Create prefabs
+		AddEntity(Crypt::Player::Create(glm::vec2(0.0f, 0.0f), windowWidth));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, windowHeight - 20.0f), windowWidth));
 
 		AddNewEntities();
 	}
 
 	void MainGameScreen::Init(int windowWidth, int windowHeight)
 	{
-		Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
+		camera = Camera(glm::vec3(0.0f, 0.0f, 1.0f));
 
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
@@ -50,7 +66,8 @@ namespace Crypt
 	std::uint16_t MainGameScreen::Update(std::chrono::microseconds elapsedTime)
 	{
 		auto firstTime = std::chrono::system_clock::now();
-
+		camera.Position = glm::vec3(camera.Position.x + 100, camera.Position.y, camera.Position.z);
+		camera.updateCameraVectors();
 		std::latch graphDone{ 1 };
 
 		auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(
@@ -85,6 +102,22 @@ namespace Crypt
 			}
 		);
 
+		auto animationTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				animationSystem.Update(elapsedTime);
+			}
+		);
+
+		auto playerTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				playerSystem.Update(elapsedTime);
+			}
+		);
+
 
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
 		graphDone.wait();
@@ -99,6 +132,7 @@ namespace Crypt
 
 		// Draw things!
 		spriteRenderer.Update();
+		animationRenderer.Update();
 
 		Ebony::Graphics2d::UnbindRenderTarget(clearColor);
 
@@ -152,6 +186,9 @@ namespace Crypt
 			physicsSystem.AddEntity(entity);
 			audioSystem.AddEntity(entity);
 			inputSystem.AddEntity(entity);
+			animationSystem.AddEntity(entity);
+			animationRenderer.AddEntity(entity);
+			playerSystem.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -167,7 +204,9 @@ namespace Crypt
 			physicsSystem.RemoveEntity(entityId);
 			audioSystem.RemoveEntity(entityId);
 			inputSystem.RemoveEntity(entityId);
-
+			animationSystem.RemoveEntity(entityId);
+			animationRenderer.RemoveEntity(entityId);
+			playerSystem.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();
