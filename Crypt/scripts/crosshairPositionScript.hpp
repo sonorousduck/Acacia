@@ -4,6 +4,7 @@
 #include "../Ebony/src/components/cppScriptComponent.hpp"
 #include "../BrickBreaker/screens/screenEnums.hpp"
 #include <components/transform.hpp>
+#include <graphics2d.hpp>
 
 namespace scripts
 {
@@ -18,8 +19,8 @@ namespace scripts
 		{
 			// Keep a radius of 1 away from the player, but point towards the direction
 			auto playerTransform = player->getComponent<components::Transform>();
-
-			glm::vec2 currentDirection = glm::normalize(glm::vec2(screenPositionX, screenPositionY) + (playerTransform->position - playerTransform->previousPosition)) * glm::vec2(100, -100);
+			glm::vec3 cameraPosition = Ebony::Graphics2d::mainCamera->Position;
+			glm::vec2 currentDirection = glm::normalize((glm::vec2(screenPositionX, screenPositionY) + glm::vec2(cameraPosition.x, cameraPosition.y)) - playerTransform->position) * glm::vec2(100, 100);
 
 			aimLastDirection = currentDirection;
 			std::cout << (aimLastDirection + playerTransform->position).x << ", " << (aimLastDirection + playerTransform->position).y << std::endl;
