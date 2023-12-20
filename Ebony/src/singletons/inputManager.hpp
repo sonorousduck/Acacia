@@ -37,6 +37,21 @@ namespace Ebony
 		Press pressedState;
 	};
 
+	struct JoystickVectorPress
+	{
+		short currentXValue;
+		short currentYValue;
+		short lastXValue;
+		short lastYValue;
+		
+		float scaledCurrentXValue;
+		float scaledCurrentYValue;
+		float scaledLastXValue;
+		float scaledLastYValue;
+
+		Press pressedState;
+	};
+
 	struct MouseEvent
 	{
 		Uint16 clicks = 0;
@@ -91,6 +106,8 @@ namespace Ebony
 		~ControllerInputManager();
 
 		PressedState getButtonState(Uint8 button);
+		JoystickVectorPress getJoystickVector(Uint8 trigger);
+
 		JoystickAndTriggerPress getTriggerJoystickState(Uint8 trigger);
 
 		// Takes in left and right from 0.0 - 1.0, it manually converts it to the maximums for you
@@ -105,6 +122,12 @@ namespace Ebony
 	private:
 		std::unordered_map<Uint8, Press> buttons;
 		std::unordered_map<Uint8, JoystickAndTriggerPress> joysticksAndTriggers;
+		std::unordered_map<Uint8, JoystickVectorPress> joystickVectors;
+
+		int leftStickX = 0;
+		int leftStickY = 0;
+		int rightStickX = 0;
+		int rightStickY = 0;
 
 	};
 

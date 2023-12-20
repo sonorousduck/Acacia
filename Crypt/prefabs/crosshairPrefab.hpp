@@ -30,12 +30,17 @@ namespace Crypt
 			mouseComponent->onPressActions.insert({ "mousePress", [=](entities::EntityPtr, Ebony::MousePress& mousePress) {std::cout << "Button pressed at " << mousePress.mouseClick.x << ", " << mousePress.mouseClick.y << std::endl; } });
 			mouseComponent->onReleaseActions.insert({ "mousePress",[=](entities::EntityPtr, Ebony::MousePress&) {std::cout << "Mouse Button released!" << std::endl; } });
 
+
+			auto controllerComponent = std::make_unique<components::ControllerInput>(0);
+
+
 			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::CrosshairScript>(player);
 
 			entity->addComponent(std::move(mouseComponent));
 			entity->addComponent(std::move(script));
 			entity->addComponent(std::move(transform));
 			entity->addComponent(std::move(sprite));
+			entity->addComponent(std::move(controllerComponent));
 
 			return entity;
 		}

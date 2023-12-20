@@ -73,6 +73,8 @@ namespace systems
 							controllerInputComponent->onReleaseActions[iter->second](entity);
 						}
 					}
+					
+					controllerInputComponent->SetJoystickPositions();
 
 
 					// Look for Joystick/Trigger inputs

@@ -164,7 +164,7 @@ namespace Ebony
 				break;
 
 			case SDL_CONTROLLERTOUCHPADMOTION:
-				EB_TRACE(event.type);
+				//EB_TRACE(event.type);
 				break;
 
 			case SDL_JOYBATTERYUPDATED:
@@ -319,9 +319,57 @@ namespace Ebony
 		// 3: Right Y axis moved (Down is positive, up is negative)
 		// 4: Trigger Left axis moved
 		// 5: Trigger Right axis moved
+		// Adding two more of my own
 
 		if (it != joysticksAndTriggers.end())
 		{
+			if (button == 0 || button == 1)
+			{
+				JoystickVectorPress press = joystickVectors[0];
+
+				if (button == 0)
+				{
+					press.lastXValue = press.currentXValue;
+					press.scaledLastXValue = press.scaledCurrentXValue;
+
+					press.currentXValue = value;
+					press.scaledCurrentXValue = static_cast<float>(value) / 32767.0f; // Technically, will allow for an less than -1, but will be close enough
+				}
+				else 
+				{
+					press.lastYValue = press.currentYValue;
+					press.scaledLastYValue = press.scaledCurrentYValue;
+
+					press.currentYValue = value;
+					press.scaledCurrentYValue = static_cast<float>(value) / 32767.0f; // Technically, will allow for an less than -1, but will be close enough
+				}
+
+				joystickVectors[0] = press;
+			}
+			else if (button == 2 || button == 3)
+			{
+				JoystickVectorPress press = joystickVectors[1];
+
+				if (button == 2)
+				{
+					press.lastXValue = press.currentXValue;
+					press.scaledLastXValue = press.scaledCurrentXValue;
+
+					press.currentXValue = value;
+					press.scaledCurrentXValue = static_cast<float>(value) / 32767.0f; // Technically, will allow for an less than -1, but will be close enough
+				}
+				else
+				{
+					press.lastYValue = press.currentYValue;
+					press.scaledLastYValue = press.scaledCurrentYValue;
+
+					press.currentYValue = value;
+					press.scaledCurrentYValue = static_cast<float>(value) / 32767.0f; // Technically, will allow for an less than -1, but will be close enough
+				}
+
+				joystickVectors[1] = press;
+			}
+
 			JoystickAndTriggerPress press = joysticksAndTriggers[button];
 			press.lastValue = press.currentValue;
 			press.scaledLastValue = press.scaledCurrentValue;
@@ -338,7 +386,6 @@ namespace Ebony
 			}
 
 			joysticksAndTriggers[button] = press;
-
 		}
 		else
 		{
@@ -354,6 +401,36 @@ namespace Ebony
 
 			joysticksAndTriggers[button] = press;
 		}
+	}
+
+
+	// 0 is the left stick, 1 is the right stick
+	JoystickVectorPress ControllerInputManager::getJoystickVector(Uint8 joystick)
+	{
+		std::unordered_map<Uint8, JoystickVectorPress>::iterator it = joystickVectors.find(joystick);
+		JoystickVectorPress press = JoystickVectorPress();
+
+		if (it != joystickVectors.end())
+		{
+			press = joystickVectors[joystick];
+		}
+		else
+		{
+			joystickVectors[joystick] = press;
+
+			if (joystick == 0)
+			{
+				JoystickVectorPress pressVector = JoystickVectorPress();
+				joystickVectors[0] = pressVector;
+			}
+			else if (joystick == 1)
+			{
+				JoystickVectorPress pressVector = JoystickVectorPress();
+				joystickVectors[1] = pressVector;
+			}
+		}
+
+		return press;
 	}
 
 	JoystickAndTriggerPress ControllerInputManager::getTriggerJoystickState(Uint8 trigger)
@@ -383,6 +460,18 @@ namespace Ebony
 		else
 		{
 			joysticksAndTriggers[trigger] = press;
+
+			if (trigger == 0 || trigger == 1)
+			{
+				JoystickVectorPress pressVector = JoystickVectorPress();
+				joystickVectors[0] = pressVector;
+			}
+			else if (trigger == 2 || trigger == 3)
+			{
+				JoystickVectorPress pressVector = JoystickVectorPress();
+				joystickVectors[1] = pressVector;
+			}
+
 		}
 
 		return press;

@@ -11,6 +11,7 @@
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/istreamwrapper.h>
 #include "../entity.hpp"
+#include <iostream>
 
 namespace components
 {
@@ -34,11 +35,92 @@ namespace components
 		//std::unordered_map<int, bool> actions{};
 		//std::unordered_map<int, bool> previousActions{};
 
+
+
+		float leftJoystickXPosition{ 0.0f };
+		float leftJoystickYPosition{ 0.0f };
+		float leftLastJoystickXPosition{ 0.0f };
+		float leftLastJoystickYPosition{ 0.0f };
+
+		float rightJoystickXPosition{ 0.0f };
+		float rightJoystickYPosition{ 0.0f };
+		float rightLastJoystickXPosition{ 0.0f };
+		float rightLastJoystickYPosition{ 0.0f };
+
 		// TODO: Probably need to have a controller id attributed to an input as well (i.e. so you can have it known this is player one's input)
 		int joystickId = -1;
 
 
 	public:
+
+		// 0: Left X axis moved (Left is negative, right positive)
+		// 1: Left Y axis moved (Down is positive, up is negative)
+		// 2: Right X axis moved (Left is negative, right positive)
+		// 3: Right Y axis moved (Down is positive, up is negative)
+		// 4: Trigger Left axis moved
+		// 5: Trigger Right axis moved
+		void SetJoystickPositions()
+		{
+			leftLastJoystickXPosition = leftJoystickXPosition;
+			leftLastJoystickYPosition = leftJoystickYPosition;
+			rightLastJoystickXPosition = rightJoystickXPosition;
+			rightLastJoystickYPosition = rightJoystickYPosition;
+
+			auto leftJoystick = Ebony::InputManager::controllerInstances[joystickId]->getJoystickVector(0);
+			auto rightJoystick = Ebony::InputManager::controllerInstances[joystickId]->getJoystickVector(1);
+
+
+
+
+
+			// Round to the nearest tenth
+			leftJoystickXPosition = leftJoystick.scaledCurrentXValue;
+			leftJoystickYPosition = leftJoystick.scaledCurrentYValue;
+			rightJoystickXPosition = rightJoystick.scaledCurrentXValue;
+			rightJoystickYPosition = rightJoystick.scaledCurrentYValue;
+
+
+			if (abs(leftJoystickXPosition) < 0.1f)
+			{
+				leftJoystickXPosition = 0.0f;
+			}
+			else
+			{
+				leftJoystickXPosition = static_cast<float>(static_cast<int>(leftJoystickXPosition * 100)) / 100.0f;
+			}
+
+			if (abs(leftJoystickYPosition) < 0.1f)
+			{
+				leftJoystickYPosition = 0.0f;
+			}
+			else
+			{
+				leftJoystickYPosition = static_cast<float>(static_cast<int>(leftJoystickYPosition * 100)) / 100.0f;
+			}
+
+			if (abs(rightJoystickXPosition) < 0.1f)
+			{
+				rightJoystickXPosition = 0.0f;
+			}
+			else
+			{
+				rightJoystickXPosition = static_cast<float>(static_cast<int>(rightJoystickXPosition * 100)) / 100.0f;
+			}
+
+			if (abs(rightJoystickYPosition) < 0.1f)
+			{
+				rightJoystickYPosition = 0.0f;
+			}
+			else
+			{
+				rightJoystickYPosition = static_cast<float>(static_cast<int>(rightJoystickYPosition * 100)) / 100.0f;
+			}
+			
+	
+
+			//std::cout << "(" << rightJoystickXPosition << ", " << rightJoystickYPosition << ")" << std::endl;
+		}
+
 		void saveControllerBindings(std::string_view filepathBindings, std::string_view filepathJoystickBindings)
 		{
 			{
