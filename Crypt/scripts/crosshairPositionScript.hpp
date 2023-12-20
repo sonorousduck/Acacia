@@ -23,7 +23,6 @@ namespace scripts
 			glm::vec2 currentDirection = glm::normalize((glm::vec2(screenPositionX, screenPositionY) + glm::vec2(cameraPosition.x, cameraPosition.y)) - playerTransform->position) * glm::vec2(100, 100);
 
 			aimLastDirection = currentDirection;
-			std::cout << (aimLastDirection + playerTransform->position).x << ", " << (aimLastDirection + playerTransform->position).y << std::endl;
 			entity->getComponent<components::Transform>()->position = aimLastDirection + playerTransform->position;
 		}
 

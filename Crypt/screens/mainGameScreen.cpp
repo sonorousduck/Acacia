@@ -13,7 +13,8 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("Default.tx", "default", "Crypt");
 		Ebony::ResourceManager::LoadTexture("particle.tx", "collider", "Crypt");
 		Ebony::ResourceManager::LoadTexture("empty.tx", "empty", "Crypt");
-		Ebony::ResourceManager::LoadTexture("aim.tx", "aim", "Crypt");
+		Ebony::ResourceManager::LoadTexture("new_aim.tx", "aim", "Crypt");
+
 
 
 	}
