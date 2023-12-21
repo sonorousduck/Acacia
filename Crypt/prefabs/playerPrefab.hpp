@@ -27,8 +27,7 @@ namespace Crypt
 		{
 			entities::EntityPtr player = std::make_shared<entities::Entity>();
 
-			//TODO : CHANGE BACK TO 500
-			glm::vec2 originalVelocity = glm::vec2(100.0f, 0.0f);
+			glm::vec2 originalVelocity = glm::vec2(100.0f, 500.0f);
 			glm::vec2 originalVelocityWithoutY = glm::vec2(originalVelocity.x, 0.0f);
 
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
@@ -168,8 +167,7 @@ namespace Crypt
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(60.0f, 60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 			
 			// Will use a separate system for controlling gravity and such
-			// TODO: CHANGE BACK TO 200.0f
-			auto rigidbody = std::make_unique<components::RigidBody>(originalVelocity, glm::vec2(0.0f, 0.0f));
+			auto rigidbody = std::make_unique<components::RigidBody>(originalVelocity, glm::vec2(0.0f, 200.0f));
 			auto animationController = std::make_unique<components::AnimationController>();
 
 

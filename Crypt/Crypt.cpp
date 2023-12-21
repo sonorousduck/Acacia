@@ -55,8 +55,8 @@ namespace Ebony {
 			screens[Crypt::ScreenEnum::PAUSE] = std::make_shared<Crypt::PauseScreen>();
 
 
-			currentScreen = screens[Crypt::ScreenEnum::MAIN_MENU];
-			this->nextScreenEnum = Crypt::ScreenEnum::MAIN_MENU;
+			currentScreen = screens[Crypt::ScreenEnum::GAME];
+			this->nextScreenEnum = Crypt::ScreenEnum::GAME;
 			// TODO: Get ResourceManager to register fonts in a good way, but for now, use the graphics.LoadFont way
 			// Also, register any default fonts that I want to include throughout all the project
 

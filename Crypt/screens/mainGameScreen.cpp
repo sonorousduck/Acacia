@@ -14,9 +14,8 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("particle.tx", "collider", "Crypt");
 		Ebony::ResourceManager::LoadTexture("empty.tx", "empty", "Crypt");
 		Ebony::ResourceManager::LoadTexture("new_aim.tx", "aim", "Crypt");
-
-
-
+		Ebony::ResourceManager::LoadTexture("FireBall.tx", "fire_bullet", "Crypt");
+		Ebony::ResourceManager::LoadTexture("IceBolt.tx", "ice_bullet", "Crypt");
 	}
 
 	void MainGameScreen::Start()
@@ -50,7 +49,7 @@ namespace Crypt
 		AddEntity(player);
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, windowHeight - 5.0f), windowWidth));
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), windowWidth));
-		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player));
+		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
 		AddNewEntities();
 	}
 
@@ -73,68 +72,76 @@ namespace Crypt
 	{
 		auto firstTime = std::chrono::system_clock::now();
 		Ebony::Graphics2d::mainCamera->Position = glm::vec3(Ebony::Graphics2d::mainCamera->Position.x + 0.01f, Ebony::Graphics2d::mainCamera->Position.y, Ebony::Graphics2d::mainCamera->Position.z);
-		
-		std::latch graphDone{ 1 };
+		physicsSystem.Update(elapsedTime);
+		audioSystem.Update(elapsedTime);
+		inputSystem.Update();
+		animationSystem.Update(elapsedTime);
+		playerSystem.Update(elapsedTime);
+		cppScriptingSystem.Update(elapsedTime);
 
-		auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(
-			[&graphDone]()
-			{
-				graphDone.count_down();
-			});
+		//std::latch graphDone{ 1 };
 
-		// UI will need physics layer, input system, music, sprite
+		//auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(
+		//	[&graphDone]()
+		//	{
+		//		graphDone.count_down();
+		//	});
 
-		auto physicsTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				physicsSystem.Update(elapsedTime);
-			}
-		);
+		//// UI will need physics layer, input system, music, sprite
 
-		auto audioTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				audioSystem.Update(elapsedTime);
-			}
-		);
+		//auto physicsTask = Ebony::ThreadPool::instance().createTask(
+		//	taskGraph,
+		//	[this, elapsedTime]()
+		//	{
+		//		physicsSystem.Update(elapsedTime);
+		//	}
+		//);
 
-		auto inputTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				inputSystem.Update();
-			}
-		);
+		//auto audioTask = Ebony::ThreadPool::instance().createTask(
+		//	taskGraph,
+		//	[this, elapsedTime]()
+		//	{
+		//		audioSystem.Update(elapsedTime);
+		//	}
+		//);
 
-		auto animationTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				animationSystem.Update(elapsedTime);
-			}
-		);
+		//auto inputTask = Ebony::ThreadPool::instance().createTask(
+		//	taskGraph,
+		//	[this, elapsedTime]()
+		//	{
+		//		inputSystem.Update();
+		//	}
+		//);
 
-		auto playerTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				playerSystem.Update(elapsedTime);
-			}
-		);
+		//auto animationTask = Ebony::ThreadPool::instance().createTask(
+		//	taskGraph,
+		//	[this, elapsedTime]()
+		//	{
+		//		animationSystem.Update(elapsedTime);
+		//	}
+		//);
 
-		auto scriptingTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				cppScriptingSystem.Update(elapsedTime);
-			}
-		);
+		//auto playerTask = Ebony::ThreadPool::instance().createTask(
+		//	taskGraph,
+		//	[this, elapsedTime]()
+		//	{
+		//		playerSystem.Update(elapsedTime);
+		//	}
+		//);
+
+		//auto scriptingTask = Ebony::ThreadPool::instance().createTask(
+		//	taskGraph,
+		//	[this, elapsedTime]()
+		//	{
+		//		cppScriptingSystem.Update(elapsedTime);
+		//	}
+		//);
 
 
-		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
-		graphDone.wait();
+
+
+		//Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
+		//graphDone.wait();
 
 		return nextScreen;
 

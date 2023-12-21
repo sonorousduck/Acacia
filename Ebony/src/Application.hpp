@@ -50,6 +50,7 @@ namespace Ebony {
 		virtual void Draw(std::chrono::microseconds elapsedTime);
 		virtual void ProcessInput(std::chrono::microseconds elapsedTime);
 		virtual void ChangeScreens();
+
 		
 		//float deltaTime = 0.0f;
 		//float lastFrame = 0.0f;

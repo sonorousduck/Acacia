@@ -8,14 +8,18 @@ set(SOURCE_FILES
 
 set(SystemHeaders
   systems/playerSystem.hpp
+  systems/bulletSystem.hpp
 )
 
 set(SystemSources
   systems/playerSystem.cpp
+  systems/bulletSystem.cpp
 )
 
 set(ComponentHeaders
   components/playerComponent.hpp
+  components/bulletComponent.hpp
+  components/aimComponent.hpp
 )
 
 set(MiscHeaders
@@ -31,6 +35,7 @@ set(Prefabs
   prefabs/playerPrefab.hpp
   prefabs/groundPrefab.hpp
   prefabs/crosshairPrefab.hpp
+  prefabs/bulletPrefab.hpp
 )
 
 set(UIPrefabs
@@ -71,6 +76,7 @@ set(ScreenSources
 
 set(ScriptHeaders
   scripts/crosshairPositionScript.hpp
+  scripts/shootingScript.hpp
 )
 
 

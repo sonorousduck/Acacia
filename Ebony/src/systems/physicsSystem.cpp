@@ -39,13 +39,11 @@ namespace systems
 			{
 				quadtree.Insert(entity);
 			}
-			else
+			else if (staticQuadtree.shouldRebuild)
 			{
-				if (staticQuadtree.shouldRebuild)
-				{
-					staticQuadtree.Insert(entity);
-				}
+				staticQuadtree.Insert(entity);
 			}
+			
 		}
 
 		staticQuadtree.shouldRebuild = false;

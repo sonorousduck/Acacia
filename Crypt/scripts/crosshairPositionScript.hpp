@@ -5,6 +5,7 @@
 #include "../BrickBreaker/screens/screenEnums.hpp"
 #include <components/transform.hpp>
 #include <graphics2d.hpp>
+#include "../components/aimComponent.hpp"
 
 namespace scripts
 {
@@ -64,6 +65,11 @@ namespace scripts
 			}
 			auto playerTransform = player->getComponent<components::Transform>();
 			entity->getComponent<components::Transform>()->position = aimLastDirection + playerTransform->position;
+
+			auto crosshairComponent = entity->getComponent<components::Crosshair>();
+			crosshairComponent->aimDirection = aimLastDirection;
+			crosshairComponent->aimLocation = aimLastDirection + playerTransform->position;
+
 		}
 
 		entities::EntityPtr player;
