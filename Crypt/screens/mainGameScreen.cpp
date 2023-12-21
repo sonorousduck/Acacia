@@ -72,22 +72,16 @@ namespace Crypt
 	{
 		auto firstTime = std::chrono::system_clock::now();
 		Ebony::Graphics2d::mainCamera->Position = glm::vec3(Ebony::Graphics2d::mainCamera->Position.x + 0.01f, Ebony::Graphics2d::mainCamera->Position.y, Ebony::Graphics2d::mainCamera->Position.z);
-		physicsSystem.Update(elapsedTime);
-		audioSystem.Update(elapsedTime);
-		inputSystem.Update();
-		animationSystem.Update(elapsedTime);
-		playerSystem.Update(elapsedTime);
-		cppScriptingSystem.Update(elapsedTime);
 
-		//std::latch graphDone{ 1 };
+		std::latch graphDone{ 1 };
 
-		//auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(
-		//	[&graphDone]()
-		//	{
-		//		graphDone.count_down();
-		//	});
+		auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(
+			[&graphDone]()
+			{
+				graphDone.count_down();
+			});
 
-		//// UI will need physics layer, input system, music, sprite
+		// UI will need physics layer, input system, music, sprite
 
 		//auto physicsTask = Ebony::ThreadPool::instance().createTask(
 		//	taskGraph,
@@ -97,54 +91,64 @@ namespace Crypt
 		//	}
 		//);
 
-		//auto audioTask = Ebony::ThreadPool::instance().createTask(
-		//	taskGraph,
-		//	[this, elapsedTime]()
-		//	{
-		//		audioSystem.Update(elapsedTime);
-		//	}
-		//);
+		auto audioTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				audioSystem.Update(elapsedTime);
+			}
+		);
 
-		//auto inputTask = Ebony::ThreadPool::instance().createTask(
-		//	taskGraph,
-		//	[this, elapsedTime]()
-		//	{
-		//		inputSystem.Update();
-		//	}
-		//);
+		auto inputTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				inputSystem.Update();
+			}
+		);
 
-		//auto animationTask = Ebony::ThreadPool::instance().createTask(
-		//	taskGraph,
-		//	[this, elapsedTime]()
-		//	{
-		//		animationSystem.Update(elapsedTime);
-		//	}
-		//);
+		auto animationTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				animationSystem.Update(elapsedTime);
+			}
+		);
 
-		//auto playerTask = Ebony::ThreadPool::instance().createTask(
-		//	taskGraph,
-		//	[this, elapsedTime]()
-		//	{
-		//		playerSystem.Update(elapsedTime);
-		//	}
-		//);
+		auto playerTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				playerSystem.Update(elapsedTime);
+			}
+		);
 
-		//auto scriptingTask = Ebony::ThreadPool::instance().createTask(
-		//	taskGraph,
-		//	[this, elapsedTime]()
-		//	{
-		//		cppScriptingSystem.Update(elapsedTime);
-		//	}
-		//);
+		auto scriptingTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				cppScriptingSystem.Update(elapsedTime);
+			}
+		);
+
+		auto shootingTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				shootingSystem.Update(elapsedTime);
+			}
+		);
 
 
 
 
-		//Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
-		//graphDone.wait();
+		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
+		graphDone.wait();
+
+		// Put this outside the update loop so in the future, I can use all the threads to then do multi-threaded physics updates
+		physicsSystem.Update(elapsedTime);
 
 		return nextScreen;
-
 	}
 
 	void MainGameScreen::Draw(std::chrono::microseconds elapsedTime)
@@ -211,6 +215,7 @@ namespace Crypt
 			animationRenderer.AddEntity(entity);
 			playerSystem.AddEntity(entity);
 			cppScriptingSystem.AddEntity(entity);
+			shootingSystem.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -230,6 +235,7 @@ namespace Crypt
 			animationRenderer.RemoveEntity(entityId);
 			playerSystem.RemoveEntity(entityId);
 			cppScriptingSystem.RemoveEntity(entityId);
+			shootingSystem.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();

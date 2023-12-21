@@ -9,17 +9,22 @@ set(SOURCE_FILES
 set(SystemHeaders
   systems/playerSystem.hpp
   systems/bulletSystem.hpp
+  systems/shootingSystem.hpp
+
 )
 
 set(SystemSources
   systems/playerSystem.cpp
   systems/bulletSystem.cpp
+  systems/shootingSystem.cpp
+
 )
 
 set(ComponentHeaders
   components/playerComponent.hpp
   components/bulletComponent.hpp
   components/aimComponent.hpp
+  components/shootingComponent.hpp
 )
 
 set(MiscHeaders

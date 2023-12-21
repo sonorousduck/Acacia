@@ -8,6 +8,7 @@
 #include "../scripts/crosshairPositionScript.hpp"
 #include "../components/aimComponent.hpp"
 #include "bulletPrefab.hpp"
+#include "../components/shootingComponent.hpp"
 
 namespace Crypt
 {
@@ -27,13 +28,19 @@ namespace Crypt
 
 			mouseComponent->bindings.insert({ SDL_BUTTON_LEFT, "shoot" });
 			
-	
 
 			mouseComponent->onPressActions.insert({ "shoot", [=](entities::EntityPtr& entity, Ebony::MousePress& mousePress)
 				{
-					auto crosshair = entity->getComponent<components::Crosshair>();
-					std::cout << "FIRE!" << std::endl;
-					AddEntity(BulletPrefab::Create(crosshair->aimLocation, glm::vec2(100.0f, 100.0f), crosshair->aimDirection * speed, components::BULLET_TYPE::FIRE, 1, "fire_bullet"));
+					auto shootingComponent = entity->getComponent<components::Shooting>();
+
+					if (shootingComponent->currentCooldown >= shootingComponent->maxShootingSpeed)
+					{
+						auto crosshair = entity->getComponent<components::Crosshair>();
+						AddEntity(BulletPrefab::Create(crosshair->aimLocation, glm::vec2(50.0f, 50.0f), crosshair->aimDirection * speed, components::BULLET_TYPE::FIRE, 1, "fire_bullet"));
+
+						shootingComponent->currentCooldown = 0.0f;
+					}
+
 				} });
 
 
@@ -43,11 +50,22 @@ namespace Crypt
 			
 			controllerComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_TRIGGERRIGHT, "shoot" });
 
-			controllerComponent->onPressActions.insert({ "shoot", [=](entities::EntityPtr& entity)
+			controllerComponent->joystickActions.insert({ "shoot", [=](entities::EntityPtr& entity, float value)
 				{
-					auto crosshair = entity->getComponent<components::Crosshair>();
+					auto shootingComponent = entity->getComponent<components::Shooting>();
 
-					AddEntity(BulletPrefab::Create(crosshair->aimLocation, glm::vec2(0.5f), crosshair->aimDirection * speed, components::BULLET_TYPE::FIRE, 1, "fire_bullet"));
+					if (shootingComponent->currentCooldown >= shootingComponent->maxShootingSpeed)
+					{
+						auto crosshair = entity->getComponent<components::Crosshair>();
+						AddEntity(BulletPrefab::Create(crosshair->aimLocation, glm::vec2(50.0f, 50.0f), crosshair->aimDirection * speed, components::BULLET_TYPE::FIRE, 1, "fire_bullet"));
+
+						shootingComponent->currentCooldown = 0.0f;
+					}
+
+
+
+					
+
 				} });
 
 
@@ -59,6 +77,7 @@ namespace Crypt
 			entity->addComponent(std::move(sprite));
 			entity->addComponent(std::move(controllerComponent));
 			entity->addComponent(std::make_unique<components::Crosshair>());
+			entity->addComponent(std::make_unique<components::Shooting>());
 
 			return entity;
 		}
