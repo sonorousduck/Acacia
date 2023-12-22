@@ -1,9 +1,9 @@
 #pragma once
 
+#include "../entity.hpp"
 #include <cstdint>
 #include <chrono>
 #include <unordered_set>
-#include <entity.hpp>
 #include <graphics2d.hpp>
 #include <mutex>
 
@@ -37,7 +37,7 @@ namespace Ebony
 		
 
 		// Returns the next screen
-		virtual std::uint16_t Update(std::chrono::microseconds elapsedTime) { return 0; }
+		virtual std::uint64_t Update(std::chrono::microseconds elapsedTime) { return 0; }
 		virtual void Draw(std::chrono::microseconds elapsedTime) {}
 		virtual void ProcessInput(std::chrono::microseconds elapsedTime) {}
 	

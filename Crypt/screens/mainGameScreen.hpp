@@ -6,6 +6,8 @@
 #include <systems/fontRenderer.hpp>
 #include <systems/physicsSystem.hpp>
 #include <systems/spriteRenderer.hpp>
+#include <systems/destructionSystem.hpp>
+#include <systems/timingSystem.hpp>
 
 #include "camera.hpp"
 #include "glm/glm.hpp"
@@ -40,7 +42,7 @@ namespace Crypt
 		void SetNextScreen(std::uint16_t nextScreen);
 
 		void RemoveOldEntities() override;
-		std::uint16_t Update(std::chrono::microseconds elapsedTime) override;
+		std::uint64_t Update(std::chrono::microseconds elapsedTime) override;
 		void Draw(std::chrono::microseconds elapsedTime) override;
 		void ProcessInput(std::chrono::microseconds elapsedTime) override;
 		void AddEntity(entities::EntityPtr entity);
@@ -55,6 +57,8 @@ namespace Crypt
 		systems::PlayerSystem playerSystem;
 		systems::CppScriptingSystem cppScriptingSystem;
 		systems::ShootingSystem shootingSystem;
+		systems::DestructionSystem destructionSystem;
+		systems::TimingSystem timingSystem;
 
 
 		void OnScreenDefocus() override;

@@ -10,6 +10,8 @@ namespace Crypt
 		GROUND = BIT(0),
 		UI = BIT(1),
 		PLAYER = BIT(2),
+		ENEMY = BIT(3),
+
 
 	};
 }

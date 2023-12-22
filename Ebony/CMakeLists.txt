@@ -15,7 +15,6 @@ set(HEADER_FILES
 set(SOURCE_FILES
 	src/Application.cpp
 	src/Log.cpp
-	src/animation.cpp
 )
 
 set(HEADER_EVENTS
@@ -46,6 +45,8 @@ set(ComponentHeaders
 	src/components/activeUICollisionComponent.hpp
 	src/components/buttonComponent.hpp
 	src/components/cppScriptComponent.hpp
+	src/components/destructionComponent.hpp
+	src/components/timedComponent.hpp
 )
 
 set(SystemHeaders
@@ -63,6 +64,9 @@ set(SystemHeaders
 	src/systems/colliderRenderer.hpp
 	src/systems/aiSystem.hpp
 	src/systems/cppScriptingSystem.hpp
+	src/systems/destructionSystem.hpp
+	src/systems/timingSystem.hpp
+
 
 )
 
@@ -81,6 +85,8 @@ set(SystemSources
 	src/systems/colliderRenderer.cpp
 	src/systems/aiSystem.cpp
 	src/systems/cppScriptingSystem.cpp
+	src/systems/destructionSystem.cpp
+	src/systems/timingSystem.cpp
 )
 
 set(EntityHeaders

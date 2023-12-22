@@ -41,6 +41,7 @@ set(Prefabs
   prefabs/groundPrefab.hpp
   prefabs/crosshairPrefab.hpp
   prefabs/bulletPrefab.hpp
+  prefabs/batPrefab.hpp
 )
 
 set(UIPrefabs

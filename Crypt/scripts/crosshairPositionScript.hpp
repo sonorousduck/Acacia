@@ -1,4 +1,6 @@
 #pragma once
+#include <components/controllerComponent.hpp>
+#include <components/mouseInputComponent.hpp>
 
 #include <iostream>
 #include "../Ebony/src/components/cppScriptComponent.hpp"
@@ -16,7 +18,7 @@ namespace scripts
 		{
 		}
 
-		void MoveCrosshair(int screenPositionX, int screenPositionY)
+		void MoveCrosshair(float screenPositionX, float screenPositionY)
 		{
 			// Keep a radius of 1 away from the player, but point towards the direction
 			auto playerTransform = player->getComponent<components::Transform>();

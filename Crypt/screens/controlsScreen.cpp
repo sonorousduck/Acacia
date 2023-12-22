@@ -47,7 +47,7 @@ namespace Crypt
 
 	
 
-	std::uint16_t ControlsScreen::Update(std::chrono::microseconds elapsedTime)
+	std::uint64_t ControlsScreen::Update(std::chrono::microseconds elapsedTime)
 	{
 		auto firstTime = std::chrono::system_clock::now();
 
