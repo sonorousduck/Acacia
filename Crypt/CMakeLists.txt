@@ -84,6 +84,8 @@ set(ScreenSources
 set(ScriptHeaders
   scripts/crosshairPositionScript.hpp
   scripts/shootingScript.hpp
+  scripts/suicideBatScript.hpp
+  scripts/shootingBatScript.hpp
 )
 
 
@@ -111,7 +113,7 @@ source_group("Singletons\\Header Files" FILES ${SingletonHeaders})
 source_group("Singletons\\Source Files" FILES ${SingletonSources})
 source_group("Screens\\Header Files" FILES ${ScreenHeaders})
 source_group("Screens\\Source Files" FILES ${ScreenSources})
-source_group("Scripts\\Header Files" FILES ${ScriptHeaders})
+source_group("Scripts" FILES ${ScriptHeaders})
 
 set (CODE_FILES
   ${HEADER_FILES} 

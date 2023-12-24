@@ -44,6 +44,8 @@ namespace Crypt
 		cppScriptingSystem = systems::CppScriptingSystem();
 		timingSystem = systems::TimingSystem();
 		destructionSystem = systems::DestructionSystem([=](entities::Entity::IdType entityId) {RemoveEntity(entityId); });
+		enemyDetectionSystem = systems::EnemyDetectionSystem();
+
 
 		spriteRenderer.debug = true;
 
@@ -152,6 +154,14 @@ namespace Crypt
 			}
 		);
 
+		auto enemyDetectionTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				enemyDetectionSystem.Update(elapsedTime);
+			}
+		);
+
 
 
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
@@ -230,6 +240,7 @@ namespace Crypt
 			shootingSystem.AddEntity(entity);
 			destructionSystem.AddEntity(entity);
 			timingSystem.AddEntity(entity);
+			enemyDetectionSystem.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -252,6 +263,7 @@ namespace Crypt
 			shootingSystem.RemoveEntity(entityId);
 			destructionSystem.RemoveEntity(entityId);
 			timingSystem.RemoveEntity(entityId);
+			enemyDetectionSystem.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();

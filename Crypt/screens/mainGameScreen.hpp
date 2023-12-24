@@ -27,6 +27,8 @@
 #include "../systems/playerSystem.hpp"
 #include <systems/cppScriptingSystem.hpp>
 #include "../systems/shootingSystem.hpp"
+#include "../systems/enemyDetectionSystem.hpp"
+
 
 
 namespace Crypt
@@ -59,6 +61,7 @@ namespace Crypt
 		systems::ShootingSystem shootingSystem;
 		systems::DestructionSystem destructionSystem;
 		systems::TimingSystem timingSystem;
+		systems::EnemyDetectionSystem enemyDetectionSystem;
 
 
 		void OnScreenDefocus() override;
