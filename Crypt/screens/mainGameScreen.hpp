@@ -39,7 +39,7 @@ namespace Crypt
 		void Init(int windowWidth, int windowHeight) override;
 		void AddNewEntities() override;
 
-		void SetNextScreen(std::uint16_t nextScreen);
+		void SetNextScreen(std::uint64_t nextScreen);
 
 		void RemoveOldEntities() override;
 		std::uint64_t Update(std::chrono::microseconds elapsedTime) override;

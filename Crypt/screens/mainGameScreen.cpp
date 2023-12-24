@@ -48,7 +48,7 @@ namespace Crypt
 		spriteRenderer.debug = true;
 
 
-		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), windowWidth);
+		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });
 
 		// Create prefabs
 		AddEntity(player);
@@ -56,7 +56,7 @@ namespace Crypt
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), windowWidth));
 		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
 
-		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(75.0f, 75.0f)));
+		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(75.0f, 75.0f), player));
 		AddNewEntities();
 	}
 
@@ -209,7 +209,7 @@ namespace Crypt
 		
 	}
 
-    void MainGameScreen::SetNextScreen(std::uint16_t nextScreenIncoming)
+    void MainGameScreen::SetNextScreen(std::uint64_t nextScreenIncoming)
 	{
 		nextScreen = nextScreenIncoming;
 	}

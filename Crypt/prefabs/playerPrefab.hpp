@@ -16,14 +16,14 @@
 #include <components/mouseInputComponent.hpp>
 #include <components/animationControllerComponent.hpp>
 #include "../components/playerComponent.hpp"
-
+#include "../screens/screenEnums.hpp"
 
 namespace Crypt
 {
 	class Player
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, int windowWidth)
+		static entities::EntityPtr Create(glm::vec2 startTransform, std::function<void(std::uint64_t)> setNextScreen)
 		{
 			entities::EntityPtr player = std::make_shared<entities::Entity>();
 
@@ -33,12 +33,6 @@ namespace Crypt
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
 
-			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_B, "print" });
-			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_Y, "printRelease" });
-
-
-			controllerInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) {std::cout << "Circle was called (OnHeld)" << std::endl; } });
-			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=](entities::EntityPtr) {std::cout << "Triangle was called" << std::endl; } });
 			controllerInputComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_LEFTX, "playerMovement" });
 
 			controllerInputComponent->joystickActions.insert({ "playerMovement", [=](entities::EntityPtr entity, float value) {
@@ -85,10 +79,26 @@ namespace Crypt
 			}
 			});
 
+			
+
+			controllerInputComponent->onPressActions.insert({"pause", [=](entities::EntityPtr entity)
+				{
+					setNextScreen(ScreenEnum::PAUSE);
+				} });
+
+			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_START, "pause" });
+
 
 			keyboardInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
 			keyboardInputComponent->bindings.insert({ SDLK_a, "playerLeft" });
 			keyboardInputComponent->bindings.insert({ SDLK_d, "playerRight" });
+			keyboardInputComponent->bindings.insert({ SDLK_ESCAPE, "pause" });
+
+			keyboardInputComponent->onPressActions.insert({ "pause", [=](entities::EntityPtr entity)
+				{
+					setNextScreen(ScreenEnum::PAUSE);
+				} });
+
 
 			keyboardInputComponent->onHeldActions.insert({ "playerLeft", [=](entities::EntityPtr entity)
 			{
@@ -141,8 +151,6 @@ namespace Crypt
 					//std::cout << (playerComponent->gravityDown ? "-1" : "1") << std::endl;
 					rigidBody->setVelocity(glm::vec2(rigidBody->getVelocity().x, originalVelocity.y * (playerComponent->gravityDown ? 1 : -1)));
 					playerComponent->isOnGround = false;
-
-					std::cout << rigidBody->getVelocity().y << std::endl;
 				}
 			}
 				});

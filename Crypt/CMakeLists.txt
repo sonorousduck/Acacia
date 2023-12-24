@@ -10,14 +10,14 @@ set(SystemHeaders
   systems/playerSystem.hpp
   systems/bulletSystem.hpp
   systems/shootingSystem.hpp
-
+  systems/enemyDetectionSystem.hpp
 )
 
 set(SystemSources
   systems/playerSystem.cpp
   systems/bulletSystem.cpp
   systems/shootingSystem.cpp
-
+  systems/enemyDetectionSystem.cpp
 )
 
 set(ComponentHeaders
@@ -25,6 +25,7 @@ set(ComponentHeaders
   components/bulletComponent.hpp
   components/aimComponent.hpp
   components/shootingComponent.hpp
+  components/enemyDetectionComponent.hpp
 )
 
 set(MiscHeaders

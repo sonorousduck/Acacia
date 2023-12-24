@@ -15,17 +15,18 @@
 #include <singletons/time.hpp>
 #include <components/mouseInputComponent.hpp>
 #include <components/animationControllerComponent.hpp>
-
+#include "../components/shootingComponent.hpp"
 
 namespace Crypt
 {
 	class Bat
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale)
+		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, entities::EntityPtr player)
 		{
 			entities::EntityPtr bat = std::make_shared<entities::Entity>();
 
+			float detectionRange = 10.0f;
 
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("bat"), Ebony::Colors::White, 0.11);
 			components::Subcollider aabbcollider = components::Subcollider(scale / glm::vec2(2.0f, 2.0f), scale, true, true);
@@ -34,6 +35,7 @@ namespace Crypt
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
 
+			auto shootingComponent = std::make_unique<components::Shooting>();
 
 			bat->addComponent(std::move(collider));
 			bat->addComponent(std::move(transform));

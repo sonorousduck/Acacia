@@ -60,7 +60,7 @@ namespace Crypt
 						AddEntity(BulletPrefab::Create(crosshair->aimLocation, glm::vec2(50.0f, 50.0f), crosshair->aimDirection, speed, components::BULLET_TYPE::FIRE, 1, "fire_bullet"));
 
 						shootingComponent->currentCooldown = 0.0f;
-						Ebony::InputManager::Vibrate(0, 0, 1, 100, true);
+						Ebony::InputManager::Vibrate(0, 0, 1.0f, 100, true);
 					}
 
 
