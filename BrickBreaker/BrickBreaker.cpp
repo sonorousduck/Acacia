@@ -205,7 +205,7 @@ namespace Ebony {
 		std::shared_ptr<Screen> currentScreen;
 		std::unordered_map<std::uint16_t, std::shared_ptr<Screen>> screens{};
 
-		std::uint16_t nextScreenEnum = Ebony::ScreenEnum::DEFAULT;
+		std::uint64_t nextScreenEnum = Ebony::ScreenEnum::DEFAULT;
 		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
 
 	};

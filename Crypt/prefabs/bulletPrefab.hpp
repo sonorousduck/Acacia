@@ -32,7 +32,7 @@ namespace Crypt
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(texture), Ebony::Colors::White, 0.11);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(texture), Ebony::Colors::White, 0.11f);
 			components::Subcollider aabbcollider = components::Subcollider(scale / 2.0f, scale, true, true);
 			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::GROUND, false);
 			float test = (glm::atan(direction.y, direction.x)) / (2 * glm::pi<float>()) * 360.0f;

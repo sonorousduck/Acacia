@@ -31,15 +31,15 @@ namespace systems
 					
 					if (pressedState & Ebony::PressedState::PRESSED && keyInputComponent->onPressActions.contains(iter->second))
 					{
-						keyInputComponent->onPressActions[iter->second](entity);
+						keyInputComponent->onPressActions[iter->second]();
 					}
 					if (pressedState & Ebony::PressedState::HELD && keyInputComponent->onHeldActions.contains(iter->second))
 					{
-						keyInputComponent->onHeldActions[iter->second](entity);
+						keyInputComponent->onHeldActions[iter->second]();
 					}
 					else if (pressedState & Ebony::PressedState::RELEASED && keyInputComponent->onReleaseActions.contains(iter->second))
 					{
-						keyInputComponent->onReleaseActions[iter->second](entity);
+						keyInputComponent->onReleaseActions[iter->second]();
 					}
 				}
 			}
@@ -62,15 +62,15 @@ namespace systems
 
 						if (pressedState & Ebony::PressedState::PRESSED && controllerInputComponent->onPressActions.contains(iter->second))
 						{
-							controllerInputComponent->onPressActions[iter->second](entity);
+							controllerInputComponent->onPressActions[iter->second]();
 						}
 						else if (pressedState & Ebony::PressedState::HELD && controllerInputComponent->onHeldActions.contains(iter->second))
 						{
-							controllerInputComponent->onHeldActions[iter->second](entity);
+							controllerInputComponent->onHeldActions[iter->second]();
 						}
 						else if (pressedState & Ebony::PressedState::RELEASED && controllerInputComponent->onReleaseActions.contains(iter->second))
 						{
-							controllerInputComponent->onReleaseActions[iter->second](entity);
+							controllerInputComponent->onReleaseActions[iter->second]();
 						}
 					}
 					
@@ -84,7 +84,7 @@ namespace systems
 
 						if ((pressedState.pressedState.current & (Ebony::PressedState::PRESSED | Ebony::PressedState::HELD)) && controllerInputComponent->joystickActions.contains(iter->second))
 						{
-							controllerInputComponent->joystickActions[iter->second](entity, pressedState.scaledCurrentValue);
+							controllerInputComponent->joystickActions[iter->second](pressedState.scaledCurrentValue);
 						}
 					}
 				}
@@ -100,15 +100,15 @@ namespace systems
 
 					if (mousePress.pressInfo.current & Ebony::PressedState::PRESSED && mouseInputComponent->onPressActions.contains(iter->second))
 					{
-						mouseInputComponent->onPressActions[iter->second](entity, mousePress);
+						mouseInputComponent->onPressActions[iter->second](mousePress);
 					}
 					else if (mousePress.pressInfo.current & Ebony::PressedState::HELD && mouseInputComponent->onHeldActions.contains(iter->second))
 					{
-						mouseInputComponent->onHeldActions[iter->second](entity, mousePress);
+						mouseInputComponent->onHeldActions[iter->second](mousePress);
 					}
 					else if (mousePress.pressInfo.current & Ebony::PressedState::RELEASED && mouseInputComponent->onReleaseActions.contains(iter->second))
 					{
-						mouseInputComponent->onReleaseActions[iter->second](entity, mousePress);
+						mouseInputComponent->onReleaseActions[iter->second](mousePress);
 					}
 				}
 
@@ -116,7 +116,7 @@ namespace systems
 
 				if (mouseInputComponent->onMove.has_value())
 				{
-					mouseInputComponent->onMove.value()(entity);
+					mouseInputComponent->onMove.value()();
 				}
 			}
 		}

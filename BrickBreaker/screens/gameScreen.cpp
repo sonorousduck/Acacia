@@ -20,7 +20,6 @@ namespace BrickBreaker
 		Ebony::ResourceManager::LoadMusic("cyberpunk_moonlight_sonata_short", "Cyberpunk-Moonlight-Sonata-editted.wav");
 			
 		Ebony::ResourceManager::LoadMusic("song18", "/Music/song18.wav", false);
-		Ebony::ResourceManager::LoadTexture("textures/awesomeface.tx", "face", false);
 		Ebony::ResourceManager::LoadTexture("blue_tile.tx", "blue_tile");
 		Ebony::ResourceManager::LoadTexture("blue_broken_tile.tx", "blue_broken_tile");
 		Ebony::ResourceManager::LoadTexture("grey_tile.tx", "grey_tile");
@@ -255,7 +254,7 @@ namespace BrickBreaker
 		removeEntities.clear();
 	}
 		
-	std::uint16_t GameScreen::Update(std::chrono::microseconds elapsedTime)
+	std::uint64_t GameScreen::Update(std::chrono::microseconds elapsedTime)
 	{
 		auto firstTime = std::chrono::system_clock::now();
 		

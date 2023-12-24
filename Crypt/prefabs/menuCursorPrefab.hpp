@@ -1,4 +1,5 @@
 #pragma once
+#include <components/mouseInputComponent.hpp>
 #include <entity.hpp>
 #include <components/transform.hpp>
 #include <components/sprite.hpp>
@@ -9,6 +10,7 @@
 #include "../misc/collisionLayers.hpp"
 #include <iostream>
 #include <components/activeUICollisionComponent.hpp>
+#include <components/buttonComponent.hpp>
 
 namespace Crypt
 {
@@ -29,17 +31,17 @@ namespace Crypt
 
 			auto mouseInput = std::make_unique<components::MouseInput>();
 
-			mouseInput->onMove = [=](entities::EntityPtr self)
+			mouseInput->onMove = [=]()
 				{
-					auto mouseInput = self->getComponent<components::MouseInput>();
+					auto mouseInput = entity->getComponent<components::MouseInput>();
 
-					self->getComponent<components::Transform>()->position = glm::vec2(mouseInput->positionX, mouseInput->positionY);
+					entity->getComponent<components::Transform>()->position = glm::vec2(mouseInput->positionX, mouseInput->positionY);
 				};
 			
 			mouseInput->bindings.insert({ SDL_BUTTON_LEFT, "pressButton" });
 
 
-			mouseInput->onPressActions.insert({ "pressButton", [=](entities::EntityPtr& entity, Ebony::MousePress& mousePress)
+			mouseInput->onPressActions.insert({ "pressButton", [=](Ebony::MousePress& mousePress)
 				{
 					auto activeCollisionComponent = entity->getComponent<components::ActiveUICollision>();
 

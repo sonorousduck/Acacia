@@ -47,7 +47,7 @@ namespace BrickBreaker
 
 		}
 
-		std::uint16_t Update(std::chrono::microseconds elapsedTime) override
+		std::uint64_t Update(std::chrono::microseconds elapsedTime) override
 		{
 
 		}

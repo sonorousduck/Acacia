@@ -38,7 +38,7 @@ namespace BrickBreaker
 		void SetNextScreen(std::uint16_t nextScreen);
 
 		void RemoveOldEntities() override;
-		std::uint16_t Update(std::chrono::microseconds elapsedTime) override;
+		std::uint64_t Update(std::chrono::microseconds elapsedTime) override;
 		void Draw(std::chrono::microseconds elapsedTime) override;
 		void ProcessInput(std::chrono::microseconds elapsedTime) override;
 		void AddEntity(entities::EntityPtr entity);

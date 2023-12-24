@@ -20,7 +20,7 @@ namespace Crypt
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 			float speed = 10.0f;
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("aim"), Ebony::Colors::White, 0.1);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("aim"), Ebony::Colors::White, 0.1f);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(25.0f, 25.0f));
 
 
@@ -29,7 +29,7 @@ namespace Crypt
 			mouseComponent->bindings.insert({ SDL_BUTTON_LEFT, "shoot" });
 			
 
-			mouseComponent->onPressActions.insert({ "shoot", [=](entities::EntityPtr& entity, Ebony::MousePress& mousePress)
+			mouseComponent->onPressActions.insert({ "shoot", [=](Ebony::MousePress& mousePress)
 				{
 					auto shootingComponent = entity->getComponent<components::Shooting>();
 
@@ -50,7 +50,7 @@ namespace Crypt
 			
 			controllerComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_TRIGGERRIGHT, "shoot" });
 
-			controllerComponent->joystickActions.insert({ "shoot", [=](entities::EntityPtr& entity, float value)
+			controllerComponent->joystickActions.insert({ "shoot", [=](float value)
 				{
 					auto shootingComponent = entity->getComponent<components::Shooting>();
 
@@ -62,11 +62,6 @@ namespace Crypt
 						shootingComponent->currentCooldown = 0.0f;
 						Ebony::InputManager::Vibrate(0, 0, 1.0f, 100, true);
 					}
-
-
-
-					
-
 				} });
 
 

@@ -1,4 +1,5 @@
 #pragma once
+#include <components/controllerComponent.hpp>
 #include <entity.hpp>
 #include <components/transform.hpp>
 #include <components/sprite.hpp>
@@ -10,6 +11,7 @@
 #include <components/rigidbodyComponent.hpp>
 #include <components/keyboardComponent.hpp>
 #include <singletons/inputManager.hpp>
+#include <components/soundEffectComponent.hpp>
 
 namespace BrickBreaker
 {
@@ -166,10 +168,10 @@ namespace BrickBreaker
 
 			keyboardInputComponentBall->bindings.insert({ SDLK_SPACE, "launchBall" });
 
-			keyboardInputComponentBall->onReleaseActions.insert({ "launchBall", [=](entities::EntityPtr entity)
+			keyboardInputComponentBall->onReleaseActions.insert({ "launchBall", [=]()
 			{
 				//TODO: Make this only happen when isAttachedToPaddle is true. Right now, it is nice for debugging though :)
-				auto ball = entity->getComponent<components::Ball>();
+				auto ball = ballEntity->getComponent<components::Ball>();
 				ball->isAttachedToPaddle = false;
 				double random_x = ball->random_double(-0.8, 0.8);
 				double random_y = ball->random_double(-0.8, 0.8);
@@ -177,10 +179,10 @@ namespace BrickBreaker
 			} });
 
 			controllerComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_A, "launchBall" });
-			controllerComponent->onReleaseActions.insert({ "launchBall", [=](entities::EntityPtr entity)
+			controllerComponent->onReleaseActions.insert({ "launchBall", [=]()
 			{
 					//TODO: Make this only happen when isAttachedToPaddle is true. Right now, it is nice for debugging though :)
-					auto ball = entity->getComponent<components::Ball>();
+					auto ball = ballEntity->getComponent<components::Ball>();
 					ball->isAttachedToPaddle = false;
 					double random_x = ball->random_double(-0.8, 0.8);
 					double random_y = ball->random_double(-0.8, 0.8);

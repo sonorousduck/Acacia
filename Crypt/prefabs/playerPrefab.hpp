@@ -35,12 +35,12 @@ namespace Crypt
 
 			controllerInputComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_LEFTX, "playerMovement" });
 
-			controllerInputComponent->joystickActions.insert({ "playerMovement", [=](entities::EntityPtr entity, float value) {
+			controllerInputComponent->joystickActions.insert({ "playerMovement", [=](float value) {
 				if (abs(value) > 0.10)
 				{
-					auto rigidBody = entity->getComponent<components::RigidBody>();
-					auto transform = entity->getComponent<components::Transform>();
-					auto collider = entity->getComponent<components::Collider>();
+					auto rigidBody = player->getComponent<components::RigidBody>();
+					auto transform = player->getComponent<components::Transform>();
+					auto collider = player->getComponent<components::Collider>();
 
 					if (value < 0)
 					{
@@ -53,7 +53,7 @@ namespace Crypt
 				}
 			} });
 
-			keyboardInputComponent->onReleaseActions.insert({ "playerLeft", [=](entities::EntityPtr) 
+			keyboardInputComponent->onReleaseActions.insert({ "playerLeft", [=]() 
 			{ 
 				auto playerComponent = player->getComponent<components::Player>();
 				auto rigidBody = player->getComponent<components::RigidBody>();
@@ -66,7 +66,7 @@ namespace Crypt
 			} 
 			});
 
-			keyboardInputComponent->onReleaseActions.insert({ "playerRight", [=](entities::EntityPtr)
+			keyboardInputComponent->onReleaseActions.insert({ "playerRight", [=]()
 			{
 				auto playerComponent = player->getComponent<components::Player>();
 				auto rigidBody = player->getComponent<components::RigidBody>();
@@ -81,7 +81,7 @@ namespace Crypt
 
 			
 
-			controllerInputComponent->onPressActions.insert({"pause", [=](entities::EntityPtr entity)
+			controllerInputComponent->onPressActions.insert({"pause", [=]()
 				{
 					setNextScreen(ScreenEnum::PAUSE);
 				} });
@@ -89,22 +89,22 @@ namespace Crypt
 			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_START, "pause" });
 
 
-			keyboardInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
+			keyboardInputComponent->onHeldActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
 			keyboardInputComponent->bindings.insert({ SDLK_a, "playerLeft" });
 			keyboardInputComponent->bindings.insert({ SDLK_d, "playerRight" });
 			keyboardInputComponent->bindings.insert({ SDLK_ESCAPE, "pause" });
 
-			keyboardInputComponent->onPressActions.insert({ "pause", [=](entities::EntityPtr entity)
+			keyboardInputComponent->onPressActions.insert({ "pause", [=]()
 				{
 					setNextScreen(ScreenEnum::PAUSE);
 				} });
 
 
-			keyboardInputComponent->onHeldActions.insert({ "playerLeft", [=](entities::EntityPtr entity)
+			keyboardInputComponent->onHeldActions.insert({ "playerLeft", [=]()
 			{
-				auto rigidBody = entity->getComponent<components::RigidBody>();
-				auto transform = entity->getComponent<components::Transform>();
-				auto collider = entity->getComponent<components::Collider>();
+				auto rigidBody = player->getComponent<components::RigidBody>();
+				auto transform = player->getComponent<components::Transform>();
+				auto collider = player->getComponent<components::Collider>();
 				auto playerComponent = player->getComponent<components::Player>();
 
 				if (!playerComponent->isSlow && !playerComponent->isFast)
@@ -115,11 +115,11 @@ namespace Crypt
 				}
 			} });
 
-			keyboardInputComponent->onHeldActions.insert({ "playerRight", [=](entities::EntityPtr entity)
+			keyboardInputComponent->onHeldActions.insert({ "playerRight", [=]()
 			{
-				auto rigidBody = entity->getComponent<components::RigidBody>();
-				auto transform = entity->getComponent<components::Transform>();
-				auto collider = entity->getComponent<components::Collider>();
+				auto rigidBody = player->getComponent<components::RigidBody>();
+				auto transform = player->getComponent<components::Transform>();
+				auto collider = player->getComponent<components::Collider>();
 				auto playerComponent = player->getComponent<components::Player>();
 
 				if (!playerComponent->isFast && !playerComponent->isSlow)
@@ -135,11 +135,11 @@ namespace Crypt
 			keyboardInputComponent->bindings.insert({ SDLK_SPACE, "flipGravity" });
 
 
-			keyboardInputComponent->onPressActions.insert({ "flipGravity", [=](entities::EntityPtr entity)
+			keyboardInputComponent->onPressActions.insert({ "flipGravity", [=]()
 				{
-				auto rigidBody = entity->getComponent<components::RigidBody>();
-				auto transform = entity->getComponent<components::Transform>();
-				auto collider = entity->getComponent<components::Collider>();
+				auto rigidBody = player->getComponent<components::RigidBody>();
+				auto transform = player->getComponent<components::Transform>();
+				auto collider = player->getComponent<components::Collider>();
 				auto playerComponent = player->getComponent<components::Player>();
 
 				if (playerComponent->gravityCooldown <= 0.0f)

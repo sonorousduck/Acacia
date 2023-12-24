@@ -1,4 +1,7 @@
 #pragma once
+#include <components/rigidbodyComponent.hpp>
+#include <components/keyboardComponent.hpp>
+#include <components/controllerComponent.hpp>
 #include <entity.hpp>
 #include <components/transform.hpp>
 #include <components/sprite.hpp>
@@ -9,7 +12,9 @@
 #include <graphics2d.hpp>
 #include <SDL.h>
 #include <Log.hpp>
-
+#include <singletons/time.hpp>
+#include <components/soundEffectComponent.hpp>
+#include <components/mouseInputComponent.hpp>
 
 namespace BrickBreaker
 {
@@ -28,16 +33,16 @@ namespace BrickBreaker
 			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_Y, "printRelease" });
 
 
-			controllerInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) {std::cout << "Circle was called (OnHeld)" << std::endl; } });
-			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=](entities::EntityPtr) {std::cout << "Triangle was called" << std::endl; } });
+			controllerInputComponent->onHeldActions.insert({ "print", [=]() {std::cout << "Circle was called (OnHeld)" << std::endl; } });
+			controllerInputComponent->onReleaseActions.insert({ "printRelease", [=]() {std::cout << "Triangle was called" << std::endl; } });
 			controllerInputComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_LEFTX, "paddleMovement" });
 
-			controllerInputComponent->joystickActions.insert({ "paddleMovement", [=](entities::EntityPtr entity, float value) {
+			controllerInputComponent->joystickActions.insert({ "paddleMovement", [=](float value) {
 				if (abs(value) > 0.10)
 				{
-					auto rigidBody = entity->getComponent<components::RigidBody>();
-					auto transform = entity->getComponent<components::Transform>();
-					auto collider = entity->getComponent<components::Collider>();
+					auto rigidBody = paddle->getComponent<components::RigidBody>();
+					auto transform = paddle->getComponent<components::Transform>();
+					auto collider = paddle->getComponent<components::Collider>();
 
 					if (value < 0 && transform->position.x > 0)
 					{
@@ -51,17 +56,17 @@ namespace BrickBreaker
 				}
 			} });
 		
-			keyboardInputComponent->onReleaseActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
-			keyboardInputComponent->onHeldActions.insert({ "print", [=](entities::EntityPtr) { std::cout << "E was called" << std::endl; } });
+			keyboardInputComponent->onReleaseActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
+			keyboardInputComponent->onHeldActions.insert({ "print", [=]() { std::cout << "E was called" << std::endl; } });
 			keyboardInputComponent->bindings.insert({ SDLK_a, "paddleLeft" });
 			keyboardInputComponent->bindings.insert({ SDLK_d, "paddleRight" });
 			keyboardInputComponent->bindings.insert({ SDLK_e, "growShrink" });
 
-			keyboardInputComponent->onHeldActions.insert({ "paddleLeft", [=](entities::EntityPtr entity)
+			keyboardInputComponent->onHeldActions.insert({ "paddleLeft", [=]()
 			{
-				auto rigidBody = entity->getComponent<components::RigidBody>();
-				auto transform = entity->getComponent<components::Transform>();
-				auto collider = entity->getComponent<components::Collider>();
+				auto rigidBody = paddle->getComponent<components::RigidBody>();
+				auto transform = paddle->getComponent<components::Transform>();
+				auto collider = paddle->getComponent<components::Collider>();
 
 
 				if (transform->position.x > 0)
@@ -70,11 +75,11 @@ namespace BrickBreaker
 				}
 			} });
 
-			keyboardInputComponent->onHeldActions.insert({ "paddleRight", [=](entities::EntityPtr entity)
+			keyboardInputComponent->onHeldActions.insert({ "paddleRight", [=]()
 			{
-				auto rigidBody = entity->getComponent<components::RigidBody>();
-				auto transform = entity->getComponent<components::Transform>();
-				auto collider = entity->getComponent<components::Collider>();
+				auto rigidBody = paddle->getComponent<components::RigidBody>();
+				auto transform = paddle->getComponent<components::Transform>();
+				auto collider = paddle->getComponent<components::Collider>();
 				if (transform->position.x + transform->scale.x < windowWidth)
 				{
 					rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
@@ -83,9 +88,9 @@ namespace BrickBreaker
 				});
 
 
-			keyboardInputComponent->onPressActions.insert({ "growShrink", [=](entities::EntityPtr entity)
+			keyboardInputComponent->onPressActions.insert({ "growShrink", [=]()
 			{
-				auto transform = entity->getComponent<components::Transform>();
+				auto transform = paddle->getComponent<components::Transform>();
 
 				if (transform->scale.x == 150.0f)
 				{
@@ -102,8 +107,8 @@ namespace BrickBreaker
 			auto mouseComponent = std::make_unique<components::MouseInput>();
 
 			mouseComponent->bindings.insert({SDL_BUTTON_LEFT, "mousePress" });
-			mouseComponent->onPressActions.insert({ "mousePress", [=](entities::EntityPtr, Ebony::MousePress& mousePress) {std::cout << "Button pressed at " << mousePress.mouseClick.x << ", " << mousePress.mouseClick.y << std::endl; }});
-			mouseComponent->onReleaseActions.insert({ "mousePress",[=](entities::EntityPtr, Ebony::MousePress&) {std::cout << "Mouse Button released!" << std::endl; } });
+			mouseComponent->onPressActions.insert({ "mousePress", [=](Ebony::MousePress& mousePress) {std::cout << "Button pressed at " << mousePress.mouseClick.x << ", " << mousePress.mouseClick.y << std::endl; }});
+			mouseComponent->onReleaseActions.insert({ "mousePress",[=](Ebony::MousePress&) {std::cout << "Mouse Button released!" << std::endl; } });
 
 			//mouseComponent->loadMouseBindings("../mouseBindings.json");
 			//mouseComponent->saveMouseBindings("../mouseBindings.json");

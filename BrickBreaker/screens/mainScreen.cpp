@@ -112,7 +112,7 @@ namespace BrickBreaker
 		removeEntities.clear();
 	}
 
-	std::uint16_t MainScreen::Update(std::chrono::microseconds elapsedTime)
+	std::uint64_t MainScreen::Update(std::chrono::microseconds elapsedTime)
 	{
 		auto firstTime = std::chrono::system_clock::now();
 
