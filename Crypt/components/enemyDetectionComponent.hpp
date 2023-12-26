@@ -32,7 +32,7 @@ namespace components
 		entities::EntityPtr target;
 		bool canDetectTarget = false;
 		bool canMoveTowardsTarget = false;
-		glm::vec2 offset{0.0f, 0.0f}
+		glm::vec2 offset{ 0.0f, 0.0f };
 
 		glm::vec2 towardsTargetVector{0.0f, 0.0f};
 
