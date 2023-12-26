@@ -31,7 +31,8 @@ namespace Crypt
 
 			float detectionRange = 10.0f;
 			float movementRange = 300.0f;
-			float movementSpeed = 150.0f;
+			float movementSpeed = 300.0f;
+			glm::vec2 offset = { 200.0f, 50.0f };
 
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("bat"), Ebony::Colors::White, 0.11f);
 			components::Subcollider aabbcollider = components::Subcollider(scale / glm::vec2(2.0f, 2.0f), scale, true, true);
@@ -44,7 +45,7 @@ namespace Crypt
 
 			auto shootingComponent = std::make_unique<components::Shooting>();
 
-			bat->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, player));
+			bat->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, player));
 			bat->addComponent(std::move(script));
 			bat->addComponent(std::move(shootingComponent));
 			bat->addComponent(std::move(collider));

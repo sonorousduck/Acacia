@@ -54,8 +54,8 @@ namespace Crypt
 
 		// Create prefabs
 		AddEntity(player);
-		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, windowHeight - 5.0f), windowWidth));
-		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), windowWidth));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, windowHeight - 5.0f), windowWidth * 30.0f));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), windowWidth * 30.0f));
 		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
 
 		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(75.0f, 75.0f), player));
