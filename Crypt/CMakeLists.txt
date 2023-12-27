@@ -44,11 +44,15 @@ set(Prefabs
   prefabs/crosshairPrefab.hpp
   prefabs/bulletPrefab.hpp
   prefabs/batPrefab.hpp
+  prefabs/healthBarPrefab.hpp
 )
 
 set(UIPrefabs
   prefabs/UI/buttonPrefab.hpp
   prefabs/UI/buttonTextPrefab.hpp
+  prefabs/UI/playerHealthPrefab.hpp
+  prefabs/UI/playerSpellSelection.hpp
+
 )
 
 set(SingletonHeaders
@@ -87,6 +91,7 @@ set(ScriptHeaders
   scripts/shootingScript.hpp
   scripts/suicideBatScript.hpp
   scripts/shootingBatScript.hpp
+  scripts/healthBarUpdateScript.hpp
 )
 
 

@@ -11,7 +11,7 @@
 //#include "../Audio/src/MusicSource.hpp"
 //#include "../Audio/src/SoundSource.hpp"
 #include <SDL_mixer.h>
-
+#include "../Graphics/src/spritefont.hpp"
 
 namespace Ebony
 {
@@ -46,6 +46,12 @@ namespace Ebony
 		static void LoadMusic(const std::string& file, const std::string& name, bool currentFolder = true, const std::string& otherFolder = "../Audio");
 		static void UnloadMusic(const char* name);
 		static Mix_Music* GetMusic(const char* name);
+
+
+		static void LoadFont(const std::string& file, const std::string& name, const std::string& nameOfGame = "Crypt", bool currentFolder = true, const std::string& otherFolder = "");
+		static void UnloadFont(const char* name);
+		static std::shared_ptr<Ebony::SpriteFont> GetFont(const char* name);
+
 		
 		static void loadComplete(const std::string& file, std::function<void(std::string)> onComplete);
 
@@ -67,6 +73,9 @@ namespace Ebony
 		static std::unordered_map<std::string, std::shared_ptr<Texture2D>> Textures;
 		static std::unordered_map<std::string, Mix_Chunk*> SoundEffectBuffers;
 		static std::unordered_map<std::string, Mix_Music*> MusicSources;
+		static std::unordered_map<std::string, std::shared_ptr<SpriteFont>> Fonts;
+
+
 
 		static std::atomic_uint16_t tasksRemaining; // We need this so we are guarenteed not to start a level while content is loading
 

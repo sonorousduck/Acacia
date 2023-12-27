@@ -14,7 +14,7 @@ namespace components
 	class Sprite : public PolymorphicComparable<Component, Sprite>
 	{
 	public:
-		Sprite(Shader& shader, std::shared_ptr<Texture2D> texture, Ebony::Color spriteColor, float depth = 0.0f) : texture(texture), spriteColor(spriteColor), depth(depth), shader(shader)
+		Sprite(Shader& shader, std::shared_ptr<Texture2D> texture, Ebony::Color spriteColor, float depth = 0.0f, bool isUI = false) : texture(texture), spriteColor(spriteColor), depth(depth), shader(shader), isUI(isUI)
 		{}
 
 
@@ -27,5 +27,6 @@ namespace components
 		Ebony::Color spriteColor;
 		float depth;
 		Shader& shader;
+		bool isUI;
 	};
 }

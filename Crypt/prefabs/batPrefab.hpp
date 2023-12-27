@@ -20,6 +20,9 @@
 #include <components/cppScriptComponent.hpp>
 #include "../scripts/shootingBatScript.hpp"
 #include "../components/enemyComponent.hpp"
+#include "healthBarPrefab.hpp"
+
+
 
 namespace Crypt
 {
@@ -40,7 +43,7 @@ namespace Crypt
 
 			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
-					if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::PLAYER_BULLET)
+					if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::PLAYER_BULLET && !(other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::GROUND))
 					{
 						auto enemyInformation = bat->getComponent<components::Enemy>();
 
@@ -80,6 +83,10 @@ namespace Crypt
 			bat->addComponent(std::move(transform));
 			bat->addComponent(std::move(sprite));
 			bat->addComponent(std::move(rigidbody));
+
+
+			entities::EntityPtr healthBar = HealthBar::Create(startTransform + glm::vec2(0.0f, -20.0f), glm::vec2(scale.x, 7.0f), bat);
+			AddEntity(healthBar);
 
 			return bat;
 		}

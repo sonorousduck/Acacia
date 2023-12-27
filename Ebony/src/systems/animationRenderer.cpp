@@ -11,11 +11,12 @@ namespace systems
 			auto animationController = entity->getComponent<components::AnimationController>();
 			auto transform = entity->getComponent<components::Transform>();
 			auto animationsToDraw = animationController->GetSprite();
+			
 
 			// Draw each Texture2D here
 			for (auto& animation : animationsToDraw)
 			{
-				Ebony::Graphics2d::DrawAnimation(Ebony::ResourceManager::GetShader("spritesheet"), animation.GetSprite().spritesheet, animation.GetCurrentSpriteFrame(), transform->position, transform->scale, transform->rotation, transform->rotationAxis, Ebony::Colors::Red, animation.GetDepth());
+				Ebony::Graphics2d::DrawAnimation(Ebony::ResourceManager::GetShader("spritesheet"), animation.GetSprite().spritesheet, animation.GetCurrentSpriteFrame(), transform->position, transform->scale, transform->rotation, transform->rotationAxis, Ebony::Colors::Red, animation.GetDepth(), animationController->isUI);
 			}
 
 

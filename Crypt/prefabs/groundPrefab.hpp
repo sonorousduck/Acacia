@@ -29,7 +29,7 @@ namespace Crypt
 
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Colors::White);
 			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(windowWidth / 2.0f, 5.0f), glm::vec2(windowWidth, 10.0f), true, true);
-			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::GROUND, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, CollisionLayers::GROUND | CollisionLayers::ENEMY_BULLET | CollisionLayers::PLAYER_BULLET, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(windowWidth, 100.0f));
 			auto rigidbody = std::make_unique<components::RigidBody>();
 

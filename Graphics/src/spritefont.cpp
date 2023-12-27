@@ -14,7 +14,7 @@ namespace Ebony
         }
 
         FT_Face face{};
-        if (FT_New_Face(ft, ("../Graphics/" + fontLocation).c_str(), 0, &face))
+        if (FT_New_Face(ft, (fontLocation).c_str(), 0, &face))
         {
             std::cout << "Error: Freetype: Failed to load the font" << std::endl;
             return;

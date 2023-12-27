@@ -56,6 +56,7 @@ namespace Crypt
 		systems::AudioSystem audioSystem;
 		systems::AnimationRenderer animationRenderer;
 		systems::Animation2d animationSystem;
+		systems::FontRenderer fontRenderer;
 		systems::PlayerSystem playerSystem;
 		systems::CppScriptingSystem cppScriptingSystem;
 		systems::ShootingSystem shootingSystem;
@@ -67,7 +68,9 @@ namespace Crypt
 		void OnScreenDefocus() override;
 		void OnScreenFocus() override;
 
+		Ebony::RenderTarget2D uiRenderTarget;
 		Ebony::RenderTarget2D mainRenderTarget;
+
 		std::uint64_t screen = Crypt::ScreenEnum::GAME;
 		std::uint64_t nextScreen = Crypt::ScreenEnum::GAME;
 		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;

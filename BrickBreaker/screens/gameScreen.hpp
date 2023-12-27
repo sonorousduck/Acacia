@@ -87,6 +87,7 @@ namespace BrickBreaker
 
 		Ebony::RenderTarget2D mainRenderTarget;
 
+
 		std::chrono::microseconds averageParticleRenderingTime = std::chrono::microseconds::zero();
 		std::chrono::microseconds averageParticleSystemTime = std::chrono::microseconds::zero();
 		std::chrono::microseconds averageAnimationSystemTime = std::chrono::microseconds::zero();

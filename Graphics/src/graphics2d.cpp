@@ -1,5 +1,4 @@
 #include "graphics2d.hpp"
-#include "../Ebony/src/misc/resourceManager.hpp"
 
 // https://www.glfw.org/docs/3.3/input_guide.html
 namespace Ebony
@@ -232,7 +231,7 @@ namespace Ebony
 	}
 
 
-	void Graphics2d::Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth)
+	void Graphics2d::Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI)
 	{
 		// This one will use a default shader that will already be loaded into graphics
 		Shader& s = ResourceManager::GetShader("default");
@@ -252,7 +251,7 @@ namespace Ebony
 		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
 		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 
-		if (hasCamera)
+		if (!isUI && hasCamera)
 		{
 			s.setMat4("view", mainCamera->GetViewMatrix());
 		}
@@ -279,7 +278,7 @@ namespace Ebony
 
 	}
 
-	void Graphics2d::Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth)
+	void Graphics2d::Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI)
 	{
 		if (activeShaderId != s.ID) 
 		{
@@ -294,7 +293,7 @@ namespace Ebony
 		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
 		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 
-		if (hasCamera)
+		if (!isUI && hasCamera)
 		{
 			s.setMat4("view", mainCamera->GetViewMatrix());
 		}
@@ -322,7 +321,7 @@ namespace Ebony
 		glBindVertexArray(0);
 	}
 
-	void Graphics2d::DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth)
+	void Graphics2d::DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI)
 	{
 		if (activeShaderId != s.ID)
 		{
@@ -337,7 +336,7 @@ namespace Ebony
 		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
 		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 
-		if (hasCamera)
+		if (!isUI && hasCamera)
 		{
 			s.setMat4("view", mainCamera->GetViewMatrix());
 		}
@@ -403,13 +402,33 @@ namespace Ebony
 		glBindVertexArray(0);
 	}
 
-	void Graphics2d::DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color, Color outlineColor, float depth)
+	void Graphics2d::DrawString(Shader& s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, float rotate, Color color, Color outlineColor, float depth, bool isUI)
 	{
 		if (activeShaderId != s.ID)
 		{
 			s.use();
 			activeShaderId = s.ID;
 		}
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
+		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
+		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
+		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
+
+
+		if (!isUI && hasCamera)
+		{
+			s.setMat4("view", mainCamera->GetViewMatrix());
+		}
+		else
+		{
+			s.setMat4("view", glm::mat4(1.0f));
+		}
+
+		s.setMat4("model", model);
 
 		s.setVec3("textColor", color.GetRGB());
 		s.setVec3("outlineColor", outlineColor.GetRGB());
@@ -422,13 +441,13 @@ namespace Ebony
 		std::string::const_iterator c;
 		for (c = text.begin(); c != text.end(); c++)
 		{
-			Character ch = spriteFont.characters[*c];
+			Character ch = spriteFont->characters[*c];
 
-			float xpos = x + ch.Bearing.x * scale;
-			float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+			float xpos = position.x + ch.Bearing.x * size.x;
+			float ypos = position.y - (ch.Size.y - ch.Bearing.y) * size.y;
 
-			float w = ch.Size.x * scale;
-			float h = ch.Size.y * scale;
+			float w = ch.Size.x * size.x;
+			float h = ch.Size.y * size.y;
 
 			// Update VBO for each character
 			float vertices[6][4] = {
@@ -451,7 +470,7 @@ namespace Ebony
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 
 			// Now advance cursors for next glyph (Note that advance number is 1/64 pixels)
-			x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
+			position.x += (ch.Advance >> 6) * size.x; // Bitshift by 6 to get value in pixels (2^6 = 64)
 		}
 
 		glBindVertexArray(0);

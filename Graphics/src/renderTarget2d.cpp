@@ -3,7 +3,7 @@
 
 namespace Ebony
 {
-	RenderTarget2D RenderTarget2D::Create(std::uint16_t width, std::uint16_t height, GLint minFilter, GLint magFilter, bool depthStencil)
+	RenderTarget2D RenderTarget2D::Create(std::uint16_t width, std::uint16_t height, GLint minFilter, GLint magFilter, bool depthStencil, bool usesCamera)
 	{
 		
 		unsigned int framebuffer = 0;
@@ -42,7 +42,7 @@ namespace Ebony
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		return RenderTarget2D(width, height, framebuffer, textureColorBuffer, rbo, depthStencil);
+		return RenderTarget2D(width, height, framebuffer, textureColorBuffer, rbo, depthStencil, usesCamera);
 	}
 
 	// https://stackoverflow.com/questions/44763449/updating-width-and-height-of-render-target-on-the-fly

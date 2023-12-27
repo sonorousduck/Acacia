@@ -4,6 +4,8 @@
 #include "../prefabs/groundPrefab.hpp"
 #include "../prefabs/crosshairPrefab.hpp"
 #include "../prefabs/batPrefab.hpp"
+#include "../prefabs/UI/playerHealthPrefab.hpp"
+#include "../prefabs/UI/playerSpellSelection.hpp"
 
 namespace Crypt
 {
@@ -19,7 +21,9 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("IceBolt.tx", "ice_bullet", "Crypt");
 		Ebony::ResourceManager::LoadTexture("Bat1.tx", "bat", "Crypt");
 		Ebony::ResourceManager::LoadTexture("BatAttack.tx", "bat_attack", "Crypt");
-
+		Ebony::ResourceManager::LoadTexture("Icon.tx", "icon", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Panel.tx", "panel", "Crypt");
+		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "Crypt");
 
 	}
 
@@ -39,6 +43,7 @@ namespace Crypt
 		physicsSystem = systems::PhysicsSystem();
 		spriteRenderer = systems::SpriteRenderer();
 		animationSystem = systems::Animation2d();
+		fontRenderer = systems::FontRenderer();
 		animationRenderer = systems::AnimationRenderer();
 		playerSystem = systems::PlayerSystem();
 		inputSystem = systems::InputSystem();
@@ -49,18 +54,22 @@ namespace Crypt
 		enemyDetectionSystem = systems::EnemyDetectionSystem();
 
 
-		spriteRenderer.debug = false;
+		spriteRenderer.debug = true;
 
 
 		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });
 
 		// Create prefabs
 		AddEntity(player);
-		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, windowHeight - 5.0f), windowWidth * 30.0f));
-		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), windowWidth * 30.0f));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, static_cast<float>(windowHeight) - 5.0f), static_cast<float>(windowWidth) * 30.0f));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
 
 		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(75.0f, 75.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
+		
+		AddEntity(Crypt::PlayerHealth::Create(windowWidth));
+		
+		
 		AddNewEntities();
 	}
 
@@ -71,6 +80,7 @@ namespace Crypt
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
 		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
+		uiRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST, true, false);
 		clearColor = Ebony::Colors::Black;
 
 		Ebony::Graphics2d::SetMainCamera(camera);
@@ -182,10 +192,13 @@ namespace Crypt
 		// Draw things!
 		spriteRenderer.Update();
 		animationRenderer.Update();
+		fontRenderer.Update();
 
 		Ebony::Graphics2d::UnbindRenderTarget(clearColor);
 
 		Ebony::Graphics2d::DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), mainRenderTarget);
+		//Ebony::Graphics2d::DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), uiRenderTarget);
+
 	}
 
 	void MainGameScreen::ProcessInput(std::chrono::microseconds elapsedTime)
@@ -243,6 +256,7 @@ namespace Crypt
 			destructionSystem.AddEntity(entity);
 			timingSystem.AddEntity(entity);
 			enemyDetectionSystem.AddEntity(entity);
+			fontRenderer.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -266,6 +280,7 @@ namespace Crypt
 			destructionSystem.RemoveEntity(entityId);
 			timingSystem.RemoveEntity(entityId);
 			enemyDetectionSystem.RemoveEntity(entityId);
+			fontRenderer.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();

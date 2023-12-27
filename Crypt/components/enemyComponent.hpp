@@ -15,11 +15,12 @@ namespace components
 	class Enemy : public PolymorphicComparable<Component, Enemy>
 	{
 	public:
-		Enemy(float health) : health(health)
+		Enemy(float health) : health(health), maxHealth(health)
 		{}
 
 
 		float health;
+		float maxHealth;
 
 	};
 }

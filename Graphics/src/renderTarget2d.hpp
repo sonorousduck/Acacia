@@ -10,7 +10,7 @@ namespace Ebony
 	public:
 		RenderTarget2D() {}
 
-		static RenderTarget2D Create(std::uint16_t width, std::uint16_t height, GLint minFilter, GLint magFilter, bool depthStencil = true); // Eventually, this should be able to take in the filtering
+		static RenderTarget2D Create(std::uint16_t width, std::uint16_t height, GLint minFilter, GLint magFilter, bool depthStencil = true, bool usesCamera = true); // Eventually, this should be able to take in the filtering
 
 		unsigned int GetFramebuffer()
 		{
@@ -34,12 +34,13 @@ namespace Ebony
 		RenderTarget2D(std::uint16_t width, std::uint16_t height) : m_Width(width), m_Height(height)
 		{}
 
-		RenderTarget2D(std::uint16_t width, std::uint16_t height, unsigned int framebuffer, unsigned int textureColorBuffer, unsigned int rbo, bool depthStencil) : 
+		RenderTarget2D(std::uint16_t width, std::uint16_t height, unsigned int framebuffer, unsigned int textureColorBuffer, unsigned int rbo, bool depthStencil, bool usesCamera) : 
 			m_Width(width), m_Height(height), 
 			m_Framebuffer(framebuffer), 
 			m_TextureColorBuffer(textureColorBuffer),
 			m_Rbo(rbo), 
-			depthStencil(depthStencil)
+			depthStencil(depthStencil),
+			usesCamera(usesCamera)
 		{}
 
 		std::uint16_t m_Width = 0;
@@ -48,6 +49,7 @@ namespace Ebony
 		unsigned int m_TextureColorBuffer = 0;
 		unsigned int m_Rbo = 0;
 		bool depthStencil = false;
+		bool usesCamera = true;
 
 		
 

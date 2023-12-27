@@ -29,8 +29,8 @@ namespace components
 	class AnimationController : public PolymorphicComparable<Component, AnimationController>
 	{
 	public:
-		AnimationController() : animationTree(std::vector<Node>()) { };
-		AnimationController(std::vector<Node> animationTree) : animationTree(animationTree) {};
+		AnimationController() : animationTree(std::vector<Node>()), isUI(false) { };
+		AnimationController(std::vector<Node> animationTree, bool isUI = false) : animationTree(animationTree), isUI(isUI) {};
 
 		std::vector<Ebony::Animation> GetSprite()
 		{
@@ -79,6 +79,7 @@ namespace components
 		//std::vector<std::vector<Ebony::Animation>> animations;
 		std::vector<Node> animationTree;
 		size_t currentNode{ 0 };
+		bool isUI;
 
 		// Needs a graph structure here
 		// Animations are the nodes

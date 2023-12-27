@@ -33,6 +33,7 @@
 #include "spritefont.hpp"
 #include "colors.hpp"
 #include "renderTarget2d.hpp"
+#include "../Ebony/src/misc/resourceManager.hpp"
 
 #include <memory>
 
@@ -49,7 +50,7 @@ namespace Ebony
 
 		//// Need to load fonts as well
 
-		static void DrawString(Shader& s, SpriteFont& spriteFont, std::string text, float x, float y, float scale, Color color, Color outlineColor, float depth = 0.0f);
+		static void DrawString(Shader& s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, float rotate, Color color, Color outlineColor, float depth = 0.0f, bool isUI = false);
 		//void DrawString(SpriteFont& spriteFont, std::string text, float x, float y, float scale, glm::vec3 color);
 
 		static void SetMainCamera(std::shared_ptr<Camera> camera);
@@ -59,9 +60,9 @@ namespace Ebony
 
 		static void InitializeImgui();
 
-		static void Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f);
-		static void Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f);
-		static void DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth);
+		static void Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f, bool isUI = false);
+		static void Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f, bool isUI = false);
+		static void DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI = false);
 		static void DrawInstanced(Shader& s, std::shared_ptr<Texture2D> texture, unsigned int VAO, std::uint32_t count);
 		static void DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget);
 

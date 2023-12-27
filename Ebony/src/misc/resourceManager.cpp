@@ -15,6 +15,8 @@ namespace Ebony
 	std::unordered_map<std::string, Shader> ResourceManager::Shaders;
 	std::unordered_map<std::string, Mix_Chunk*> ResourceManager::SoundEffectBuffers;
 	std::unordered_map<std::string, Mix_Music*> ResourceManager::MusicSources;
+	std::unordered_map<std::string, std::shared_ptr<SpriteFont>> ResourceManager::Fonts;
+
 	std::atomic_uint16_t ResourceManager::tasksRemaining{ 0 };
 
 	Shader& ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name)
@@ -281,6 +283,31 @@ namespace Ebony
 	Mix_Music* ResourceManager::GetMusic(const char* name)
 	{
 		return MusicSources[name];
+	}
+
+	void ResourceManager::LoadFont(const std::string& file, const std::string& name, const std::string& nameOfGame, bool currentFolder, const std::string& otherFolder)
+	{
+		std::shared_ptr<Ebony::SpriteFont> spriteFont = std::make_shared<Ebony::SpriteFont>();
+		if (currentFolder)
+		{
+			spriteFont->LoadFont("../" + nameOfGame + "/fonts/" + file);
+
+			Fonts[name] = spriteFont;
+			return;
+		}
+		spriteFont->LoadFont("../Graphics/" + file);
+		Fonts[name] = spriteFont;
+		return;
+
+	}
+
+	void ResourceManager::UnloadFont(const char* name)
+	{
+	}
+
+	std::shared_ptr<Ebony::SpriteFont> ResourceManager::GetFont(const char* name)
+	{
+		return Fonts[name];
 	}
 
 	void ResourceManager::LoadTextureAsync(const std::string& file, const char* name, std::function<void(std::string)> onComplete)
