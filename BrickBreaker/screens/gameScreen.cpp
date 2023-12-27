@@ -105,11 +105,11 @@ namespace BrickBreaker
 
 		Shader& s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
-
+		spriteFont = std::make_shared<Ebony::SpriteFont>();
 
 
 		Ebony::Graphics2d::InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
-		spriteFont.LoadFont("fonts/super-indie-font/SuperIndie.ttf");
+		spriteFont->LoadFont("../Graphics/fonts/super-indie-font/SuperIndie.ttf");
 
 
 		s.use();

@@ -292,12 +292,11 @@ namespace Ebony
 		{
 			spriteFont->LoadFont("../" + nameOfGame + "/fonts/" + file);
 
-			Fonts[name] = spriteFont;
+			Fonts[name] = std::move(spriteFont);
 			return;
 		}
 		spriteFont->LoadFont("../Graphics/" + file);
-		Fonts[name] = spriteFont;
-		return;
+		Fonts[name] = std::move(spriteFont);
 
 	}
 

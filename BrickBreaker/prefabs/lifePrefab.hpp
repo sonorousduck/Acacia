@@ -13,7 +13,7 @@ namespace BrickBreaker
 	class LifePrefab
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 position, Ebony::SpriteFont spriteFont)
+		static entities::EntityPtr Create(glm::vec2 position, std::shared_ptr<Ebony::SpriteFont> spriteFont)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
