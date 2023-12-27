@@ -17,6 +17,7 @@
 #include <components/animationControllerComponent.hpp>
 #include "../components/playerComponent.hpp"
 #include "../screens/screenEnums.hpp"
+#include "../components/bulletComponent.hpp"
 
 namespace Crypt
 {
@@ -168,10 +169,16 @@ namespace Crypt
 					{
 						player->getComponent<components::Player>()->isOnGround = true;
 					}
+					else if (layer & Crypt::CollisionLayers::ENEMY_BULLET)
+					{
+						player->getComponent<components::Player>()->health -= other->getComponent<components::Bullet>()->strength;
+						EB_TRACE(player->getComponent<components::Player>()->health);
+					}
+
 				};
 
 
-			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::PLAYER | Crypt::CollisionLayers::GROUND, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::PLAYER | Crypt::CollisionLayers::GROUND | Crypt::CollisionLayers::ENEMY_BULLET, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(60.0f, 60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 			
 			// Will use a separate system for controlling gravity and such

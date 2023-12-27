@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <components/component.hpp>
+#include "../components/bulletComponent.hpp"
 
 namespace components
 {
@@ -14,5 +15,6 @@ namespace components
 
 		glm::vec2 aimDirection{};
 		glm::vec2 aimLocation{};
+		components::BULLET_TYPE bulletType = components::BULLET_TYPE::FIRE;
 	};
 }

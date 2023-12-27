@@ -11,6 +11,8 @@ namespace Crypt
 		UI = BIT(1),
 		PLAYER = BIT(2),
 		ENEMY = BIT(3),
+		PLAYER_BULLET = BIT(4),
+		ENEMY_BULLET = BIT(5)
 
 
 	};

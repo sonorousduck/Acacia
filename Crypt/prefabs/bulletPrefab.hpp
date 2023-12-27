@@ -27,23 +27,36 @@ namespace Crypt
 	class BulletPrefab
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, glm::vec2 direction, float speed, components::BULLET_TYPE bulletType, std::uint8_t strength, const char* texture)
+		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, glm::vec2 direction, float speed, components::BULLET_TYPE bulletType, std::uint8_t strength, const char* texture, float timeUntilDestruction = 3.0f, std::uint16_t collisionLayer = Crypt::CollisionLayers::PLAYER_BULLET)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
 
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(texture), Ebony::Colors::White, 0.11f);
 			components::Subcollider aabbcollider = components::Subcollider(scale / 2.0f, scale, true, true);
-			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::GROUND, false);
-			float test = (glm::atan(direction.y, direction.x)) / (2 * glm::pi<float>()) * 360.0f;
-			std::cout << test << std::endl;
+
+			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+				{
+					if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::GROUND)
+					{					
+						entity->getComponent<components::DestructionComponent>()->shouldDestroy = true;
+					}
+
+					else if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::PLAYER)
+					{
+						entity->getComponent<components::DestructionComponent>()->shouldDestroy = true;
+					}
+				};
+
+
+			auto collider = std::make_unique<components::Collider>(aabbcollider, collisionLayer, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, (glm::atan(direction.y, direction.x)) / (2 * glm::pi<float>()) * 360.0f, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 			rigidbody->setVelocity(direction * speed);
 
 
 
-			entity->addComponent(std::make_unique<components::TimedComponent>(1.0f, [=]() 
+			entity->addComponent(std::make_unique<components::TimedComponent>(timeUntilDestruction, [=]() 
 				{
 					entity->getComponent<components::DestructionComponent>()->shouldDestroy = true;				
 				}));

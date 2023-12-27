@@ -14,7 +14,8 @@ namespace components
 	enum BULLET_TYPE : std::uint8_t
 	{
 		FIRE = BIT(0),
-		ICE = BIT(1)
+		ICE = BIT(1),
+		ENEMY_BAT = BIT(2)
 	};
 
 

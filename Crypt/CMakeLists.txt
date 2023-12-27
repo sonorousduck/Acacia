@@ -26,6 +26,7 @@ set(ComponentHeaders
   components/aimComponent.hpp
   components/shootingComponent.hpp
   components/enemyDetectionComponent.hpp
+  components/enemyComponent.hpp
 )
 
 set(MiscHeaders
