@@ -18,6 +18,8 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("FireBall.tx", "fire_bullet", "Crypt");
 		Ebony::ResourceManager::LoadTexture("IceBolt.tx", "ice_bullet", "Crypt");
 		Ebony::ResourceManager::LoadTexture("Bat1.tx", "bat", "Crypt");
+		Ebony::ResourceManager::LoadTexture("BatAttack.tx", "bat_attack", "Crypt");
+
 
 	}
 
@@ -47,7 +49,7 @@ namespace Crypt
 		enemyDetectionSystem = systems::EnemyDetectionSystem();
 
 
-		spriteRenderer.debug = true;
+		spriteRenderer.debug = false;
 
 
 		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });

@@ -66,7 +66,7 @@ namespace Crypt
 
 
 			bat->addComponent(std::make_unique<components::Enemy>(3.0f));
-			bat->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "fire_bullet", player));
+			bat->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "bat_attack", player));
 
 			bat->addComponent(std::make_unique<components::DestructionComponent>([=]()
 				{
