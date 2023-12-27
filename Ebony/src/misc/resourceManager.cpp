@@ -303,6 +303,7 @@ namespace Ebony
 
 	void ResourceManager::UnloadFont(const char* name)
 	{
+		Fonts.erase(name);
 	}
 
 	std::shared_ptr<Ebony::SpriteFont> ResourceManager::GetFont(const char* name)

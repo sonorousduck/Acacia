@@ -431,8 +431,8 @@ namespace Ebony
 		s.setMat4("model", model);
 
 		s.setVec3("textColor", color.GetRGB());
-		s.setVec3("outlineColor", outlineColor.GetRGB());
-		s.setFloat("depth", depth);
+		//s.setVec3("outlineColor", outlineColor.GetRGB());
+		//s.setFloat("depth", depth);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindVertexArray(textVAO);
