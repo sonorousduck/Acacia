@@ -9,13 +9,12 @@ namespace Crypt
 
 	void MainMenuScreen::LoadContent()
 	{
-		Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed");
-		Ebony::ResourceManager::LoadTexture("Button_Pressed.tx", "button_pressed");
-		Ebony::ResourceManager::LoadTexture("Button_Hovered.tx", "button_hovered");
-		Ebony::ResourceManager::LoadTexture("Logo_BrickBreaker.tx", "logo_brickbreaker");
-		Ebony::ResourceManager::LoadTexture("Start_Text.tx", "start_text");
-		Ebony::ResourceManager::LoadTexture("Options_Text.tx", "options_text");
-		Ebony::ResourceManager::LoadTexture("Quit_Text.tx", "quit_text");
+		Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Button_Pressed.tx", "button_pressed", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Button_Hovered.tx", "button_hovered", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Start_Text.tx", "start_text", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Options_Text.tx", "options_text", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Quit_Text.tx", "quit_text", "Crypt");
 	}
 
 	void MainMenuScreen::Start()

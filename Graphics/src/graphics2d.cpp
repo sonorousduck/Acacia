@@ -238,6 +238,7 @@ namespace Ebony
 		{
 			s.use();
 			activeShaderId = s.ID;
+			//s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
 		}
 
 		glEnable(GL_TEXTURE_2D_ARRAY);
@@ -283,6 +284,7 @@ namespace Ebony
 		{
 			s.use();
 			activeShaderId = s.ID;
+			//s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
 		}
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
@@ -326,6 +328,7 @@ namespace Ebony
 		{
 			s.use();
 			activeShaderId = s.ID;
+			//s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
 		}
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
@@ -407,16 +410,9 @@ namespace Ebony
 		{
 			s.use();
 			activeShaderId = s.ID;
+			//s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
+
 		}
-
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
-		model = glm::translate(model, glm::vec3(0.5f * transformScale.x, 0.5f * transformScale.y, 0.0f)); // move origin of rotation to center of quad
-		model = glm::rotate(model, glm::radians(rotate), rotationAxis); // then rotate
-		model = glm::translate(model, glm::vec3(-0.5f * transformScale.x, -0.5f * transformScale.y, 0.0f)); // move origin back
-		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
-
 
 		if (!isUI && hasCamera)
 		{
@@ -427,8 +423,6 @@ namespace Ebony
 			s.setMat4("view", glm::mat4(1.0f));
 		}
 
-		s.setMat4("model", model);
-		s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
 
 		s.setVec3("textColor", color.GetRGB());
 		//s.setVec3("outlineColor", outlineColor.GetRGB());
@@ -451,12 +445,12 @@ namespace Ebony
 
 			// Update VBO for each character
 			float vertices[6][4] = {
-				{ xpos,         ypos + h,   0.0f, 0.0f  },
-				{ xpos,         ypos,       0.0f, 1.0f  },
-				{ xpos + w,     ypos,       1.0f, 1.0f  },
-				{ xpos,         ypos + h,   0.0f, 0.0f  },
-				{ xpos + w,     ypos,       1.0f, 1.0f  },
-				{ xpos + w,     ypos + h,   1.0f, 0.0f  }
+				{ xpos,         ypos,					0.0f, 0.0f  },
+				{ xpos,         ypos + h,				0.0f, 1.0f  },
+				{ xpos + w,     ypos + h,				1.0f, 1.0f  },
+				{ xpos,         ypos,					0.0f, 0.0f  },
+				{ xpos + w,     ypos + h,				1.0f, 1.0f  },
+				{ xpos + w,     ypos,					1.0f, 0.0f  }
 			};
 
 			// Render glyph texture over quad

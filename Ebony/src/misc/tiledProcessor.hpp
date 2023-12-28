@@ -1,9 +1,6 @@
 #pragma once
-//#include "tileson.hpp"
-//#include <cstdint>
-//#include <vector>
-//#include "glm/glm.hpp"
-//#include "../Log.hpp"
+
+#include "tileson.hpp"
 #include <iostream>
 #include <functional>
 

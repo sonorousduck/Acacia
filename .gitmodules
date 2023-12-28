@@ -28,6 +28,6 @@
 [submodule "ThirdParty/freetype"]
 	path = ThirdParty/freetype
 	url = https://gitlab.freedesktop.org/freetype/freetype.git
-# [submodule "ThirdParty/box2d"]
-# 	path = ThirdParty/box2d
-# 	url = git@github.com:erincatto/box2d.git
+[submodule "ThirdParty/tileson"]
+	path = ThirdParty/tileson
+	url = https://github.com/SSBMTonberry/tileson

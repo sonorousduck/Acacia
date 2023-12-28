@@ -28,7 +28,7 @@
 #include <systems/cppScriptingSystem.hpp>
 #include "../systems/shootingSystem.hpp"
 #include "../systems/enemyDetectionSystem.hpp"
-#include "../misc/cryptTiledProcessor.cpp"
+#include "../misc/cryptTiledProcessor.hpp"
 
 
 namespace Crypt
