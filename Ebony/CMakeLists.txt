@@ -47,6 +47,7 @@ set(ComponentHeaders
 	src/components/cppScriptComponent.hpp
 	src/components/destructionComponent.hpp
 	src/components/timedComponent.hpp
+	src/components/tileComponent.hpp
 )
 
 set(SystemHeaders
@@ -66,8 +67,7 @@ set(SystemHeaders
 	src/systems/cppScriptingSystem.hpp
 	src/systems/destructionSystem.hpp
 	src/systems/timingSystem.hpp
-
-
+	src/systems/tileRenderingSystem.hpp
 )
 
 set(SystemSources
@@ -87,6 +87,7 @@ set(SystemSources
 	src/systems/cppScriptingSystem.cpp
 	src/systems/destructionSystem.cpp
 	src/systems/timingSystem.cpp
+	src/systems/tileRenderingSystem.cpp
 )
 
 set(EntityHeaders

@@ -401,7 +401,7 @@ namespace Ebony
 		glBindVertexArray(0);
 	}
 
-	void Graphics2d::DrawString(Shader& s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, Color outlineColor, float depth, bool isUI)
+	void Graphics2d::DrawString(Shader& s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, glm::vec2 transformScale, float rotate, glm::vec3 rotationAxis, Color color, Color outlineColor, float depth, bool isUI)
 	{
 		if (activeShaderId != s.ID)
 		{
@@ -412,9 +412,9 @@ namespace Ebony
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
-		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
-		model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
-		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
+		model = glm::translate(model, glm::vec3(0.5f * transformScale.x, 0.5f * transformScale.y, 0.0f)); // move origin of rotation to center of quad
+		model = glm::rotate(model, glm::radians(rotate), rotationAxis); // then rotate
+		model = glm::translate(model, glm::vec3(-0.5f * transformScale.x, -0.5f * transformScale.y, 0.0f)); // move origin back
 		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 
 
@@ -428,7 +428,7 @@ namespace Ebony
 		}
 
 		s.setMat4("model", model);
-		s.setMat4("projection", projection);
+		s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
 
 		s.setVec3("textColor", color.GetRGB());
 		//s.setVec3("outlineColor", outlineColor.GetRGB());
@@ -486,7 +486,7 @@ namespace Ebony
 		// TODO: This should change to use the actual window sizes
 		//glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(screenWidth), 0.0f, static_cast<float>(screenHeight));
 		textShader.use();
-		textShader.setMat4("projection", projection); 
+		textShader.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
 
 		glGenVertexArrays(1, &textVAO);
 		glGenBuffers(1, &textVBO);
