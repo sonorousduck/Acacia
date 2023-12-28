@@ -3,6 +3,7 @@
 #include "tileson.hpp"
 #include <iostream>
 #include <functional>
+#include "../entity.hpp"
 
 namespace Ebony
 {
@@ -15,7 +16,7 @@ namespace Ebony
 
 
 		// This should be called after AddEntityDefinitions has already been called
-		virtual void ParseMap(const char* filepath);
+		virtual void ParseMap(const char* filepath, std::function<void(entities::EntityPtr)> AddEntity);
 
 		// This function will be implemented by the developer in each game.
 		virtual void CreateTranslationFunction();

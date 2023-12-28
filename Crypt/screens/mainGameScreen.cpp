@@ -22,6 +22,8 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("Bat1.tx", "bat", "Crypt");
 		Ebony::ResourceManager::LoadTexture("BatAttack.tx", "bat_attack", "Crypt");
 		Ebony::ResourceManager::LoadTexture("Icon.tx", "icon", "Crypt");
+		Ebony::ResourceManager::LoadTexture("wood.tx", "wood", "Crypt");
+
 		Ebony::ResourceManager::LoadTexture("Panel.tx", "panel", "Crypt");
 		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "Crypt");
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire", "Crypt");
@@ -55,7 +57,7 @@ namespace Crypt
 		enemyDetectionSystem = systems::EnemyDetectionSystem();
 
 
-		spriteRenderer.debug = true;
+		spriteRenderer.debug = false;
 
 
 		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });
@@ -74,7 +76,7 @@ namespace Crypt
 
 		CryptTiledProcessor tiledProcessor = CryptTiledProcessor();
 		tiledProcessor.CreateTranslationFunction();
-		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json");
+		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json", [=](entities::EntityPtr entity) {AddEntity(entity); });
 
 
 		

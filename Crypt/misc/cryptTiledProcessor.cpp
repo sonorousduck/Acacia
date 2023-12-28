@@ -4,7 +4,7 @@
 namespace Crypt
 {
 
-	void CryptTiledProcessor::ParseMap(const char* filepath)
+	void CryptTiledProcessor::ParseMap(const char* filepath, std::function<void(entities::EntityPtr)> AddEntity)
 	{
 		std::cout << "Test" << std::endl;
 		std::cout << "Probably didn't work!!" << std::endl;
@@ -22,9 +22,19 @@ namespace Crypt
 				tson::Tileset* tileset = tileObject.getTile()->getTileset();
 				tson::Rect drawingRect = tileObject.getDrawingRect();
 				tson::Vector2f position = tileObject.getPosition();
+
+				entities::EntityPtr renderedTile = std::make_shared<entities::Entity>();
+
+				auto test = tileset->getImage().u8string();
+
+				auto transform = std::make_unique<components::Transform>(glm::vec2(position.x, position.y), 0.0f, glm::vec2(drawingRect.width, drawingRect.height));
+				auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("wood"), Ebony::Colors::White, 0.05f);
+
+				renderedTile->addComponent(std::move(transform));
+				renderedTile->addComponent(std::move(sprite));
+
+				AddEntity(renderedTile);
 			}
-
-
 		}
 	}
 
