@@ -227,7 +227,6 @@ namespace Ebony
 		activeShaderId = -1;
 		SDL_GL_SwapWindow(window.getWindow());
 		resized = false;
-		//glfwSwapBuffers(window.getWindow());
 	}
 
 
@@ -402,7 +401,7 @@ namespace Ebony
 		glBindVertexArray(0);
 	}
 
-	void Graphics2d::DrawString(Shader& s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, float rotate, Color color, Color outlineColor, float depth, bool isUI)
+	void Graphics2d::DrawString(Shader& s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, Color outlineColor, float depth, bool isUI)
 	{
 		if (activeShaderId != s.ID)
 		{
@@ -429,6 +428,7 @@ namespace Ebony
 		}
 
 		s.setMat4("model", model);
+		s.setMat4("projection", projection);
 
 		s.setVec3("textColor", color.GetRGB());
 		//s.setVec3("outlineColor", outlineColor.GetRGB());
@@ -484,9 +484,9 @@ namespace Ebony
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		// TODO: This should change to use the actual window sizes
-		glm::mat4 textProjection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+		//glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(screenWidth), 0.0f, static_cast<float>(screenHeight));
 		textShader.use();
-		textShader.setMat4("projection", textProjection);
+		textShader.setMat4("projection", projection); 
 
 		glGenVertexArrays(1, &textVAO);
 		glGenBuffers(1, &textVBO);

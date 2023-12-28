@@ -187,16 +187,16 @@ namespace Crypt
 
 	void MainGameScreen::Draw(std::chrono::microseconds elapsedTime)
 	{
-		//Ebony::Graphics2d::SetRenderTarget(mainRenderTarget, clearColor);
+		Ebony::Graphics2d::SetRenderTarget(mainRenderTarget, clearColor);
 
 		// Draw things!
 		spriteRenderer.Update();
-		animationRenderer.Update();
 		fontRenderer.Update();
+		animationRenderer.Update();
 
-		//Ebony::Graphics2d::UnbindRenderTarget(clearColor);
+		Ebony::Graphics2d::UnbindRenderTarget(clearColor);
 
-		//Ebony::Graphics2d::DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), mainRenderTarget);
+		Ebony::Graphics2d::DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), mainRenderTarget);
 		//Ebony::Graphics2d::DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), uiRenderTarget);
 
 	}

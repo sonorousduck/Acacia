@@ -71,7 +71,7 @@ namespace BrickBreaker
 		//Ebony::MouseInput mouseInput;
 		//Ebony::ControllerInput controllerInput;
 		Ebony::Color clearColor;
-		std::shared_ptr<Ebony::SpriteFont> spriteFont;
+		//std::shared_ptr<Ebony::SpriteFont> spriteFont;
 		systems::ParticleSystem particleSystem;
 		systems::ParticleRenderer particleRenderer;
 		systems::AnimationRenderer animationRenderer;

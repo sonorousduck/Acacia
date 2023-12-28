@@ -50,7 +50,7 @@ namespace Ebony
 
 		//// Need to load fonts as well
 
-		static void DrawString(Shader& s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, float rotate, Color color, Color outlineColor, float depth = 0.0f, bool isUI = false);
+		static void DrawString(Shader& s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, Color outlineColor, float depth = 0.0f, bool isUI = false);
 		//void DrawString(SpriteFont& spriteFont, std::string text, float x, float y, float scale, glm::vec3 color);
 
 		static void SetMainCamera(std::shared_ptr<Camera> camera);

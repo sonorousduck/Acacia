@@ -59,6 +59,7 @@ namespace BrickBreaker
 		Ebony::ResourceManager::LoadTexture("smaller_paddle_powerup.tx", "smaller_paddle_powerup");
 		Ebony::ResourceManager::LoadTexture("box.tx", "collider");
 		Ebony::ResourceManager::LoadTexture("empty.tx", "empty");
+		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "Crypt");
 
 
 		//Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed");
@@ -105,11 +106,11 @@ namespace BrickBreaker
 
 		Shader& s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
-		spriteFont = std::make_shared<Ebony::SpriteFont>();
+		//spriteFont = std::make_shared<Ebony::SpriteFont>();
 
 
 		Ebony::Graphics2d::InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
-		spriteFont->LoadFont("../Graphics/fonts/super-indie-font/SuperIndie.ttf");
+		//spriteFont->LoadFont("../Graphics/fonts/super-indie-font/SuperIndie.ttf");
 
 
 		s.use();
@@ -173,14 +174,14 @@ namespace BrickBreaker
 			AddEntity(brickEntity);
 		}
 
-		entities::EntityPtr scoreDisplay = BrickBreaker::ScorePrefab::Create(glm::vec2(windowWidth - 150.0f, 25.0f), spriteFont);
+		entities::EntityPtr scoreDisplay = BrickBreaker::ScorePrefab::Create(glm::vec2(windowWidth - 150.0f, 25.0f), Ebony::ResourceManager::GetFont("default"));
 
 		AddEntity(scoreDisplay);
 
 
 		//keyboardInputComponent->loadKeyBindings("../keyBindings.json");
 
-		auto textComponent = std::make_unique<components::Text>(fps, Ebony::Colors::Black, Ebony::Colors::White, spriteFont);
+		auto textComponent = std::make_unique<components::Text>(fps, Ebony::Colors::Black, Ebony::Colors::White, Ebony::ResourceManager::GetFont("default"));
 		fpsEntity->addComponent(std::move(textComponent));
 		fpsEntity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 25.0f, 100.0f }, 0.0f, glm::vec2{ 1.0f, 1.0f })));
 
