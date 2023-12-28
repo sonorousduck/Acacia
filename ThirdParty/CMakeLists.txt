@@ -12,7 +12,7 @@ add_library(glm INTERFACE)
 add_library(sdl2 INTERFACE)
 add_library(sdl2_mixer INTERFACE)
 # add_library(freetype INTERFACE)
-
+add_library(tileson INTERFACE)
 
 add_library(lz4 STATIC)
 
@@ -23,6 +23,8 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 # add_subdirectory(glfw)
 add_subdirectory(spdlog)
 
+
+target_include_directories(tileson INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/tileson")
 
 
 find_package(SDL2 REQUIRED)

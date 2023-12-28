@@ -31,9 +31,11 @@ set(ComponentHeaders
 
 set(MiscHeaders
   misc/collisionLayers.hpp
+  misc/cryptTiledProcessor.hpp
 )
 
 set(MiscSources
+  misc/cryptTiledProcessor.cpp
 )
 
 
@@ -156,7 +158,7 @@ include_directories("../Graphics/src")
 target_include_directories(Crypt PRIVATE ../Graphics/include/ ../Graphics/include/glm)
 
 
-target_link_libraries(Crypt Ebony Graphics glm)
+target_link_libraries(Crypt Ebony Graphics glm tileson)
 
 add_custom_target(copy_assets_crypt
   COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy-assets.cmake

@@ -96,7 +96,7 @@ void assets::unpack_texture(TextureInfo* info, const char* sourceBuffer, size_t 
 {
 	if (info->compressionMode == CompressionMode::LZ4)
 	{
-		LZ4_decompress_safe(sourceBuffer, destination, sourceSize, info->textureSize);
+		LZ4_decompress_safe(sourceBuffer, destination, static_cast<int>(sourceSize), static_cast<int>(info->textureSize));
 	}
 	else 
 	{

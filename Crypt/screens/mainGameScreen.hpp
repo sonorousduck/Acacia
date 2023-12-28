@@ -28,7 +28,7 @@
 #include <systems/cppScriptingSystem.hpp>
 #include "../systems/shootingSystem.hpp"
 #include "../systems/enemyDetectionSystem.hpp"
-
+#include "../misc/cryptTiledProcessor.cpp"
 
 
 namespace Crypt
@@ -63,6 +63,8 @@ namespace Crypt
 		systems::DestructionSystem destructionSystem;
 		systems::TimingSystem timingSystem;
 		systems::EnemyDetectionSystem enemyDetectionSystem;
+
+		
 
 
 		void OnScreenDefocus() override;

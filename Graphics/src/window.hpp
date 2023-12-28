@@ -7,7 +7,7 @@ namespace Ebony
 	class Window
 	{
 	public:
-		Window() {};
+		//Window() {};
 		void createWindow(int versionMajor, int versionMinor, int screenWidth, int screenHeight);
 		void createWindow(const char* windowName, int versionMajor, int versionMinor, int screenWidth, int screenHeight);
 

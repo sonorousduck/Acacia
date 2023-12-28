@@ -24,7 +24,7 @@ bool assets::save_binaryfile(const char* path, const assets::AssetFile& file)
 	outFile.write((const char*)&length, sizeof(uint32_t));
 
 	// Blob length
-	uint32_t blobLength = file.binaryBlob.size();
+	uint32_t blobLength = static_cast<uint32_t>(file.binaryBlob.size());
 	outFile.write((const char*)&blobLength, sizeof(uint32_t));
 
 	// Json stream

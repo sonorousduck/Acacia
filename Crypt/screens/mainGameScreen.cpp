@@ -69,6 +69,13 @@ namespace Crypt
 		
 		AddEntity(Crypt::PlayerHealth::Create(windowWidth));
 		
+		// Load Tiled map
+
+		CryptTiledProcessor tiledProcessor = CryptTiledProcessor();
+		tiledProcessor.CreateTranslationFunction();
+		tiledProcessor.ParseMap("../Crypt/maps/test/Crypt.tmj");
+
+
 		
 		AddNewEntities();
 	}
