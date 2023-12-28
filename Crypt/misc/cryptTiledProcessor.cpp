@@ -8,14 +8,13 @@ namespace Crypt
 	{
 		std::cout << "Test" << std::endl;
 		std::cout << "Probably didn't work!!" << std::endl;
-		/*tson::Tileson t;
-
+		tson::Tileson t;
 		std::unique_ptr<tson::Map> map = t.parse(fs::path(filepath));
 
 		if (map->getStatus() == tson::ParseStatus::OK)
 		{
-			tson::Layer* tileLayer = map->getLayer("Walls");
-			tson::Tileset* tileset = map->getTileset("GenericBackground");
+			tson::Layer* tileLayer = map->getLayer("Tile Layer 1");
+			tson::Tileset* tileset = map->getTileset("Test_SpriteSheet");
 				
 
 			for (auto& [pos, tileObject] : tileLayer->getTileObjects())
@@ -26,7 +25,7 @@ namespace Crypt
 			}
 
 
-		}*/
+		}
 	}
 
 	void CryptTiledProcessor::CreateTranslationFunction()

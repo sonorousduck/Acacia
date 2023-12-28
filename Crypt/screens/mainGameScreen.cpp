@@ -74,7 +74,7 @@ namespace Crypt
 
 		CryptTiledProcessor tiledProcessor = CryptTiledProcessor();
 		tiledProcessor.CreateTranslationFunction();
-		tiledProcessor.ParseMap("../Crypt/maps/test/Crypt.tmj");
+		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json");
 
 
 		
