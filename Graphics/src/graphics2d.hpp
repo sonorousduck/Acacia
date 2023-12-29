@@ -60,8 +60,8 @@ namespace Ebony
 
 		static void InitializeImgui();
 
-		static void Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f, bool isUI = false);
-		static void Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f, bool isUI = false);
+		static void Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f, bool isUI = false, bool isSpriteSheet = false, std::uint64_t layer = 0);
+		static void Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f, bool isUI = false, bool isSpriteSheet = false, std::uint64_t layer = 0);
 		static void DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI = false);
 		static void DrawInstanced(Shader& s, std::shared_ptr<Texture2D> texture, unsigned int VAO, std::uint32_t count);
 		static void DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget);

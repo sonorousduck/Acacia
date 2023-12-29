@@ -23,7 +23,7 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("BatAttack.tx", "bat_attack", "Crypt");
 		Ebony::ResourceManager::LoadTexture("Icon.tx", "icon", "Crypt");
 		Ebony::ResourceManager::LoadTexture("wood.tx", "wood", "Crypt");
-
+		Ebony::ResourceManager::LoadAtlas("Test_SpriteSheet.tx", "test_spritesheet", "Crypt", 4, 4);
 		Ebony::ResourceManager::LoadTexture("Panel.tx", "panel", "Crypt");
 		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "Crypt");
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire", "Crypt");

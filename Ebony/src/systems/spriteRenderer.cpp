@@ -12,7 +12,7 @@ namespace systems
 			auto transform = entity->getComponent<components::Transform>();
 
 
-			Ebony::Graphics2d::Draw(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, transform->rotationAxis, sprite->spriteColor, sprite->depth, sprite->isUI);
+			Ebony::Graphics2d::Draw(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, transform->rotationAxis, sprite->spriteColor, sprite->depth, sprite->isUI, sprite->isAtlas, sprite->layer);
 
 
 			if (debug && entity->hasComponent<components::Collider>())

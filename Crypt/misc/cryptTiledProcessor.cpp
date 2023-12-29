@@ -6,8 +6,6 @@ namespace Crypt
 
 	void CryptTiledProcessor::ParseMap(const char* filepath, std::function<void(entities::EntityPtr)> AddEntity)
 	{
-		std::cout << "Test" << std::endl;
-		std::cout << "Probably didn't work!!" << std::endl;
 		tson::Tileson t;
 		std::unique_ptr<tson::Map> map = t.parse(fs::path(filepath));
 
@@ -23,12 +21,15 @@ namespace Crypt
 				tson::Rect drawingRect = tileObject.getDrawingRect();
 				tson::Vector2f position = tileObject.getPosition();
 
+				// We have to do a bit of calculations to convert from the drawingRect way of storing it to the correct layer in the spritesheet
+
+
 				entities::EntityPtr renderedTile = std::make_shared<entities::Entity>();
 
 				auto test = tileset->getImage().u8string();
 
 				auto transform = std::make_unique<components::Transform>(glm::vec2(position.x, position.y), 0.0f, glm::vec2(drawingRect.width, drawingRect.height));
-				auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("wood"), Ebony::Colors::White, 0.05f);
+				auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("spritesheet"), Ebony::ResourceManager::GetTexture("test_spritesheet"), Ebony::Colors::White, 0.05f, false, 0, true);
 
 				renderedTile->addComponent(std::move(transform));
 				renderedTile->addComponent(std::move(sprite));

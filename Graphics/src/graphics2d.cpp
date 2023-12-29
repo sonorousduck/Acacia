@@ -230,55 +230,14 @@ namespace Ebony
 	}
 
 
-	void Graphics2d::Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI)
+	void Graphics2d::Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI, bool isSpriteSheet, std::uint64_t layer)
 	{
 		// This one will use a default shader that will already be loaded into graphics
 		Shader& s = ResourceManager::GetShader("default");
-		if (activeShaderId != s.ID)
-		{
-			s.use();
-			activeShaderId = s.ID;
-			//s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
-		}
-
-		glEnable(GL_TEXTURE_2D_ARRAY);
-
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
-		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
-		model = glm::rotate(model, glm::radians(rotate), rotationAxis); // then rotate
-		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
-		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
-
-		if (!isUI && hasCamera)
-		{
-			s.setMat4("view", mainCamera->GetViewMatrix());
-		}
-		else
-		{
-			s.setMat4("view", glm::mat4(1.0f));
-		}
-
-
-		s.setMat4("model", model);
-		s.setVec3("spriteColor", Colors::White.GetRGB());
-
-		if (activeTextureId != texture->ID)
-		{
-			glActiveTexture(GL_TEXTURE0);
-			texture->Bind();
-			activeTextureId = texture->ID;
-		}
-
-		glBindVertexArray(quadVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
-		glDisable(GL_TEXTURE_2D_ARRAY);
-
+		Draw(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
 	}
 
-	void Graphics2d::Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI)
+	void Graphics2d::Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI, bool isSpriteSheet, std::uint64_t layer)
 	{
 		if (activeShaderId != s.ID) 
 		{
@@ -286,6 +245,9 @@ namespace Ebony
 			activeShaderId = s.ID;
 			//s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
 		}
+
+		//glEnable(GL_TEXTURE_2D_ARRAY);
+
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
@@ -303,10 +265,19 @@ namespace Ebony
 			s.setMat4("view", glm::mat4(1.0f));
 		}
 
+		
+
+
 		s.setMat4("model", model);
 		s.setVec3("spriteColor", color.GetRGB());
-		//s.setVec3("spriteColor", Colors::White.GetRGB());
-		//s.setInt("spritesheet", texture.ID);
+
+		if (isSpriteSheet)
+		{
+			//s.setInt("spritesheet", texture->ID);
+			s.setInt("layer", static_cast<int>(layer));
+		}
+
+
 
 		if (activeTextureId != texture->ID)
 		{
@@ -320,6 +291,8 @@ namespace Ebony
 		glBindVertexArray(quadVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
+		//glDisable(GL_TEXTURE_2D_ARRAY);
+
 	}
 
 	void Graphics2d::DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI)
