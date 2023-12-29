@@ -74,7 +74,7 @@ namespace Crypt
 
 		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
 		
-		AddEntity(Crypt::PlayerHealth::Create(windowWidth));
+		AddEntity(Crypt::PlayerHealth::Create(player));
 		
 		// Load Tiled map
 

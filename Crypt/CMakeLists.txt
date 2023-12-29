@@ -94,6 +94,7 @@ set(ScriptHeaders
   scripts/suicideBatScript.hpp
   scripts/shootingBatScript.hpp
   scripts/healthBarUpdateScript.hpp
+  scripts/playerHealthUpdateScript.hpp
 )
 
 
