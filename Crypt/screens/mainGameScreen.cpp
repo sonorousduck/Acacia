@@ -59,6 +59,10 @@ namespace Crypt
 
 		spriteRenderer.debug = false;
 
+		CryptTiledProcessor tiledProcessor = CryptTiledProcessor();
+		tiledProcessor.CreateTranslationFunction();
+		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json", [=](entities::EntityPtr entity) {AddEntity(entity); });
+
 
 		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });
 
@@ -68,15 +72,13 @@ namespace Crypt
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
 
-		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(75.0f, 75.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
+		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
 		
 		AddEntity(Crypt::PlayerHealth::Create(windowWidth));
 		
 		// Load Tiled map
 
-		CryptTiledProcessor tiledProcessor = CryptTiledProcessor();
-		tiledProcessor.CreateTranslationFunction();
-		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json", [=](entities::EntityPtr entity) {AddEntity(entity); });
+
 
 
 		
@@ -90,7 +92,6 @@ namespace Crypt
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
 		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
-		uiRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST, true, false);
 		clearColor = Ebony::Colors::Black;
 
 		Ebony::Graphics2d::SetMainCamera(camera);
@@ -102,7 +103,7 @@ namespace Crypt
 	std::uint64_t MainGameScreen::Update(std::chrono::microseconds elapsedTime)
 	{
 		auto firstTime = std::chrono::system_clock::now();
-		Ebony::Graphics2d::mainCamera->Position = glm::vec3(Ebony::Graphics2d::mainCamera->Position.x + 0.01f, Ebony::Graphics2d::mainCamera->Position.y, Ebony::Graphics2d::mainCamera->Position.z);
+		//Ebony::Graphics2d::mainCamera->Position = glm::vec3(Ebony::Graphics2d::mainCamera->Position.x + 0.01f, Ebony::Graphics2d::mainCamera->Position.y, Ebony::Graphics2d::mainCamera->Position.z);
 
 		std::latch graphDone{ 1 };
 
@@ -207,7 +208,6 @@ namespace Crypt
 		Ebony::Graphics2d::UnbindRenderTarget(clearColor);
 
 		Ebony::Graphics2d::DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), mainRenderTarget);
-		//Ebony::Graphics2d::DrawRenderTarget(Ebony::ResourceManager::GetShader("screenTexture"), uiRenderTarget);
 
 	}
 

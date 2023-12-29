@@ -70,7 +70,6 @@ namespace Crypt
 		void OnScreenDefocus() override;
 		void OnScreenFocus() override;
 
-		Ebony::RenderTarget2D uiRenderTarget;
 		Ebony::RenderTarget2D mainRenderTarget;
 
 		std::uint64_t screen = Crypt::ScreenEnum::GAME;

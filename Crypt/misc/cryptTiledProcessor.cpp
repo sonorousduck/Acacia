@@ -22,14 +22,15 @@ namespace Crypt
 				tson::Vector2f position = tileObject.getPosition();
 
 				// We have to do a bit of calculations to convert from the drawingRect way of storing it to the correct layer in the spritesheet
+				int col = drawingRect.x / drawingRect.width;
+				int row = drawingRect.y / drawingRect.height;
 
+				int index = tileset->getColumns() * row + col;
 
 				entities::EntityPtr renderedTile = std::make_shared<entities::Entity>();
 
-				auto test = tileset->getImage().u8string();
-
 				auto transform = std::make_unique<components::Transform>(glm::vec2(position.x, position.y), 0.0f, glm::vec2(drawingRect.width, drawingRect.height));
-				auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("spritesheet"), Ebony::ResourceManager::GetTexture("test_spritesheet"), Ebony::Colors::White, 0.05f, false, 0, true);
+				auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("spritesheet"), Ebony::ResourceManager::GetTexture("test_spritesheet"), Ebony::Colors::White, 0.05f, false, index, true);
 
 				renderedTile->addComponent(std::move(transform));
 				renderedTile->addComponent(std::move(sprite));

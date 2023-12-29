@@ -33,12 +33,16 @@ namespace Crypt
 		{
 			entities::EntityPtr bat = std::make_shared<entities::Entity>();
 
+
 			float detectionRange = 300.0f;
 			float movementRange = 500.0f;
-			float movementSpeed = 300.0f;
+			float movementSpeed = 200.0f;
 			glm::vec2 offset = { 200.0f, 50.0f };
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("bat"), Ebony::Colors::White, 0.11f);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("bat"), Ebony::Colors::White, 0.10f);
+			scale *= glm::vec2(sprite->texture->Width, sprite->texture->Height);
+
+
 			components::Subcollider aabbcollider = components::Subcollider(scale / glm::vec2(2.0f, 2.0f), scale, true, true);
 
 			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
