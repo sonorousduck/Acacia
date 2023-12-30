@@ -19,14 +19,14 @@ namespace Crypt
 
 	void MainMenuScreen::Start()
 	{
-		Shader& s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
+		std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
 
 		Ebony::Graphics2d::InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
 
-		s.use();
-		s.setInt("image", 0);
-		s.setMat4("projection", Ebony::Graphics2d::projection);
+		s->use();
+		s->setInt("image", 0);
+		s->setMat4("projection", Ebony::Graphics2d::projection);
 
 		physicsSystem = systems::PhysicsSystem();
 		spriteRenderer = systems::SpriteRenderer();

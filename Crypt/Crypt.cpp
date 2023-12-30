@@ -115,7 +115,7 @@ namespace Ebony {
 		{
 			Ebony::Graphics2d::BeginDraw(clearColor);
 			currentScreen->Draw(elapsedTime);
-
+			Ebony::Graphics2d::DrawFromQueue();
 
 			Application::Draw(elapsedTime);
 			//Ebony::Graphics2d::EndImgui();
@@ -149,23 +149,23 @@ namespace Ebony {
 			Init();
 			LoadContent();
 
-			Shader& s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
+			std::shared_ptr<Shader> s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
 
-			s1.use();
-			s1.setInt("screenTexture", 0);
+			s1->use();
+			s1->setInt("screenTexture", 0);
 
 
-			Shader& s = Ebony::ResourceManager::LoadShader("shaders/spritesheet3d.vert", "shaders/spritesheet3d.frag", "spritesheet");
+			std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/spritesheet3d.vert", "shaders/spritesheet3d.frag", "spritesheet");
 
-			s.use();
-			s.setInt("spritesheet", 0);
-			s.setMat4("projection", Ebony::Graphics2d::projection);
+			s->use();
+			s->setInt("spritesheet", 0);
+			s->setMat4("projection", Ebony::Graphics2d::projection);
 
-			Shader& s2 = Ebony::ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
+			std::shared_ptr<Shader> s2 = Ebony::ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
 
-			s2.use();
-			s2.setInt("particleTexture", 0);
-			s2.setMat4("projection", Ebony::Graphics2d::projection);
+			s2->use();
+			s2->setInt("particleTexture", 0);
+			s2->setMat4("projection", Ebony::Graphics2d::projection);
 
 
 

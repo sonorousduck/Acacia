@@ -104,7 +104,7 @@ namespace BrickBreaker
 		lifePointSystem = systems::LifePointSystem();
 		cppScriptingSystem = systems::CppScriptingSystem();
 
-		Shader& s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
+		std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
 		//spriteFont = std::make_shared<Ebony::SpriteFont>();
 
@@ -113,9 +113,9 @@ namespace BrickBreaker
 		//spriteFont->LoadFont("../Graphics/fonts/super-indie-font/SuperIndie.ttf");
 
 
-		s.use();
-		s.setInt("image", 0);
-		s.setMat4("projection", Ebony::Graphics2d::projection);
+		s->use();
+		s->setInt("image", 0);
+		s->setMat4("projection", Ebony::Graphics2d::projection);
 
 		std::unique_ptr<components::ControllerInput> gameplayControllerInputComponent = std::make_unique<components::ControllerInput>(0);
 		std::unique_ptr<components::KeyboardInput> gameplayKeyboardInputComponent = std::make_unique<components::KeyboardInput>();

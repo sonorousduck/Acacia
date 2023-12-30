@@ -106,7 +106,7 @@ struct Particle
 	Particle(std::shared_ptr<Texture2D> texture, std::chrono::microseconds lifetime, std::chrono::microseconds alive, glm::vec2 position, glm::vec2 direction, glm::vec2 velocity) :
 		texture(texture), lifetime(lifetime), alive(alive), position(position), direction(direction), velocity(velocity) {};
 
-	std::optional<Shader> shader;
+	std::optional<std::shared_ptr<Shader>> shader;
 
 	// Allows for fade in/fade out, etc.
 	float startAlpha{ 1.0f };
@@ -349,7 +349,7 @@ namespace components
 		};
 
 		// Allow the developer to set a shader, if desired. If none is found, then a default particle shader will be used
-		std::optional<Shader> shader;
+		std::optional<std::shared_ptr<Shader>> shader;
 
 		// This defines the base velocity that each particle will be generated around
 		glm::vec2 velocity{ 0.0f };

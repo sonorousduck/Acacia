@@ -32,16 +32,16 @@ namespace Crypt
 
 	void MainGameScreen::Start()
 	{
-		Shader& s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
+		std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
 
 		Ebony::Graphics2d::InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
 		this->clearColor = Ebony::Colors::CornflowerBlue;
 
 
-		s.use();
-		s.setInt("image", 0);
-		s.setMat4("projection", Ebony::Graphics2d::projection);
+		s->use();
+		s->setInt("image", 0);
+		s->setMat4("projection", Ebony::Graphics2d::projection);
 
 		physicsSystem = systems::PhysicsSystem();
 		spriteRenderer = systems::SpriteRenderer();
@@ -202,8 +202,8 @@ namespace Crypt
 
 		// Draw things!
 		spriteRenderer.Update();
-		fontRenderer.Update();
 		animationRenderer.Update();
+		fontRenderer.Update();
 
 		Ebony::Graphics2d::UnbindRenderTarget(clearColor);
 

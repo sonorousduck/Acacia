@@ -200,8 +200,8 @@ namespace Crypt
 
 			// Debugging only
 			// ===================================================================
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Colors::White);
-			player->addComponent(std::move(sprite));
+			//auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Colors::White);
+			//player->addComponent(std::move(sprite));
 
 
 			// ===================================================================

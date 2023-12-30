@@ -22,7 +22,7 @@ namespace Crypt
 			entity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 300.0f, 100.0f }, 0.0f, glm::vec2{ 100.0f, 50.0f })));
 
 			entity->addComponent(std::move(textComponent));
-			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Color(1.0f, 1.0f, 1.0f, 1.0f), 0.1f, true));
+			//entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Color(1.0f, 1.0f, 1.0f, 1.0f), 0.1f, true));
 			entity->addComponent(std::move(script));
 
 

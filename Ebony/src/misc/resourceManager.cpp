@@ -12,20 +12,20 @@
 namespace Ebony
 {
 	std::unordered_map<std::string, std::shared_ptr<Texture2D>> ResourceManager::Textures;
-	std::unordered_map<std::string, Shader> ResourceManager::Shaders;
+	std::unordered_map<std::string, std::shared_ptr<Shader>> ResourceManager::Shaders;
 	std::unordered_map<std::string, Mix_Chunk*> ResourceManager::SoundEffectBuffers;
 	std::unordered_map<std::string, Mix_Music*> ResourceManager::MusicSources;
 	std::unordered_map<std::string, std::shared_ptr<SpriteFont>> ResourceManager::Fonts;
 
 	std::atomic_uint16_t ResourceManager::tasksRemaining{ 0 };
 
-	Shader& ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name)
+	std::shared_ptr<Shader> ResourceManager::LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name)
 	{
-		Shaders[name] = Shader("../Graphics/" + vShaderFile, "../Graphics/" + fShaderFile);
+		Shaders[name] = std::make_shared<Shader>("../Graphics/" + vShaderFile, "../Graphics/" + fShaderFile);
 		return Shaders[name];
 	}
 
-	Shader& ResourceManager::GetShader(const char* name)
+	std::shared_ptr<Shader> ResourceManager::GetShader(const char* name)
 	{
 		return Shaders[name];
 	}
@@ -391,7 +391,7 @@ namespace Ebony
 	{
 		for (auto& iter : Shaders)
 		{
-			glDeleteProgram(iter.second.ID);
+			glDeleteProgram(iter.second->ID);
 		}
 
 		for (auto& iter : Textures)

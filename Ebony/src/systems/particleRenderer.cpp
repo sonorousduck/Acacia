@@ -13,7 +13,7 @@ namespace systems
 
 			if (particleEffect->particleCount > 0)
 			{
-				Shader& s = Ebony::ResourceManager::GetShader("defaultParticle");
+				std::shared_ptr<Shader> s = Ebony::ResourceManager::GetShader("defaultParticle");
 
 				if (particleEffect->shader.has_value())
 				{

@@ -9,7 +9,7 @@ Model::Model(std::string const& path)
 
 
 
-void Model::Draw(Shader& shader)
+void Model::Draw(std::shared_ptr<Shader> shader)
 {
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{

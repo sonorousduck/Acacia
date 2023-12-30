@@ -22,8 +22,8 @@ namespace Ebony
 	public:
 
 
-		static Shader& LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name);
-		static Shader& GetShader(const char* name);
+		static std::shared_ptr<Shader> LoadShader(const std::string& vShaderFile, const std::string& fShaderFile, const char* name);
+		static std::shared_ptr<Shader> GetShader(const char* name);
 		static void UnloadShader(const char* name);
 
 
@@ -63,13 +63,13 @@ namespace Ebony
 		// private constructor, that is we do not want any actual resource manager objects. Its members and functions should be publicly available (static).
 		ResourceManager() {}
 
-		//static Shader& loadShaderFromFile();
+		//static std::shared_ptr<Shader> loadShaderFromFile();
 
 		static std::shared_ptr<Texture2D> loadTextureFromFile(const std::string& path);
 		static std::shared_ptr<Texture2D> loadAtlasFromFile(char const* path, std::uint16_t tilesX, std::uint16_t tilesY);
 		static std::shared_ptr<Texture2D> loadAtlasFromFileAs3D(const std::string& path, std::uint16_t tilesX, std::uint16_t tilesY);
 
-		static std::unordered_map<std::string, Shader> Shaders;
+		static std::unordered_map<std::string, std::shared_ptr<Shader>> Shaders;
 		static std::unordered_map<std::string, std::shared_ptr<Texture2D>> Textures;
 		static std::unordered_map<std::string, Mix_Chunk*> SoundEffectBuffers;
 		static std::unordered_map<std::string, Mix_Music*> MusicSources;

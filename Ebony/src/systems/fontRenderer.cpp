@@ -23,7 +23,7 @@ namespace systems
 				Ebony::Graphics2d::DrawString(Ebony::ResourceManager::GetShader("text"), text->spriteFont, text->text, transform->position + glm::vec2(0.0f, 1.0f), text->scale, transform->scale, transform->rotation, transform->rotationAxis, text->outlineColor, text->color, text->layerDepth, text->isUI); // Down
 			}
 
-			Ebony::Graphics2d::DrawString(Ebony::ResourceManager::GetShader("text"), text->spriteFont, text->text, transform->position, text->scale, transform->scale, transform->rotation, transform->rotationAxis, text->color, text->outlineColor, text->layerDepth, text->isUI);
+			Ebony::Graphics2d::DrawString(Ebony::ResourceManager::GetShader("text"), text->spriteFont, text->text, transform->position, text->scale, transform->scale, transform->rotation, transform->rotationAxis, text->color, text->outlineColor, text->layerDepth + 0.01f, text->isUI);
 
 		}
 		glEnable(GL_DEPTH_TEST);

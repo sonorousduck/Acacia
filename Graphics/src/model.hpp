@@ -22,7 +22,7 @@ public:
 
 	Model(std::string const& path);
 
-	void Draw(Shader& shader);
+	void Draw(std::shared_ptr<Shader> shader);
 
 private:
 

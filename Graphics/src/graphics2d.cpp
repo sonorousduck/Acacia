@@ -26,10 +26,11 @@ namespace Ebony
 	const char* Graphics2d::windowName;
 	int Graphics2d::screenWidth;
 	int Graphics2d::screenHeight;
+	int Graphics2d::bufferDrawing{ 30 }; // This is how much more of the screen to draw, since you will see the updating screen as it goes out of view on the ope and left
 	
 	ImGuiIO Graphics2d::io;
 	glm::mat4 Graphics2d::projection;
-
+	std::priority_queue<DrawableObject, std::vector<DrawableObject>, CompareDrawableDepth> Graphics2d::renderPriorityQueue{};
 
 	void Graphics2d::InitializeImgui()
 	{
@@ -230,120 +231,99 @@ namespace Ebony
 	}
 
 
-	void Graphics2d::Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI, bool isSpriteSheet, std::uint64_t layer)
+	void Graphics2d::Draw(std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI, bool isSpriteSheet, std::uint64_t layer)
 	{
 		// This one will use a default shader that will already be loaded into graphics
-		Shader& s = ResourceManager::GetShader("default");
-		Draw(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
-	}
+		std::shared_ptr<Shader> s = ResourceManager::GetShader("default");
 
-	void Graphics2d::Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI, bool isSpriteSheet, std::uint64_t layer)
-	{
-		if (activeShaderId != s.ID) 
+		// Check to make sure it can even see if for drawing
+
+		if (Graphics2d::hasCamera)
 		{
-			s.use();
-			activeShaderId = s.ID;
-			//s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
-		}
-
-		//glEnable(GL_TEXTURE_2D_ARRAY);
-
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
-		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
-		model = glm::rotate(model, glm::radians(rotate), rotationAxis); // then rotate
-		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
-		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
-
-		if (!isUI && hasCamera)
-		{
-			s.setMat4("view", mainCamera->GetViewMatrix());
-		}
-		else
-		{
-			s.setMat4("view", glm::mat4(1.0f));
-		}
-
-		
-
-
-		s.setMat4("model", model);
-		s.setVec3("spriteColor", color.GetRGB());
-
-		if (isSpriteSheet)
-		{
-			//s.setInt("spritesheet", texture->ID);
-			s.setInt("layer", static_cast<int>(layer));
+			if (Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
+				Graphics2d::mainCamera->Position.y - bufferDrawing < position.y && Graphics2d::mainCamera->Position.y + screenHeight > position.y)
+			{
+				DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
+				Graphics2d::renderPriorityQueue.push(drawableObject);
+			}
 		}
 
 
-
-		if (activeTextureId != texture->ID)
-		{
-			glActiveTexture(GL_TEXTURE0);
-			texture->Bind();
-			activeTextureId = texture->ID;
-		}
-
-
-
-		glBindVertexArray(quadVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
-		//glDisable(GL_TEXTURE_2D_ARRAY);
 
 	}
 
-	void Graphics2d::DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI)
+	void Graphics2d::Draw(std::shared_ptr<Shader> s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI, bool isSpriteSheet, std::uint64_t layer)
 	{
-		if (activeShaderId != s.ID)
+		if (Graphics2d::hasCamera)
 		{
-			s.use();
-			activeShaderId = s.ID;
-			//s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
+			if (Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
+				Graphics2d::mainCamera->Position.y - bufferDrawing < position.y && Graphics2d::mainCamera->Position.y + screenHeight > position.y)
+			{
+				DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
+				Graphics2d::renderPriorityQueue.push(drawableObject);
+			}
 		}
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+	}
 
-		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
-		model = glm::rotate(model, glm::radians(rotate), rotationAxis); // then rotate
-		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
-		model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
-
-		if (!isUI && hasCamera)
+	void Graphics2d::DrawAnimation(std::shared_ptr<Shader> s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI)
+	{
+		if (Graphics2d::hasCamera)
 		{
-			s.setMat4("view", mainCamera->GetViewMatrix());
-		}
-		else
-		{
-			s.setMat4("view", glm::mat4(1.0f));
-		}
-
-		s.setMat4("model", model);
-		s.setInt("layer", layer);
-
-		if (activeTextureId != texture->ID)
-		{
-			glActiveTexture(GL_TEXTURE0);
-			texture->Bind();
-			activeTextureId = texture->ID;
+			if (Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
+				Graphics2d::mainCamera->Position.y - bufferDrawing < position.y && Graphics2d::mainCamera->Position.y + screenHeight > position.y)
+			{
+				DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, true, layer);
+				Graphics2d::renderPriorityQueue.push(drawableObject);
+			}
 		}
 
+		//if (activeShaderId != s->ID)
+		//{
+		//	s->use();
+		//	activeShaderId = s->ID;
+		//	//s->setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
+		//}
+		//glm::mat4 model = glm::mat4(1.0f);
+		//model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+		//model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
+		//model = glm::rotate(model, glm::radians(rotate), rotationAxis); // then rotate
+		//model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
+		//model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
+
+		//if (!isUI && hasCamera)
+		//{
+		//	s->setMat4("view", mainCamera->GetViewMatrix());
+		//}
+		//else
+		//{
+		//	s->setMat4("view", glm::mat4(1.0f));
+		//}
+
+		//s->setMat4("model", model);
+		//s->setInt("layer", layer);
+
+		//if (activeTextureId != texture->ID)
+		//{
+		//	glActiveTexture(GL_TEXTURE0);
+		//	texture->Bind();
+		//	activeTextureId = texture->ID;
+		//}
 
 
-		glBindVertexArray(quadVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);
+
+		//glBindVertexArray(quadVAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
+		//glBindVertexArray(0);
 	}
 
 
-	void Graphics2d::DrawInstanced(Shader& s, std::shared_ptr<Texture2D> texture, unsigned int VAO, std::uint32_t count)
+	void Graphics2d::DrawInstanced(std::shared_ptr<Shader> s, std::shared_ptr<Texture2D> texture, unsigned int VAO, std::uint32_t count)
 	{
-		if (activeShaderId != s.ID)
+		if (activeShaderId != s->ID)
 		{
-			s.use();
-			activeShaderId = s.ID;
+			s->use();
+			activeShaderId = s->ID;
 		}
 		if (activeTextureId != texture->ID)
 		{
@@ -354,11 +334,11 @@ namespace Ebony
 
 		if (hasCamera)
 		{
-			s.setMat4("view", mainCamera->GetViewMatrix());
+			s->setMat4("view", mainCamera->GetViewMatrix());
 		}
 		else
 		{
-			s.setMat4("view", glm::mat4(1.0f));
+			s->setMat4("view", glm::mat4(1.0f));
 		}
 
 		glBindVertexArray(VAO);
@@ -367,93 +347,163 @@ namespace Ebony
 		glBindVertexArray(0);
 	}
 
-
-	void Graphics2d::DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget)
+	void Graphics2d::DrawFromQueue()
 	{
-		s.use();
+		while (Graphics2d::renderPriorityQueue.size() > 0)
+		{
+			DrawableObject drawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::renderPriorityQueue.pop();
+
+			if (activeShaderId != drawable.s->ID)
+			{
+				drawable.s->use();
+				activeShaderId = drawable.s->ID;
+				//s->setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
+			}
+
+			//glEnable(GL_TEXTURE_2D_ARRAY);
+
+			if (drawable.isString)
+			{
+				drawable.s->setVec3("textColor", drawable.color.GetRGB());
+
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(drawable.position, drawable.depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+				model = glm::translate(model, glm::vec3(0.5f * drawable.size.x, 0.5f * drawable.size.y, 0.0f)); // move origin of rotation to center of quad
+				model = glm::rotate(model, glm::radians(drawable.rotate), drawable.rotationAxis); // then rotate
+				model = glm::translate(model, glm::vec3(-0.5f * drawable.size.x, -0.5f * drawable.size.y, 0.0f)); // move origin back
+				model = glm::scale(model, glm::vec3(drawable.size, 1.0f)); // last scale
+
+				if (!drawable.isUI && hasCamera)
+				{
+					drawable.s->setMat4("view", mainCamera->GetViewMatrix());
+				}
+				else
+				{
+					drawable.s->setMat4("view", glm::mat4(1.0f));
+				}
+
+				drawable.s->setMat4("model", model);
+
+				glActiveTexture(GL_TEXTURE0);
+				glBindVertexArray(textVAO);
+
+				// Iterate through all characters
+				std::string::const_iterator c;
+				for (c = drawable.text.begin(); c != drawable.text.end(); c++)
+				{
+					Character ch = drawable.spriteFont->characters[*c];
+
+					float xpos = drawable.position.x + ch.Bearing.x * drawable.size.x;
+					float ypos = drawable.position.y - (ch.Size.y - ch.Bearing.y) * drawable.size.y;
+
+					float w = ch.Size.x * drawable.size.x;
+					float h = ch.Size.y * drawable.size.y;
+
+					// Update VBO for each character
+					float vertices[6][4] = {
+						{ xpos,         ypos,					0.0f, 0.0f  },
+						{ xpos,         ypos + h,				0.0f, 1.0f  },
+						{ xpos + w,     ypos + h,				1.0f, 1.0f  },
+						{ xpos,         ypos,					0.0f, 0.0f  },
+						{ xpos + w,     ypos + h,				1.0f, 1.0f  },
+						{ xpos + w,     ypos,					1.0f, 0.0f  }
+					};
+
+					// Render glyph texture over quad
+					glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+					// Update content of VBO memory
+					glBindBuffer(GL_ARRAY_BUFFER, textVBO);
+					glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+					glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+					// Render Quad
+					glDrawArrays(GL_TRIANGLES, 0, 6);
+
+					// Now advance cursors for next glyph (Note that advance number is 1/64 pixels)
+					drawable.position.x += (ch.Advance >> 6) * drawable.size.x; // Bitshift by 6 to get value in pixels (2^6 = 64)
+				}
+
+				glBindVertexArray(0);
+				glBindTexture(GL_TEXTURE_2D, 0);
+			}
+			else if (drawable.isInstanced)
+			{
+
+			}
+			else
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(drawable.position, drawable.depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+				model = glm::translate(model, glm::vec3(0.5f * drawable.size.x, 0.5f * drawable.size.y, 0.0f)); // move origin of rotation to center of quad
+				model = glm::rotate(model, glm::radians(drawable.rotate), drawable.rotationAxis); // then rotate
+				model = glm::translate(model, glm::vec3(-0.5f * drawable.size.x, -0.5f * drawable.size.y, 0.0f)); // move origin back
+				model = glm::scale(model, glm::vec3(drawable.size, 1.0f)); // last scale
+
+				if (!drawable.isUI && hasCamera)
+				{
+					drawable.s->setMat4("view", mainCamera->GetViewMatrix());
+				}
+				else
+				{
+					drawable.s->setMat4("view", glm::mat4(1.0f));
+				}
+
+				drawable.s->setMat4("model", model);
+				drawable.s->setVec3("spriteColor", drawable.color.GetRGB());
+
+				if (drawable.isSpriteSheet)
+				{
+					//s->setInt("spritesheet", texture->ID);
+					drawable.s->setInt("layer", static_cast<int>(drawable.layer));
+				}
+
+
+
+				if (activeTextureId != drawable.texture->ID)
+				{
+					glActiveTexture(GL_TEXTURE0);
+					drawable.texture->Bind();
+					activeTextureId = drawable.texture->ID;
+				}
+
+
+
+				glBindVertexArray(quadVAO);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+				glBindVertexArray(0);
+			}
+			
+			//glDisable(GL_TEXTURE_2D_ARRAY);
+		}
+	}
+
+	void Graphics2d::DrawRenderTarget(std::shared_ptr<Shader> s, RenderTarget2D& renderTarget)
+	{
+		s->use();
 		glBindVertexArray(quadRenderTarget);
 		glBindTexture(GL_TEXTURE_2D, renderTarget.GetTextureColorBuffer());
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 	}
 
-	void Graphics2d::DrawString(Shader& s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, glm::vec2 transformScale, float rotate, glm::vec3 rotationAxis, Color color, Color outlineColor, float depth, bool isUI)
+	void Graphics2d::DrawString(std::shared_ptr<Shader> s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, glm::vec2 transformScale, float rotate, glm::vec3 rotationAxis, Color color, Color outlineColor, float depth, bool isUI)
 	{
-		if (activeShaderId != s.ID)
-		{
-			s.use();
-			activeShaderId = s.ID;
-			//s.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
-
-		}
-
-		if (!isUI && hasCamera)
-		{
-			s.setMat4("view", mainCamera->GetViewMatrix());
-		}
-		else
-		{
-			s.setMat4("view", glm::mat4(1.0f));
-		}
-
-
-		s.setVec3("textColor", color.GetRGB());
-		//s.setVec3("outlineColor", outlineColor.GetRGB());
-		//s.setFloat("depth", depth);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindVertexArray(textVAO);
-
-		// Iterate through all characters
-		std::string::const_iterator c;
-		for (c = text.begin(); c != text.end(); c++)
-		{
-			Character ch = spriteFont->characters[*c];
-
-			float xpos = position.x + ch.Bearing.x * size.x;
-			float ypos = position.y - (ch.Size.y - ch.Bearing.y) * size.y;
-
-			float w = ch.Size.x * size.x;
-			float h = ch.Size.y * size.y;
-
-			// Update VBO for each character
-			float vertices[6][4] = {
-				{ xpos,         ypos,					0.0f, 0.0f  },
-				{ xpos,         ypos + h,				0.0f, 1.0f  },
-				{ xpos + w,     ypos + h,				1.0f, 1.0f  },
-				{ xpos,         ypos,					0.0f, 0.0f  },
-				{ xpos + w,     ypos + h,				1.0f, 1.0f  },
-				{ xpos + w,     ypos,					1.0f, 0.0f  }
-			};
-
-			// Render glyph texture over quad
-			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-			// Update content of VBO memory
-			glBindBuffer(GL_ARRAY_BUFFER, textVBO);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-			// Render Quad
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-
-			// Now advance cursors for next glyph (Note that advance number is 1/64 pixels)
-			position.x += (ch.Advance >> 6) * size.x; // Bitshift by 6 to get value in pixels (2^6 = 64)
-		}
-
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
+		DrawableObject drawableObject = DrawableObject(s, nullptr, position, size, rotate, rotationAxis, color, depth, isUI, true, 0, true, text, spriteFont, false);
+		Graphics2d::renderPriorityQueue.push(drawableObject);
 	}
 
-	void Graphics2d::InitializeTextDrawing(Shader& textShader)
+	void Graphics2d::InitializeTextDrawing(std::shared_ptr<Shader> textShader)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		// TODO: This should change to use the actual window sizes
 		//glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(screenWidth), 0.0f, static_cast<float>(screenHeight));
-		textShader.use();
-		textShader.setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
+		textShader->use();
+		textShader->setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
 
 		glGenVertexArrays(1, &textVAO);
 		glGenBuffers(1, &textVBO);

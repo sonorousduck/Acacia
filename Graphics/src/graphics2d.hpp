@@ -34,11 +34,77 @@
 #include "colors.hpp"
 #include "renderTarget2d.hpp"
 #include "../Ebony/src/misc/resourceManager.hpp"
+#include <vector>
+#include <queue>
 
 #include <memory>
 
 namespace Ebony
 {
+	class DrawableObject
+	{
+	public:
+		DrawableObject(
+			std::shared_ptr<Shader> s, 
+			std::shared_ptr<Texture2D> texture, 
+			glm::vec2 position, 
+			glm::vec2 size, 
+			float rotate, 
+			glm::vec3 rotationAxis,
+			Color color, 
+			float depth, 
+			bool isUI, 
+			bool isSpriteSheet, 
+			std::uint64_t layer, 
+			bool isString = false, 
+			std::string text = "",
+			std::shared_ptr<SpriteFont> spriteFont = nullptr,
+			bool isInstanced = false
+		) :
+			s(s),
+			texture(texture),
+			position(position),
+			size(size),
+			rotate(rotate),
+			rotationAxis(rotationAxis),
+			color(color),
+			depth(depth),
+			isUI(isUI),
+			isSpriteSheet(isSpriteSheet),
+			layer(layer),
+			isString(isString),
+			text(text),
+			spriteFont(spriteFont),
+			isInstanced(isInstanced)
+		{}
+	
+		std::shared_ptr<Shader> s;
+		std::shared_ptr<Texture2D> texture;
+		glm::vec2 position;
+		glm::vec2 size;
+		float rotate;
+		glm::vec3 rotationAxis;
+		Ebony::Color color;
+		float depth;
+		bool isUI;
+		bool isSpriteSheet;
+		std::uint64_t layer;
+		bool isString;
+		std::shared_ptr<SpriteFont> spriteFont;
+		bool isInstanced;
+		std::string text;
+	};
+
+	struct CompareDrawableDepth
+	{
+		bool operator()(const DrawableObject& drawable1, const DrawableObject& drawable2)
+		{
+			return drawable1.depth > drawable2.depth;
+		}
+	};
+
+
+
 	class Graphics2d : Graphics
 	{
 	public:
@@ -46,11 +112,11 @@ namespace Ebony
 
 		static void Initialize(const char* windowName, int width, int height);
 		static void Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion);
-		static void InitializeTextDrawing(Shader& textShader);
+		static void InitializeTextDrawing(std::shared_ptr<Shader> textShader);
 
 		//// Need to load fonts as well
 
-		static void DrawString(Shader& s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, glm::vec2 transformScale, float rotate, glm::vec3 rotationAxis, Color color, Color outlineColor, float depth = 0.0f, bool isUI = false);
+		static void DrawString(std::shared_ptr<Shader> s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, glm::vec2 transformScale, float rotate, glm::vec3 rotationAxis, Color color, Color outlineColor, float depth = 0.0f, bool isUI = false);
 		//void DrawString(SpriteFont& spriteFont, std::string text, float x, float y, float scale, glm::vec3 color);
 
 		static void SetMainCamera(std::shared_ptr<Camera> camera);
@@ -60,11 +126,15 @@ namespace Ebony
 
 		static void InitializeImgui();
 
-		static void Draw(const std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f, bool isUI = false, bool isSpriteSheet = false, std::uint64_t layer = 0);
-		static void Draw(Shader& s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f, bool isUI = false, bool isSpriteSheet = false, std::uint64_t layer = 0);
-		static void DrawAnimation(Shader& s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI = false);
-		static void DrawInstanced(Shader& s, std::shared_ptr<Texture2D> texture, unsigned int VAO, std::uint32_t count);
-		static void DrawRenderTarget(Shader& s, RenderTarget2D& renderTarget);
+		static void Draw(std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f, bool isUI = false, bool isSpriteSheet = false, std::uint64_t layer = 0);
+		static void Draw(std::shared_ptr<Shader> s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth = 0.0f, bool isUI = false, bool isSpriteSheet = false, std::uint64_t layer = 0);
+		
+		static void DrawAnimation(std::shared_ptr<Shader> s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI = false);
+		static void DrawInstanced(std::shared_ptr<Shader> s, std::shared_ptr<Texture2D> texture, unsigned int VAO, std::uint32_t count);
+		static void DrawRenderTarget(std::shared_ptr<Shader> s, RenderTarget2D& renderTarget);
+
+		static void DrawFromQueue();
+
 
 		static void BeginImgui();
 		static void DrawWindow(std::string_view windowName);
@@ -112,6 +182,9 @@ namespace Ebony
 		static unsigned int instancedVAO;
 		static unsigned int quadRenderTarget;
 		static unsigned int particlePositionBuffer, particleColorBuffer;
+		
+		static std::priority_queue<DrawableObject, std::vector<DrawableObject>, CompareDrawableDepth> renderPriorityQueue;
+ 
 
 		static ImGuiIO io;
 
@@ -124,6 +197,8 @@ namespace Ebony
 		static void SetupCallback();
 
 		static bool hasCamera;
+
+		static int bufferDrawing;
 
 
 	};
