@@ -27,7 +27,7 @@ namespace Crypt
 	class BulletPrefab
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, glm::vec2 direction, float speed, components::BULLET_TYPE bulletType, std::uint8_t strength, const char* texture, float timeUntilDestruction = 3.0f, std::uint16_t collisionLayer = Crypt::CollisionLayers::PLAYER_BULLET, float transformModification = 0.0f)
+		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, glm::vec2 direction, float speed, components::BULLET_TYPE bulletType, std::uint8_t strength, const char* texture, float timeUntilDestruction = 3.0f, std::uint16_t collisionLayer = Crypt::CollisionLayers::PLAYER_BULLET, std::uint16_t layersToCollideWith = Crypt::CollisionLayers::ENEMY | Crypt::CollisionLayers::GROUND, float transformModification = 0.0f)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
@@ -49,7 +49,7 @@ namespace Crypt
 				};
 
 
-			auto collider = std::make_unique<components::Collider>(aabbcollider, collisionLayer, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, collisionLayer, layersToCollideWith, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, ((glm::atan(direction.y, direction.x)) / (2 * glm::pi<float>()) * 360.0f) + transformModification, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 			rigidbody->setVelocity(direction * speed);

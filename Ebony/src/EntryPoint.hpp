@@ -1,5 +1,7 @@
 #pragma once
 
+// This is an error I believe spdlog is throwing.
+#define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
 
 
 extern Ebony::Application* Ebony::CreateApplication();

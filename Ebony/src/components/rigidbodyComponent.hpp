@@ -26,8 +26,8 @@ namespace components
 		{}
 
 
-		glm::vec2 getVelocity() { return this->velocity; }
-		glm::vec2 getAcceleration() { return this->acceleration; }
+		glm::vec2 getVelocity() const { return this->velocity; }
+		glm::vec2 getAcceleration() const { return this->acceleration; }
 		
 		void setVelocity(glm::vec2 value) { this->velocity = value; }
 		void setAcceleration(glm::vec2 value) { this->acceleration = value; }
@@ -35,7 +35,7 @@ namespace components
 		// Enables gravity calculations
 		bool usesGravity = false;
 
-		bool checkHasMoved() { return hasMoved; }
+		bool checkHasMoved() const { return hasMoved; }
 		void toggleHasMoved() { this->hasMoved = !this->hasMoved; }
 
 

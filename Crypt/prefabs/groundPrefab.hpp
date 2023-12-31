@@ -22,14 +22,14 @@ namespace Crypt
 	class Ground
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, int windowWidth)
+		static entities::EntityPtr Create(glm::vec2 startTransform, float windowWidth)
 		{
 			entities::EntityPtr ground = std::make_shared<entities::Entity>();
 
 
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Colors::White);
 			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(windowWidth / 2.0f, 5.0f), glm::vec2(windowWidth, 10.0f), true, true);
-			auto collider = std::make_unique<components::Collider>(aabbcollider, CollisionLayers::GROUND | CollisionLayers::ENEMY_BULLET | CollisionLayers::PLAYER_BULLET, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, CollisionLayers::GROUND, CollisionLayers::ENEMY_BULLET | CollisionLayers::PLAYER_BULLET | CollisionLayers::ENEMY | CollisionLayers::PLAYER, true);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(windowWidth, 100.0f));
 			auto rigidbody = std::make_unique<components::RigidBody>();
 

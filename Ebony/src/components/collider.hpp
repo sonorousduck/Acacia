@@ -11,16 +11,26 @@ namespace components
 	class Collider : public PolymorphicComparable<Component, Collider>
 	{
 	public:
-		Collider(Subcollider aabbCollider, std::uint16_t layer, bool staticCollider, bool collidesWithOwnLayer = true) : aabbCollider(aabbCollider), layer(layer), isStatic(staticCollider), collidesWithOwnLayer(collidesWithOwnLayer) {};
+		Collider(Subcollider aabbCollider, std::uint16_t layer, bool staticCollider) : aabbCollider(aabbCollider), layer(layer), layersToCollideWith(layer), isStatic(staticCollider) {};
+		Collider(Subcollider aabbCollider, std::uint16_t layer, std::uint16_t layersToCollideWith, bool staticCollider) : aabbCollider(aabbCollider), layer(layer), layersToCollideWith(layersToCollideWith), isStatic(staticCollider) {};
 
-		Collider(Subcollider aabbCollider, std::vector<Subcollider> subcolliders, std::uint16_t layer, bool staticCollider, bool collidesWithOwnLayer = true) : 
+		Collider(Subcollider aabbCollider, std::vector<Subcollider> subcolliders, std::uint16_t layer, bool staticCollider) : 
 			aabbCollider(aabbCollider), 
 			subcolliders(subcolliders), 
 			preciseSubcolliderDetection(true), 
 			layer(layer),
-			isStatic(staticCollider),
-			collidesWithOwnLayer(collidesWithOwnLayer) 
+			layersToCollideWith(layer),
+			isStatic(staticCollider)
 		{}
+
+		Collider(Subcollider aabbCollider, std::vector<Subcollider> subcolliders, std::uint16_t layer, std::uint16_t layersToCollideWith, bool staticCollider) :
+		aabbCollider(aabbCollider),
+		subcolliders(subcolliders),
+		preciseSubcolliderDetection(true),
+		layer(layer),
+		layersToCollideWith(layersToCollideWith),
+		isStatic(staticCollider)
+	{}
 
 
 		Subcollider aabbCollider;
@@ -31,14 +41,11 @@ namespace components
 		bool isCollidingLastFrame = false;
 		bool isDebugging = true;
 		bool isStatic;
-		// This is to allow a user to specify if its own layer can collide. I.E. In brick breaker, the bricks are on the collision layer of "BRICK" but you don't want to check collisions against other bricks
-		bool collidesWithOwnLayer;
 
 		std::set<std::uint16_t> currentlyCollidingWith{};
 
-		// Need to figure out how to do the bitwise comparisons
 		std::uint16_t layer;
-		
+		std::uint16_t layersToCollideWith;
 		
 
 	private:

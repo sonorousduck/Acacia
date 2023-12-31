@@ -60,7 +60,7 @@ namespace Crypt
 
 
 			entity->addComponent(std::move(mouseInput));
-			entity->addComponent(std::make_unique<components::Collider>(subcollider, Crypt::CollisionLayers::UI, true, false));
+			entity->addComponent(std::make_unique<components::Collider>(subcollider, Crypt::CollisionLayers::UI, false));
 			entity->addComponent(std::make_unique<components::RigidBody>());
 
 

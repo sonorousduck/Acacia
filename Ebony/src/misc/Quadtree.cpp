@@ -138,7 +138,7 @@ namespace Ebony
 	{
 		if (children.size() == 0)
 		{
-			auto entityLayer = entity->getComponent<components::Collider>()->layer;
+			auto entityLayer = entity->getComponent<components::Collider>()->layersToCollideWith;
 			
 			for (const auto& possibleCollision : entitiesInLevel)
 			{
@@ -147,11 +147,7 @@ namespace Ebony
 				// If the layers match
 				if (result->layer & entityLayer)
 				{
-					// If it is not allowed to collide with its own layer and it is the same exact layer
-					if (result->collidesWithOwnLayer || result->layer != entityLayer)
-					{
-						results.insert(possibleCollision);
-					}
+					results.insert(possibleCollision);
 				}
 			}
 

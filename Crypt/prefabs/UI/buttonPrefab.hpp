@@ -59,7 +59,7 @@ namespace Crypt
 					}
 				};
 
-			entity->addComponent(std::make_unique<components::Collider>(subcollider, CollisionLayers::UI, true, false));
+			entity->addComponent(std::make_unique<components::Collider>(subcollider, CollisionLayers::UI, true));
 			entity->addComponent(std::make_unique<components::RigidBody>());
 
 

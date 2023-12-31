@@ -36,7 +36,7 @@ namespace scripts
 
 					if (shootingCooldown->currentCooldown >= shootingCooldown->maxShootingSpeed)
 					{
-						AddEntity(Crypt::BulletPrefab::Create(entity->getComponent<components::Transform>()->position, glm::vec2(35.0f, 35.0f), -detectionComponent->towardsRealTargetVector, detectionComponent->shootSpeed, components::BULLET_TYPE::ENEMY_BAT, 1, detectionComponent->shootSprite, 3.0f, Crypt::CollisionLayers::ENEMY_BULLET, 90.0f));
+						AddEntity(Crypt::BulletPrefab::Create(entity->getComponent<components::Transform>()->position, glm::vec2(35.0f, 35.0f), -detectionComponent->towardsRealTargetVector, detectionComponent->shootSpeed, components::BULLET_TYPE::ENEMY_BAT, 1, detectionComponent->shootSprite, 3.0f, Crypt::CollisionLayers::ENEMY_BULLET, Crypt::CollisionLayers::PLAYER | Crypt::CollisionLayers::GROUND, 90.0f));
 						shootingCooldown->currentCooldown -= shootingCooldown->maxShootingSpeed;
 					}
 

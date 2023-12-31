@@ -4,6 +4,8 @@
 #include "../prefabs/groundPrefab.hpp"
 #include "../prefabs/crosshairPrefab.hpp"
 #include "../prefabs/batPrefab.hpp"
+#include "../prefabs/suicideBirdPrefab.hpp"
+
 #include "../prefabs/UI/playerHealthPrefab.hpp"
 #include "../prefabs/UI/playerSpellSelection.hpp"
 
@@ -57,7 +59,7 @@ namespace Crypt
 		enemyDetectionSystem = systems::EnemyDetectionSystem();
 
 
-		spriteRenderer.debug = false;
+		spriteRenderer.debug = true;
 
 		CryptTiledProcessor tiledProcessor = CryptTiledProcessor();
 		tiledProcessor.CreateTranslationFunction();
@@ -73,7 +75,11 @@ namespace Crypt
 		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
 
 		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
-		
+		AddEntity(Crypt::Bat::Create(glm::vec2(400.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
+		AddEntity(Crypt::Bat::Create(glm::vec2(50.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
+
+		AddEntity(Crypt::SuicideBird::Create(glm::vec2(250.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
+
 		AddEntity(Crypt::PlayerHealth::Create(player));
 		
 		// Load Tiled map

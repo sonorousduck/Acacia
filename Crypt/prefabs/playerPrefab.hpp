@@ -151,6 +151,8 @@ namespace Crypt
 					transform->rotation = fmod(transform->rotation + 180.0f, 360.0f);
 					//std::cout << (playerComponent->gravityDown ? "-1" : "1") << std::endl;
 					rigidBody->setVelocity(glm::vec2(rigidBody->getVelocity().x, originalVelocity.y * (playerComponent->gravityDown ? 1 : -1)));
+					rigidBody->setAcceleration(glm::vec2(rigidBody->getAcceleration().x, 200.0f * (playerComponent->gravityDown ? 1 : -1)));
+
 					playerComponent->isOnGround = false;
 				}
 			}
@@ -178,7 +180,7 @@ namespace Crypt
 				};
 
 
-			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::PLAYER | Crypt::CollisionLayers::GROUND | Crypt::CollisionLayers::ENEMY_BULLET, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::PLAYER, Crypt::CollisionLayers::GROUND | Crypt::CollisionLayers::ENEMY_BULLET, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(60.0f, 60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 			
 			// Will use a separate system for controlling gravity and such

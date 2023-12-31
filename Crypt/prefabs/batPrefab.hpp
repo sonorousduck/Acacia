@@ -42,7 +42,7 @@ namespace Crypt
 
 			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
-					if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::PLAYER_BULLET && !(other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::GROUND))
+					if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::PLAYER_BULLET)
 					{
 						auto enemyInformation = bat->getComponent<components::Enemy>();
 
@@ -55,9 +55,15 @@ namespace Crypt
 
 						other->getComponent<components::DestructionComponent>()->shouldDestroy = true;
 					}
+					else
+					{
+						auto test = other->getComponent<components::Collider>()->layersToCollideWith;
+						auto beep = 1;
+						std::cout << "NOFD" << std::endl;
+					}
 				};
 
-			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::ENEMY | Crypt::CollisionLayers::PLAYER_BULLET, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::ENEMY, Crypt::CollisionLayers::PLAYER_BULLET | CollisionLayers::GROUND, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 

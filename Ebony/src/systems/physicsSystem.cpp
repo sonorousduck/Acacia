@@ -100,12 +100,12 @@ namespace systems
 				std::vector<entities::EntityPtr> staticPossibleCollisions = staticQuadtree.GetPossibleCollisions(entity);
 				possibleCollisions.insert(possibleCollisions.end(), std::make_move_iterator(staticPossibleCollisions.begin()), std::make_move_iterator(staticPossibleCollisions.end()));
 
-				// TODO: Look into adding a static collisions
-
 
 				for (std::uint16_t i = 0; i < possibleCollisions.size(); i++)
 				{
-					if (entity->getId() != possibleCollisions[i]->getId() && (collider->layer & possibleCollisions[i]->getComponent<components::Collider>()->layer))
+					auto test = possibleCollisions[i]->getComponent<components::Collider>();
+
+					if (entity->getId() != possibleCollisions[i]->getId() && (collider->layersToCollideWith & possibleCollisions[i]->getComponent<components::Collider>()->layer))
 					{
 						components::CppScript* script;
 						bool hasScript = entity->tryGetComponent<components::CppScript>(script);
