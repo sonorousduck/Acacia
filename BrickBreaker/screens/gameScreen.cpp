@@ -434,7 +434,7 @@ namespace BrickBreaker
 	}
 
 
-	void GameScreen::OnScreenDefocus()
+	void GameScreen::OnScreenDefocus(std::uint64_t nextScreenEnum)
 	{
 		nextScreen = screen;
 
@@ -442,7 +442,7 @@ namespace BrickBreaker
 		Ebony::AudioManager::StopAll();
 	}
 
-	void GameScreen::OnScreenFocus()
+	void GameScreen::OnScreenFocus(std::uint64_t lastScreenEnum)
 	{
 		std::cout << "Focusing Game Screen" << std::endl;
 		Reset();

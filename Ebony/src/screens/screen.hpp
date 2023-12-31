@@ -28,8 +28,13 @@ namespace Ebony
 		virtual void RemoveOldEntities() {}
 
 
-		virtual void OnScreenFocus() {}
-		virtual void OnScreenDefocus() {}
+		// This way, you can control if they are coming from the pause menu to not restart your game, but if they are
+		// coming from the main menu screen, to set everything up
+		virtual void OnScreenFocus(std::uint64_t lastScreenEnum) {}
+
+		// Now you can tell which screen they are going to. That way you can cleanup depending on 
+		// if they are just pausing, or changing to a new scene entirely
+		virtual void OnScreenDefocus(std::uint64_t lastScreenEnum) {}
 
 		virtual void AddEntity(entities::EntityPtr entity) {}
 		virtual void RemoveEntity(entities::Entity::IdType id) {}
@@ -56,6 +61,7 @@ namespace Ebony
 	
 		float deltaTime = 0.0f;
 		float lastFrame = 0.0f;
+		bool alreadyStarted = false;
 
 	};
 }

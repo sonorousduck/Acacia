@@ -23,7 +23,7 @@ namespace Crypt
 
 
 			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width - (texture->Width / 3.0f), height), 0.0f, glm::vec2(texture->Width, texture->Height)));
-			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.02f));
+			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.02f, true));
 
 
 

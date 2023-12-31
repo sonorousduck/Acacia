@@ -93,7 +93,7 @@ namespace Ebony {
 
 			if (newScreenFocused)
 			{
-				currentScreen->OnScreenFocus();
+				currentScreen->OnScreenFocus(lastScreenEnum);
 				newScreenFocused = false;
 			}
 
@@ -102,7 +102,8 @@ namespace Ebony {
 
 			if (screens[nextScreenEnum] != currentScreen)
 			{
-				currentScreen->OnScreenDefocus();
+				lastScreenEnum = this->currentScreenEnum;
+				currentScreen->OnScreenDefocus(nextScreenEnum);
 				newScreenFocused = true;
 			}
 		
@@ -126,7 +127,7 @@ namespace Ebony {
 		{
 			// Reset the screen to have the next screen of itself so it doesn't infinitely loop
 			currentScreen = screens[this->nextScreenEnum];
-
+			currentScreenEnum = this->nextScreenEnum;
 			if (nextScreenEnum == Crypt::QUIT)
 			{
 				quit = true;
@@ -218,6 +219,9 @@ namespace Ebony {
 		std::unordered_map<std::uint64_t, std::shared_ptr<Screen>> screens{};
 
 		std::uint64_t nextScreenEnum = Ebony::ScreenEnum::DEFAULT;
+		std::uint64_t currentScreenEnum = Ebony::ScreenEnum::DEFAULT;
+		std::uint64_t lastScreenEnum = Ebony::ScreenEnum::DEFAULT;
+
 		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
 
 	};

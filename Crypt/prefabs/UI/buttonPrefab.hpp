@@ -27,7 +27,7 @@ namespace Crypt
 			components::Subcollider subcollider = components::Subcollider(glm::vec2(texture->Width / 2, texture->Height / 2), glm::vec2(texture->Width, texture->Height), true, true);
 			
 
-			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.01f));
+			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.01f, true));
 			
 
 			auto button = std::make_unique<components::ButtonComponent>(spriteImageUnpressed, spriteImageHover, spriteImagePressed);

@@ -189,14 +189,14 @@ namespace BrickBreaker
 		removeEntities.insert(id);
 	}
 
-	void MainScreen::OnScreenDefocus()
+	void MainScreen::OnScreenDefocus(std::uint64_t nextScreenEnum)
 	{
 		nextScreen = screen;
 
 		std::cout << "Defocusing Main Screen" << std::endl;
 	}
 
-	void MainScreen::OnScreenFocus()
+	void MainScreen::OnScreenFocus(std::uint64_t lastScreenEnum)
 	{
 		Start();
 

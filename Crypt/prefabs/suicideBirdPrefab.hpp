@@ -1,0 +1,21 @@
+#pragma once
+#include <entity.hpp>
+#include <components/transform.hpp>
+#include <components/sprite.hpp>
+#include <misc/resourceManager.hpp>
+#include <components/subcolliderClass.hpp>
+#include "../misc/collisionLayers.hpp"
+#include <components/collider.hpp>
+
+#include <components/controllerComponent.hpp>
+#include <components/keyboardComponent.hpp>
+#include <components/rigidbodyComponent.hpp>
+#include <singletons/time.hpp>
+#include <components/mouseInputComponent.hpp>
+#include <components/animationControllerComponent.hpp>
+#include "../components/shootingComponent.hpp"
+#include "../components/enemyDetectionComponent.hpp"
+#include <components/cppScriptComponent.hpp>
+#include "../scripts/shootingBatScript.hpp"
+#include "../components/enemyComponent.hpp"
+#include "healthBarPrefab.hpp"

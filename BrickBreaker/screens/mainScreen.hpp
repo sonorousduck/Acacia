@@ -49,8 +49,8 @@ namespace BrickBreaker
 		systems::InputSystem inputSystem;
 		systems::AudioSystem audioSystem;
 
-		void OnScreenDefocus() override;
-		void OnScreenFocus() override;
+		void OnScreenDefocus(std::uint64_t nextScreenEnum) override;
+		void OnScreenFocus(std::uint64_t lastScreenEnum) override;
 
 		Ebony::RenderTarget2D mainRenderTarget;
 		std::uint64_t screen = BrickBreaker::ScreenEnum::MAIN_MENU;

@@ -1,10 +1,18 @@
 #include "pauseScreen.hpp"
+#include "../prefabs/UI/buttonTextPrefab.hpp"
+#include "../prefabs/UI/buttonPrefab.hpp"
+#include "../prefabs/menuCursorPrefab.hpp"
 
 namespace Crypt
 {
 
 	void PauseScreen::LoadContent()
 	{
+		Ebony::ResourceManager::LoadTexture("Button_Unpressed.tx", "button_unpressed", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Button_Pressed.tx", "button_pressed", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Button_Hovered.tx", "button_hovered", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Resume_Text.tx", "resume_text", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Quit_Text.tx", "quit_text", "Crypt");
 	}
 
 	void PauseScreen::Start()
@@ -28,8 +36,20 @@ namespace Crypt
 		audioSystem = systems::AudioSystem();
 
 		// Create prefabs
+		auto button = Crypt::Button::Create(40.0f, 250.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
+		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 2.0f;
+		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 4.0f;
+		AddEntity(button);
+
+		AddEntity(Crypt::MenuCursor::Create());
+		AddEntity(Crypt::ButtonText::Create(buttonWidth, 250.0f + buttonHeight, "resume_text"));
+
+		AddEntity(Crypt::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
+		AddEntity(Crypt::ButtonText::Create(buttonWidth, 470.0f + buttonHeight, "quit_text"));
+
 
 		AddNewEntities();
+		alreadyStarted = true;
 	}
 
 	void PauseScreen::Init(int windowWidth, int windowHeight)
@@ -42,7 +62,6 @@ namespace Crypt
 		clearColor = Ebony::Colors::Black;
 
 		Ebony::Graphics2d::SetMainCamera(camera);
-
 	}
 
 	
@@ -124,18 +143,20 @@ namespace Crypt
 		removeEntities.insert(id);
 	}
 
-	void PauseScreen::OnScreenDefocus()
+	void PauseScreen::OnScreenDefocus(std::uint64_t nextScreenEnum)
 	{
 		nextScreen = screen;
 
 		
 	}
 
-	void PauseScreen::OnScreenFocus()
+	void PauseScreen::OnScreenFocus(std::uint64_t lastScreenEnum)
 	{
-		Start();
-
-		
+		if (!alreadyStarted)
+		{
+			Start();
+		}
+		Ebony::Graphics2d::SetMainCamera(camera);
 	}
 
     void PauseScreen::SetNextScreen(std::uint16_t nextScreenIncoming)

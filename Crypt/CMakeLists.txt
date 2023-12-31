@@ -47,6 +47,7 @@ set(Prefabs
   prefabs/bulletPrefab.hpp
   prefabs/batPrefab.hpp
   prefabs/healthBarPrefab.hpp
+  prefabs/suicideBirdPrefab.hpp
 )
 
 set(UIPrefabs

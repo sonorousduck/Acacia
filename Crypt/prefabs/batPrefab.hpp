@@ -6,11 +6,6 @@
 #include <components/subcolliderClass.hpp>
 #include "../misc/collisionLayers.hpp"
 #include <components/collider.hpp>
-#include <graphics2d.hpp>
-#include <SDL.h>
-#include <Log.hpp>
-#include <components/controllerComponent.hpp>
-#include <components/keyboardComponent.hpp>
 #include <components/rigidbodyComponent.hpp>
 #include <singletons/time.hpp>
 #include <components/mouseInputComponent.hpp>

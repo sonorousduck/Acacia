@@ -230,16 +230,23 @@ namespace Crypt
 		removeEntities.insert(id);
 	}
 
-	void MainGameScreen::OnScreenDefocus()
+	void MainGameScreen::OnScreenDefocus(std::uint64_t nextScreenEnum)
 	{
 		nextScreen = screen;
 
 		
 	}
 
-	void MainGameScreen::OnScreenFocus()
+	void MainGameScreen::OnScreenFocus(std::uint64_t lastScreenEnum)
 	{
-		Start();
+
+		if (lastScreenEnum != ScreenEnum::PAUSE)
+		{
+			Start();
+		}
+
+		Ebony::Graphics2d::SetMainCamera(camera);
+
 
 		
 	}

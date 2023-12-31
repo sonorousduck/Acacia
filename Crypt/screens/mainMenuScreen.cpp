@@ -147,14 +147,14 @@ namespace Crypt
 		removeEntities.insert(id);
 	}
 
-	void MainMenuScreen::OnScreenDefocus()
+	void MainMenuScreen::OnScreenDefocus(std::uint64_t nextScreenEnum)
 	{
 		nextScreen = screen;
 
 		
 	}
 
-	void MainMenuScreen::OnScreenFocus()
+	void MainMenuScreen::OnScreenFocus(std::uint64_t lastScreenEnum)
 	{
 		Start();
 

@@ -47,8 +47,8 @@ namespace Crypt
 		systems::InputSystem inputSystem;
 		systems::AudioSystem audioSystem;
 
-		void OnScreenDefocus() override;
-		void OnScreenFocus() override;
+		void OnScreenDefocus(std::uint64_t nextScreenEnum) override;
+		void OnScreenFocus(std::uint64_t lastScreenEnum) override;
 
 
 		std::shared_ptr<Camera> camera;

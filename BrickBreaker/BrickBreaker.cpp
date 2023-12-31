@@ -79,7 +79,7 @@ namespace Ebony {
 			if (newScreenFocused)
 			{
 				currentScreen->nextScreen = currentScreen->screen;
-				currentScreen->OnScreenFocus();
+				currentScreen->OnScreenFocus(lastScreenEnum);
 				newScreenFocused = false;
 			}
 
@@ -88,7 +88,8 @@ namespace Ebony {
 
 			if (screens[nextScreenEnum] != currentScreen)
 			{
-				currentScreen->OnScreenDefocus();
+				lastScreenEnum = this->currentScreenEnum;
+				currentScreen->OnScreenDefocus(nextScreenEnum);
 				newScreenFocused = true;
 			}
 		
@@ -114,6 +115,7 @@ namespace Ebony {
 
 
 			currentScreen = screens[nextScreenEnum];
+			currentScreenEnum = this->nextScreenEnum;
 
 			if (nextScreenEnum == BrickBreaker::QUIT)
 			{
@@ -204,7 +206,9 @@ namespace Ebony {
 	private:
 		std::shared_ptr<Screen> currentScreen;
 		std::unordered_map<std::uint16_t, std::shared_ptr<Screen>> screens{};
-
+		
+		std::uint64_t currentScreenEnum = Ebony::ScreenEnum::DEFAULT;
+		std::uint64_t lastScreenEnum = Ebony::ScreenEnum::DEFAULT;
 		std::uint64_t nextScreenEnum = Ebony::ScreenEnum::DEFAULT;
 		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
 

@@ -63,8 +63,8 @@ namespace BrickBreaker
 		void Reset();
 
 
-		void OnScreenDefocus() override;
-		void OnScreenFocus() override;
+		void OnScreenDefocus(std::uint64_t nextScreenEnum) override;
+		void OnScreenFocus(std::uint64_t lastScreenEnum) override;
 
 		std::string fps = "";
 		//Ebony::KeyInput keyInput;
