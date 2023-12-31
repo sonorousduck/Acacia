@@ -55,12 +55,6 @@ namespace Crypt
 
 						other->getComponent<components::DestructionComponent>()->shouldDestroy = true;
 					}
-					else
-					{
-						auto test = other->getComponent<components::Collider>()->layersToCollideWith;
-						auto beep = 1;
-						std::cout << "NOFD" << std::endl;
-					}
 				};
 
 			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::ENEMY, Crypt::CollisionLayers::PLAYER_BULLET | CollisionLayers::GROUND, false);

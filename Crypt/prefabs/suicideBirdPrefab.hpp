@@ -7,18 +7,14 @@
 #include "../misc/collisionLayers.hpp"
 #include <components/collider.hpp>
 
-#include <components/controllerComponent.hpp>
-#include <components/keyboardComponent.hpp>
 #include <components/rigidbodyComponent.hpp>
 #include <singletons/time.hpp>
-#include <components/mouseInputComponent.hpp>
 #include <components/animationControllerComponent.hpp>
-#include "../components/shootingComponent.hpp"
 #include "../components/enemyDetectionComponent.hpp"
 #include <components/cppScriptComponent.hpp>
-#include "../scripts/shootingBatScript.hpp"
 #include "../components/enemyComponent.hpp"
 #include "healthBarPrefab.hpp"
+#include "../scripts/suicideBatScript.hpp"
 
 
 namespace Crypt
@@ -32,8 +28,9 @@ namespace Crypt
 
 			float detectionRange = 400.0f;
 			float movementRange = 500.0f;
-			float movementSpeed = 500.0f;
+			float movementSpeed = 350.0f;
 			glm::vec2 offset = { 0.0f, 0.0f };
+			std::uint16_t explosionStrength = 3;
 
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("bat"), Ebony::Colors::White, 0.10f);
 			scale *= glm::vec2(sprite->texture->Width, sprite->texture->Height);
@@ -58,14 +55,22 @@ namespace Crypt
 					else if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::GROUND)
 					{
 						bird->getComponent<components::DestructionComponent>()->shouldDestroy = true;
+						bird->getComponent<components::Enemy>()->health = 0.0f;
+					}
+					else if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::PLAYER)
+					{
+						bird->getComponent<components::DestructionComponent>()->shouldDestroy = true;
+						bird->getComponent<components::Enemy>()->health = 0.0f;
+
+						other->getComponent<components::Player>()->health -= explosionStrength;
 					}
 				};
 
-			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::ENEMY, Crypt::CollisionLayers::GROUND | Crypt::CollisionLayers::PLAYER_BULLET, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::ENEMY, Crypt::CollisionLayers::GROUND | Crypt::CollisionLayers::PLAYER_BULLET | Crypt::CollisionLayers::PLAYER, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
-			//std::unique_ptr<components::CppScript> script = std::make_unique<scripts::ShootingBatScript>(AddEntity);
+			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::SuicideBatScript>();
 
 			bird->addComponent(std::make_unique<components::Enemy>(1.0f));
 			bird->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "bat_attack", player));
@@ -76,7 +81,7 @@ namespace Crypt
 					bird->getComponent<components::DestructionComponent>()->shouldRemove = true;
 				}));
 
-			//bird->addComponent(std::move(script));
+			bird->addComponent(std::move(script));
 			bird->addComponent(std::move(collider));
 			bird->addComponent(std::move(transform));
 			bird->addComponent(std::move(sprite));

@@ -174,7 +174,6 @@ namespace Crypt
 					else if (layer & Crypt::CollisionLayers::ENEMY_BULLET)
 					{
 						player->getComponent<components::Player>()->health -= other->getComponent<components::Bullet>()->strength;
-						EB_TRACE(player->getComponent<components::Player>()->health);
 					}
 
 				};
