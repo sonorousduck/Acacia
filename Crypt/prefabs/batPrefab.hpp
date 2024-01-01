@@ -58,7 +58,7 @@ namespace Crypt
 				};
 
 			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::ENEMY, Crypt::CollisionLayers::PLAYER_BULLET | CollisionLayers::GROUND, false);
-			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
+			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale, glm::vec3(0.0f, 1.0f, 0.0f));
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
 			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::ShootingBatScript>(AddEntity);

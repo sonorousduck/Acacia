@@ -26,6 +26,8 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("Icon.tx", "icon", "Crypt");
 		Ebony::ResourceManager::LoadTexture("wood.tx", "wood", "Crypt");
 		Ebony::ResourceManager::LoadAtlas("Test_SpriteSheet.tx", "test_spritesheet", "Crypt", 4, 4);
+		Ebony::ResourceManager::LoadAtlas("BomberBird.tx", "bomber_bird", "Crypt", 6, 1);
+
 		Ebony::ResourceManager::LoadTexture("Panel.tx", "panel", "Crypt");
 		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "Crypt");
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire", "Crypt");
@@ -59,12 +61,13 @@ namespace Crypt
 		enemyDetectionSystem = systems::EnemyDetectionSystem();
 
 
-		spriteRenderer.debug = true;
+		spriteRenderer.debug = false;
 
 		CryptTiledProcessor tiledProcessor = CryptTiledProcessor();
 		tiledProcessor.CreateTranslationFunction();
 		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json", [=](entities::EntityPtr entity) {AddEntity(entity); });
 
+		std::function<void(entities::EntityPtr entity)> AddEntityLambda = [=](entities::EntityPtr entity) {AddEntity(entity); };
 
 		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });
 
@@ -72,15 +75,16 @@ namespace Crypt
 		AddEntity(player);
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, static_cast<float>(windowHeight) - 5.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), static_cast<float>(windowWidth) * 30.0f));
-		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
+		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, AddEntityLambda));
 
-		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
-		AddEntity(Crypt::Bat::Create(glm::vec2(400.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
-		AddEntity(Crypt::Bat::Create(glm::vec2(50.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
+		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
+		AddEntity(Crypt::Bat::Create(glm::vec2(400.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
+		AddEntity(Crypt::Bat::Create(glm::vec2(50.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
 
-		AddEntity(Crypt::SuicideBird::Create(glm::vec2(250.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, [=](entities::EntityPtr entity) {AddEntity(entity); }));
+		AddEntity(Crypt::SuicideBird::Create(glm::vec2(250.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
 
 		AddEntity(Crypt::PlayerHealth::Create(player));
+		AddEntity(Crypt::PlayerSpellSelection::Create(windowHeight, AddEntityLambda));
 		
 		// Load Tiled map
 

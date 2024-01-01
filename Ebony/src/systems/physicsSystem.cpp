@@ -169,7 +169,6 @@ namespace systems
 								}
 
 								collider->currentlyCollidingWith.erase(possibleCollisions[i]->getId());
-
 							}
 						}	
 					}

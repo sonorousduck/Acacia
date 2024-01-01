@@ -45,6 +45,18 @@ namespace systems
 					}
 
 					detectionComponent->towardsRealTargetVector = towardsRealTarget;
+
+					// Update the direction that the sprite is facing
+					
+					if (transform->position.x > targetTransform->position.x)
+					{
+						transform->rotation = 0.0f + detectionComponent->rotationOffset;
+					}
+					else
+					{
+						transform->rotation = 180.0f + detectionComponent->rotationOffset;
+					}
+
 				}
 				else
 				{

@@ -15,11 +15,11 @@ namespace Ebony
 	public:
 		Animation(SpriteSheet spritesheet) : m_Spritesheet(spritesheet), depth(1.0) {};
 
-		const auto& GetSprite() { return m_Spritesheet; }
-		auto GetSpriteCount() { return m_Spritesheet.numDivisions; }
-		auto GetSpriteTime() { return m_Spritesheet.timings[m_CurrentSprite]; }
-		auto GetSpriteColor() { return m_SpriteColor; }
-		auto GetCurrentSpriteFrame() { return m_CurrentSprite; }
+		const auto& GetSprite() const { return m_Spritesheet; }
+		auto GetSpriteCount() const { return m_Spritesheet.numDivisions; }
+		auto GetSpriteTime() const { return m_Spritesheet.timings[m_CurrentSprite]; }
+		auto GetSpriteColor() const { return m_SpriteColor; }
+		auto GetCurrentSpriteFrame() const { return m_CurrentSprite; }
 		//auto GetCurrentFrame() { return m_FrameNumber; }
 		auto GetCurrentSpriteRect()
 		{

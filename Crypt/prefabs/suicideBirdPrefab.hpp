@@ -32,8 +32,30 @@ namespace Crypt
 			glm::vec2 offset = { 0.0f, 0.0f };
 			std::uint16_t explosionStrength = 3;
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("bat"), Ebony::Colors::White, 0.10f);
-			scale *= glm::vec2(sprite->texture->Width, sprite->texture->Height);
+			//auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("bat"), Ebony::Colors::White, 0.10f);
+			//scale *= glm::vec2(sprite->texture->Width, sprite->texture->Height);
+
+			auto animationController = std::make_unique<components::AnimationController>();
+
+			auto spriteSheet = Ebony::ResourceManager::GetTexture("bomber_bird");
+
+			std::vector<std::chrono::microseconds> timings(6, std::chrono::milliseconds(120));
+
+			std::vector<components::Link> links = { components::Link(1, [=]() {
+								return (false);
+
+			}) };
+			std::vector<Ebony::Animation> animations = { Ebony::Animation(SpriteSheet(spriteSheet, 6, timings)) };
+
+			auto node1 = components::Node(links, animations);
+
+			animationController->animationTree.emplace_back(node1);
+			bird->addComponent(std::move(animationController));
+
+			
+
+			scale *= glm::vec2(spriteSheet->Width / 6, spriteSheet->Height); // We know there are 6 in the x
+
 
 			components::Subcollider aabbcollider = components::Subcollider(scale / glm::vec2(2.0f, 2.0f), scale, true, true);
 
@@ -67,13 +89,13 @@ namespace Crypt
 				};
 
 			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::ENEMY, Crypt::CollisionLayers::GROUND | Crypt::CollisionLayers::PLAYER_BULLET | Crypt::CollisionLayers::PLAYER, false);
-			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
+			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale, glm::vec3(0.0f, 1.0f, 0.0f));
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
 			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::SuicideBatScript>();
 
 			bird->addComponent(std::make_unique<components::Enemy>(1.0f));
-			bird->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "bat_attack", player));
+			bird->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "bat_attack", player, 180.0f));
 
 			bird->addComponent(std::make_unique<components::DestructionComponent>([=]()
 				{
@@ -84,7 +106,7 @@ namespace Crypt
 			bird->addComponent(std::move(script));
 			bird->addComponent(std::move(collider));
 			bird->addComponent(std::move(transform));
-			bird->addComponent(std::move(sprite));
+			//bird->addComponent(std::move(sprite));
 			bird->addComponent(std::move(rigidbody));
 
 

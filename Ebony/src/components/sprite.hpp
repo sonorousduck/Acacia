@@ -26,6 +26,11 @@ namespace components
 			this->texture = texture;
 		}
 
+		glm::vec2 GetDimensions()
+		{
+			return glm::vec2(this->texture->Width, this->texture->Height);
+		}
+
 		std::shared_ptr<Texture2D> texture;
 		Ebony::Color spriteColor;
 		float depth;

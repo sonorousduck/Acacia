@@ -240,28 +240,35 @@ namespace Ebony
 
 		if (Graphics2d::hasCamera)
 		{
-			if (Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
+			if (isUI || Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
 				Graphics2d::mainCamera->Position.y - bufferDrawing < position.y && Graphics2d::mainCamera->Position.y + screenHeight > position.y)
 			{
 				DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
 				Graphics2d::renderPriorityQueue.push(drawableObject);
 			}
 		}
-
-
-
+		else
+		{
+			DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
+			Graphics2d::renderPriorityQueue.push(drawableObject);
+		}
 	}
 
 	void Graphics2d::Draw(std::shared_ptr<Shader> s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI, bool isSpriteSheet, std::uint64_t layer)
 	{
 		if (Graphics2d::hasCamera)
 		{
-			if (Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
+			if (isUI || Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
 				Graphics2d::mainCamera->Position.y - bufferDrawing < position.y && Graphics2d::mainCamera->Position.y + screenHeight > position.y)
 			{
 				DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
 				Graphics2d::renderPriorityQueue.push(drawableObject);
 			}
+		}
+		else
+		{
+			DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
+			Graphics2d::renderPriorityQueue.push(drawableObject);
 		}
 	}
 
@@ -269,12 +276,17 @@ namespace Ebony
 	{
 		if (Graphics2d::hasCamera)
 		{
-			if (Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
+			if (isUI || Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
 				Graphics2d::mainCamera->Position.y - bufferDrawing < position.y && Graphics2d::mainCamera->Position.y + screenHeight > position.y)
 			{
 				DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, true, layer);
 				Graphics2d::renderPriorityQueue.push(drawableObject);
 			}
+		}
+		else
+		{
+			DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, true, layer);
+			Graphics2d::renderPriorityQueue.push(drawableObject);
 		}
 
 		//if (activeShaderId != s->ID)
