@@ -3,11 +3,11 @@ in vec2 vUv;
 out vec4 outColor;
 
 uniform sampler2D image;
-uniform vec3 spriteColor;
+uniform vec4 spriteColor;
 
 void main()
 {
-    outColor = texture(image, vUv) * vec4(spriteColor, 1.0);
+    outColor = texture(image, vUv) * spriteColor;
 
     // if (outColor.a < 0.1)
     // {

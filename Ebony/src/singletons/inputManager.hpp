@@ -111,7 +111,7 @@ namespace Ebony
 		JoystickAndTriggerPress getTriggerJoystickState(Uint8 trigger);
 
 		// Takes in left and right from 0.0 - 1.0, it manually converts it to the maximums for you
-		void Vibrate(float left, float right, Uint32 ms, bool vibrateTriggers);
+		void Vibrate(float left, float right, Uint32 ms, bool vibrateTriggers) const;
 		
 		void setIsButtonDown(Uint8 button, PressedState pressedState);
 		void setIsTriggerDown(Uint8 button, short value);
@@ -120,9 +120,9 @@ namespace Ebony
 		bool isXboxController = false;
 
 	private:
-		std::unordered_map<Uint8, Press> buttons;
-		std::unordered_map<Uint8, JoystickAndTriggerPress> joysticksAndTriggers;
-		std::unordered_map<Uint8, JoystickVectorPress> joystickVectors;
+		std::unordered_map<Uint8, Press> buttons = std::unordered_map<Uint8, Press>();
+		std::unordered_map<Uint8, JoystickAndTriggerPress> joysticksAndTriggers = std::unordered_map<Uint8, JoystickAndTriggerPress>();
+		std::unordered_map<Uint8, JoystickVectorPress> joystickVectors = std::unordered_map<Uint8, JoystickVectorPress>();
 
 		int leftStickX = 0;
 		int leftStickY = 0;

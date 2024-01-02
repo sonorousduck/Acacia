@@ -229,7 +229,7 @@ namespace Ebony
 	{
 	}
 
-	void ControllerInputManager::Vibrate(float left, float right, Uint32 ms, bool vibrateTriggers)
+	void ControllerInputManager::Vibrate(float left, float right, Uint32 ms, bool vibrateTriggers) const
 	{
 		if (vibrateTriggers && this->isXboxController)
 		{

@@ -464,7 +464,7 @@ namespace Ebony
 				}
 
 				drawable.s->setMat4("model", model);
-				drawable.s->setVec3("spriteColor", drawable.color.GetRGB());
+				drawable.s->setVec4("spriteColor", drawable.color.GetRGBA());
 
 				if (drawable.isSpriteSheet)
 				{

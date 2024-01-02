@@ -98,7 +98,7 @@ namespace systems
 				// Check for AABB collisions
 				std::vector<entities::EntityPtr> possibleCollisions = quadtree.GetPossibleCollisions(entity);
 				std::vector<entities::EntityPtr> staticPossibleCollisions = staticQuadtree.GetPossibleCollisions(entity);
-				possibleCollisions.insert(possibleCollisions.end(), std::make_move_iterator(staticPossibleCollisions.begin()), std::make_move_iterator(staticPossibleCollisions.end()));
+				possibleCollisions.insert(possibleCollisions.end(), staticPossibleCollisions.begin(), staticPossibleCollisions.end());
 
 
 				for (std::uint16_t i = 0; i < possibleCollisions.size(); i++)

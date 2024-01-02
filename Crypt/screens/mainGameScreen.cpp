@@ -20,7 +20,11 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("empty.tx", "empty", "Crypt");
 		Ebony::ResourceManager::LoadTexture("new_aim.tx", "aim", "Crypt");
 		Ebony::ResourceManager::LoadTexture("FireBall.tx", "fire_bullet", "Crypt");
+		Ebony::ResourceManager::LoadTexture("FireBallPanel.tx", "fire_bullet_panel", "Crypt");
+
 		Ebony::ResourceManager::LoadTexture("IceBolt.tx", "ice_bullet", "Crypt");
+		Ebony::ResourceManager::LoadTexture("IceBoltPanel.tx", "ice_bullet_panel", "Crypt");
+
 		Ebony::ResourceManager::LoadTexture("Bat1.tx", "bat", "Crypt");
 		Ebony::ResourceManager::LoadTexture("BatAttack.tx", "bat_attack", "Crypt");
 		Ebony::ResourceManager::LoadTexture("Icon.tx", "icon", "Crypt");

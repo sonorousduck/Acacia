@@ -27,6 +27,7 @@ set(ComponentHeaders
   components/shootingComponent.hpp
   components/enemyDetectionComponent.hpp
   components/enemyComponent.hpp
+  components/selectedSpellComponent.hpp
 )
 
 set(MiscHeaders
@@ -55,7 +56,7 @@ set(UIPrefabs
   prefabs/UI/buttonTextPrefab.hpp
   prefabs/UI/playerHealthPrefab.hpp
   prefabs/UI/playerSpellSelection.hpp
-
+  prefabs/UI/spellPrefab.hpp
 )
 
 set(SingletonHeaders
