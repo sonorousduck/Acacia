@@ -15,7 +15,7 @@ namespace Crypt
 	class Crosshair
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, entities::EntityPtr player, std::function<void(entities::EntityPtr)> AddEntity)
+		static entities::EntityPtr Create(glm::vec2 startTransform, entities::EntityPtr player,  std::function<void(entities::EntityPtr)> AddEntity)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 			float speed = 10.0f;
@@ -36,7 +36,7 @@ namespace Crypt
 					if (shootingComponent->currentCooldown >= shootingComponent->maxShootingSpeed)
 					{
 						auto crosshair = entity->getComponent<components::Crosshair>();
-						AddEntity(BulletPrefab::Create(crosshair->aimLocation, glm::vec2(50.0f, 50.0f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "fire_bullet"));
+						AddEntity(BulletPrefab::Create(player->getComponent<components::Transform>()->position, glm::vec2(3.0f, 3.0f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "fire_bullet"));
 
 						shootingComponent->currentCooldown = 0.0f;
 					}
