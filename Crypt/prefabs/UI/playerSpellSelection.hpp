@@ -13,7 +13,7 @@ namespace Crypt
 	class PlayerSpellSelection
 	{
 	public:
-		static entities::EntityPtr Create(int windowHeight, std::function<void(entities::EntityPtr entity)> AddEntity)
+		static entities::EntityPtr Create(int windowHeight, entities::EntityPtr crosshair, std::function<void(entities::EntityPtr entity)> AddEntity)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("panel"), Ebony::Colors::White, 0.20f, true);
@@ -49,6 +49,7 @@ namespace Crypt
 				fireSpellEntity->getComponent<components::Sprite>()->spriteColor = Ebony::Colors::White;
 
 				entity->getComponent<components::SelectedSpell>()->selectedSpell = 1;
+				crosshair->getComponent<components::Crosshair>()->bulletType = components::BULLET_TYPE::ICE;
 			}
 			});
 
@@ -56,6 +57,7 @@ namespace Crypt
 			{
 				iceSpellEntity->getComponent<components::Sprite>()->spriteColor = Ebony::Colors::White;
 				fireSpellEntity->getComponent<components::Sprite>()->spriteColor = Ebony::Color(glm::vec4(0.5647f, 0.933f, 0.5647f, 0.6f));
+				crosshair->getComponent<components::Crosshair>()->bulletType = components::BULLET_TYPE::FIRE;
 
 
 				entity->getComponent<components::SelectedSpell>()->selectedSpell = 0;
@@ -71,10 +73,12 @@ namespace Crypt
 					case 0:
 						iceSpellEntity->getComponent<components::Sprite>()->spriteColor = Ebony::Colors::White;
 						fireSpellEntity->getComponent<components::Sprite>()->spriteColor = Ebony::Color(glm::vec4(0.5647f, 0.933f, 0.5647f, 0.6f));
+						crosshair->getComponent<components::Crosshair>()->bulletType = components::BULLET_TYPE::FIRE;
 						break;
 					case 1:
 						iceSpellEntity->getComponent<components::Sprite>()->spriteColor = Ebony::Color(glm::vec4(0.5647f, 0.933f, 0.5647f, 0.6f));
 						fireSpellEntity->getComponent<components::Sprite>()->spriteColor = Ebony::Colors::White;
+						crosshair->getComponent<components::Crosshair>()->bulletType = components::BULLET_TYPE::ICE;
 						break;
 					}
 

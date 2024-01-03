@@ -67,6 +67,7 @@ namespace Crypt
 
 		spriteRenderer.debug = false;
 
+		// Load Tiled map
 		CryptTiledProcessor tiledProcessor = CryptTiledProcessor();
 		tiledProcessor.CreateTranslationFunction();
 		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json", [=](entities::EntityPtr entity) {AddEntity(entity); });
@@ -74,12 +75,12 @@ namespace Crypt
 		std::function<void(entities::EntityPtr entity)> AddEntityLambda = [=](entities::EntityPtr entity) {AddEntity(entity); };
 
 		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });
-
+		auto crosshair = Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, AddEntityLambda);
 		// Create prefabs
 		AddEntity(player);
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, static_cast<float>(windowHeight) - 5.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), static_cast<float>(windowWidth) * 30.0f));
-		AddEntity(Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, AddEntityLambda));
+		AddEntity(crosshair);
 
 		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
 		AddEntity(Crypt::Bat::Create(glm::vec2(400.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
@@ -88,9 +89,7 @@ namespace Crypt
 		AddEntity(Crypt::SuicideBird::Create(glm::vec2(250.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
 
 		AddEntity(Crypt::PlayerHealth::Create(player));
-		AddEntity(Crypt::PlayerSpellSelection::Create(windowHeight, AddEntityLambda));
-		
-		// Load Tiled map
+		AddEntity(Crypt::PlayerSpellSelection::Create(windowHeight, crosshair, AddEntityLambda));
 
 
 
@@ -105,7 +104,7 @@ namespace Crypt
 
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
-		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
+		mainRenderTarget = Ebony::RenderTarget2D::Create(800, 600, GL_LINEAR, GL_NEAREST);
 		clearColor = Ebony::Colors::Black;
 
 		Ebony::Graphics2d::SetMainCamera(camera);

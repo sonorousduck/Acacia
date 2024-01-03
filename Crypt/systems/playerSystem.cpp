@@ -19,7 +19,7 @@ namespace systems
 			auto transform = entity->getComponent<components::Transform>();
 
 
-			if (player->isSlow)
+			/*if (player->isSlow)
 			{
 				if (player->switchedSpeeds)
 				{
@@ -70,7 +70,9 @@ namespace systems
 					player->switchedSpeeds = false;
 
 				}
-			}
+			}*/
+
+			Ebony::Graphics2d::mainCamera->SetCameraXPosition(transform->position.x - 100.0f);
 
 
 			if (player->isOnGround)

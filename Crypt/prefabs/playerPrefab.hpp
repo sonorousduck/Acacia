@@ -161,7 +161,37 @@ namespace Crypt
 			player->addComponent(std::make_unique<components::Player>());
 
 			//auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White);
-			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(30.0f, 30.0f), glm::vec2(60.0f, 60.0f), true, true);
+			
+			// Will use a separate system for controlling gravity and such
+			auto rigidbody = std::make_unique<components::RigidBody>(originalVelocity, glm::vec2(0.0f, 200.0f));
+			auto animationController = std::make_unique<components::AnimationController>();
+
+
+			std::vector<std::chrono::microseconds> timings(4, std::chrono::milliseconds(120));
+
+			std::vector<components::Link> links = { components::Link(1, [=]() {
+								return (false);
+				
+			}) };
+
+			auto spriteSheet = Ebony::ResourceManager::GetTexture("character_run");
+
+			std::vector<Ebony::Animation> animations = { Ebony::Animation(SpriteSheet(spriteSheet, 4, timings)) };
+			
+			auto node1 = components::Node(links, animations);
+
+			animationController->animationTree.emplace_back(node1);
+
+			// Debugging only
+			// ===================================================================
+			//auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Colors::White);
+			//player->addComponent(std::move(sprite));
+
+
+			// ===================================================================
+			glm::vec2 scale = glm::vec2(spriteSheet->Width / 4, spriteSheet->Height) * glm::vec2(2.0f); // We know there are 4 in the x
+
+			components::Subcollider aabbcollider = components::Subcollider(scale / glm::vec2(2.0f), scale, true, true);
 
 			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
@@ -175,38 +205,16 @@ namespace Crypt
 					{
 						player->getComponent<components::Player>()->health -= other->getComponent<components::Bullet>()->strength;
 					}
-
 				};
 
 
 			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::PLAYER, Crypt::CollisionLayers::GROUND | Crypt::CollisionLayers::ENEMY_BULLET, false);
-			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(60.0f, 60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-			
-			// Will use a separate system for controlling gravity and such
-			auto rigidbody = std::make_unique<components::RigidBody>(originalVelocity, glm::vec2(0.0f, 200.0f));
-			auto animationController = std::make_unique<components::AnimationController>();
 
 
-			std::vector<std::chrono::microseconds> timings(4, std::chrono::milliseconds(120));
-
-			std::vector<components::Link> links = { components::Link(1, [=]() {
-								return (false);
-				
-			}) };
-			std::vector<Ebony::Animation> animations = { Ebony::Animation(SpriteSheet(Ebony::ResourceManager::GetTexture("character_run"), 4, timings)) };
-			
-			auto node1 = components::Node(links, animations);
-
-			animationController->animationTree.emplace_back(node1);
-
-			// Debugging only
-			// ===================================================================
-			//auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Colors::White);
-			//player->addComponent(std::move(sprite));
 
 
-			// ===================================================================
 
+			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale, glm::vec3(1.0f, 0.0f, 0.0f));
 
 
 			player->addComponent(std::move(collider));

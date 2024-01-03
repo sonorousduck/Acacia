@@ -25,9 +25,24 @@ namespace scripts
 			components::EnemyDetection* detectionComponent;
 			if (entity->tryGetComponent<components::EnemyDetection>(detectionComponent))
 			{
+				auto test = detectionComponent->tolerance;
+
 				if (detectionComponent->canMoveTowardsTarget)
 				{
-					entity->getComponent<components::RigidBody>()->addScriptedMovement(-detectionComponent->towardsTargetVector * detectionComponent->movementSpeed * Ebony::Time::GetDeltaTimeFloat());
+					if (detectionComponent->tolerance > detectionComponent->distanceAway)
+					{
+						// Slow down movement
+						auto test = glm::vec2(detectionComponent->tolerance / detectionComponent->distanceAway);
+						entity->getComponent<components::RigidBody>()->addScriptedMovement(-detectionComponent->towardsTargetVector * detectionComponent->movementSpeed * Ebony::Time::GetDeltaTimeFloat() * glm::vec2(detectionComponent->distanceAway / detectionComponent->tolerance));
+
+
+					}
+					else
+					{
+						entity->getComponent<components::RigidBody>()->addScriptedMovement(-detectionComponent->towardsTargetVector * detectionComponent->movementSpeed * Ebony::Time::GetDeltaTimeFloat());
+					}
+
+
 				}
 
 				if (detectionComponent->canDetectTarget)

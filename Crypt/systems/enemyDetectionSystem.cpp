@@ -21,16 +21,20 @@ namespace systems
 			auto transform = entity->getComponent<components::Transform>();
 			auto targetTransform = detectionComponent->target->getComponent<components::Transform>();
 
-
-			float distance = glm::distance(transform->position, targetTransform->position);
-			
-			detectionComponent->canMoveTowardsTarget = distance < detectionComponent->movementRange;
-			detectionComponent->canDetectTarget = distance < detectionComponent->detectionRange;
-			if (transform->position != targetTransform->position + detectionComponent->offset)
+			components::Player* playerComponent;
+			if (detectionComponent->target->tryGetComponent(playerComponent))
 			{
-				components::Player* playerComponent;
-				if (detectionComponent->target->tryGetComponent(playerComponent))
+				float distance = glm::distance(transform->position, targetTransform->position);
+				float distanceToTarget = glm::distance(transform->position, targetTransform->position + detectionComponent->offset * glm::vec2(1.0f, playerComponent->gravityDown ? -1 : 1));
+				detectionComponent->canMoveTowardsTarget = distance < detectionComponent->movementRange;
+				detectionComponent->canDetectTarget = distance < detectionComponent->detectionRange;
+				detectionComponent->distanceAway = distanceToTarget;
+
+				// Basically need to do reverse box bounding check.
+
+				if (transform->position != targetTransform->position + detectionComponent->offset)
 				{
+
 					// If it is targetting the player, you want to check if it has gravity
 					glm::vec2 towardsTargetVector = glm::normalize(transform->position - (targetTransform->position + detectionComponent->offset * glm::vec2(1.0f, playerComponent->gravityDown ? -1 : 1)));
 					glm::vec2 towardsRealTarget = glm::normalize(transform->position - targetTransform->position);

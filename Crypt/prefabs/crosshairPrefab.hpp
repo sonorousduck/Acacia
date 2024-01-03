@@ -36,7 +36,22 @@ namespace Crypt
 					if (shootingComponent->currentCooldown >= shootingComponent->maxShootingSpeed)
 					{
 						auto crosshair = entity->getComponent<components::Crosshair>();
-						AddEntity(BulletPrefab::Create(player->getComponent<components::Transform>()->position, glm::vec2(3.0f, 3.0f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "fire_bullet"));
+						glm::vec2 fireFromPosition = player->getComponent<components::Transform>()->position;
+
+						if (!player->getComponent<components::Player>()->gravityDown)
+						{
+							fireFromPosition += glm::vec2(0.0f, 20.0f);
+						}
+
+						if (crosshair->bulletType & components::BULLET_TYPE::FIRE)
+						{
+							AddEntity(BulletPrefab::Create(fireFromPosition, glm::vec2(2.5f, 2.5f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "fire_bullet"));
+						}
+						else if (crosshair->bulletType & components::BULLET_TYPE::ICE)
+						{
+							AddEntity(BulletPrefab::Create(fireFromPosition, glm::vec2(2.5f, 2.5f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "ice_bullet"));
+						}
+
 
 						shootingComponent->currentCooldown = 0.0f;
 					}

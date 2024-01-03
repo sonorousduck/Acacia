@@ -208,8 +208,8 @@ namespace Ebony {
 
 	public:
 
-		int windowWidth = 800;
-		int windowHeight = 600;
+		int windowWidth = 1920;
+		int windowHeight = 1080;
 		bool quit = false;
 
 		bool newScreenFocused = false;

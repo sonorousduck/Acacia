@@ -95,7 +95,7 @@ namespace Crypt
 			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::SuicideBatScript>();
 
 			bird->addComponent(std::make_unique<components::Enemy>(1.0f));
-			bird->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "bat_attack", player, 180.0f));
+			bird->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "bat_attack", player, 0.0f, 180.0f));
 
 			bird->addComponent(std::make_unique<components::DestructionComponent>([=]()
 				{

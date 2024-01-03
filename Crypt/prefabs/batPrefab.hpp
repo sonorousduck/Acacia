@@ -42,7 +42,9 @@ namespace Crypt
 
 			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
-					if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::PLAYER_BULLET)
+					auto otherLayer = other->getComponent<components::Collider>()->layer;
+
+					if (otherLayer & Crypt::CollisionLayers::PLAYER_BULLET)
 					{
 						auto enemyInformation = bat->getComponent<components::Enemy>();
 
@@ -55,9 +57,23 @@ namespace Crypt
 
 						other->getComponent<components::DestructionComponent>()->shouldDestroy = true;
 					}
+					if (otherLayer & CollisionLayers::ENEMY)
+					{
+						bat->getComponent<components::Transform>()->position = bat->getComponent<components::Transform>()->previousPosition;
+					}
 				};
 
-			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::ENEMY, Crypt::CollisionLayers::PLAYER_BULLET | CollisionLayers::GROUND, false);
+			aabbcollider.onCollision = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+				{
+					auto otherLayer = other->getComponent<components::Collider>()->layer;
+
+					if (otherLayer & CollisionLayers::ENEMY)
+					{
+						bat->getComponent<components::Transform>()->position = bat->getComponent<components::Transform>()->previousPosition;
+					}
+				};
+
+			auto collider = std::make_unique<components::Collider>(aabbcollider, Crypt::CollisionLayers::ENEMY, Crypt::CollisionLayers::PLAYER_BULLET | CollisionLayers::GROUND | CollisionLayers::ENEMY, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale, glm::vec3(0.0f, 1.0f, 0.0f));
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
@@ -68,7 +84,7 @@ namespace Crypt
 
 
 			bat->addComponent(std::make_unique<components::Enemy>(3.0f));
-			bat->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "bat_attack", player));
+			bat->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "bat_attack", player, 5.0f));
 
 			bat->addComponent(std::make_unique<components::DestructionComponent>([=]()
 				{

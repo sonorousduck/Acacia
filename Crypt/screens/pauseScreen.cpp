@@ -56,9 +56,9 @@ namespace Crypt
 	{
 		camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 1.0f));
 
-		this->windowHeight = windowHeight;
-		this->windowWidth = windowWidth;
-		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
+		this->windowHeight = 800;
+		this->windowWidth = 600;
+		mainRenderTarget = Ebony::RenderTarget2D::Create(800, 600, GL_LINEAR, GL_NEAREST);
 		clearColor = Ebony::Colors::Black;
 
 		Ebony::Graphics2d::SetMainCamera(camera);
