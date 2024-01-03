@@ -38,7 +38,7 @@ namespace Ebony {
 			// Set up graphics here
 			Application::Init();
 
-			Ebony::Graphics2d::Initialize("Crypt", windowWidth, windowHeight);
+			Ebony::Graphics2d::Initialize("Crypt", windowWidth, windowHeight, renderWidth, renderHeight);
 			Ebony::AudioManager::Init();
 
 			InputManager::Initialize();
@@ -62,7 +62,7 @@ namespace Ebony {
 
 			for (auto& screen : screens)
 			{
-				screen.second->Init(windowWidth, windowHeight);
+				screen.second->Init(renderWidth, renderHeight);
 			}
 		}
 
@@ -208,8 +208,10 @@ namespace Ebony {
 
 	public:
 
-		int windowWidth = 1920;
-		int windowHeight = 1080;
+		int windowWidth = 800;
+		int windowHeight = 600;
+		int renderWidth = 480;
+		int renderHeight = 320;
 		bool quit = false;
 
 		bool newScreenFocused = false;

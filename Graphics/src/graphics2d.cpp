@@ -26,6 +26,9 @@ namespace Ebony
 	const char* Graphics2d::windowName;
 	int Graphics2d::screenWidth;
 	int Graphics2d::screenHeight;
+	int Graphics2d::renderWidth;
+	int Graphics2d::renderHeight;
+
 	int Graphics2d::bufferDrawing{ 30 }; // This is how much more of the screen to draw, since you will see the updating screen as it goes out of view on the ope and left
 	
 	ImGuiIO Graphics2d::io;
@@ -44,10 +47,12 @@ namespace Ebony
 	}
 
 
-	void Graphics2d::Initialize(const char* windowName, int width, int height) {
+	void Graphics2d::Initialize(const char* windowName, int width, int height, int renderWidth, int renderHeight) {
 		windowName = windowName;
-		screenWidth = width;
-		screenHeight = height;
+		Graphics2d::screenWidth = width;
+		Graphics2d::screenHeight = height;
+		Graphics2d::renderWidth = renderWidth;
+		Graphics2d::renderHeight = renderHeight;
 		versionMajor = 3;
 		versionMinor = 3;
 
@@ -57,15 +62,17 @@ namespace Ebony
 		SetupCallback();
 		InitializeImgui();
 
-		projection = glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f, -1.0f, 1.0f);
+		projection = glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f, -1.0f, 1.0f);
 		initRenderData();
 	}
 
-	void Graphics2d::Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion)
+	void Graphics2d::Initialize(const char* windowName, int width, int height, int renderWidth, int renderHeight, int majorVersion, int minorVersion)
 	{
 		windowName = windowName;
-		screenWidth = width;
-		screenHeight = height;
+		Graphics2d::screenWidth = width;
+		Graphics2d::screenHeight = height;
+		Graphics2d::renderWidth = renderWidth;
+		Graphics2d::renderHeight = renderHeight;
 		versionMajor = majorVersion;
 		versionMinor = minorVersion;
 
@@ -73,6 +80,8 @@ namespace Ebony
 		window.createWindow(versionMajor, versionMinor, screenWidth, screenHeight);
 		SetupCallback();
 		Initialize();
+
+		projection = glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f, -1.0f, 1.0f);
 	}
 
 	void Graphics2d::SetupCallback()
@@ -370,7 +379,7 @@ namespace Ebony
 			{
 				drawable.s->use();
 				activeShaderId = drawable.s->ID;
-				//s->setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
+				drawable.s->setMat4("projection", glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f));
 			}
 
 			//glEnable(GL_TEXTURE_2D_ARRAY);
@@ -515,7 +524,7 @@ namespace Ebony
 		// TODO: This should change to use the actual window sizes
 		//glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(screenWidth), 0.0f, static_cast<float>(screenHeight));
 		textShader->use();
-		textShader->setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
+		textShader->setMat4("projection", glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f));
 
 		glGenVertexArrays(1, &textVAO);
 		glGenBuffers(1, &textVBO);
@@ -550,10 +559,10 @@ namespace Ebony
 
 	void Graphics2d::SetRenderTarget(RenderTarget2D& renderTarget, Color clearColor)
 	{
-		if (Graphics2d::resized)
-		{
-			renderTarget.Resize(Graphics2d::screenWidth, Graphics2d::screenHeight);
-		}
+		//if (Graphics2d::resized)
+		//{
+		//	renderTarget.Resize(Graphics2d::screenWidth, Graphics2d::screenHeight);
+		//}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, renderTarget.GetFramebuffer());
 		glClearColor(clearColor.r(), clearColor.g(), clearColor.b(), clearColor.a());

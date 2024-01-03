@@ -104,7 +104,7 @@ namespace Crypt
 
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
-		mainRenderTarget = Ebony::RenderTarget2D::Create(800, 600, GL_LINEAR, GL_NEAREST);
+		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
 		clearColor = Ebony::Colors::Black;
 
 		Ebony::Graphics2d::SetMainCamera(camera);

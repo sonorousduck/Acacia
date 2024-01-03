@@ -43,7 +43,13 @@ namespace Crypt
 			subcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 					entity->getComponent<components::Sprite>()->SetTexture(Ebony::ResourceManager::GetTexture(spriteImageHover));
-					other->getComponent<components::ActiveUICollision>()->collidingWith = entity;
+
+					components::ActiveUICollision* activeUICollision;
+					if (other->tryGetComponent<components::ActiveUICollision>(activeUICollision))
+					{
+						activeUICollision->collidingWith = entity;
+					}
+
 					//other->getComponent<components::
 					// If it is clicked while onCollision though, I need to switch to the pressed version
 				};
@@ -59,7 +65,7 @@ namespace Crypt
 					}
 				};
 
-			entity->addComponent(std::make_unique<components::Collider>(subcollider, CollisionLayers::UI, true));
+			entity->addComponent(std::make_unique<components::Collider>(subcollider, CollisionLayers::UI, CollisionLayers::UI, true));
 			entity->addComponent(std::make_unique<components::RigidBody>());
 
 

@@ -110,8 +110,8 @@ namespace Ebony
 	public:
 		// Graphics2d();
 
-		static void Initialize(const char* windowName, int width, int height);
-		static void Initialize(const char* windowName, int width, int height, int majorVersion, int minorVersion);
+		static void Initialize(const char* windowName, int width, int height, int renderWidth, int renderHeight);
+		static void Initialize(const char* windowName, int width, int height, int renderWidth, int renderHeight, int majorVersion, int minorVersion);
 		static void InitializeTextDrawing(std::shared_ptr<Shader> textShader);
 
 		//// Need to load fonts as well
@@ -159,6 +159,8 @@ namespace Ebony
 		static Window window;
 		static int screenWidth;
 		static int screenHeight;
+		static int renderWidth;
+		static int renderHeight;
 		static bool firstMouse;
 		static bool cursorDisabled;
 

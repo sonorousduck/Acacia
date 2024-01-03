@@ -36,16 +36,16 @@ namespace Crypt
 		audioSystem = systems::AudioSystem();
 
 		// Create prefabs
-		auto button = Crypt::Button::Create(40.0f, 250.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
+		auto button = Crypt::Button::Create(0.0f, 0.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
 		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 2.0f;
 		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 4.0f;
 		AddEntity(button);
 
 		AddEntity(Crypt::MenuCursor::Create());
-		AddEntity(Crypt::ButtonText::Create(buttonWidth, 250.0f + buttonHeight, "resume_text"));
+		AddEntity(Crypt::ButtonText::Create(buttonWidth, 0.0f + buttonHeight, "resume_text"));
 
-		AddEntity(Crypt::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
-		AddEntity(Crypt::ButtonText::Create(buttonWidth, 470.0f + buttonHeight, "quit_text"));
+		AddEntity(Crypt::Button::Create(0.0f, buttonHeight + 10.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
+		AddEntity(Crypt::ButtonText::Create(buttonWidth, 10.0f + 2 * buttonHeight, "quit_text"));
 
 
 		AddNewEntities();
@@ -56,9 +56,9 @@ namespace Crypt
 	{
 		camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 1.0f));
 
-		this->windowHeight = 800;
-		this->windowWidth = 600;
-		mainRenderTarget = Ebony::RenderTarget2D::Create(800, 600, GL_LINEAR, GL_NEAREST);
+		this->windowHeight = windowWidth;
+		this->windowWidth = windowHeight;
+		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
 		clearColor = Ebony::Colors::Black;
 
 		Ebony::Graphics2d::SetMainCamera(camera);
