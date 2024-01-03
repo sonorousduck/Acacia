@@ -523,6 +523,10 @@ namespace Ebony
 	{
 		std::unordered_map<Uint8, MousePress>::iterator it = buttons.find(button);
 
+		x = static_cast<int>((static_cast<float>(x) / static_cast<float>(Graphics2d::screenWidth)) * static_cast<float>(Graphics2d::renderWidth));
+		y = static_cast<int>((static_cast<float>(y) / static_cast<float>(Graphics2d::screenHeight)) * static_cast<float>(Graphics2d::renderHeight));
+
+
 		if (it != buttons.end())
 		{
 			MousePress press = buttons[button];
@@ -573,6 +577,9 @@ namespace Ebony
 
 	void MouseInputManager::setMousePosition(int x, int y, int xRel, int yRel)
 	{
+		x = static_cast<int>((static_cast<float>(x) / static_cast<float>(Graphics2d::screenWidth)) * static_cast<float>(Graphics2d::renderWidth));
+		y = static_cast<int>((static_cast<float>(y) / static_cast<float>(Graphics2d::screenHeight)) * static_cast<float>(Graphics2d::renderHeight));
+
 		absoluteX = x;
 		absoluteY = y;
 		relativeX += xRel;

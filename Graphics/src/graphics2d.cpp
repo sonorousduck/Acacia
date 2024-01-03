@@ -379,7 +379,7 @@ namespace Ebony
 			{
 				drawable.s->use();
 				activeShaderId = drawable.s->ID;
-				drawable.s->setMat4("projection", glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f));
+				//drawable.s->setMat4("projection", glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f));
 			}
 
 			//glEnable(GL_TEXTURE_2D_ARRAY);
