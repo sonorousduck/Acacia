@@ -22,9 +22,9 @@ namespace Crypt
 
 			std::shared_ptr<Texture2D> texture = Ebony::ResourceManager::GetTexture(spriteImageUnpressed);
 
-			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width, height), 0.0f, glm::vec2(texture->Width, texture->Height)));
+			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width, height), 0.0f, glm::vec2(texture->Width, texture->Height) * glm::vec2(0.5f, 0.5f)));
 
-			components::Subcollider subcollider = components::Subcollider(glm::vec2(texture->Width / 2, texture->Height / 2), glm::vec2(texture->Width, texture->Height), true, true);
+			components::Subcollider subcollider = components::Subcollider(glm::vec2(texture->Width / 2, texture->Height / 2) * glm::vec2(0.5f, 0.5f), glm::vec2(texture->Width, texture->Height) * glm::vec2(0.5f, 0.5f), true, true);
 			
 
 			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.01f, true));
@@ -42,11 +42,12 @@ namespace Crypt
 			// Create the onCollisionStart
 			subcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
-					entity->getComponent<components::Sprite>()->SetTexture(Ebony::ResourceManager::GetTexture(spriteImageHover));
 
 					components::ActiveUICollision* activeUICollision;
 					if (other->tryGetComponent<components::ActiveUICollision>(activeUICollision))
 					{
+						entity->getComponent<components::Sprite>()->SetTexture(Ebony::ResourceManager::GetTexture(spriteImageHover));
+
 						activeUICollision->collidingWith = entity;
 					}
 

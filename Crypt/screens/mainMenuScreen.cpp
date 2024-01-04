@@ -38,20 +38,21 @@ namespace Crypt
 
 		// Create prefabs
 
-		auto button = Crypt::Button::Create(40.0f, 250.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
-		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 2.0f;
+		auto button = Crypt::Button::Create(40.0f, 120.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
+		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 4.0f;
+		auto actualHalfButtonWidth = button->getComponent<components::Transform>()->scale.x / 2.0f;
 		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 4.0f;
 		AddEntity(button);
 
 		AddEntity(Crypt::MenuCursor::Create());
-		AddEntity(Crypt::ButtonText::Create(buttonWidth, 250.0f + buttonHeight, "start_text"));
-		AddEntity(Crypt::Button::Create(40.0f, 360.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::OPTIONS, [=](std::uint16_t nextScreen) { SetNextScreen(nextScreen); }));
-		AddEntity(Crypt::ButtonText::Create(buttonWidth, 360.0f + buttonHeight, "options_text"));
-		AddEntity(Crypt::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
+		AddEntity(Crypt::ButtonText::Create(actualHalfButtonWidth + 30.0f, 120.0f + buttonHeight, "start_text"));
+		AddEntity(Crypt::Button::Create(40.0f, 130.0f + 2 * buttonHeight, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::OPTIONS, [=](std::uint16_t nextScreen) { SetNextScreen(nextScreen); }));
+		//AddEntity(Crypt::ButtonText::Create(buttonWidth, 360.0f + buttonHeight, "options_text"));
+		AddEntity(Crypt::Button::Create(40.0f, 140.0f + 4 * buttonHeight, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
 
 
 
-		AddEntity(Crypt::ButtonText::Create(buttonWidth, 470.0f + buttonHeight, "quit_text"));
+		//AddEntity(Crypt::ButtonText::Create(buttonWidth, 460.0f + buttonHeight, "quit_text"));
 
 		AddNewEntities();
 	}

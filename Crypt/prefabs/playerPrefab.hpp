@@ -189,7 +189,7 @@ namespace Crypt
 
 
 			// ===================================================================
-			glm::vec2 scale = glm::vec2(spriteSheet->Width / 4, spriteSheet->Height) * glm::vec2(2.0f); // We know there are 4 in the x
+			glm::vec2 scale = glm::vec2(spriteSheet->Width / 4, spriteSheet->Height); // We know there are 4 in the x
 
 			components::Subcollider aabbcollider = components::Subcollider(scale / glm::vec2(2.0f), scale, true, true);
 

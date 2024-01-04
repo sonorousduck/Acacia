@@ -36,16 +36,20 @@ namespace Crypt
 		audioSystem = systems::AudioSystem();
 
 		// Create prefabs
-		auto button = Crypt::Button::Create(0.0f, 0.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
-		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 2.0f;
-		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 4.0f;
+		AddEntity(Crypt::MenuCursor::Create());
+
+
+		auto button = Crypt::Button::Create(75.0f, 140.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
+		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 3.0f;
+		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 8.0f;
 		AddEntity(button);
 
-		AddEntity(Crypt::MenuCursor::Create());
-		AddEntity(Crypt::ButtonText::Create(buttonWidth, 0.0f + buttonHeight, "resume_text"));
+		auto firstText = Crypt::ButtonText::Create(buttonWidth, 140.0f + buttonHeight, "resume_text");
 
-		AddEntity(Crypt::Button::Create(0.0f, buttonHeight + 10.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
-		AddEntity(Crypt::ButtonText::Create(buttonWidth, 10.0f + 2 * buttonHeight, "quit_text"));
+		AddEntity(firstText);
+
+		AddEntity(Crypt::Button::Create(75.0f, button->getComponent<components::Transform>()->position.y + (buttonHeight * 4.0f) + 10.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
+		AddEntity(Crypt::ButtonText::Create(buttonWidth, button->getComponent<components::Transform>()->position.y + (buttonHeight * 5.0f) + 10.0f, "quit_text"));
 
 
 		AddNewEntities();

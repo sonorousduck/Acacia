@@ -22,7 +22,7 @@ namespace Crypt
 			std::shared_ptr<Texture2D> texture = Ebony::ResourceManager::GetTexture(spriteText);
 
 
-			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width - (texture->Width / 3.0f), height), 0.0f, glm::vec2(texture->Width, texture->Height)));
+			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width - ((texture->Width * 0.5f) / 3.0f), height), 0.0f, glm::vec2(texture->Width, texture->Height) * glm::vec2(0.5f, 0.5f)));
 			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.02f, true));
 
 
