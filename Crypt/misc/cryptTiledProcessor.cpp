@@ -6,6 +6,7 @@ namespace Crypt
 
 	void CryptTiledProcessor::ParseMap(const char* filepath, std::function<void(entities::EntityPtr)> AddEntity)
 	{
+		this->AddEntity = AddEntity;
 		tson::Tileson t;
 		std::unique_ptr<tson::Map> map = t.parse(fs::path(filepath));
 
@@ -37,23 +38,35 @@ namespace Crypt
 
 				AddEntity(renderedTile);
 			}
+
+
+			tson::Layer* enemyLayer = map->getLayer("Enemies");
+
+
+			for (auto& enemy : enemyLayer->getObjects())
+			{
+				tson::Vector2i position = enemy.getPosition();
+				glm::vec2 glmPosition = glm::vec2(position.x, position.y);
+
+				translationFunction(glmPosition, enemy.getGid());
+			}
+
 		}
 	}
 
 	void CryptTiledProcessor::CreateTranslationFunction()
 	{
-		translationFunction = [=](int entityId) 
+		translationFunction = [=](glm::vec2 position, int entityId) 
 			{
 				switch (entityId)
 				{
-				case 3221225509:
-					std::cout << "Top Wall" << std::endl;
+				case 33:
+					std::cout << "Bat" << std::endl;
+					AddEntity(Crypt::Bat::Create(position, glm::vec2(1.0f), player, this->AddEntity));
 					break;
-				case 50:
-					std::cout << "Background wall" << std::endl;
-					break;
-				case 37:
-					std::cout << "Bottom wall" << std::endl;
+				case 34:
+					std::cout << "Suicide Bird" << std::endl;
+					AddEntity(Crypt::SuicideBird::Create(position, glm::vec2(1.0f), player, this->AddEntity));
 					break;
 				default:
 					std::cout << "Unknown id: " << entityId << std::endl;

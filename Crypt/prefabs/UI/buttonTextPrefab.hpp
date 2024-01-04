@@ -15,14 +15,22 @@ namespace Crypt
 	class ButtonText
 	{
 	public:
-		static entities::EntityPtr Create(float width, float height, const char* spriteText)
+		static entities::EntityPtr Create(float width, float height, float buttonWidth, float buttonHeight, const char* spriteText)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
 			std::shared_ptr<Texture2D> texture = Ebony::ResourceManager::GetTexture(spriteText);
+			auto scale = glm::vec2(texture->Width, texture->Height) * glm::vec2(0.5f, 0.5f);
+
+			auto centeredPositionX = (buttonWidth - scale.x) / 2.0f;
+			auto centeredPositionY = (buttonHeight - scale.y) / 2.0f;
 
 
-			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width - ((texture->Width * 0.5f) / 3.0f), height), 0.0f, glm::vec2(texture->Width, texture->Height) * glm::vec2(0.5f, 0.5f)));
+
+			// Base the button text based on the overall size of the button, using the original positioning of the button as a guide.
+
+
+			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(centeredPositionX + width, height + centeredPositionY), 0.0f, scale));
 			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.02f, true));
 
 

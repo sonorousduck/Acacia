@@ -208,8 +208,8 @@ namespace Ebony {
 
 	public:
 
-		int windowWidth = 680;
-		int windowHeight = 480;
+		int windowWidth = 1920;
+		int windowHeight = 1080;
 		int renderWidth = 480;
 		int renderHeight = 320;
 		bool quit = false;

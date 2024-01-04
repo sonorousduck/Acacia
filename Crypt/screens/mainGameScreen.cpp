@@ -67,14 +67,15 @@ namespace Crypt
 
 		spriteRenderer.debug = false;
 
+		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });
+
 		// Load Tiled map
-		CryptTiledProcessor tiledProcessor = CryptTiledProcessor();
+		CryptTiledProcessor tiledProcessor = CryptTiledProcessor(player);
 		tiledProcessor.CreateTranslationFunction();
 		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json", [=](entities::EntityPtr entity) {AddEntity(entity); });
 
 		std::function<void(entities::EntityPtr entity)> AddEntityLambda = [=](entities::EntityPtr entity) {AddEntity(entity); };
 
-		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });
 		auto crosshair = Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, AddEntityLambda);
 		// Create prefabs
 		AddEntity(player);
@@ -82,11 +83,11 @@ namespace Crypt
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(crosshair);
 
-		AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
-		AddEntity(Crypt::Bat::Create(glm::vec2(400.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
-		AddEntity(Crypt::Bat::Create(glm::vec2(50.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
+		//AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
+		//AddEntity(Crypt::Bat::Create(glm::vec2(400.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
+		//AddEntity(Crypt::Bat::Create(glm::vec2(50.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
 
-		AddEntity(Crypt::SuicideBird::Create(glm::vec2(250.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
+		//AddEntity(Crypt::SuicideBird::Create(glm::vec2(250.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
 
 		AddEntity(Crypt::PlayerHealth::Create(player));
 		AddEntity(Crypt::PlayerSpellSelection::Create(windowHeight, crosshair, AddEntityLambda));
@@ -108,7 +109,6 @@ namespace Crypt
 		clearColor = Ebony::Colors::Black;
 
 		Ebony::Graphics2d::SetMainCamera(camera);
-
 	}
 
 	

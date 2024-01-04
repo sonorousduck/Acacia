@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tileson.hpp"
+#include "glm/glm.hpp"
 #include <iostream>
 #include <functional>
 #include "../entity.hpp"
@@ -21,7 +22,7 @@ namespace Ebony
 		// This function will be implemented by the developer in each game.
 		virtual void CreateTranslationFunction();
 
-		std::function<void(int entityId)> translationFunction{};
+		std::function<void(glm::vec2 position, int entityId)> translationFunction;
 
 
 	private:

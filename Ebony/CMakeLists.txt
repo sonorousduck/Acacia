@@ -134,6 +134,7 @@ set (SingletonHeaders
 	src/singletons/inputPersistence.hpp
 	src/singletons/audioManager.hpp
 	src/singletons/time.hpp
+	src/singletons/systemManager.hpp
 )
 
 set (SingletonSources
@@ -141,6 +142,7 @@ set (SingletonSources
 	src/singletons/audioManager.cpp
 	src/singletons/time.cpp
 	src/singletons/inputManager.cpp
+	src/singletons/systemManager.cpp
 )
 
 source_group("Main\\Header Files" FILES ${HEADER_FILES})

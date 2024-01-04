@@ -23,7 +23,19 @@ namespace scripts
 			// Keep a radius of 1 away from the player, but point towards the direction
 			auto playerTransform = player->getComponent<components::Transform>();
 			glm::vec3 cameraPosition = Ebony::Graphics2d::mainCamera->Position;
-			glm::vec2 currentDirection = glm::normalize((glm::vec2(screenPositionX, screenPositionY) + glm::vec2(cameraPosition.x, cameraPosition.y)) - playerTransform->position) * glm::vec2(100, 100);
+
+			glm::vec2 fireFromPosition = player->getComponent<components::Transform>()->position;
+
+			//if (!player->getComponent<components::Player>()->gravityDown)
+			//{
+			//	fireFromPosition += glm::vec2(0.0f, 10.0f);
+			//}
+			//else
+			//{
+			//	fireFromPosition -= glm::vec2(0.0f, 10.0f);
+			//}
+
+			glm::vec2 currentDirection = glm::normalize((glm::vec2(screenPositionX, screenPositionY) + glm::vec2(cameraPosition.x, cameraPosition.y)) - fireFromPosition) * glm::vec2(100, 100);
 
 			aimLastDirection = currentDirection;
 			//entity->getComponent<components::Transform>()->position = aimLastDirection + playerTransform->position;

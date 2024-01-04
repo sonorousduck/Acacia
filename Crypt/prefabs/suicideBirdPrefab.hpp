@@ -11,8 +11,10 @@
 #include <singletons/time.hpp>
 #include <components/animationControllerComponent.hpp>
 #include "../components/enemyDetectionComponent.hpp"
-#include <components/cppScriptComponent.hpp>
+#include "../components/playerComponent.hpp"
 #include "../components/enemyComponent.hpp"
+
+#include <components/cppScriptComponent.hpp>
 #include "healthBarPrefab.hpp"
 #include "../scripts/suicideBatScript.hpp"
 

@@ -16,15 +16,20 @@ namespace Crypt
 	class Button
 	{
 	public:
-		static entities::EntityPtr Create(float width, float height, const char* spriteImageUnpressed, const char* spriteImageHover, const char* spriteImagePressed, Crypt::ScreenEnum screenEnum, std::function<void(std::uint16_t)> setNextScreen)
+		static entities::EntityPtr Create(float width, float height, float screenWidth, const char* spriteImageUnpressed, const char* spriteImageHover, const char* spriteImagePressed, Crypt::ScreenEnum screenEnum, std::function<void(std::uint16_t)> setNextScreen)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
+			
 			std::shared_ptr<Texture2D> texture = Ebony::ResourceManager::GetTexture(spriteImageUnpressed);
+			auto scale = glm::vec2(texture->Width, texture->Height) * glm::vec2(0.5f, 0.5f);
 
-			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width, height), 0.0f, glm::vec2(texture->Width, texture->Height) * glm::vec2(0.5f, 0.5f)));
+			auto centeredPositionX = (screenWidth - scale.x) / 2.0f;
 
-			components::Subcollider subcollider = components::Subcollider(glm::vec2(texture->Width / 2, texture->Height / 2) * glm::vec2(0.5f, 0.5f), glm::vec2(texture->Width, texture->Height) * glm::vec2(0.5f, 0.5f), true, true);
+
+			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(centeredPositionX + width, height), 0.0f, scale));
+
+			components::Subcollider subcollider = components::Subcollider(scale * glm::vec2(0.5f, 0.5f), scale, true, true);
 			
 
 			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.01f, true));

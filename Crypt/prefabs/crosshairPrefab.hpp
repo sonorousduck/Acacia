@@ -15,7 +15,7 @@ namespace Crypt
 	class Crosshair
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, entities::EntityPtr player,  std::function<void(entities::EntityPtr)> AddEntity)
+		static entities::EntityPtr Create(glm::vec2 startTransform, entities::EntityPtr player, std::function<void(entities::EntityPtr)> AddEntity)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 			float speed = 10.0f;
@@ -38,18 +38,13 @@ namespace Crypt
 						auto crosshair = entity->getComponent<components::Crosshair>();
 						glm::vec2 fireFromPosition = player->getComponent<components::Transform>()->position;
 
-						if (!player->getComponent<components::Player>()->gravityDown)
-						{
-							fireFromPosition += glm::vec2(0.0f, 20.0f);
-						}
-
 						if (crosshair->bulletType & components::BULLET_TYPE::FIRE)
 						{
-							AddEntity(BulletPrefab::Create(fireFromPosition, glm::vec2(2.5f, 2.5f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "fire_bullet"));
+							AddEntity(BulletPrefab::Create(fireFromPosition, glm::vec2(2.5f, 2.5f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "fire_bullet", AddEntity));
 						}
 						else if (crosshair->bulletType & components::BULLET_TYPE::ICE)
 						{
-							AddEntity(BulletPrefab::Create(fireFromPosition, glm::vec2(2.5f, 2.5f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "ice_bullet"));
+							AddEntity(BulletPrefab::Create(fireFromPosition, glm::vec2(2.5f, 2.5f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "ice_bullet", AddEntity));
 						}
 
 
@@ -72,7 +67,7 @@ namespace Crypt
 					if (shootingComponent->currentCooldown >= shootingComponent->maxShootingSpeed)
 					{
 						auto crosshair = entity->getComponent<components::Crosshair>();
-						AddEntity(BulletPrefab::Create(crosshair->aimLocation, glm::vec2(50.0f, 50.0f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "fire_bullet"));
+						AddEntity(BulletPrefab::Create(crosshair->aimLocation, glm::vec2(50.0f, 50.0f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "fire_bullet", AddEntity));
 
 						shootingComponent->currentCooldown = 0.0f;
 						Ebony::InputManager::Vibrate(0, 0, 1.0f, 100, true);

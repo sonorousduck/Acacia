@@ -38,17 +38,18 @@ namespace Crypt
 
 		// Create prefabs
 
-		auto button = Crypt::Button::Create(40.0f, 120.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
-		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 4.0f;
-		auto actualHalfButtonWidth = button->getComponent<components::Transform>()->scale.x / 2.0f;
-		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 4.0f;
+		auto button = Crypt::Button::Create(0.0f, 120.0f, static_cast<float>(windowWidth), "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
+		auto actualButtonScale = button->getComponent<components::Transform>()->scale;
+		auto buttonPositioningX = button->getComponent<components::Transform>()->position.x;
+
 		AddEntity(button);
 
 		AddEntity(Crypt::MenuCursor::Create());
-		AddEntity(Crypt::ButtonText::Create(actualHalfButtonWidth + 30.0f, 120.0f + buttonHeight, "start_text"));
-		AddEntity(Crypt::Button::Create(40.0f, 130.0f + 2 * buttonHeight, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::OPTIONS, [=](std::uint16_t nextScreen) { SetNextScreen(nextScreen); }));
-		//AddEntity(Crypt::ButtonText::Create(buttonWidth, 360.0f + buttonHeight, "options_text"));
-		AddEntity(Crypt::Button::Create(40.0f, 140.0f + 4 * buttonHeight, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
+		AddEntity(Crypt::ButtonText::Create(buttonPositioningX, 120.0f, actualButtonScale.x, actualButtonScale.y, "start_text"));
+		AddEntity(Crypt::Button::Create(0.0f, 130.0f + actualButtonScale.y, static_cast<float>(windowWidth), "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::OPTIONS, [=](std::uint16_t nextScreen) { SetNextScreen(nextScreen); }));
+		AddEntity(Crypt::ButtonText::Create(buttonPositioningX, 130.0f + actualButtonScale.y, actualButtonScale.x, actualButtonScale.y, "options_text"));
+		AddEntity(Crypt::Button::Create(0.0f, 140.0f + 2 * actualButtonScale.y, static_cast<float>(windowWidth), "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
+		AddEntity(Crypt::ButtonText::Create(buttonPositioningX, 140.0f + 2.0f * actualButtonScale.y, actualButtonScale.x, actualButtonScale.y, "quit_text"));
 
 
 
@@ -67,7 +68,6 @@ namespace Crypt
 		clearColor = Ebony::Colors::Black;
 
 		Ebony::Graphics2d::SetMainCamera(camera);
-
 	}
 
 	

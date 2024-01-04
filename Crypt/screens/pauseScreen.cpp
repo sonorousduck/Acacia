@@ -39,17 +39,18 @@ namespace Crypt
 		AddEntity(Crypt::MenuCursor::Create());
 
 
-		auto button = Crypt::Button::Create(75.0f, 140.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
-		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 3.0f;
-		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 8.0f;
+		auto button = Crypt::Button::Create(0.0f, 140.0f, static_cast<float>(windowWidth), "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
+		auto actualButtonScale = button->getComponent<components::Transform>()->scale;
+		auto buttonPositioningX = button->getComponent<components::Transform>()->position.x;
+
 		AddEntity(button);
 
-		auto firstText = Crypt::ButtonText::Create(buttonWidth, 140.0f + buttonHeight, "resume_text");
+		AddEntity(Crypt::ButtonText::Create(buttonPositioningX, 140.0f, actualButtonScale.x, actualButtonScale.y, "resume_text"));
 
-		AddEntity(firstText);
+		
 
-		AddEntity(Crypt::Button::Create(75.0f, button->getComponent<components::Transform>()->position.y + (buttonHeight * 4.0f) + 10.0f, "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
-		AddEntity(Crypt::ButtonText::Create(buttonWidth, button->getComponent<components::Transform>()->position.y + (buttonHeight * 5.0f) + 10.0f, "quit_text"));
+		AddEntity(Crypt::Button::Create(0.0f, 150.0f + actualButtonScale.y, static_cast<float>(windowWidth), "button_unpressed", "button_hovered", "button_pressed", Crypt::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
+		AddEntity(Crypt::ButtonText::Create(buttonPositioningX, 150.0f + actualButtonScale.y, actualButtonScale.x, actualButtonScale.y, "quit_text"));
 
 
 		AddNewEntities();
@@ -60,8 +61,8 @@ namespace Crypt
 	{
 		camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 1.0f));
 
-		this->windowHeight = windowWidth;
-		this->windowWidth = windowHeight;
+		this->windowHeight = windowHeight;
+		this->windowWidth = windowWidth;
 		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
 		clearColor = Ebony::Colors::Black;
 
