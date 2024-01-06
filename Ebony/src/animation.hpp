@@ -28,7 +28,17 @@ namespace Ebony
 		}
 
 
-		void IncrementSprite() { m_CurrentSprite = (m_CurrentSprite + 1) % m_Spritesheet.numDivisions; }
+		void IncrementSprite() 
+		{ 
+			if (m_CurrentSprite + 1 < m_Spritesheet.numDivisions)
+			{
+				m_CurrentSprite++;
+			}
+			else if ((m_ShouldRepeatForever || m_NumRepeatTimes > 0))
+			{
+				m_CurrentSprite = (m_CurrentSprite + 1) % m_Spritesheet.numDivisions;
+			}
+		}
 		//void IncrementFrameNumber() { m_FrameNumber = (m_FrameNumber + 1); }
 		void ResetAnimation()
 		{

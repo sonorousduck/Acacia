@@ -4,9 +4,8 @@
 namespace Crypt
 {
 
-	void CryptTiledProcessor::ParseMap(const char* filepath, std::function<void(entities::EntityPtr)> AddEntity)
+	void CryptTiledProcessor::ParseMap(const char* filepath)
 	{
-		this->AddEntity = AddEntity;
 		tson::Tileson t;
 		std::unique_ptr<tson::Map> map = t.parse(fs::path(filepath));
 
@@ -36,7 +35,7 @@ namespace Crypt
 				renderedTile->addComponent(std::move(transform));
 				renderedTile->addComponent(std::move(sprite));
 
-				AddEntity(renderedTile);
+				Ebony::SystemManager::AddEntity(renderedTile);
 			}
 
 
@@ -61,12 +60,10 @@ namespace Crypt
 				switch (entityId)
 				{
 				case 33:
-					std::cout << "Bat" << std::endl;
-					AddEntity(Crypt::Bat::Create(position, glm::vec2(1.0f), player, this->AddEntity));
+					Ebony::SystemManager::AddEntity(Crypt::Bat::Create(position, glm::vec2(1.0f), player));
 					break;
 				case 34:
-					std::cout << "Suicide Bird" << std::endl;
-					AddEntity(Crypt::SuicideBird::Create(position, glm::vec2(1.0f), player, this->AddEntity));
+					Ebony::SystemManager::AddEntity(Crypt::SuicideBird::Create(position, glm::vec2(1.0f), player));
 					break;
 				default:
 					std::cout << "Unknown id: " << entityId << std::endl;

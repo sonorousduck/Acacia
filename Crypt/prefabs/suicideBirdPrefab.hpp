@@ -24,7 +24,7 @@ namespace Crypt
 	class SuicideBird
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, entities::EntityPtr player, std::function<void(entities::EntityPtr entity)> AddEntity)
+		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, entities::EntityPtr player)
 		{
 			entities::EntityPtr bird = std::make_shared<entities::Entity>();
 
@@ -114,7 +114,7 @@ namespace Crypt
 
 
 			entities::EntityPtr healthBar = HealthBar::Create(startTransform + glm::vec2(0.0f, -20.0f), glm::vec2(scale.x, 7.0f), bird);
-			AddEntity(healthBar);
+			Ebony::SystemManager::AddEntity(healthBar);
 
 			return bird;
 

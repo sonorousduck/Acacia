@@ -19,17 +19,17 @@ namespace Ebony
 
 		static bool newScreenFocused;
 		static bool quit;
+		static std::unordered_map<std::uint64_t, std::shared_ptr<Screen>> screens;
+		static std::shared_ptr<Screen> currentScreen;
+		static std::uint64_t nextScreenEnum;
+		static std::uint64_t currentScreenEnum;
+		static std::uint64_t lastScreenEnum;
 
 	private:
 		SystemManager() {}
 
 
-		static std::shared_ptr<Screen> currentScreen;
-		static std::unordered_map<std::uint64_t, std::shared_ptr<Screen>> screens;
 
-		static std::uint64_t nextScreenEnum;
-		static std::uint64_t currentScreenEnum;
-		static std::uint64_t lastScreenEnum;
 
 	};
 }

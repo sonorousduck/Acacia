@@ -27,7 +27,7 @@ namespace Crypt
 	class BulletPrefab
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, glm::vec2 direction, float speed, components::BULLET_TYPE bulletType, std::uint8_t strength, const char* texture, std::function<void(entities::EntityPtr)> AddEntity, float timeUntilDestruction = 3.0f, std::uint16_t collisionLayer = Crypt::CollisionLayers::PLAYER_BULLET, std::uint16_t layersToCollideWith = Crypt::CollisionLayers::ENEMY | Crypt::CollisionLayers::GROUND, float transformModification = 0.0f)
+		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, glm::vec2 direction, float speed, components::BULLET_TYPE bulletType, std::uint8_t strength, const char* texture, float timeUntilDestruction = 3.0f, std::uint16_t collisionLayer = Crypt::CollisionLayers::PLAYER_BULLET, std::uint16_t layersToCollideWith = Crypt::CollisionLayers::ENEMY | Crypt::CollisionLayers::GROUND, float transformModification = 0.0f)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 

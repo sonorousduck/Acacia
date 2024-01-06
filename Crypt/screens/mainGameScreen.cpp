@@ -29,6 +29,8 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("BatAttack.tx", "bat_attack", "Crypt");
 		Ebony::ResourceManager::LoadTexture("Icon.tx", "icon", "Crypt");
 		Ebony::ResourceManager::LoadTexture("wood.tx", "wood", "Crypt");
+
+		Ebony::ResourceManager::LoadAtlas("Exploding Red Oil Barrel.tx", "explosion", "Crypt", 12, 1);
 		Ebony::ResourceManager::LoadAtlas("Test_SpriteSheet.tx", "test_spritesheet", "Crypt", 4, 4);
 		Ebony::ResourceManager::LoadAtlas("BomberBird.tx", "bomber_bird", "Crypt", 6, 1);
 
@@ -61,7 +63,7 @@ namespace Crypt
 		audioSystem = systems::AudioSystem();
 		cppScriptingSystem = systems::CppScriptingSystem();
 		timingSystem = systems::TimingSystem();
-		destructionSystem = systems::DestructionSystem([=](entities::Entity::IdType entityId) {RemoveEntity(entityId); });
+		destructionSystem = systems::DestructionSystem();
 		enemyDetectionSystem = systems::EnemyDetectionSystem();
 
 
@@ -72,29 +74,18 @@ namespace Crypt
 		// Load Tiled map
 		CryptTiledProcessor tiledProcessor = CryptTiledProcessor(player);
 		tiledProcessor.CreateTranslationFunction();
-		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json", [=](entities::EntityPtr entity) {AddEntity(entity); });
+		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json");
 
-		std::function<void(entities::EntityPtr entity)> AddEntityLambda = [=](entities::EntityPtr entity) {AddEntity(entity); };
 
-		auto crosshair = Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player, AddEntityLambda);
+		auto crosshair = Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player);
 		// Create prefabs
 		AddEntity(player);
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, static_cast<float>(windowHeight) - 5.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(crosshair);
 
-		//AddEntity(Crypt::Bat::Create(glm::vec2(150.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
-		//AddEntity(Crypt::Bat::Create(glm::vec2(400.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
-		//AddEntity(Crypt::Bat::Create(glm::vec2(50.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
-
-		//AddEntity(Crypt::SuicideBird::Create(glm::vec2(250.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, AddEntityLambda));
-
 		AddEntity(Crypt::PlayerHealth::Create(player));
-		AddEntity(Crypt::PlayerSpellSelection::Create(windowHeight, crosshair, AddEntityLambda));
-
-
-
-
+		AddEntity(Crypt::PlayerSpellSelection::Create(windowHeight, crosshair));
 		
 		AddNewEntities();
 	}

@@ -16,7 +16,8 @@
 #include "../scripts/shootingBatScript.hpp"
 #include "../components/enemyComponent.hpp"
 #include "healthBarPrefab.hpp"
-
+#include <singletons/systemManager.hpp>
+#include "../prefabs/explosionDeathPrefab.hpp"
 
 
 namespace Crypt
@@ -24,7 +25,7 @@ namespace Crypt
 	class Bat
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, entities::EntityPtr player, std::function<void(entities::EntityPtr entity)> AddEntity)
+		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, entities::EntityPtr player)
 		{
 			entities::EntityPtr bat = std::make_shared<entities::Entity>();
 
@@ -77,7 +78,7 @@ namespace Crypt
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale, glm::vec3(0.0f, 1.0f, 0.0f));
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
-			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::ShootingBatScript>(AddEntity);
+			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::ShootingBatScript>();
 
 
 			auto shootingComponent = std::make_unique<components::Shooting>();
@@ -89,6 +90,7 @@ namespace Crypt
 			bat->addComponent(std::make_unique<components::DestructionComponent>([=]()
 				{
 					// Eventually, this is where the animations will be inserted and played probably (Maybe just spawn an entity or something)
+					Ebony::SystemManager::AddEntity(Crypt::ExplosionDeathPrefab::Create(bat->getComponent<components::Transform>()->position, glm::vec2(1.0f, 1.0f)));
 					bat->getComponent<components::DestructionComponent>()->shouldRemove = true;
 				}));
 
@@ -101,7 +103,7 @@ namespace Crypt
 
 
 			entities::EntityPtr healthBar = HealthBar::Create(startTransform + glm::vec2(0.0f, -20.0f), glm::vec2(scale.x, 7.0f), bat);
-			AddEntity(healthBar);
+			Ebony::SystemManager::AddEntity(healthBar);
 
 			return bat;
 		}

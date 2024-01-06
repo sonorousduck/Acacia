@@ -6,6 +6,7 @@
 #include <singletons/time.hpp>
 #include <singletons/inputManager.hpp>
 #include <singletons/audioManager.hpp>
+#include <singletons/systemManager.hpp>
 #include <misc/resourceManager.hpp>
 #include "misc/ThreadPool.hpp"
 #include "screens/screenEnums.hpp"
@@ -47,20 +48,20 @@ namespace Ebony {
 			// Add screens here as well
 			//screens[BrickBreaker::ScreenEnum::GAME] = std::make_shared<BrickBreaker::GameScreen>();
 			//screens[BrickBreaker::ScreenEnum::MAIN_MENU] = std::make_shared<BrickBreaker::MainScreen>();
-			screens[Crypt::ScreenEnum::MAIN_MENU] = std::make_shared<Crypt::MainMenuScreen>();
-			screens[Crypt::ScreenEnum::GAME] = std::make_shared<Crypt::MainGameScreen>();
-			screens[Crypt::ScreenEnum::CONTROLS] = std::make_shared<Crypt::ControlsScreen>();
-			screens[Crypt::ScreenEnum::HIGH_SCORE] = std::make_shared<Crypt::HighScoreScreen>();
-			screens[Crypt::ScreenEnum::OPTIONS] = std::make_shared<Crypt::OptionsMenuScreen>();
-			screens[Crypt::ScreenEnum::PAUSE] = std::make_shared<Crypt::PauseScreen>();
+			Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU] = std::make_shared<Crypt::MainMenuScreen>();
+			Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME] = std::make_shared<Crypt::MainGameScreen>();
+			Ebony::SystemManager::screens[Crypt::ScreenEnum::CONTROLS] = std::make_shared<Crypt::ControlsScreen>();
+			Ebony::SystemManager::screens[Crypt::ScreenEnum::HIGH_SCORE] = std::make_shared<Crypt::HighScoreScreen>();
+			Ebony::SystemManager::screens[Crypt::ScreenEnum::OPTIONS] = std::make_shared<Crypt::OptionsMenuScreen>();
+			Ebony::SystemManager::screens[Crypt::ScreenEnum::PAUSE] = std::make_shared<Crypt::PauseScreen>();
 
 
-			currentScreen = screens[Crypt::ScreenEnum::MAIN_MENU];
-			this->nextScreenEnum = Crypt::ScreenEnum::MAIN_MENU;
+			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU];
+			Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::MAIN_MENU;
 			// TODO: Get ResourceManager to register fonts in a good way, but for now, use the graphics.LoadFont way
 			// Also, register any default fonts that I want to include throughout all the project
 
-			for (auto& screen : screens)
+			for (auto& screen : Ebony::SystemManager::screens)
 			{
 				screen.second->Init(renderWidth, renderHeight);
 			}
@@ -68,7 +69,7 @@ namespace Ebony {
 
 		void LoadContent() override
 		{
-			for (auto& screen : screens)
+			for (auto& screen : Ebony::SystemManager::screens)
 			{
 				screen.second->LoadContent();
 			}
@@ -79,32 +80,32 @@ namespace Ebony {
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
 		{
 			// Update the SDL information here
-			quit = InputManager::HandleInput();
+			Ebony::SystemManager::quit = InputManager::HandleInput();
 
-			currentScreen->ProcessInput(elapsedTime);
+			Ebony::SystemManager::currentScreen->ProcessInput(elapsedTime);
 
 			Application::ProcessInput(elapsedTime);
 		}
 
 		void Update(std::chrono::microseconds elapsedTime) override
 		{
-			currentScreen->windowHeight = windowHeight;
-			currentScreen->windowWidth = windowWidth;
+			Ebony::SystemManager::currentScreen->windowHeight = windowHeight;
+			Ebony::SystemManager::currentScreen->windowWidth = windowWidth;
 
-			if (newScreenFocused)
+			if (Ebony::SystemManager::newScreenFocused)
 			{
-				currentScreen->OnScreenFocus(lastScreenEnum);
-				newScreenFocused = false;
+				Ebony::SystemManager::currentScreen->OnScreenFocus(Ebony::SystemManager::lastScreenEnum);
+				Ebony::SystemManager::newScreenFocused = false;
 			}
 
-			nextScreenEnum = currentScreen->Update(elapsedTime);
+			Ebony::SystemManager::nextScreenEnum = Ebony::SystemManager::currentScreen->Update(elapsedTime);
 
 
-			if (screens[nextScreenEnum] != currentScreen)
+			if (Ebony::SystemManager::screens[Ebony::SystemManager::nextScreenEnum] != Ebony::SystemManager::currentScreen)
 			{
-				lastScreenEnum = this->currentScreenEnum;
-				currentScreen->OnScreenDefocus(nextScreenEnum);
-				newScreenFocused = true;
+				Ebony::SystemManager::lastScreenEnum = Ebony::SystemManager::currentScreenEnum;
+				Ebony::SystemManager::currentScreen->OnScreenDefocus(Ebony::SystemManager::nextScreenEnum);
+				Ebony::SystemManager::newScreenFocused = true;
 			}
 		
 
@@ -115,7 +116,7 @@ namespace Ebony {
 		void Draw(std::chrono::microseconds elapsedTime) override
 		{
 			Ebony::Graphics2d::BeginDraw(clearColor);
-			currentScreen->Draw(elapsedTime);
+			Ebony::SystemManager::currentScreen->Draw(elapsedTime);
 			Ebony::Graphics2d::DrawFromQueue();
 
 			Application::Draw(elapsedTime);
@@ -126,22 +127,22 @@ namespace Ebony {
 		void ChangeScreens() override
 		{
 			// Reset the screen to have the next screen of itself so it doesn't infinitely loop
-			currentScreen = screens[this->nextScreenEnum];
-			currentScreenEnum = this->nextScreenEnum;
-			if (nextScreenEnum == Crypt::QUIT)
+			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Ebony::SystemManager::nextScreenEnum];
+			Ebony::SystemManager::currentScreenEnum = Ebony::SystemManager::nextScreenEnum;
+			if (Ebony::SystemManager::nextScreenEnum == Crypt::QUIT)
 			{
-				quit = true;
+				Ebony::SystemManager::quit = true;
 			}
 		}
 
 		void AddNewEntities() override
 		{
-			currentScreen->AddNewEntities();
+			Ebony::SystemManager::currentScreen->AddNewEntities();
 		}
 
 		void RemoveOldEntities() override
 		{
-			currentScreen->RemoveOldEntities();
+			Ebony::SystemManager::currentScreen->RemoveOldEntities();
 		}
 
 
@@ -174,9 +175,9 @@ namespace Ebony {
 			auto previousTime = std::chrono::system_clock::now();
 			int frame = 0;
 
-			currentScreen->Start();
+			Ebony::SystemManager::currentScreen->Start();
 
-			while (!quit)
+			while (!Ebony::SystemManager::quit)
 			{
 				auto currentTime = std::chrono::system_clock::now();
 				auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
@@ -193,7 +194,7 @@ namespace Ebony {
 				RemoveOldEntities();
 				AddNewEntities();
 
-				if (newScreenFocused)
+				if (Ebony::SystemManager::newScreenFocused)
 				{
 					ChangeScreens();
 				}
@@ -212,17 +213,17 @@ namespace Ebony {
 		int windowHeight = 1080;
 		int renderWidth = 480;
 		int renderHeight = 320;
-		bool quit = false;
+		//bool quit = false;
 
-		bool newScreenFocused = false;
+		//bool newScreenFocused = false;
 
 	private:
-		std::shared_ptr<Screen> currentScreen;
-		std::unordered_map<std::uint64_t, std::shared_ptr<Screen>> screens{};
+		//std::shared_ptr<Screen> currentScreen;
+		//std::unordered_map<std::uint64_t, std::shared_ptr<Screen>> screens{};
 
-		std::uint64_t nextScreenEnum = Ebony::ScreenEnum::DEFAULT;
-		std::uint64_t currentScreenEnum = Ebony::ScreenEnum::DEFAULT;
-		std::uint64_t lastScreenEnum = Ebony::ScreenEnum::DEFAULT;
+		//std::uint64_t nextScreenEnum = Ebony::ScreenEnum::DEFAULT;
+		//std::uint64_t currentScreenEnum = Ebony::ScreenEnum::DEFAULT;
+		//std::uint64_t lastScreenEnum = Ebony::ScreenEnum::DEFAULT;
 
 		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
 

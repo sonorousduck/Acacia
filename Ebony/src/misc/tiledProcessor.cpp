@@ -4,7 +4,7 @@
 namespace Ebony
 {
 
-	void TiledProcessor::ParseMap(const char* filepath, std::function<void(entities::EntityPtr)> AddEntity)
+	void TiledProcessor::ParseMap(const char* filepath)
 	{
 		//EB_TRACE("This function must be implmemented");
 		return;

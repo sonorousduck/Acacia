@@ -20,7 +20,7 @@ namespace systems
 
 			if (destructionComponent->shouldRemove)
 			{
-				OnRemove(id);
+				Ebony::SystemManager::RemoveEntity(id);
 			}
 
 

@@ -18,11 +18,10 @@ namespace Crypt
 	{
 	public:
 		CryptTiledProcessor(entities::EntityPtr player) : player(player) {}
-		void ParseMap(const char* filepath, std::function<void(entities::EntityPtr)> AddEntity) override;
+		void ParseMap(const char* filepath) override;
 
 		void CreateTranslationFunction() override;
 
-		std::function<void(entities::EntityPtr)> AddEntity;
 	
 	private:
 		entities::EntityPtr player;

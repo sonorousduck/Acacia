@@ -13,7 +13,7 @@ namespace Crypt
 	class PlayerSpellSelection
 	{
 	public:
-		static entities::EntityPtr Create(int windowHeight, entities::EntityPtr crosshair, std::function<void(entities::EntityPtr entity)> AddEntity)
+		static entities::EntityPtr Create(int windowHeight, entities::EntityPtr crosshair)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("panel"), Ebony::Colors::White, 0.20f, true);
@@ -88,8 +88,8 @@ namespace Crypt
 
 
 
-			AddEntity(fireSpellEntity);
-			AddEntity(iceSpellEntity);
+			Ebony::SystemManager::AddEntity(fireSpellEntity);
+			Ebony::SystemManager::AddEntity(iceSpellEntity);
 
 			entity->addComponent(std::make_unique<components::Transform>(initialUIPlacement, 0.0f, sprite->GetDimensions() * overallScaling));
 			entity->addComponent(std::move(sprite));
