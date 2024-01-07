@@ -176,7 +176,7 @@ namespace Crypt
 
 			auto spriteSheet = Ebony::ResourceManager::GetTexture("character_run");
 
-			std::vector<Ebony::Animation> animations = { Ebony::Animation(SpriteSheet(spriteSheet, 4, timings)) };
+			std::vector<Ebony::Animation> animations = { Ebony::Animation(SpriteSheet(spriteSheet, 4, timings), true) };
 			
 			auto node1 = components::Node(links, animations);
 

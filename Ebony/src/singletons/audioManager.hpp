@@ -91,6 +91,7 @@ namespace Ebony
 		{
 		}
 
+		static void ReturnChannelAutomatically(int channel);
 
 
 
@@ -108,7 +109,6 @@ namespace Ebony
 		static bool Muted;
 
 
-		static void ReturnChannelAutomatically(int channel);
 
 		static std::vector<int> previousUIVolumes;
 		static std::vector<int> previousEntityVolumes;

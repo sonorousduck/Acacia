@@ -39,6 +39,9 @@ namespace Crypt
 		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "Crypt");
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire", "Crypt");
 
+
+		Ebony::ResourceManager::LoadSoundEffect("explosion.wav", "spell", "Crypt");
+
 		Ebony::ResourceManager::LoadMusic("commonFight.ogg", "base_music", "Crypt");
 
 	}

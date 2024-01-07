@@ -29,9 +29,26 @@ namespace systems
 		for (auto& [id, entity] : m_Entities)
 		{
 			// Handle Sound Effects
-			if (entity->hasComponent<components::SoundEffect>())
+			components::SoundEffect* soundEffect;
+			if (entity->tryGetComponent(soundEffect))
 			{
-				auto soundEffect = entity->getComponent<components::SoundEffect>();
+
+
+
+
+				/*auto test = std::remove_if(soundEffect->channelsReserved.begin(), soundEffect->channelsReserved.end(), [=](int channelInQuestion) { 
+					
+					int isPlaying = Mix_Playing(channelInQuestion);
+					
+					if (!isPlaying)
+					{
+						Ebony::AudioManager::ReturnChannelAutomatically(channelInQuestion);
+					}
+					
+					return isPlaying; 
+					});
+
+				soundEffect->channelsReserved.erase(test, soundEffect->channelsReserved.end());*/
 
 				while (!soundEffect->soundEffectQueue.empty())
 				{
@@ -44,12 +61,12 @@ namespace systems
 						Mix_Volume(channel, nextSoundEffect.volume);
 						if (nextSoundEffect.fadesIn)
 						{
-							Mix_FadeInChannel(channel, nextSoundEffect.soundEffect, 0, nextSoundEffect.fadeInTime);
+							int test = Mix_FadeInChannel(channel, nextSoundEffect.soundEffect, 0, nextSoundEffect.fadeInTime);
 						}
 						else
 						{
 							
-							Mix_PlayChannel(channel, nextSoundEffect.soundEffect, 0);
+							int test = Mix_PlayChannel(channel, nextSoundEffect.soundEffect, 0);
 						}
 						soundEffect->soundEffectQueue.pop_front();
 					}
@@ -58,6 +75,11 @@ namespace systems
 						// TODO: Skip for now. This means there weren't enough sounds to play it. Should think about how to handle this in the future
 					}
 				}
+
+
+
+				
+
 			}
 
 			if (entity->hasComponent<components::Music>())

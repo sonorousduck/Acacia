@@ -50,6 +50,7 @@ namespace components
 		}
 
 		std::deque<Ebony::IndividualSound> soundEffectQueue{};
+		std::vector<int> channelsReserved{};
 		Ebony::AudioType soundEffectType;
 	};
 

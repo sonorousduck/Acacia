@@ -21,6 +21,8 @@
 #include "../components/bulletComponent.hpp"
 #include "../components/aimComponent.hpp"
 #include <iostream>
+#include <components/soundEffectComponent.hpp>
+#include <singletons/audioManager.hpp>
 
 namespace Crypt
 {
@@ -55,6 +57,11 @@ namespace Crypt
 			auto collider = std::make_unique<components::Collider>(aabbcollider, collisionLayer, layersToCollideWith, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, ((glm::atan(direction.y, direction.x)) / (2 * glm::pi<float>()) * 360.0f) + transformModification, (spriteScale * scale));
 			auto rigidbody = std::make_unique<components::RigidBody>();
+
+			auto soundeffects = std::make_unique<components::SoundEffect>(Ebony::AudioType::ENTITY);
+
+			soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("spell"), 127));
+
 			rigidbody->setVelocity(direction * speed);
 
 
@@ -74,6 +81,7 @@ namespace Crypt
 			entity->addComponent(std::move(transform));
 			entity->addComponent(std::move(sprite));
 			entity->addComponent(std::move(rigidbody));
+			entity->addComponent(std::move(soundeffects));
 
 			return entity;
 		}

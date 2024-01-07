@@ -14,6 +14,7 @@ namespace Ebony
 	{
 	public:
 		Animation(SpriteSheet spritesheet) : m_Spritesheet(spritesheet), depth(1.0) {};
+		Animation(SpriteSheet spritesheet, bool repeatForever) : m_Spritesheet(spritesheet), depth(1.0), m_ShouldRepeatForever(repeatForever) {};
 
 		const auto& GetSprite() const { return m_Spritesheet; }
 		auto GetSpriteCount() const { return m_Spritesheet.numDivisions; }

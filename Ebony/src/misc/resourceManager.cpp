@@ -235,15 +235,15 @@ namespace Ebony
 		return texture;
 	}
 
-	Mix_Chunk* ResourceManager::LoadSoundEffect(const std::string& name, const std::string& filename, bool currentFolder, const std::string& otherFolder)
+	Mix_Chunk* ResourceManager::LoadSoundEffect(const std::string& file, const std::string& name, const std::string& nameOfGame, bool currentFolder, const std::string& otherFolder)
 	{
 		if (currentFolder)
 		{
-			SoundEffectBuffers[name] = Mix_LoadWAV(("../BrickBreaker/soundeffects/" + filename).c_str());
+			SoundEffectBuffers[name] = Mix_LoadWAV(("../" + nameOfGame + "/soundeffects/" + file).c_str());
 		}
 		else
 		{
-			SoundEffectBuffers[name] = Mix_LoadWAV((otherFolder + filename).c_str());
+			SoundEffectBuffers[name] = Mix_LoadWAV((otherFolder + file).c_str());
 		}
 
 		return SoundEffectBuffers[name];
