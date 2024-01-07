@@ -261,15 +261,15 @@ namespace Ebony
 		return SoundEffectBuffers[name];
 	}
 
-	void ResourceManager::LoadMusic(const std::string& name, const std::string& filename, bool currentFolder, const std::string& otherFolder)
+	void ResourceManager::LoadMusic(const std::string& file, const std::string& name, const std::string& nameOfGame, bool currentFolder, const std::string& otherFolder)
 	{
 		if (currentFolder)
 		{
-			MusicSources[name] = Mix_LoadMUS(("../BrickBreaker/music/" + filename).c_str());
+			MusicSources[name] = Mix_LoadMUS(("../" + nameOfGame + "/music/" + file).c_str());
 		}
 		else
 		{
-			MusicSources[name] = Mix_LoadMUS((otherFolder + filename).c_str());
+			MusicSources[name] = Mix_LoadMUS((otherFolder + file).c_str());
 		}
 	}
 

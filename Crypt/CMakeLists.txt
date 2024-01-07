@@ -50,6 +50,7 @@ set(Prefabs
   prefabs/healthBarPrefab.hpp
   prefabs/suicideBirdPrefab.hpp
   prefabs/explosionDeathPrefab.hpp
+  prefabs/mainMusicPrefab.hpp
 )
 
 set(UIPrefabs

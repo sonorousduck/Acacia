@@ -43,7 +43,7 @@ namespace Ebony
 		static void UnloadSoundEffect(const std::string& name);
 		static Mix_Chunk* GetSoundEffect(const std::string& name);
 
-		static void LoadMusic(const std::string& file, const std::string& name, bool currentFolder = true, const std::string& otherFolder = "../Audio");
+		static void LoadMusic(const std::string& file, const std::string& name, const std::string& nameOfGame, bool currentFolder = true, const std::string& otherFolder = "../Audio");
 		static void UnloadMusic(const char* name);
 		static Mix_Music* GetMusic(const char* name);
 

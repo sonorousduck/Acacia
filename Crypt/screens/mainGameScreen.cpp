@@ -8,6 +8,7 @@
 
 #include "../prefabs/UI/playerHealthPrefab.hpp"
 #include "../prefabs/UI/playerSpellSelection.hpp"
+#include "../prefabs/mainMusicPrefab.hpp"
 
 namespace Crypt
 {
@@ -37,6 +38,8 @@ namespace Crypt
 		Ebony::ResourceManager::LoadTexture("Panel.tx", "panel", "Crypt");
 		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "Crypt");
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire", "Crypt");
+
+		Ebony::ResourceManager::LoadMusic("commonFight.ogg", "base_music", "Crypt");
 
 	}
 
@@ -83,6 +86,8 @@ namespace Crypt
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, static_cast<float>(windowHeight) - 5.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(crosshair);
+
+		AddEntity(Crypt::MainMusicPrefab::Create("base_music", 100));
 
 		AddEntity(Crypt::PlayerHealth::Create(player));
 		AddEntity(Crypt::PlayerSpellSelection::Create(windowHeight, crosshair));

@@ -47,6 +47,8 @@ namespace Crypt
 								return (false);
 
 			}) };
+
+
 			std::vector<Ebony::Animation> animations = { Ebony::Animation(SpriteSheet(spriteSheet, 6, timings)) };
 
 			auto node1 = components::Node(links, animations);
@@ -101,7 +103,7 @@ namespace Crypt
 
 			bird->addComponent(std::make_unique<components::DestructionComponent>([=]()
 				{
-					// Eventually, this is where the animations will be inserted and played probably (Maybe just spawn an entity or something)
+					Ebony::SystemManager::AddEntity(Crypt::ExplosionDeathPrefab::Create(bird->getComponent<components::Transform>()->position, glm::vec2(1.0f, 1.0f)));
 					bird->getComponent<components::DestructionComponent>()->shouldRemove = true;
 				}));
 
