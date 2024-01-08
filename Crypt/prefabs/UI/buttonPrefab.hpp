@@ -10,6 +10,7 @@
 #include <iostream>
 #include <components/buttonComponent.hpp>
 #include <components/activeUICollisionComponent.hpp>
+#include <singletons/systemManager.hpp>
 
 namespace Crypt
 {
@@ -39,7 +40,7 @@ namespace Crypt
 
 			button->onPress = [=](entities::EntityPtr self)
 				{
-					setNextScreen(screenEnum);
+					Ebony::SystemManager::nextScreenEnum = screenEnum;
 				};
 
 			entity->addComponent(std::move(button));

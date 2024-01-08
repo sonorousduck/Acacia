@@ -12,7 +12,7 @@ namespace scripts
 	struct PlayerHealthUpdateScript : components::CppScript
 	{
 	public:
-		PlayerHealthUpdateScript(entities::EntityPtr parent) : parent(parent)
+		PlayerHealthUpdateScript(entities::EntityPtr parent, entities::EntityPtr heart1, entities::EntityPtr heart2, entities::EntityPtr heart3) : parent(parent), heart1(heart1), heart2(heart2), heart3(heart3)
 		{
 		}
 
@@ -21,16 +21,47 @@ namespace scripts
 		{
 			// Get if we can move, then if we can shoot
 			auto player = parent->getComponent<components::Player>();
-
-			auto textComponent = entity->getComponent<components::Text>();
-
-			textComponent->text = std::to_string(player->health) + "/10";
-			
+			auto playerHealth = player->health;
+			auto lastHealth = player->lastHealth;
 
 
+			if (lastHealth != playerHealth)
+			{
+				switch (playerHealth)
+				{
+				case 0:
+					heart1->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
+					Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::GAME_OVER;
+					break;
+				case 1:
+					heart1->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("damaged_heart");
+					break;
+				case 2:
+					heart2->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
+					break;
+				case 3:
+					heart2->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("damaged_heart");
+					break;
+				case 4:
+					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
+					break;
+				case 5:
+					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("damaged_heart");
+					break;
+				case 6:
+					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("full_heart");
+					break;
+				}
 
+
+				lastHealth = playerHealth;
+			}
 		}
 
 		entities::EntityPtr parent;
+		entities::EntityPtr heart1;
+		entities::EntityPtr heart2;
+		entities::EntityPtr heart3;
+
 	};
 }

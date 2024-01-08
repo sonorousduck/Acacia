@@ -23,7 +23,8 @@ namespace components
 		float totalCameraSmoothingTime = 50.0f;
 		float returnSmoothingTime = 20.0f;
 		bool gravityDown = true;
-		std::int16_t health = 10;
+		std::int16_t health = 6;
+		std::int16_t lastHealth = 6;
 
 		float gravityCooldown = 0.0f;
 		float gravityUsageCooldownResetTime = 1.0f; // This will be the reset time that the gravity cooldown gets set to when the player uses it 

@@ -33,9 +33,17 @@ namespace Crypt
 
 		Ebony::ResourceManager::LoadAtlas("Exploding Red Oil Barrel.tx", "explosion", "Crypt", 12, 1);
 		Ebony::ResourceManager::LoadAtlas("Test_SpriteSheet.tx", "test_spritesheet", "Crypt", 4, 4);
+		Ebony::ResourceManager::LoadAtlas("CryptTileset.tx", "crypt_spritesheet", "Crypt", 24, 24);
 		Ebony::ResourceManager::LoadAtlas("BomberBird.tx", "bomber_bird", "Crypt", 6, 1);
 
 		Ebony::ResourceManager::LoadTexture("Panel.tx", "panel", "Crypt");
+		Ebony::ResourceManager::LoadTexture("Heart.tx", "full_heart", "Crypt");
+		Ebony::ResourceManager::LoadTexture("DamagedHeart.tx", "damaged_heart", "Crypt");
+		Ebony::ResourceManager::LoadTexture("BrokenHeart.tx", "broken_heart", "Crypt");
+		Ebony::ResourceManager::LoadTexture("HeartUIBackground.tx", "heart_ui_background", "Crypt");
+
+
+
 		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "Crypt");
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire", "Crypt");
 
@@ -75,20 +83,26 @@ namespace Crypt
 
 		spriteRenderer.debug = false;
 
-		auto player = Crypt::Player::Create(glm::vec2(20.0f, 50.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });
+
+
+
+		auto player = Crypt::Player::Create(glm::vec2(20.0f, 80.0f), [=](std::uint64_t nextScreen) { SetNextScreen(nextScreen); });
 
 		// Load Tiled map
 		CryptTiledProcessor tiledProcessor = CryptTiledProcessor(player);
 		tiledProcessor.CreateTranslationFunction();
-		tiledProcessor.ParseMap("../Crypt/maps/other_test/Another_Test.json");
+		tiledProcessor.ParseMap("../Crypt/maps/crypt/Crypt.json");
 
 
 		auto crosshair = Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player);
 		// Create prefabs
 		AddEntity(player);
-		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, static_cast<float>(windowHeight) - 5.0f), static_cast<float>(windowWidth) * 30.0f));
-		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 0.0f), static_cast<float>(windowWidth) * 30.0f));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, static_cast<float>(windowHeight) - 48.0f), static_cast<float>(windowWidth) * 30.0f));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 40.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(crosshair);
+
+
+		AddEntity(Crypt::Bat::Create(glm::vec2(200.0f, 80.0f), glm::vec2(1.0f, 1.0f), player));
 
 		AddEntity(Crypt::MainMusicPrefab::Create("base_music", 100));
 
@@ -245,22 +259,32 @@ namespace Crypt
 	void MainGameScreen::OnScreenDefocus(std::uint64_t nextScreenEnum)
 	{
 		nextScreen = screen;
+		
+		if (Ebony::SystemManager::nextScreenEnum == Crypt::ScreenEnum::PAUSE)
+		{
+			Ebony::AudioManager::PauseAll();
+		}
+		else
+		{
+			Ebony::AudioManager::StopAll();
+		}
 
 		
 	}
 
 	void MainGameScreen::OnScreenFocus(std::uint64_t lastScreenEnum)
 	{
-
-		if (lastScreenEnum != ScreenEnum::PAUSE)
+		if (Ebony::SystemManager::lastScreenEnum == Crypt::ScreenEnum::PAUSE)
+		{
+			Ebony::AudioManager::UnpauseAll();
+		}
+		else
 		{
 			Start();
 		}
 
+
 		Ebony::Graphics2d::SetMainCamera(camera);
-
-
-		
 	}
 
     void MainGameScreen::SetNextScreen(std::uint64_t nextScreenIncoming)

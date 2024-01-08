@@ -84,7 +84,8 @@ namespace Crypt
 
 			controllerInputComponent->onPressActions.insert({"pause", [=]()
 				{
-					setNextScreen(ScreenEnum::PAUSE);
+					Ebony::SystemManager::nextScreenEnum = ScreenEnum::PAUSE;
+					//setNextScreen(ScreenEnum::PAUSE);
 				} });
 
 			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_START, "pause" });
@@ -97,7 +98,9 @@ namespace Crypt
 
 			keyboardInputComponent->onPressActions.insert({ "pause", [=]()
 				{
-					setNextScreen(ScreenEnum::PAUSE);
+					Ebony::SystemManager::nextScreenEnum = ScreenEnum::PAUSE;
+
+					//setNextScreen(ScreenEnum::PAUSE);
 				} });
 
 

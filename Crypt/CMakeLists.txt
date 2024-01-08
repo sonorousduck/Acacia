@@ -59,6 +59,7 @@ set(UIPrefabs
   prefabs/UI/playerHealthPrefab.hpp
   prefabs/UI/playerSpellSelection.hpp
   prefabs/UI/spellPrefab.hpp
+  prefabs/UI/heartPrefab.hpp
 )
 
 set(SingletonHeaders
@@ -80,6 +81,7 @@ set(ScreenHeaders
   screens/mainMenuScreen.hpp
   screens/optionsMenuScreen.hpp
   screens/pauseScreen.hpp
+  screens/gameOverScreen.hpp
 )
 
 
@@ -90,6 +92,7 @@ set(ScreenSources
   screens/mainMenuScreen.cpp
   screens/optionsMenuScreen.cpp
   screens/pauseScreen.cpp
+  screens/gameOverScreen.cpp
 )
 
 set(ScriptHeaders

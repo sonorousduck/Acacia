@@ -17,6 +17,7 @@
 #include "screens/highScoreScreen.hpp"
 #include "screens/optionsMenuScreen.hpp"
 #include "screens/pauseScreen.hpp"
+#include "screens/gameOverScreen.hpp"
 
 
 namespace Ebony {
@@ -54,6 +55,7 @@ namespace Ebony {
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::HIGH_SCORE] = std::make_shared<Crypt::HighScoreScreen>();
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::OPTIONS] = std::make_shared<Crypt::OptionsMenuScreen>();
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::PAUSE] = std::make_shared<Crypt::PauseScreen>();
+			Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME_OVER] = std::make_shared<Crypt::GameOverScreen>();
 
 
 			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU];
@@ -98,7 +100,7 @@ namespace Ebony {
 				Ebony::SystemManager::newScreenFocused = false;
 			}
 
-			Ebony::SystemManager::nextScreenEnum = Ebony::SystemManager::currentScreen->Update(elapsedTime);
+			std::uint64_t toGetRidOfEventually = Ebony::SystemManager::currentScreen->Update(elapsedTime);
 
 
 			if (Ebony::SystemManager::screens[Ebony::SystemManager::nextScreenEnum] != Ebony::SystemManager::currentScreen)

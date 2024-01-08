@@ -5,6 +5,7 @@
 #include <components/sprite.hpp>
 #include <iostream>
 #include "../../scripts/playerHealthUpdateScript.hpp"
+#include "heartPrefab.hpp"
 
 namespace Crypt
 {
@@ -15,15 +16,28 @@ namespace Crypt
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
-			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::PlayerHealthUpdateScript>(player);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("heart_ui_background"), Ebony::Colors::White, 0.25f, true);
+			auto scale = sprite->GetDimensions();
+
+			entity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 0.0f, 25.0f }, 0.0f, scale)));
+			entity->addComponent(std::move(sprite));
 
 
-			auto textComponent = std::make_unique<components::Text>("10/10", Ebony::Colors::Black, Ebony::Colors::White, Ebony::ResourceManager::GetFont("evil_empire"), 0.50f, true, true, glm::vec2(1.0f, 1.0f));
-			entity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 300.0f, 100.0f }, 0.0f, glm::vec2{ 100.0f, 50.0f })));
+			auto heart1 = Heart::Create(glm::vec2(0.0f, 30.0f));
+			auto heart2 = Heart::Create(glm::vec2(16.0f, 30.0f));
+			auto heart3 = Heart::Create(glm::vec2(32.0f, 30.0f));
 
-			entity->addComponent(std::move(textComponent));
-			//entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Color(1.0f, 1.0f, 1.0f, 1.0f), 0.1f, true));
+			Ebony::SystemManager::AddEntity(heart1);
+			Ebony::SystemManager::AddEntity(heart2);
+			Ebony::SystemManager::AddEntity(heart3);
+
+
+
+			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::PlayerHealthUpdateScript>(player, heart1, heart2, heart3);
+
 			entity->addComponent(std::move(script));
+
+
 
 
 			return entity;
