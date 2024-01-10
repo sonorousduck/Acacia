@@ -5,6 +5,7 @@
 #include <components/sprite.hpp>
 #include <iostream>
 #include "../../scripts/playerHealthUpdateScript.hpp"
+#include <misc/renderLayers.hpp>
 
 namespace Crypt
 {
@@ -15,7 +16,7 @@ namespace Crypt
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(imageName), startingSpell ? Ebony::Color(glm::vec4(0.5647f, 0.933f, 0.5647f, 0.6f)) : Ebony::Colors::White, 0.4f, true);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(imageName), startingSpell ? Ebony::Color(glm::vec4(0.5647f, 0.933f, 0.5647f, 0.6f)) : Ebony::Colors::White, Ebony::RenderLayer::ALWAYS_FRONT, true);
 
 			entity->addComponent(std::make_unique<components::Transform>(position, 0.0f, sprite->GetDimensions() * scaling));
 			entity->addComponent(std::move(sprite));

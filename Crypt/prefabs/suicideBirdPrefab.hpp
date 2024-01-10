@@ -17,6 +17,7 @@
 #include <components/cppScriptComponent.hpp>
 #include "healthBarPrefab.hpp"
 #include "../scripts/suicideBatScript.hpp"
+#include <misc/renderLayers.hpp>
 
 
 namespace Crypt
@@ -37,7 +38,7 @@ namespace Crypt
 			//auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("bat"), Ebony::Colors::White, 0.10f);
 			//scale *= glm::vec2(sprite->texture->Width, sprite->texture->Height);
 
-			auto animationController = std::make_unique<components::AnimationController>();
+			auto animationController = std::make_unique<components::AnimationController>(Ebony::RenderLayer::FOREGROUND);
 
 			auto spriteSheet = Ebony::ResourceManager::GetTexture("bomber_bird");
 

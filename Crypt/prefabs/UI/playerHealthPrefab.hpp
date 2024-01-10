@@ -6,6 +6,7 @@
 #include <iostream>
 #include "../../scripts/playerHealthUpdateScript.hpp"
 #include "heartPrefab.hpp"
+#include <misc/renderLayers.hpp>
 
 namespace Crypt
 {
@@ -16,7 +17,7 @@ namespace Crypt
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("heart_ui_background"), Ebony::Colors::White, 0.25f, true);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("heart_ui_background"), Ebony::Colors::White, Ebony::RenderLayer::UI_RENDER, true);
 			auto scale = sprite->GetDimensions();
 
 			entity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 0.0f, 25.0f }, 0.0f, scale)));

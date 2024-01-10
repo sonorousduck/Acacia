@@ -5,6 +5,7 @@
 #include <misc/resourceManager.hpp>
 #include <components/destructionComponent.hpp>
 #include "../scripts/healthBarUpdateScript.hpp"
+#include <misc/renderLayers.hpp>
 
 namespace Crypt
 {
@@ -16,7 +17,7 @@ namespace Crypt
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Colors::Red, 0.12f);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("default"), Ebony::Colors::Red, Ebony::RenderLayer::FOREGROUND);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
 			
 

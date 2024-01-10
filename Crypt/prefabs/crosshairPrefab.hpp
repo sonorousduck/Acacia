@@ -10,6 +10,7 @@
 #include "bulletPrefab.hpp"
 #include "../components/shootingComponent.hpp"
 
+#include <misc/renderLayers.hpp>
 namespace Crypt
 {
 	class Crosshair
@@ -20,7 +21,7 @@ namespace Crypt
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 			float speed = 10.0f;
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("aim"), Ebony::Colors::White, 0.1f);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("aim"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(25.0f, 25.0f));
 
 

@@ -18,7 +18,7 @@
 #include "healthBarPrefab.hpp"
 #include <singletons/systemManager.hpp>
 #include "../prefabs/explosionDeathPrefab.hpp"
-
+#include <misc/renderLayers.hpp>
 
 namespace Crypt
 {
@@ -35,7 +35,7 @@ namespace Crypt
 			float movementSpeed = 200.0f;
 			glm::vec2 offset = { 200.0f, 50.0f };
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("bat"), Ebony::Colors::White, 0.10f);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("bat"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
 			scale *= glm::vec2(sprite->texture->Width, sprite->texture->Height);
 
 

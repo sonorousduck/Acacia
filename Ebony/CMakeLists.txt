@@ -48,7 +48,6 @@ set(SystemHeaders
 	src/systems/system.hpp
 	src/systems/animationRenderer.hpp
 	src/systems/particleRenderer.hpp
-	src/systems/staticRenderer.hpp
 	src/systems/particleSystem.hpp
 	src/systems/inputSystem.hpp
 	src/systems/audioSystem.hpp
@@ -69,7 +68,6 @@ set(SystemSources
 	src/systems/system.cpp
 	src/systems/animationRenderer.cpp
 	src/systems/particleRenderer.cpp
-	src/systems/staticRenderer.cpp
 	src/systems/particleSystem.cpp
 	src/systems/inputSystem.cpp
 	src/systems/audioSystem.cpp

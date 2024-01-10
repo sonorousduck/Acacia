@@ -13,11 +13,15 @@ namespace systems
 			auto animationsToDraw = animationController->GetSprite();
 			
 
-			// Draw each Texture2D here
-			for (auto& animation : animationsToDraw)
-			{
-				Ebony::Graphics2d::DrawAnimation(Ebony::ResourceManager::GetShader("spritesheet"), animation.GetSprite().spritesheet, animation.GetCurrentSpriteFrame(), transform->position, transform->scale, transform->rotation, transform->rotationAxis, Ebony::Colors::Red, animation.GetDepth(), animationController->isUI);
-			}
+			Ebony::Graphics2d::DrawAnimation(entity);
+
+			//// Draw each Texture2D here
+			//for (auto& animation : animationsToDraw)
+			//{
+			//	//Ebony::Graphics2d::DrawAnimation(Ebony::ResourceManager::GetShader("spritesheet"), animation.GetSprite().spritesheet, animation.GetCurrentSpriteFrame(), transform->position, transform->scale, transform->rotation, transform->rotationAxis, Ebony::Colors::Red, animation.GetDepth(), animationController->isUI);
+			//	Ebony::Graphics2d::DrawAnimation(entity, animation);
+
+			//}
 
 
 		}

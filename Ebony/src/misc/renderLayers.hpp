@@ -11,7 +11,7 @@ namespace Ebony
 		BACKGROUND = BIT(0),
 		NEAR_BACKGROUND = BIT(1),
 		FOREGROUND = BIT(2),
-		UI = BIT(3),
+		UI_RENDER = BIT(3),
 		ALWAYS_FRONT = BIT(4),
 		DYNAMIC_PLACING = BIT(5)
 	};

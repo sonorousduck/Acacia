@@ -17,7 +17,7 @@
 #include <components/cppScriptComponent.hpp>
 #include "healthBarPrefab.hpp"
 #include "../scripts/suicideBatScript.hpp"
-
+#include <misc/renderLayers.hpp>
 
 namespace Crypt
 {
@@ -28,7 +28,7 @@ namespace Crypt
 		{
 			entities::EntityPtr explosion = std::make_shared<entities::Entity>();
 
-			auto animationController = std::make_unique<components::AnimationController>();
+			auto animationController = std::make_unique<components::AnimationController>(Ebony::RenderLayer::FOREGROUND);
 
 			auto spriteSheet = Ebony::ResourceManager::GetTexture("explosion");
 

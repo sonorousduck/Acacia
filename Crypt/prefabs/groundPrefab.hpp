@@ -16,7 +16,6 @@
 #include <components/mouseInputComponent.hpp>
 #include <components/animationControllerComponent.hpp>
 
-
 namespace Crypt
 {
 	class Ground

@@ -104,7 +104,7 @@ namespace Crypt
 
 		AddEntity(Crypt::Bat::Create(glm::vec2(200.0f, 80.0f), glm::vec2(1.0f, 1.0f), player));
 
-		AddEntity(Crypt::MainMusicPrefab::Create("base_music", 100));
+		AddEntity(Crypt::MainMusicPrefab::Create("base_music", 5));
 
 		AddEntity(Crypt::PlayerHealth::Create(player));
 		AddEntity(Crypt::PlayerSpellSelection::Create(windowHeight, crosshair));

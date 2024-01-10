@@ -11,6 +11,7 @@
 #include <components/buttonComponent.hpp>
 #include <components/activeUICollisionComponent.hpp>
 #include <singletons/systemManager.hpp>
+#include <misc/renderLayers.hpp>
 
 namespace Crypt
 {
@@ -33,7 +34,7 @@ namespace Crypt
 			components::Subcollider subcollider = components::Subcollider(scale * glm::vec2(0.5f, 0.5f), scale, true, true);
 			
 
-			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.01f, true));
+			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, Ebony::RenderLayer::UI_RENDER, true));
 			
 
 			auto button = std::make_unique<components::ButtonComponent>(spriteImageUnpressed, spriteImageHover, spriteImagePressed);

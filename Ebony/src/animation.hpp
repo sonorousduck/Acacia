@@ -8,6 +8,9 @@
 #include <optional>
 #include <map>
 
+#include "../Ebony/src/misc/renderLayers.hpp"
+#include "misc/resourceManager.hpp"
+
 namespace Ebony
 {
 	class Animation
@@ -15,8 +18,10 @@ namespace Ebony
 	public:
 		Animation(SpriteSheet spritesheet) : m_Spritesheet(spritesheet), depth(1.0) {};
 		Animation(SpriteSheet spritesheet, bool repeatForever) : m_Spritesheet(spritesheet), depth(1.0), m_ShouldRepeatForever(repeatForever) {};
+		Animation(SpriteSheet spritesheet, Ebony::RenderLayer renderLayer, bool repeatForever, float depth = 0.0f) : m_Spritesheet(spritesheet), renderLayer(renderLayer), depth(depth), m_ShouldRepeatForever(repeatForever) {};
 
 		const auto& GetSprite() const { return m_Spritesheet; }
+		auto GetRenderLayer() const { return renderLayer; }
 		auto GetSpriteCount() const { return m_Spritesheet.numDivisions; }
 		auto GetSpriteTime() const { return m_Spritesheet.timings[m_CurrentSprite]; }
 		auto GetSpriteColor() const { return m_SpriteColor; }
@@ -65,7 +70,7 @@ namespace Ebony
 			depth = newDepth;
 		}
 
-		auto GetDepth()
+		auto GetDepth() const
 		{
 			return depth;
 		}
@@ -96,6 +101,11 @@ namespace Ebony
 
 		std::map<std::uint16_t, std::vector<std::function<void()>>> onAnimationFrame; // <Frame number, function>
 
+
+	public:
+		std::shared_ptr<Shader> shader = ResourceManager::GetShader("spritesheet");
+
+
 	private:
 		SpriteSheet m_Spritesheet;
 
@@ -103,6 +113,7 @@ namespace Ebony
 		std::uint16_t m_NumRepeatTimes{ 0 };
 		std::uint16_t m_FrameNumber{ 0 };
 		float depth = 1.0;
+		std::uint16_t renderLayer = Ebony::RenderLayer::BACKGROUND;
 		bool m_ShouldRepeatForever{ false };
 		bool m_Started{ false };
 

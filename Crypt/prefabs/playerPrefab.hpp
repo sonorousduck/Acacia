@@ -18,6 +18,7 @@
 #include "../components/playerComponent.hpp"
 #include "../screens/screenEnums.hpp"
 #include "../components/bulletComponent.hpp"
+#include <misc/renderLayers.hpp>
 
 namespace Crypt
 {
@@ -167,7 +168,7 @@ namespace Crypt
 			
 			// Will use a separate system for controlling gravity and such
 			auto rigidbody = std::make_unique<components::RigidBody>(originalVelocity, glm::vec2(0.0f, 200.0f));
-			auto animationController = std::make_unique<components::AnimationController>();
+			auto animationController = std::make_unique<components::AnimationController>(Ebony::RenderLayer::FOREGROUND);
 
 
 			std::vector<std::chrono::microseconds> timings(4, std::chrono::milliseconds(120));

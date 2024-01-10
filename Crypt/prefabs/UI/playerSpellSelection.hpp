@@ -6,6 +6,7 @@
 
 #include "../UI/spellPrefab.hpp"
 #include "../../components/selectedSpellComponent.hpp"
+#include <misc/renderLayers.hpp>
 
 
 namespace Crypt
@@ -16,7 +17,7 @@ namespace Crypt
 		static entities::EntityPtr Create(int windowHeight, entities::EntityPtr crosshair)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("panel"), Ebony::Colors::White, 0.20f, true);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("panel"), Ebony::Colors::White, Ebony::RenderLayer::UI_RENDER, true);
 			//std::unique_ptr<components::CppScript> script = std::make_unique<scripts::PlayerHealthUpdateScript>(player);
 			glm::vec2 overallScaling = glm::vec2(2.0f, 2.0f);
 

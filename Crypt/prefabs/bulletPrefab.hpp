@@ -23,6 +23,8 @@
 #include <iostream>
 #include <components/soundEffectComponent.hpp>
 #include <singletons/audioManager.hpp>
+#include <misc/renderLayers.hpp>
+
 
 namespace Crypt
 {
@@ -33,7 +35,7 @@ namespace Crypt
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(texture), Ebony::Colors::White, 0.11f);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(texture), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
 			auto spriteScale = sprite->GetDimensions();
 
 			components::Subcollider aabbcollider = components::Subcollider((spriteScale * scale) / 2.0f, (spriteScale * scale), true, true);

@@ -34,7 +34,19 @@ namespace Ebony
 	ImGuiIO Graphics2d::io;
 	glm::mat4 Graphics2d::projection;
 	std::priority_queue<DrawableObject, std::vector<DrawableObject>, CompareDrawableDepth> Graphics2d::renderPriorityQueue{};
-	std::priority_queue<DrawableObject, std::vector<DrawableObject>, CompareDrawableDepth> Graphics2d::dynamicQueue{};
+
+
+	std::vector<DrawableObject> Graphics2d::backgroundQueue{};
+	std::vector<DrawableObject> Graphics2d::nearBackgroundQueue{};
+	std::vector<DrawableObject> Graphics2d::foregroundQueue{};
+	std::vector<DrawableObject> Graphics2d::uiQueue{};
+	std::vector<DrawableObject> Graphics2d::alwaysFrontQueue{};
+
+	float Graphics2d::BACKGROUND_DEPTH{ 0.01f };
+	float Graphics2d::NEAR_BACKGROUND_DEPTH{ 0.05f };
+	float Graphics2d::FOREGROUND_DEPTH{ 0.50f };
+	float Graphics2d::UI_DEPTH{ 0.70f };
+	float Graphics2d::ALWAYS_FRONT_DEPTH{ 0.99f };
 
 
 
@@ -243,103 +255,135 @@ namespace Ebony
 	}
 
 
-	void Graphics2d::Draw(std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI, bool isSpriteSheet, std::uint64_t layer)
+	void Graphics2d::Draw(entities::EntityPtr entity, bool isSpriteSheet)
 	{
+		//std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI, bool isSpriteSheet, std::uint64_t layer
 		// This one will use a default shader that will already be loaded into graphics
-		std::shared_ptr<Shader> s = ResourceManager::GetShader("default");
+		//std::shared_ptr<Shader> s = ResourceManager::GetShader("default");
 
+		auto sprite = entity->getComponent<components::Sprite>();
+		auto transform = entity->getComponent<components::Transform>();
+		isSpriteSheet = sprite->isAtlas;
 		// Check to make sure it can even see if for drawing
 
 		if (Graphics2d::hasCamera)
 		{
-			if (isUI || Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
-				Graphics2d::mainCamera->Position.y - bufferDrawing < position.y && Graphics2d::mainCamera->Position.y + screenHeight > position.y)
+			if (!(Graphics2d::mainCamera->Position.x - bufferDrawing < transform->position.x && Graphics2d::mainCamera->Position.x + screenWidth > transform->position.x &&
+				Graphics2d::mainCamera->Position.y - bufferDrawing < transform->position.y && Graphics2d::mainCamera->Position.y + screenHeight > transform->position.y) && !sprite->isUI)
 			{
-				DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
-				Graphics2d::renderPriorityQueue.push(drawableObject);
+				return;
 			}
 		}
-		else
+
+		switch (sprite->renderLayer)
 		{
-			DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
+		case (Ebony::RenderLayer::BACKGROUND):
+		{
+			DrawableObject drawableObject = DrawableObject(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, transform->rotationAxis, sprite->spriteColor, sprite->isUI, isSpriteSheet, sprite->layer, Graphics2d::BACKGROUND_DEPTH);
+			Graphics2d::backgroundQueue.push_back(drawableObject);
+			return;
+		}
+		case (Ebony::RenderLayer::NEAR_BACKGROUND):
+		{
+			DrawableObject drawableObject = DrawableObject(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, transform->rotationAxis, sprite->spriteColor, sprite->isUI, isSpriteSheet, sprite->layer, Graphics2d::NEAR_BACKGROUND_DEPTH);
+			Graphics2d::nearBackgroundQueue.push_back(drawableObject);
+			return;
+		}
+				
+		case (Ebony::RenderLayer::FOREGROUND):
+		{
+			DrawableObject drawableObject = DrawableObject(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, transform->rotationAxis, sprite->spriteColor, sprite->isUI, isSpriteSheet, sprite->layer, Graphics2d::FOREGROUND_DEPTH);
+			Graphics2d::foregroundQueue.push_back(drawableObject);
+			return;
+		}
+				
+		case (Ebony::RenderLayer::UI_RENDER):
+		{
+			DrawableObject drawableObject = DrawableObject(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, transform->rotationAxis, sprite->spriteColor, sprite->isUI, isSpriteSheet, sprite->layer, Graphics2d::UI_DEPTH);
+			Graphics2d::uiQueue.push_back(drawableObject);
+			return;
+		}
+				
+		case (Ebony::RenderLayer::ALWAYS_FRONT):
+		{
+			DrawableObject drawableObject = DrawableObject(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, transform->rotationAxis, sprite->spriteColor, sprite->isUI, isSpriteSheet, sprite->layer, Graphics2d::ALWAYS_FRONT_DEPTH);
+			Graphics2d::alwaysFrontQueue.push_back(drawableObject);
+			return;
+		}
+				
+		case (Ebony::RenderLayer::DYNAMIC_PLACING):
+		{
+			DrawableObject drawableObject = DrawableObject(sprite->shader, sprite->texture, transform->position, transform->scale, transform->rotation, transform->rotationAxis, sprite->spriteColor, sprite->isUI, isSpriteSheet, sprite->layer, sprite->depth);
 			Graphics2d::renderPriorityQueue.push(drawableObject);
+			return;
+		}
 		}
 	}
 
-	void Graphics2d::Draw(std::shared_ptr<Shader> s, std::shared_ptr<Texture2D> texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI, bool isSpriteSheet, std::uint64_t layer)
+	void Graphics2d::DrawAnimation(entities::EntityPtr entity)
 	{
+		auto animationController = entity->getComponent<components::AnimationController>();
+		auto transform = entity->getComponent<components::Transform>();
+		auto animationsToDraw = animationController->GetSprite();
+
+
 		if (Graphics2d::hasCamera)
 		{
-			if (isUI || Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
-				Graphics2d::mainCamera->Position.y - bufferDrawing < position.y && Graphics2d::mainCamera->Position.y + screenHeight > position.y)
+			if (!(Graphics2d::mainCamera->Position.x - bufferDrawing < transform->position.x && Graphics2d::mainCamera->Position.x + screenWidth > transform->position.x &&
+				Graphics2d::mainCamera->Position.y - bufferDrawing < transform->position.y && Graphics2d::mainCamera->Position.y + screenHeight > transform->position.y) && !animationController->isUI)
 			{
-				DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
-				Graphics2d::renderPriorityQueue.push(drawableObject);
+				return;
 			}
 		}
-		else
+		
+		for (auto& animation : animationsToDraw)
 		{
-			DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, isSpriteSheet, layer);
-			Graphics2d::renderPriorityQueue.push(drawableObject);
-		}
-	}
-
-	void Graphics2d::DrawAnimation(std::shared_ptr<Shader> s, std::shared_ptr<Texture2D> texture, std::uint16_t layer, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 rotationAxis, Color color, float depth, bool isUI)
-	{
-		if (Graphics2d::hasCamera)
-		{
-			if (isUI || Graphics2d::mainCamera->Position.x - bufferDrawing < position.x && Graphics2d::mainCamera->Position.x + screenWidth > position.x &&
-				Graphics2d::mainCamera->Position.y - bufferDrawing < position.y && Graphics2d::mainCamera->Position.y + screenHeight > position.y)
+			switch (animationController->renderLayer)
 			{
-				DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, true, layer);
+			case (Ebony::RenderLayer::BACKGROUND):
+			{
+				DrawableObject drawableObject = DrawableObject(animation.shader, animation.GetSprite().spritesheet, transform->position, transform->scale, transform->rotation, transform->rotationAxis, animation.GetSpriteColor(), animationController->isUI, true, animation.GetCurrentSpriteFrame(), Graphics2d::BACKGROUND_DEPTH);
+				Graphics2d::backgroundQueue.push_back(drawableObject);
+				return;
+			}
+			case (Ebony::RenderLayer::NEAR_BACKGROUND):
+			{
+				DrawableObject drawableObject = DrawableObject(animation.shader, animation.GetSprite().spritesheet, transform->position, transform->scale, transform->rotation, transform->rotationAxis, animation.GetSpriteColor(), animationController->isUI, true, animation.GetCurrentSpriteFrame(), Graphics2d::NEAR_BACKGROUND_DEPTH);
+				Graphics2d::nearBackgroundQueue.push_back(drawableObject);
+				return;
+			}
+
+			case (Ebony::RenderLayer::FOREGROUND):
+			{
+				DrawableObject drawableObject = DrawableObject(animation.shader, animation.GetSprite().spritesheet, transform->position, transform->scale, transform->rotation, transform->rotationAxis, animation.GetSpriteColor(), animationController->isUI, true, animation.GetCurrentSpriteFrame(), Graphics2d::FOREGROUND_DEPTH);
+				Graphics2d::foregroundQueue.push_back(drawableObject);
+				return;
+			}
+
+			case (Ebony::RenderLayer::UI_RENDER):
+			{
+				DrawableObject drawableObject = DrawableObject(animation.shader, animation.GetSprite().spritesheet, transform->position, transform->scale, transform->rotation, transform->rotationAxis, animation.GetSpriteColor(), animationController->isUI, true, animation.GetCurrentSpriteFrame(), Graphics2d::UI_DEPTH);
+				Graphics2d::uiQueue.push_back(drawableObject);
+				return;
+			}
+
+			case (Ebony::RenderLayer::ALWAYS_FRONT):
+			{
+				DrawableObject drawableObject = DrawableObject(animation.shader, animation.GetSprite().spritesheet, transform->position, transform->scale, transform->rotation, transform->rotationAxis, animation.GetSpriteColor(), animationController->isUI, true, animation.GetCurrentSpriteFrame(), Graphics2d::ALWAYS_FRONT_DEPTH);
+				Graphics2d::alwaysFrontQueue.push_back(drawableObject);
+				return;
+			}
+
+			case (Ebony::RenderLayer::DYNAMIC_PLACING):
+			{
+				DrawableObject drawableObject = DrawableObject(animation.shader, animation.GetSprite().spritesheet, transform->position, transform->scale, transform->rotation, transform->rotationAxis, animation.GetSpriteColor(), animationController->isUI, true, animation.GetCurrentSpriteFrame(), animation.GetDepth());
 				Graphics2d::renderPriorityQueue.push(drawableObject);
+				return;
+			}
 			}
 		}
-		else
-		{
-			DrawableObject drawableObject = DrawableObject(s, texture, position, size, rotate, rotationAxis, color, depth, isUI, true, layer);
-			Graphics2d::renderPriorityQueue.push(drawableObject);
-		}
-
-		//if (activeShaderId != s->ID)
-		//{
-		//	s->use();
-		//	activeShaderId = s->ID;
-		//	//s->setMat4("projection", glm::ortho(0.0f, static_cast<float>(screenWidth), static_cast<float>(screenHeight), 0.0f));
-		//}
-		//glm::mat4 model = glm::mat4(1.0f);
-		//model = glm::translate(model, glm::vec3(position, depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
-		//model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
-		//model = glm::rotate(model, glm::radians(rotate), rotationAxis); // then rotate
-		//model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
-		//model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
-
-		//if (!isUI && hasCamera)
-		//{
-		//	s->setMat4("view", mainCamera->GetViewMatrix());
-		//}
-		//else
-		//{
-		//	s->setMat4("view", glm::mat4(1.0f));
-		//}
-
-		//s->setMat4("model", model);
-		//s->setInt("layer", layer);
-
-		//if (activeTextureId != texture->ID)
-		//{
-		//	glActiveTexture(GL_TEXTURE0);
-		//	texture->Bind();
-		//	activeTextureId = texture->ID;
-		//}
-
-
-
-		//glBindVertexArray(quadVAO);
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
-		//glBindVertexArray(0);
 	}
+	
 
 
 	void Graphics2d::DrawInstanced(std::shared_ptr<Shader> s, std::shared_ptr<Texture2D> texture, unsigned int VAO, std::uint32_t count)
@@ -373,134 +417,212 @@ namespace Ebony
 
 	void Graphics2d::DrawFromQueue()
 	{
+		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth < Graphics2d::BACKGROUND_DEPTH)
+		{
+			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::InternalDraw(dynamicDrawable);
+			Graphics2d::renderPriorityQueue.pop();
+		}
+
+
+
+		// Draw background first. Nothing will ever be behind this.
+		for (auto i = 0; i < Graphics2d::backgroundQueue.size(); i++)
+		{
+			Graphics2d::InternalDraw(Graphics2d::backgroundQueue[i]);
+		}
+
+
+		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth < Graphics2d::NEAR_BACKGROUND_DEPTH)
+		{
+			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::InternalDraw(dynamicDrawable);
+			Graphics2d::renderPriorityQueue.pop();
+		}
+
+		// Draw near background next
+		for (auto i = 0; i < Graphics2d::nearBackgroundQueue.size(); i++)
+		{
+			Graphics2d::InternalDraw(Graphics2d::nearBackgroundQueue[i]);
+		}
+
+		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth < Graphics2d::FOREGROUND_DEPTH)
+		{
+			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::InternalDraw(dynamicDrawable);
+			Graphics2d::renderPriorityQueue.pop();
+		}
+
+		// Draw Foreground
+		for (auto i = 0; i < Graphics2d::foregroundQueue.size(); i++)
+		{
+			Graphics2d::InternalDraw(Graphics2d::foregroundQueue[i]);
+		}
+
+		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth < Graphics2d::UI_DEPTH)
+		{
+			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::InternalDraw(dynamicDrawable);
+			Graphics2d::renderPriorityQueue.pop();
+		}
+
+		// Draw UI
+		for (auto i = 0; i < Graphics2d::uiQueue.size(); i++)
+		{
+			Graphics2d::InternalDraw(Graphics2d::uiQueue[i]);
+		}
+			
+		
+		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth < Graphics2d::ALWAYS_FRONT_DEPTH)
+		{
+			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::InternalDraw(dynamicDrawable);
+			Graphics2d::renderPriorityQueue.pop();
+		}
+
+		// Draw always on top items
+		for (auto i = 0; i < Graphics2d::alwaysFrontQueue.size(); i++)
+		{
+			Graphics2d::InternalDraw(Graphics2d::alwaysFrontQueue[i]);
+		}
+
 		while (Graphics2d::renderPriorityQueue.size() > 0)
 		{
-			DrawableObject drawable = Graphics2d::renderPriorityQueue.top();
+			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::InternalDraw(dynamicDrawable);
 			Graphics2d::renderPriorityQueue.pop();
+		}
 
-			if (activeShaderId != drawable.s->ID)
+
+		Graphics2d::backgroundQueue.clear();
+		Graphics2d::nearBackgroundQueue.clear();
+		Graphics2d::foregroundQueue.clear();
+		Graphics2d::uiQueue.clear();
+		Graphics2d::alwaysFrontQueue.clear();
+	}
+
+	void Graphics2d::InternalDraw(DrawableObject drawable)
+	{
+		if (activeShaderId != drawable.s->ID)
+		{
+			drawable.s->use();
+			activeShaderId = drawable.s->ID;
+			//drawable.s->setMat4("projection", glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f));
+		}
+
+		//glEnable(GL_TEXTURE_2D_ARRAY);
+
+		if (drawable.isString)
+		{
+			drawable.s->setVec3("textColor", drawable.color.GetRGB());
+
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(drawable.position, drawable.depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+			model = glm::translate(model, glm::vec3(0.5f * drawable.size.x, 0.5f * drawable.size.y, 0.0f)); // move origin of rotation to center of quad
+			model = glm::rotate(model, glm::radians(drawable.rotate), drawable.rotationAxis); // then rotate
+			model = glm::translate(model, glm::vec3(-0.5f * drawable.size.x, -0.5f * drawable.size.y, 0.0f)); // move origin back
+			model = glm::scale(model, glm::vec3(drawable.size, 1.0f)); // last scale
+
+			if (!drawable.isUI && hasCamera)
 			{
-				drawable.s->use();
-				activeShaderId = drawable.s->ID;
-				//drawable.s->setMat4("projection", glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f));
-			}
-
-			//glEnable(GL_TEXTURE_2D_ARRAY);
-
-			if (drawable.isString)
-			{
-				drawable.s->setVec3("textColor", drawable.color.GetRGB());
-
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(drawable.position, drawable.depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
-				model = glm::translate(model, glm::vec3(0.5f * drawable.size.x, 0.5f * drawable.size.y, 0.0f)); // move origin of rotation to center of quad
-				model = glm::rotate(model, glm::radians(drawable.rotate), drawable.rotationAxis); // then rotate
-				model = glm::translate(model, glm::vec3(-0.5f * drawable.size.x, -0.5f * drawable.size.y, 0.0f)); // move origin back
-				model = glm::scale(model, glm::vec3(drawable.size, 1.0f)); // last scale
-
-				if (!drawable.isUI && hasCamera)
-				{
-					drawable.s->setMat4("view", mainCamera->GetViewMatrix());
-				}
-				else
-				{
-					drawable.s->setMat4("view", glm::mat4(1.0f));
-				}
-
-				drawable.s->setMat4("model", model);
-
-				glActiveTexture(GL_TEXTURE0);
-				glBindVertexArray(textVAO);
-
-				// Iterate through all characters
-				std::string::const_iterator c;
-				for (c = drawable.text.begin(); c != drawable.text.end(); c++)
-				{
-					Character ch = drawable.spriteFont->characters[*c];
-
-					float xpos = drawable.position.x + ch.Bearing.x * drawable.size.x;
-					float ypos = drawable.position.y - (ch.Size.y - ch.Bearing.y) * drawable.size.y;
-
-					float w = ch.Size.x * drawable.size.x;
-					float h = ch.Size.y * drawable.size.y;
-
-					// Update VBO for each character
-					float vertices[6][4] = {
-						{ xpos,         ypos,					0.0f, 0.0f  },
-						{ xpos,         ypos + h,				0.0f, 1.0f  },
-						{ xpos + w,     ypos + h,				1.0f, 1.0f  },
-						{ xpos,         ypos,					0.0f, 0.0f  },
-						{ xpos + w,     ypos + h,				1.0f, 1.0f  },
-						{ xpos + w,     ypos,					1.0f, 0.0f  }
-					};
-
-					// Render glyph texture over quad
-					glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-					// Update content of VBO memory
-					glBindBuffer(GL_ARRAY_BUFFER, textVBO);
-					glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-					glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-					// Render Quad
-					glDrawArrays(GL_TRIANGLES, 0, 6);
-
-					// Now advance cursors for next glyph (Note that advance number is 1/64 pixels)
-					drawable.position.x += (ch.Advance >> 6) * drawable.size.x; // Bitshift by 6 to get value in pixels (2^6 = 64)
-				}
-
-				glBindVertexArray(0);
-				glBindTexture(GL_TEXTURE_2D, 0);
-			}
-			else if (drawable.isInstanced)
-			{
-
+				drawable.s->setMat4("view", mainCamera->GetViewMatrix());
 			}
 			else
 			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(drawable.position, drawable.depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-
-				model = glm::translate(model, glm::vec3(0.5f * drawable.size.x, 0.5f * drawable.size.y, 0.0f)); // move origin of rotation to center of quad
-				model = glm::rotate(model, glm::radians(drawable.rotate), drawable.rotationAxis); // then rotate
-				model = glm::translate(model, glm::vec3(-0.5f * drawable.size.x, -0.5f * drawable.size.y, 0.0f)); // move origin back
-				model = glm::scale(model, glm::vec3(drawable.size, 1.0f)); // last scale
-
-				if (!drawable.isUI && hasCamera)
-				{
-					drawable.s->setMat4("view", mainCamera->GetViewMatrix());
-				}
-				else
-				{
-					drawable.s->setMat4("view", glm::mat4(1.0f));
-				}
-
-				drawable.s->setMat4("model", model);
-				drawable.s->setVec4("spriteColor", drawable.color.GetRGBA());
-
-				if (drawable.isSpriteSheet)
-				{
-					//s->setInt("spritesheet", texture->ID);
-					drawable.s->setInt("layer", static_cast<int>(drawable.layer));
-				}
-
-
-
-				if (activeTextureId != drawable.texture->ID)
-				{
-					glActiveTexture(GL_TEXTURE0);
-					drawable.texture->Bind();
-					activeTextureId = drawable.texture->ID;
-				}
-
-
-
-				glBindVertexArray(quadVAO);
-				glDrawArrays(GL_TRIANGLES, 0, 6);
-				glBindVertexArray(0);
+				drawable.s->setMat4("view", glm::mat4(1.0f));
 			}
-			
-			//glDisable(GL_TEXTURE_2D_ARRAY);
+
+			drawable.s->setMat4("model", model);
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindVertexArray(textVAO);
+
+			// Iterate through all characters
+			std::string::const_iterator c;
+			for (c = drawable.text.begin(); c != drawable.text.end(); c++)
+			{
+				Character ch = drawable.spriteFont->characters[*c];
+
+				float xpos = drawable.position.x + ch.Bearing.x * drawable.size.x;
+				float ypos = drawable.position.y - (ch.Size.y - ch.Bearing.y) * drawable.size.y;
+
+				float w = ch.Size.x * drawable.size.x;
+				float h = ch.Size.y * drawable.size.y;
+
+				// Update VBO for each character
+				float vertices[6][4] = {
+					{ xpos,         ypos,					0.0f, 0.0f  },
+					{ xpos,         ypos + h,				0.0f, 1.0f  },
+					{ xpos + w,     ypos + h,				1.0f, 1.0f  },
+					{ xpos,         ypos,					0.0f, 0.0f  },
+					{ xpos + w,     ypos + h,				1.0f, 1.0f  },
+					{ xpos + w,     ypos,					1.0f, 0.0f  }
+				};
+
+				// Render glyph texture over quad
+				glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+				// Update content of VBO memory
+				glBindBuffer(GL_ARRAY_BUFFER, textVBO);
+				glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+				// Render Quad
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+
+				// Now advance cursors for next glyph (Note that advance number is 1/64 pixels)
+				drawable.position.x += (ch.Advance >> 6) * drawable.size.x; // Bitshift by 6 to get value in pixels (2^6 = 64)
+			}
+
+			glBindVertexArray(0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+		else if (drawable.isInstanced)
+		{
+
+		}
+		else
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(drawable.position, drawable.depth));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+
+			model = glm::translate(model, glm::vec3(0.5f * drawable.size.x, 0.5f * drawable.size.y, 0.0f)); // move origin of rotation to center of quad
+			model = glm::rotate(model, glm::radians(drawable.rotate), drawable.rotationAxis); // then rotate
+			model = glm::translate(model, glm::vec3(-0.5f * drawable.size.x, -0.5f * drawable.size.y, 0.0f)); // move origin back
+			model = glm::scale(model, glm::vec3(drawable.size, 1.0f)); // last scale
+
+			if (!drawable.isUI && hasCamera)
+			{
+				drawable.s->setMat4("view", mainCamera->GetViewMatrix());
+			}
+			else
+			{
+				drawable.s->setMat4("view", glm::mat4(1.0f));
+			}
+
+			drawable.s->setMat4("model", model);
+			drawable.s->setVec4("spriteColor", drawable.color.GetRGBA());
+
+			if (drawable.isSpriteSheet)
+			{
+				//s->setInt("spritesheet", texture->ID);
+				drawable.s->setInt("layer", static_cast<int>(drawable.layer));
+			}
+
+
+
+			if (activeTextureId != drawable.texture->ID)
+			{
+				glActiveTexture(GL_TEXTURE0);
+				drawable.texture->Bind();
+				activeTextureId = drawable.texture->ID;
+			}
+
+
+
+			glBindVertexArray(quadVAO);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			glBindVertexArray(0);
 		}
 	}
 
@@ -513,10 +635,65 @@ namespace Ebony
 		glBindVertexArray(0);
 	}
 
-	void Graphics2d::DrawString(std::shared_ptr<Shader> s, std::shared_ptr<SpriteFont> spriteFont, std::string text, glm::vec2 position, glm::vec2 size, glm::vec2 transformScale, float rotate, glm::vec3 rotationAxis, Color color, Color outlineColor, float depth, bool isUI)
+	// Transform modification is used for outlining the text
+	void Graphics2d::DrawString(entities::EntityPtr entity, glm::vec2 transformModification)
 	{
-		DrawableObject drawableObject = DrawableObject(s, nullptr, position, size, rotate, rotationAxis, color, depth, isUI, true, 0, true, text, spriteFont, false);
-		Graphics2d::renderPriorityQueue.push(drawableObject);
+		auto transform = entity->getComponent<components::Transform>();
+		auto text = entity->getComponent<components::Text>();
+
+
+		if (Graphics2d::hasCamera)
+		{
+			if (!(Graphics2d::mainCamera->Position.x - bufferDrawing < transform->position.x && Graphics2d::mainCamera->Position.x + screenWidth > transform->position.x &&
+				Graphics2d::mainCamera->Position.y - bufferDrawing < transform->position.y && Graphics2d::mainCamera->Position.y + screenHeight > transform->position.y) && !text->isUI)
+			{
+				return;
+			}
+		}
+
+		switch (text->renderLayer)
+		{
+		case (Ebony::RenderLayer::BACKGROUND):
+		{
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, Graphics2d::BACKGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			Graphics2d::backgroundQueue.push_back(drawableObject);
+			return;
+		}
+		case (Ebony::RenderLayer::NEAR_BACKGROUND):
+		{
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, Graphics2d::NEAR_BACKGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			Graphics2d::nearBackgroundQueue.push_back(drawableObject);
+			return;
+		}
+
+		case (Ebony::RenderLayer::FOREGROUND):
+		{
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, Graphics2d::FOREGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			Graphics2d::foregroundQueue.push_back(drawableObject);
+			return;
+		}
+
+		case (Ebony::RenderLayer::UI_RENDER):
+		{
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, Graphics2d::UI_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			Graphics2d::uiQueue.push_back(drawableObject);
+			return;
+		}
+
+		case (Ebony::RenderLayer::ALWAYS_FRONT):
+		{
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, Graphics2d::ALWAYS_FRONT_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			Graphics2d::alwaysFrontQueue.push_back(drawableObject);
+			return;
+		}
+
+		case (Ebony::RenderLayer::DYNAMIC_PLACING):
+		{
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, text->layerDepth, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			Graphics2d::renderPriorityQueue.push(drawableObject);
+			return;
+		}
+		}
 	}
 
 	void Graphics2d::InitializeTextDrawing(std::shared_ptr<Shader> textShader)

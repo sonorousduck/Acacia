@@ -9,6 +9,7 @@
 #include "../misc/collisionLayers.hpp"
 #include <iostream>
 #include <memory>
+#include <misc/renderLayers.hpp>
 
 namespace Crypt
 {
@@ -31,7 +32,7 @@ namespace Crypt
 
 
 			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(centeredPositionX + width, height + centeredPositionY), 0.0f, scale));
-			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, 0.02f, true));
+			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, Ebony::RenderLayer::UI_RENDER, true));
 
 
 

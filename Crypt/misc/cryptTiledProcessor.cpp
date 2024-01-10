@@ -1,4 +1,5 @@
 #include "cryptTiledProcessor.hpp"
+#include <misc/renderLayers.hpp>
 
 
 namespace Crypt
@@ -30,7 +31,7 @@ namespace Crypt
 				entities::EntityPtr renderedTile = std::make_shared<entities::Entity>();
 
 				auto transform = std::make_unique<components::Transform>(glm::vec2(position.x, position.y), 0.0f, glm::vec2(drawingRect.width, drawingRect.height));
-				auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("spritesheet"), Ebony::ResourceManager::GetTexture("crypt_spritesheet"), Ebony::Colors::White, 0.05f, false, index, true);
+				auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("spritesheet"), Ebony::ResourceManager::GetTexture("crypt_spritesheet"), Ebony::Colors::White, Ebony::RenderLayer::BACKGROUND, false, 0.0f, index, true);
 
 				renderedTile->addComponent(std::move(transform));
 				renderedTile->addComponent(std::move(sprite));
