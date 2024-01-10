@@ -6,7 +6,6 @@
 #include <systems/fontRenderer.hpp>
 #include <systems/physicsSystem.hpp>
 #include <systems/spriteRenderer.hpp>
-
 #include "camera.hpp"
 #include "glm/glm.hpp"
 #include "misc/resourceManager.hpp"

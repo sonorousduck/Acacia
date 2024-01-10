@@ -3,7 +3,6 @@
 #include "../entity.hpp"
 #include "../screens/screen.hpp"
 
-
 namespace Ebony
 {
 	class SystemManager

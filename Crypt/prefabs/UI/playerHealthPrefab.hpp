@@ -35,8 +35,11 @@ namespace Crypt
 
 			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::PlayerHealthUpdateScript>(player, heart1, heart2, heart3);
 
-			entity->addComponent(std::move(script));
+			std::unique_ptr<components::PythonScript> pythonScript = std::make_unique<components::PythonScript>("testPythonScript");
 
+
+			entity->addComponent(std::move(script));
+			entity->addComponent(std::move(pythonScript));
 
 
 

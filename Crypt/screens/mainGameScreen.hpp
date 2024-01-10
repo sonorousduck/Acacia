@@ -8,6 +8,7 @@
 #include <systems/spriteRenderer.hpp>
 #include <systems/destructionSystem.hpp>
 #include <systems/timingSystem.hpp>
+#include <systems/pythonScriptingSystem.hpp>
 
 #include "camera.hpp"
 #include "glm/glm.hpp"
@@ -63,7 +64,7 @@ namespace Crypt
 		systems::DestructionSystem destructionSystem;
 		systems::TimingSystem timingSystem;
 		systems::EnemyDetectionSystem enemyDetectionSystem;
-
+		systems::PythonScriptingSystem pythonScriptingSystem;
 		
 
 

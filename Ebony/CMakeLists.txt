@@ -17,13 +17,6 @@ set(SOURCE_FILES
 	src/Log.cpp
 )
 
-set(HEADER_EVENTS
-	src/events/ApplicationEvent.hpp
-	src/events/Event.hpp
-	src/events/KeyEvent.hpp
-	src/events/MouseEvent.hpp
-)
-
 set(ComponentHeaders
 	src/components/component.hpp
 	src/components/animationControllerComponent.hpp
@@ -47,6 +40,7 @@ set(ComponentHeaders
 	src/components/cppScriptComponent.hpp
 	src/components/destructionComponent.hpp
 	src/components/timedComponent.hpp
+	src/components/pythonScriptComponent.hpp
 )
 
 set(SystemHeaders
@@ -66,6 +60,8 @@ set(SystemHeaders
 	src/systems/cppScriptingSystem.hpp
 	src/systems/destructionSystem.hpp
 	src/systems/timingSystem.hpp
+	src/systems/pythonScriptingSystem.hpp
+
 )
 
 set(SystemSources
@@ -85,6 +81,8 @@ set(SystemSources
 	src/systems/cppScriptingSystem.cpp
 	src/systems/destructionSystem.cpp
 	src/systems/timingSystem.cpp
+	src/systems/pythonScriptingSystem.cpp
+
 )
 
 set(EntityHeaders
@@ -116,7 +114,7 @@ set(MiscHeaders
 	src/misc/resourceManager.hpp
 	src/misc/Quadtree.hpp
 	src/misc/tiledProcessor.hpp
-
+	src/misc/renderLayers.hpp
 )
 
 set(MiscSources
@@ -172,7 +170,6 @@ set(CODE_FILES
 	${ComponentSources}
 	${SystemHeaders}
 	${SystemSources}
-	${HEADER_EVENTS}
 	${EntityHeaders}
 	${EntitySources}
 	${MiscHeaders}
@@ -199,7 +196,11 @@ endif()
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-target_link_libraries(Ebony spdlog Graphics rapidjson tileson)
+# find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+# target_include_directories(Ebony PRIVATE ${Python3_INCLUDE_DIRS})
+
+
+target_link_libraries(Ebony spdlog Graphics rapidjson tileson pybind11::module)
 
 # add_subdirectory(ThirdParty/rapidjson)
 # include_directories(ThirdParty/rapidjson/include)

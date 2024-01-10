@@ -104,6 +104,12 @@ set(ScriptHeaders
   scripts/playerHealthUpdateScript.hpp
 )
 
+set(PythonScripts
+  pythonScripts/testPythonScript.py
+
+
+)
+
 
 set(src_files_imgui
   ../Graphics/ThirdParty/imgui/imgui.cpp  
@@ -130,6 +136,7 @@ source_group("Singletons\\Source Files" FILES ${SingletonSources})
 source_group("Screens\\Header Files" FILES ${ScreenHeaders})
 source_group("Screens\\Source Files" FILES ${ScreenSources})
 source_group("Scripts" FILES ${ScriptHeaders})
+source_group("Scripts\\Python" FILES ${PythonScripts})
 
 set (CODE_FILES
   ${HEADER_FILES} 
@@ -146,8 +153,8 @@ set (CODE_FILES
   ${ScreenHeaders} 
   ${ScreenSources}
   ${ScriptHeaders}
+  ${PythonScripts}
 )
-
 
 
 add_executable(Crypt ${CODE_FILES} ${src_files_imgui} "../Graphics/thirdparty/glad.c")
@@ -166,7 +173,7 @@ include_directories("../Graphics/src")
 target_include_directories(Crypt PRIVATE ../Graphics/include/ ../Graphics/include/glm)
 
 
-target_link_libraries(Crypt Ebony Graphics glm tileson)
+target_link_libraries(Crypt Ebony Graphics glm tileson pybind11::embed)
 
 add_custom_target(copy_assets_crypt
   COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/copy-assets.cmake

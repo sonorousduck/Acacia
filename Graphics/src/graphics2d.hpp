@@ -187,6 +187,16 @@ namespace Ebony
 		
 		static std::priority_queue<DrawableObject, std::vector<DrawableObject>, CompareDrawableDepth> renderPriorityQueue;
  
+		static std::vector<DrawableObject> backgroundQueue;
+		static std::vector<DrawableObject> nearBackgroundQueue;
+		static std::vector<DrawableObject> foregroundQueue;
+		static std::vector<DrawableObject> uiQueue;
+		static std::vector<DrawableObject> alwaysFrontQueue;
+		static std::priority_queue<DrawableObject, std::vector<DrawableObject>, CompareDrawableDepth> dynamicQueue;
+
+
+
+
 
 		static ImGuiIO io;
 

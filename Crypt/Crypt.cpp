@@ -19,6 +19,7 @@
 #include "screens/pauseScreen.hpp"
 #include "screens/gameOverScreen.hpp"
 
+#include <pybind11/pybind11.h>
 
 namespace Ebony {
 
@@ -27,7 +28,8 @@ namespace Ebony {
 	public:
 		CryptGame()
 		{
-	
+			//pybind11::scoped_interpreter guard{};
+
 		}
 
 		~CryptGame()

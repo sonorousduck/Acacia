@@ -7,13 +7,13 @@ project(ThirdParty)
 add_library(stb_image INTERFACE)
 add_library(rapidjson INTERFACE)
 add_library(tiny_obj_loader STATIC)
+add_library(python INTERFACE)
 # add_library(vk_mem_alloc INTERFACE)
 add_library(glm INTERFACE)
 add_library(sdl2 INTERFACE)
 add_library(sdl2_mixer INTERFACE)
 # add_library(freetype INTERFACE)
 add_library(tileson INTERFACE)
-
 add_library(lz4 STATIC)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -22,7 +22,7 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 # add_subdirectory(glfw)
 add_subdirectory(spdlog)
-
+add_subdirectory(pybind11-2.11)
 
 target_include_directories(tileson INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/tileson")
 
@@ -120,8 +120,14 @@ target_link_libraries(assimp INTERFACE ${assimp_lib} )
 # find_package(SndFile REQUIRED)
 
 add_subdirectory(freetype)
-set(freetype_lib "${CMAKE_CURRENT_SOURCE_DIR}/freetype/build/Release/freetype.lib")
+# set(freetype_lib "${CMAKE_CURRENT_SOURCE_DIR}/freetype/build/Release/freetype.lib")
 
+# find_package(Python3 3.8 EXACT REQUIRED COMPONENTS Interpreter Development)
+
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+target_include_directories(python INTERFACE ${Python3_INCLUDE_DIRS})
+
+target_link_libraries(python INTERFACE ${Python3_LIBRARIES})
 
 #target_include_directories(freetype INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/freetype/include")
-target_link_libraries(freetype INTERFACE ${freetype_lib})
+# target_link_libraries(freetype INTERFACE ${freetype_lib})

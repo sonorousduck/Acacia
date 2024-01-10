@@ -79,7 +79,7 @@ namespace Crypt
 		timingSystem = systems::TimingSystem();
 		destructionSystem = systems::DestructionSystem();
 		enemyDetectionSystem = systems::EnemyDetectionSystem();
-
+		pythonScriptingSystem = systems::PythonScriptingSystem();
 
 		spriteRenderer.debug = false;
 
@@ -128,6 +128,8 @@ namespace Crypt
 
 	std::uint64_t MainGameScreen::Update(std::chrono::microseconds elapsedTime)
 	{
+		pythonScriptingSystem.Update(elapsedTime);
+
 		auto firstTime = std::chrono::system_clock::now();
 		//Ebony::Graphics2d::mainCamera->Position = glm::vec3(Ebony::Graphics2d::mainCamera->Position.x + 0.01f, Ebony::Graphics2d::mainCamera->Position.y, Ebony::Graphics2d::mainCamera->Position.z);
 
@@ -213,8 +215,10 @@ namespace Crypt
 
 
 
+
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
 		graphDone.wait();
+
 
 		// Put this outside the update loop so in the future, I can use all the threads to then do multi-threaded physics updates
 		physicsSystem.Update(elapsedTime);
@@ -310,6 +314,7 @@ namespace Crypt
 			timingSystem.AddEntity(entity);
 			enemyDetectionSystem.AddEntity(entity);
 			fontRenderer.AddEntity(entity);
+			pythonScriptingSystem.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -334,6 +339,7 @@ namespace Crypt
 			timingSystem.RemoveEntity(entityId);
 			enemyDetectionSystem.RemoveEntity(entityId);
 			fontRenderer.RemoveEntity(entityId);
+			pythonScriptingSystem.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();

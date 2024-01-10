@@ -34,6 +34,9 @@ namespace Ebony
 	ImGuiIO Graphics2d::io;
 	glm::mat4 Graphics2d::projection;
 	std::priority_queue<DrawableObject, std::vector<DrawableObject>, CompareDrawableDepth> Graphics2d::renderPriorityQueue{};
+	std::priority_queue<DrawableObject, std::vector<DrawableObject>, CompareDrawableDepth> Graphics2d::dynamicQueue{};
+
+
 
 	void Graphics2d::InitializeImgui()
 	{
