@@ -4,9 +4,13 @@ layout (location = 1) in vec2 aUv;
 
 out vec2 vUv;
 
+
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+
+
+
 
 void main()
 {

@@ -107,7 +107,7 @@ namespace Ebony
 	{
 		bool operator()(const DrawableObject& drawable1, const DrawableObject& drawable2)
 		{
-			return drawable1.depth > drawable2.depth;
+			return drawable1.depth < drawable2.depth;
 		}
 	};
 

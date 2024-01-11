@@ -42,11 +42,11 @@ namespace Ebony
 	std::vector<DrawableObject> Graphics2d::uiQueue{};
 	std::vector<DrawableObject> Graphics2d::alwaysFrontQueue{};
 
-	float Graphics2d::BACKGROUND_DEPTH{ 0.01f };
-	float Graphics2d::NEAR_BACKGROUND_DEPTH{ 0.05f };
-	float Graphics2d::FOREGROUND_DEPTH{ 0.50f };
-	float Graphics2d::UI_DEPTH{ 0.70f };
-	float Graphics2d::ALWAYS_FRONT_DEPTH{ 0.99f };
+	float Graphics2d::BACKGROUND_DEPTH{ -0.5f };
+	float Graphics2d::NEAR_BACKGROUND_DEPTH{ -0.4f };
+	float Graphics2d::FOREGROUND_DEPTH{ -0.3f };
+	float Graphics2d::UI_DEPTH{ -0.2f };
+	float Graphics2d::ALWAYS_FRONT_DEPTH{ -0.1f };
 
 
 
@@ -77,7 +77,9 @@ namespace Ebony
 		SetupCallback();
 		InitializeImgui();
 
-		projection = glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f, -1.0f, 1.0f);
+		Graphics2d::projection = glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f, -1.0f, 1.0f);
+		//Graphics2d::projection = glm::perspectiveFov(90.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.01f, 1.0f);
+
 		initRenderData();
 	}
 
@@ -96,7 +98,9 @@ namespace Ebony
 		SetupCallback();
 		Initialize();
 
-		projection = glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f, -1.0f, 1.0f);
+		Graphics2d::projection = glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f, -1.0f, 1.0f);
+		//Graphics2d::projection = glm::perspectiveFov(90.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.01f, 1.0f);
+
 	}
 
 	void Graphics2d::SetupCallback()
@@ -211,9 +215,8 @@ namespace Ebony
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 	}
 
 	void Graphics2d::BeginImgui()
@@ -417,63 +420,7 @@ namespace Ebony
 
 	void Graphics2d::DrawFromQueue()
 	{
-		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth < Graphics2d::BACKGROUND_DEPTH)
-		{
-			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
-			Graphics2d::InternalDraw(dynamicDrawable);
-			Graphics2d::renderPriorityQueue.pop();
-		}
-
-
-
-		// Draw background first. Nothing will ever be behind this.
-		for (auto i = 0; i < Graphics2d::backgroundQueue.size(); i++)
-		{
-			Graphics2d::InternalDraw(Graphics2d::backgroundQueue[i]);
-		}
-
-
-		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth < Graphics2d::NEAR_BACKGROUND_DEPTH)
-		{
-			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
-			Graphics2d::InternalDraw(dynamicDrawable);
-			Graphics2d::renderPriorityQueue.pop();
-		}
-
-		// Draw near background next
-		for (auto i = 0; i < Graphics2d::nearBackgroundQueue.size(); i++)
-		{
-			Graphics2d::InternalDraw(Graphics2d::nearBackgroundQueue[i]);
-		}
-
-		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth < Graphics2d::FOREGROUND_DEPTH)
-		{
-			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
-			Graphics2d::InternalDraw(dynamicDrawable);
-			Graphics2d::renderPriorityQueue.pop();
-		}
-
-		// Draw Foreground
-		for (auto i = 0; i < Graphics2d::foregroundQueue.size(); i++)
-		{
-			Graphics2d::InternalDraw(Graphics2d::foregroundQueue[i]);
-		}
-
-		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth < Graphics2d::UI_DEPTH)
-		{
-			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
-			Graphics2d::InternalDraw(dynamicDrawable);
-			Graphics2d::renderPriorityQueue.pop();
-		}
-
-		// Draw UI
-		for (auto i = 0; i < Graphics2d::uiQueue.size(); i++)
-		{
-			Graphics2d::InternalDraw(Graphics2d::uiQueue[i]);
-		}
-			
-		
-		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth < Graphics2d::ALWAYS_FRONT_DEPTH)
+		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth > Graphics2d::ALWAYS_FRONT_DEPTH)
 		{
 			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
 			Graphics2d::InternalDraw(dynamicDrawable);
@@ -486,12 +433,74 @@ namespace Ebony
 			Graphics2d::InternalDraw(Graphics2d::alwaysFrontQueue[i]);
 		}
 
+		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth > Graphics2d::UI_DEPTH)
+		{
+			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::InternalDraw(dynamicDrawable);
+			Graphics2d::renderPriorityQueue.pop();
+		}
+		
+		// Draw UI
+		for (auto i = 0; i < Graphics2d::uiQueue.size(); i++)
+		{
+			Graphics2d::InternalDraw(Graphics2d::uiQueue[i]);
+		}
+
+		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth > Graphics2d::FOREGROUND_DEPTH)
+		{
+			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::InternalDraw(dynamicDrawable);
+			Graphics2d::renderPriorityQueue.pop();
+		}
+
+		// Draw Foreground
+		for (auto i = 0; i < Graphics2d::foregroundQueue.size(); i++)
+		{
+			Graphics2d::InternalDraw(Graphics2d::foregroundQueue[i]);
+		}
+
+
+		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth > Graphics2d::NEAR_BACKGROUND_DEPTH)
+		{
+			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::InternalDraw(dynamicDrawable);
+			Graphics2d::renderPriorityQueue.pop();
+		}
+
+
+		while (Graphics2d::renderPriorityQueue.size() > 0 && Graphics2d::renderPriorityQueue.top().depth > Graphics2d::BACKGROUND_DEPTH)
+		{
+			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
+			Graphics2d::InternalDraw(dynamicDrawable);
+			Graphics2d::renderPriorityQueue.pop();
+		}
+
+		// Draw near background next
+		for (auto i = 0; i < Graphics2d::nearBackgroundQueue.size(); i++)
+		{
+			Graphics2d::InternalDraw(Graphics2d::nearBackgroundQueue[i]);
+		}
+
+
 		while (Graphics2d::renderPriorityQueue.size() > 0)
 		{
 			DrawableObject dynamicDrawable = Graphics2d::renderPriorityQueue.top();
 			Graphics2d::InternalDraw(dynamicDrawable);
 			Graphics2d::renderPriorityQueue.pop();
 		}
+
+
+
+		// Draw background 
+		for (auto i = 0; i < Graphics2d::backgroundQueue.size(); i++)
+		{
+			Graphics2d::InternalDraw(Graphics2d::backgroundQueue[i]);
+		}
+	
+
+		
+
+		
 
 
 		Graphics2d::backgroundQueue.clear();
@@ -748,6 +757,7 @@ namespace Ebony
 		glClearColor(clearColor.r(), clearColor.g(), clearColor.b(), clearColor.a());
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}

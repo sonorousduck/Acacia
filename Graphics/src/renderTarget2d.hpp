@@ -12,12 +12,12 @@ namespace Ebony
 
 		static RenderTarget2D Create(std::uint16_t width, std::uint16_t height, GLint minFilter, GLint magFilter, bool depthStencil = true, bool usesCamera = true); // Eventually, this should be able to take in the filtering
 
-		unsigned int GetFramebuffer()
+		unsigned int GetFramebuffer() const
 		{
 			return m_Framebuffer;
 		}
 
-		unsigned int GetTextureColorBuffer()
+		unsigned int GetTextureColorBuffer() const
 		{
 			return m_TextureColorBuffer;
 		}
@@ -48,7 +48,7 @@ namespace Ebony
 		unsigned int m_Framebuffer = 0;
 		unsigned int m_TextureColorBuffer = 0;
 		unsigned int m_Rbo = 0;
-		bool depthStencil = false;
+		bool depthStencil = true;
 		bool usesCamera = true;
 
 		

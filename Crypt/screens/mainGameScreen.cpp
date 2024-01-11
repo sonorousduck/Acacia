@@ -114,7 +114,7 @@ namespace Crypt
 
 	void MainGameScreen::Init(int windowWidth, int windowHeight)
 	{
-		camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 1.0f));
+		camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
