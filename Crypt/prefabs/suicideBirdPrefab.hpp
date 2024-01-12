@@ -74,7 +74,9 @@ namespace Crypt
 
 						if (enemyInformation->health <= 0.0f)
 						{
+							player->getComponent<components::Player>()->score += 100.0f;
 							bird->getComponent<components::DestructionComponent>()->shouldDestroy = true;
+
 						}
 
 						other->getComponent<components::DestructionComponent>()->shouldDestroy = true;

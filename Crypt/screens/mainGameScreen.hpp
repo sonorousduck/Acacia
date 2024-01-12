@@ -44,6 +44,7 @@ namespace Crypt
 		void SetNextScreen(std::uint64_t nextScreen);
 
 		void RemoveOldEntities() override;
+
 		std::uint64_t Update(std::chrono::microseconds elapsedTime) override;
 		void Draw(std::chrono::microseconds elapsedTime) override;
 		void ProcessInput(std::chrono::microseconds elapsedTime) override;

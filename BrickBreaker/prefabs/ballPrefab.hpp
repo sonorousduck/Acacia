@@ -12,6 +12,7 @@
 #include <components/keyboardComponent.hpp>
 #include <singletons/inputManager.hpp>
 #include <components/soundEffectComponent.hpp>
+#include <misc/renderLayers.hpp>
 
 namespace BrickBreaker
 {
@@ -25,7 +26,7 @@ namespace BrickBreaker
 			ballEntity->addComponent(std::make_unique<components::SoundEffect>(Ebony::ENTITY));
 
 			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(beginningTransform, 0.0f, glm::vec2(20.0f, 20.0f))));
-			auto spriteBall = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("ball"), Ebony::Colors::White);
+			auto spriteBall = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("ball"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
 			components::Subcollider ballAABBCollider = components::Subcollider(glm::vec2(10.0f, 10.0f), glm::vec2(20.0f, 20.0f), true, true);
 			
 			ballAABBCollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)

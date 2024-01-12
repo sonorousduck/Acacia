@@ -25,6 +25,7 @@ namespace components
 		bool gravityDown = true;
 		std::int16_t health = 6;
 		std::int16_t lastHealth = 6;
+		float score = 0;
 
 		float gravityCooldown = 0.0f;
 		float gravityUsageCooldownResetTime = 1.0f; // This will be the reset time that the gravity cooldown gets set to when the player uses it 

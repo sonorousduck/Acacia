@@ -68,10 +68,19 @@ namespace Crypt
 					if (shootingComponent->currentCooldown >= shootingComponent->maxShootingSpeed)
 					{
 						auto crosshair = entity->getComponent<components::Crosshair>();
-						Ebony::SystemManager::AddEntity(BulletPrefab::Create(crosshair->aimLocation, glm::vec2(50.0f, 50.0f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "fire_bullet"));
+						glm::vec2 fireFromPosition = player->getComponent<components::Transform>()->position;
+
+						if (crosshair->bulletType & components::BULLET_TYPE::FIRE)
+						{
+							Ebony::SystemManager::AddEntity(BulletPrefab::Create(fireFromPosition, glm::vec2(2.5f, 2.5f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "fire_bullet"));
+						}
+						else if (crosshair->bulletType & components::BULLET_TYPE::ICE)
+						{
+							Ebony::SystemManager::AddEntity(BulletPrefab::Create(fireFromPosition, glm::vec2(2.5f, 2.5f), crosshair->aimDirection, speed, crosshair->bulletType, 1, "ice_bullet"));
+						}
+
 
 						shootingComponent->currentCooldown = 0.0f;
-						Ebony::InputManager::Vibrate(0, 0, 1.0f, 100, true);
 					}
 				} });
 

@@ -8,7 +8,7 @@
 #include <misc/resourceManager.hpp>
 #include "../misc/collisionLayers.hpp"
 #include "../components/powerupComponent.hpp"
-
+#include <misc/renderLayers.hpp>
 
 
 
@@ -22,7 +22,7 @@ namespace BrickBreaker
 		{
 			entities::EntityPtr powerup = std::make_shared<entities::Entity>();
 			powerup->addComponent(std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(25.0f, 25.0f)));
-			powerup->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(sprite), Ebony::Colors::White));
+			powerup->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(sprite), Ebony::Colors::White, Ebony::RenderLayer::NEAR_BACKGROUND));
 			powerup->addComponent(std::make_unique<components::Powerup>(Powerups::LARGER_PADDLE));
 			powerup->addComponent(std::make_unique<components::RigidBody>(glm::vec2(0.0f, 250.0f), glm::vec2(0.0f, 0.0f), false));
 

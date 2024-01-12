@@ -59,8 +59,8 @@ namespace Ebony {
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME_OVER] = std::make_shared<Crypt::GameOverScreen>();
 
 
-			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME_OVER];
-			Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::GAME_OVER;
+			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU];
+			Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::MAIN_MENU;
 			// TODO: Get ResourceManager to register fonts in a good way, but for now, use the graphics.LoadFont way
 			// Also, register any default fonts that I want to include throughout all the project
 
@@ -72,10 +72,7 @@ namespace Ebony {
 
 		void LoadContent() override
 		{
-			for (auto& screen : Ebony::SystemManager::screens)
-			{
-				screen.second->LoadContent();
-			}
+			Ebony::SystemManager::currentScreen->LoadContent();
 
 			Application::LoadContent();
 		}
@@ -135,6 +132,10 @@ namespace Ebony {
 			if (Ebony::SystemManager::nextScreenEnum == Crypt::QUIT)
 			{
 				Ebony::SystemManager::quit = true;
+			}
+			else
+			{
+				Ebony::SystemManager::currentScreen->LoadContent();
 			}
 		}
 

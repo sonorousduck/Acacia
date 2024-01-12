@@ -41,24 +41,21 @@ namespace BrickBreaker
 
 		// Create prefabs
 
-		auto button = BrickBreaker::Button::Create(40.0f, 250.0f, "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::GAME, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); });
-		auto buttonWidth = button->getComponent<components::Sprite>()->texture->Width / 2.0f;
-		auto buttonHeight = button->getComponent<components::Sprite>()->texture->Height / 4.0f;
+		auto button = BrickBreaker::Button::Create(0.0f, 120.0f, static_cast<float>(windowWidth), "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::GAME);
+		auto actualButtonScale = button->getComponent<components::Transform>()->scale;
+		auto buttonPositioningX = button->getComponent<components::Transform>()->position.x;
 
 		AddEntity(BrickBreaker::MenuCursor::Create());
 
 
 		AddEntity(BrickBreaker::Logo::Create(0.0f, 0.0f, "logo_brickbreaker"));
 		AddEntity(button);
-		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 250.0f + buttonHeight, "start_text"));
-		AddEntity(BrickBreaker::Button::Create(40.0f, 360.0f, "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::MAIN_MENU, [=](std::uint16_t nextScreen) {
-			SetNextScreen(nextScreen); }));
-		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 360.0f + buttonHeight, "options_text"));
-		AddEntity(BrickBreaker::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));
 
-
-
-		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 470.0f + buttonHeight, "quit_text"));
+		AddEntity(BrickBreaker::ButtonText::Create(buttonPositioningX, 120.0f, actualButtonScale.x, actualButtonScale.y, "start_text"));
+		AddEntity(BrickBreaker::Button::Create(0.0f, 130.0f + actualButtonScale.y, static_cast<float>(windowWidth), "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::OPTIONS));
+		AddEntity(BrickBreaker::ButtonText::Create(buttonPositioningX, 130.0f + actualButtonScale.y, actualButtonScale.x, actualButtonScale.y, "options_text"));
+		AddEntity(BrickBreaker::Button::Create(0.0f, 140.0f + 2 * actualButtonScale.y, static_cast<float>(windowWidth), "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::QUIT));
+		AddEntity(BrickBreaker::ButtonText::Create(buttonPositioningX, 140.0f + 2.0f * actualButtonScale.y, actualButtonScale.x, actualButtonScale.y, "quit_text"));
 
 		AddNewEntities();
 	}
@@ -125,14 +122,6 @@ namespace BrickBreaker
 
 		// UI will need physics layer, input system, music, sprite
 
-		auto physicsTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				physicsSystem.Update(elapsedTime);
-			}
-		);
-
 		auto audioTask = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
 			[this, elapsedTime]()
@@ -152,6 +141,9 @@ namespace BrickBreaker
 
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
 		graphDone.wait();
+
+		physicsSystem.Update(elapsedTime);
+
 
 		return nextScreen;
 

@@ -14,6 +14,7 @@
 #include <singletons/time.hpp>
 #include <components/soundEffectComponent.hpp>
 #include <components/mouseInputComponent.hpp>
+#include <misc/renderLayers.hpp>
 
 namespace BrickBreaker
 {
@@ -116,7 +117,7 @@ namespace BrickBreaker
 			paddle->addComponent(std::make_unique<components::SoundEffect>(Ebony::ENTITY));
 
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
 			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(75.0f, 25.0f), glm::vec2(150.0f, 50.0f), true, true);
 			auto collider = std::make_unique<components::Collider>(aabbcollider, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::POWERUP, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(150.0f, 50.0f));

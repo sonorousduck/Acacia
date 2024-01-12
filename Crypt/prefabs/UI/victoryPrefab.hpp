@@ -19,9 +19,6 @@ namespace Crypt
 			auto centeredXPosition = (static_cast<float>(windowWidth) - text->stringSize.x) / 2.0f;
 
 
-			// Base the button text based on the overall size of the button, using the original positioning of the button as a guide.
-
-
 			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(centeredXPosition, 100.0f), 0.0f, glm::vec2(1.0f, 1.0f)));
 			entity->addComponent(std::move(text));
 

@@ -67,6 +67,7 @@ set(UIPrefabs
   prefabs/UI/cryptTitlePrefab.hpp
   prefabs/UI/playAgainPrefab.hpp
   prefabs/UI/quitInformationPrefab.hpp
+  prefabs/UI/playerScorePrefab.hpp
 )
 
 set(SingletonHeaders
@@ -109,6 +110,7 @@ set(ScriptHeaders
   scripts/shootingBatScript.hpp
   scripts/healthBarUpdateScript.hpp
   scripts/playerHealthUpdateScript.hpp
+  scripts/playerScoreUpdateScript.hpp
 )
 
 set(PythonScripts

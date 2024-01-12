@@ -4,6 +4,7 @@
 
 #include "../components/playerComponent.hpp"
 #include <graphics2d.hpp>
+#include <iostream>
 
 
 namespace systems

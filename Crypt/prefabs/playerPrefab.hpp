@@ -18,6 +18,8 @@
 #include "../screens/screenEnums.hpp"
 #include "../components/bulletComponent.hpp"
 #include <misc/renderLayers.hpp>
+#include "UI/playerScorePrefab.hpp"
+
 
 namespace Crypt
 {
@@ -33,6 +35,31 @@ namespace Crypt
 
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
+
+			controllerInputComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_LEFTY, "flipGravity" });
+			controllerInputComponent->joystickActions.insert({ "flipGravity", [=](float value) {
+				if (abs(value) > 0.10)
+				{
+					auto rigidBody = player->getComponent<components::RigidBody>();
+					auto transform = player->getComponent<components::Transform>();
+					auto collider = player->getComponent<components::Collider>();
+					auto playerComponent = player->getComponent<components::Player>();
+
+					if (playerComponent->gravityCooldown <= 0.0f)
+					{
+						playerComponent->gravityCooldown = playerComponent->gravityUsageCooldownResetTime;
+						playerComponent->gravityDown = !playerComponent->gravityDown;
+
+						transform->rotation = fmod(transform->rotation + 180.0f, 360.0f);
+						rigidBody->setVelocity(glm::vec2(rigidBody->getVelocity().x, originalVelocity.y * (playerComponent->gravityDown ? 1 : -1)));
+						rigidBody->setAcceleration(glm::vec2(rigidBody->getAcceleration().x, 200.0f * (playerComponent->gravityDown ? 1 : -1)));
+
+						playerComponent->isOnGround = false;
+					}
+				}
+			} });
+
+
 
 			controllerInputComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_LEFTX, "playerMovement" });
 
@@ -99,8 +126,6 @@ namespace Crypt
 			keyboardInputComponent->onPressActions.insert({ "pause", [=]()
 				{
 					Ebony::SystemManager::nextScreenEnum = ScreenEnum::PAUSE;
-
-					//setNextScreen(ScreenEnum::PAUSE);
 				} });
 
 
@@ -137,7 +162,6 @@ namespace Crypt
 
 			keyboardInputComponent->bindings.insert({ SDLK_w, "flipGravity" });
 			keyboardInputComponent->bindings.insert({ SDLK_SPACE, "flipGravity" });
-
 
 			keyboardInputComponent->onPressActions.insert({ "flipGravity", [=]()
 				{
@@ -218,6 +242,9 @@ namespace Crypt
 
 
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale, glm::vec3(1.0f, 0.0f, 0.0f));
+
+
+			Ebony::SystemManager::AddEntity(Crypt::PlayerScore::Create(480, player));
 
 
 			player->addComponent(std::move(collider));

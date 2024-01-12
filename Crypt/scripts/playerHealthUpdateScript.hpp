@@ -49,6 +49,8 @@ namespace scripts
 					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("damaged_heart");
 					break;
 				case 6:
+					heart1->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("full_heart");
+					heart2->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("full_heart");
 					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("full_heart");
 					break;
 				}

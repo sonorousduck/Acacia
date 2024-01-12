@@ -22,7 +22,7 @@ namespace Ebony
 
         FT_Set_Pixel_Sizes(face, spriteWidth, spriteHeight);
 
-        //glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 
         // We are going to loop through 128 characters of the ASCII set
         for (unsigned char c = 0; c < 128; c++)
@@ -51,8 +51,8 @@ namespace Ebony
             );
 
             // Set texture options
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 

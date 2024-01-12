@@ -6,59 +6,59 @@ namespace BrickBreaker
 
 	void GameScreen::LoadContent()
 	{
-		Ebony::ResourceManager::LoadSoundEffect("wall", "/SoundEffects/wall.wav", false);
-		Ebony::ResourceManager::LoadSoundEffect("click", "click.wav");
-		Ebony::ResourceManager::LoadSoundEffect("ball_bounce", "ball_bounce.wav");
-		Ebony::ResourceManager::LoadSoundEffect("menu_select", "Menu Selection Click.wav");
-		Ebony::ResourceManager::LoadSoundEffect("negative", "negative.wav");
-		Ebony::ResourceManager::LoadSoundEffect("positive", "positive.wav");
-		Ebony::ResourceManager::LoadSoundEffect("powerup", "Powerup.wav");
-		Ebony::ResourceManager::LoadSoundEffect("save", "save.wav");
-		Ebony::ResourceManager::LoadSoundEffect("brick_break", "brick_break.wav");
+		Ebony::ResourceManager::LoadSoundEffect("wall", "/SoundEffects/wall.wav", "", false);
+		Ebony::ResourceManager::LoadSoundEffect("click", "click.wav", "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("ball_bounce", "ball_bounce.wav", "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("menu_select", "Menu Selection Click.wav", "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("negative", "negative.wav", "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("positive", "positive.wav", "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("powerup", "Powerup.wav", "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("save", "save.wav", "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("brick_break", "brick_break.wav", "BrickBreaker");
 
-		Ebony::ResourceManager::LoadMusic("cyberpunk_moonlight_sonata", "Cyberpunk-Moonlight-Sonata.wav");
-		Ebony::ResourceManager::LoadMusic("cyberpunk_moonlight_sonata_short", "Cyberpunk-Moonlight-Sonata-editted.wav");
+		Ebony::ResourceManager::LoadMusic("cyberpunk_moonlight_sonata", "Cyberpunk-Moonlight-Sonata.wav", "BrickBreaker");
+		Ebony::ResourceManager::LoadMusic("cyberpunk_moonlight_sonata_short", "Cyberpunk-Moonlight-Sonata-editted.wav", "BrickBreaker");
 			
-		Ebony::ResourceManager::LoadMusic("song18", "/Music/song18.wav", false);
-		Ebony::ResourceManager::LoadTexture("blue_tile.tx", "blue_tile");
-		Ebony::ResourceManager::LoadTexture("blue_broken_tile.tx", "blue_broken_tile");
-		Ebony::ResourceManager::LoadTexture("grey_tile.tx", "grey_tile");
-		Ebony::ResourceManager::LoadTexture("broken_grey_tile.tx", "grey_broken_tile");
-		Ebony::ResourceManager::LoadTexture("emerald_tile.tx", "emerald_tile");
-		Ebony::ResourceManager::LoadTexture("emerald_broken_tile.tx", "emerald_broken_tile");
-		Ebony::ResourceManager::LoadTexture("green_tile.tx", "green_tile");
-		Ebony::ResourceManager::LoadTexture("green_broken_tile.tx", "green_broken_tile");
-		Ebony::ResourceManager::LoadTexture("yellow_tile.tx", "yellow_tile");
-		Ebony::ResourceManager::LoadTexture("yellow_broken_tile.tx", "yellow_broken_tile");
-		Ebony::ResourceManager::LoadTexture("red_tile.tx", "red_tile");
-		Ebony::ResourceManager::LoadTexture("red_broken_tile.tx", "red_broken_tile");
-		Ebony::ResourceManager::LoadTexture("brown_tile.tx", "brown_tile");
-		Ebony::ResourceManager::LoadTexture("broken_brown_tile.tx", "brown_broken_tile");
-		Ebony::ResourceManager::LoadTexture("purple_tile.tx", "purple_tile");
-		Ebony::ResourceManager::LoadTexture("purple_broken_tile.tx", "purple_broken_tile");
-		Ebony::ResourceManager::LoadTexture("light_blue_tile.tx", "light_blue_tile");
-		Ebony::ResourceManager::LoadTexture("light_blue_broken_tile.tx", "light_blue_broken_tile");
-		Ebony::ResourceManager::LoadTexture("orange_tile.tx", "orange_tile");
-		Ebony::ResourceManager::LoadTexture("orange_broken_tile.tx", "orange_broken_tile");
-		Ebony::ResourceManager::LoadTexture("ball.tx", "ball");
-		Ebony::ResourceManager::LoadTexture("paddle_00.tx", "paddle_0");
-		Ebony::ResourceManager::LoadTexture("paddle_01.tx", "paddle_1");
-		Ebony::ResourceManager::LoadTexture("paddle_02.tx", "paddle_2");
-		Ebony::ResourceManager::LoadTexture("heart.tx", "heart");
-		Ebony::ResourceManager::LoadTexture("50_extra.tx", "50_extra");
-		Ebony::ResourceManager::LoadTexture("100_extra.tx", "100_extra");
-		Ebony::ResourceManager::LoadTexture("250_extra.tx", "250_extra");
-		Ebony::ResourceManager::LoadTexture("500_extra.tx", "500_extra");
-		Ebony::ResourceManager::LoadTexture("big_paddle.tx", "big_paddle");
-		Ebony::ResourceManager::LoadTexture("small_paddle.tx", "small_paddle");
-		Ebony::ResourceManager::LoadTexture("bigger_paddle_powerup.tx", "bigger_paddle_powerup");
-		Ebony::ResourceManager::LoadTexture("breaks_through_powerup.tx", "breaks_through_powerup");
-		Ebony::ResourceManager::LoadTexture("extra_ball_powerup.tx", "extra_ball_powerup");
-		Ebony::ResourceManager::LoadTexture("fast_powerup.tx", "fast_powerup");
-		Ebony::ResourceManager::LoadTexture("slow_powerup.tx", "slow_powerup");
-		Ebony::ResourceManager::LoadTexture("smaller_paddle_powerup.tx", "smaller_paddle_powerup");
-		Ebony::ResourceManager::LoadTexture("box.tx", "collider");
-		Ebony::ResourceManager::LoadTexture("empty.tx", "empty");
+		Ebony::ResourceManager::LoadMusic("song18", "/Music/song18.wav", "", false);
+		Ebony::ResourceManager::LoadTexture("blue_tile.tx", "blue_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("blue_broken_tile.tx", "blue_broken_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("grey_tile.tx", "grey_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("broken_grey_tile.tx", "grey_broken_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("emerald_tile.tx", "emerald_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("emerald_broken_tile.tx", "emerald_broken_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("green_tile.tx", "green_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("green_broken_tile.tx", "green_broken_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("yellow_tile.tx", "yellow_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("yellow_broken_tile.tx", "yellow_broken_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("red_tile.tx", "red_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("red_broken_tile.tx", "red_broken_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("brown_tile.tx", "brown_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("broken_brown_tile.tx", "brown_broken_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("purple_tile.tx", "purple_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("purple_broken_tile.tx", "purple_broken_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("light_blue_tile.tx", "light_blue_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("light_blue_broken_tile.tx", "light_blue_broken_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("orange_tile.tx", "orange_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("orange_broken_tile.tx", "orange_broken_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("ball.tx", "ball", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("paddle_00.tx", "paddle_0", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("paddle_01.tx", "paddle_1", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("paddle_02.tx", "paddle_2", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("heart.tx", "heart", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("50_extra.tx", "50_extra", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("100_extra.tx", "100_extra", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("250_extra.tx", "250_extra", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("500_extra.tx", "500_extra", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("big_paddle.tx", "big_paddle", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("small_paddle.tx", "small_paddle", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("bigger_paddle_powerup.tx", "bigger_paddle_powerup", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("breaks_through_powerup.tx", "breaks_through_powerup", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("extra_ball_powerup.tx", "extra_ball_powerup", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("fast_powerup.tx", "fast_powerup", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("slow_powerup.tx", "slow_powerup", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("smaller_paddle_powerup.tx", "smaller_paddle_powerup", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("box.tx", "collider", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("empty.tx", "empty", "BrickBreaker");
 		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "Crypt");
 
 
@@ -89,7 +89,6 @@ namespace BrickBreaker
 		auto testParticles = std::make_shared<entities::Entity>();
 		auto keyboardInput = std::make_shared<entities::Entity>();
 		auto animationsTest = std::make_shared<entities::Entity>();
-		fpsEntity = std::make_shared<entities::Entity>();
 
 		particleSystem = systems::ParticleSystem();
 		particleRenderer = systems::ParticleRenderer();
@@ -150,10 +149,10 @@ namespace BrickBreaker
 
 		AddEntity(gameplayEntity);
 
-		entities::EntityPtr paddleEntity = BrickBreaker::Paddle::Create(glm::vec2(400.0f, 500.0f), windowWidth);
+		entities::EntityPtr paddleEntity = BrickBreaker::Paddle::Create(glm::vec2(10.0f, 300.0f), windowWidth);
 		AddEntity(paddleEntity);
 
-		entities::EntityPtr ballEntity = BrickBreaker::Ball::Create(glm::vec2(400.0f, 475.0f), paddleEntity, true);
+		entities::EntityPtr ballEntity = BrickBreaker::Ball::Create(glm::vec2(10.0f, 280.0f), paddleEntity, true);
 		AddEntity(ballEntity);
 
 		for (std::uint8_t i = 0; i < 19; i++)
@@ -180,14 +179,6 @@ namespace BrickBreaker
 
 
 		//keyboardInputComponent->loadKeyBindings("../keyBindings.json");
-
-		auto textComponent = std::make_unique<components::Text>(fps, Ebony::Colors::Black, Ebony::Colors::White, Ebony::ResourceManager::GetFont("default"));
-		fpsEntity->addComponent(std::move(textComponent));
-		fpsEntity->addComponent(std::move(std::make_unique<components::Transform>(glm::vec2{ 25.0f, 100.0f }, 0.0f, glm::vec2{ 1.0f, 1.0f })));
-
-
-		AddEntity(fpsEntity);
-
 
 		//keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keyBindings.json");
 		//keyboardInput->getComponent<components::ControllerInput>()->saveControllerBindings("../controllerBindings.json", "../joystickBindings.json");
@@ -347,17 +338,6 @@ namespace BrickBreaker
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
 		graphDone.wait();
 
-
-		if (fpsUpdateDeltaTime <= 1.0f)
-		{
-			fps = std::to_string(static_cast<int>(std::round(1 / (elapsedTime.count() / 1000000.0f) ))) + " fps";
-			fpsUpdateDeltaTime += 0.16f;
-			fpsEntity->getComponent<components::Text>()->text = fps;
-		}
-		else
-		{
-			fpsUpdateDeltaTime -= (elapsedTime.count() / 1000000.0f);
-		}
 
 		averageUpdateTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - firstTime);
 

@@ -17,7 +17,11 @@ namespace systems
 			auto player = entity->getComponent<components::Player>();
 			auto rigidBody = entity->getComponent<components::RigidBody>();
 			auto transform = entity->getComponent<components::Transform>();
+			
 
+			player->score += transform->position.x - transform->previousPosition.x;
+
+			std::cout << static_cast<int>((player->score) / 10.0f) << std::endl;
 
 			/*if (player->isSlow)
 			{

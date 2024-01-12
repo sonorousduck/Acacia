@@ -12,6 +12,7 @@
 #include "../prefabs/powerupPrefab.hpp"
 #include "../singletons/GameManager.hpp"
 #include <components/soundEffectComponent.hpp>
+#include <misc/renderLayers.hpp>
 
 namespace BrickBreaker
 {
@@ -56,7 +57,7 @@ namespace BrickBreaker
 
 			brickEntity->addComponent(std::make_unique<components::Collider>(subcollider, BrickBreaker::CollisionLayers::BRICK, true, false));
 			brickEntity->addComponent(std::make_unique<components::RigidBody>());
-			brickEntity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(tile_image), Ebony::Colors::White));
+			brickEntity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(tile_image), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND));
 			brickEntity->addComponent(std::make_unique<components::Brick>(brickStrength, pointValue));
 
 			return brickEntity;

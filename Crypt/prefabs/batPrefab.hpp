@@ -53,6 +53,7 @@ namespace Crypt
 
 						if (enemyInformation->health <= 0.0f)
 						{
+							player->getComponent<components::Player>()->score += 600.0f;
 							bat->getComponent<components::DestructionComponent>()->shouldDestroy = true;
 						}
 

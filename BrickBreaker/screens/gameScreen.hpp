@@ -66,11 +66,7 @@ namespace BrickBreaker
 		void OnScreenFocus(std::uint64_t lastScreenEnum) override;
 
 		std::string fps = "";
-		//Ebony::KeyInput keyInput;
-		//Ebony::MouseInput mouseInput;
-		//Ebony::ControllerInput controllerInput;
 		Ebony::Color clearColor;
-		//std::shared_ptr<Ebony::SpriteFont> spriteFont;
 		systems::ParticleSystem particleSystem;
 		systems::ParticleRenderer particleRenderer;
 		systems::AnimationRenderer animationRenderer;
@@ -93,14 +89,13 @@ namespace BrickBreaker
 		std::chrono::microseconds averageUpdateTime = std::chrono::microseconds::zero();
 		std::shared_ptr<Camera> camera;
 
-		entities::EntityPtr fpsEntity;
 		float fpsUpdateDeltaTime = 0.0f;
 
 		std::uint64_t screen = BrickBreaker::ScreenEnum::GAME;
 		std::uint64_t nextScreen = BrickBreaker::ScreenEnum::GAME;
 
-		int windowWidth;
-		int windowHeight;
+		int windowWidth = 0;
+		int windowHeight = 0;
 
 	private:
 		void RemoveAllEntities();
