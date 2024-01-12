@@ -11,7 +11,6 @@
 #include <components/collider.hpp>
 #include <graphics2d.hpp>
 #include <SDL.h>
-#include <Log.hpp>
 #include <singletons/time.hpp>
 #include <components/soundEffectComponent.hpp>
 #include <components/mouseInputComponent.hpp>

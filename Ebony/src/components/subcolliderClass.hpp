@@ -58,6 +58,8 @@ namespace components
 		bool getIsAABB() { return this->isAABB; }
 		bool isCollidingLastFrame = false;
 
+		glm::vec2 lastCollisionLocation{};
+
 		// Basically, the callback will take itself and the object with which it collided
 		std::optional<std::function<void(entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollisionStart;
 		std::optional<std::function<void(entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollision;

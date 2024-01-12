@@ -7,14 +7,12 @@ set(HEADER_FILES
 	src/Application.hpp
 	src/Core.hpp
 	src/EntryPoint.hpp
-	src/Log.hpp
 	src/Ebony.hpp
 	src/animation.hpp
 )
 
 set(SOURCE_FILES
 	src/Application.cpp
-	src/Log.cpp
 )
 
 set(ComponentHeaders
@@ -198,7 +196,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 # target_include_directories(Ebony PRIVATE ${Python3_INCLUDE_DIRS})
 
 
-target_link_libraries(Ebony spdlog Graphics rapidjson tileson pybind11::module)
+target_link_libraries(Ebony Graphics rapidjson tileson pybind11::module)
 
 # add_subdirectory(ThirdParty/rapidjson)
 # include_directories(ThirdParty/rapidjson/include)

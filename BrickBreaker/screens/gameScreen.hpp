@@ -40,7 +40,6 @@
 #include "../prefabs/scorePrefab.hpp"
 #include "../systems/lifePointSystem.hpp"
 #include "screenEnums.hpp"
-#include <Log.hpp>
 #include <systems/cppScriptingSystem.hpp>
 
 

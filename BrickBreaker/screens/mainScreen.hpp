@@ -22,7 +22,6 @@
 #include <singletons/time.hpp>
 
 #include "screenEnums.hpp"
-#include <Log.hpp>
 
 
 namespace BrickBreaker

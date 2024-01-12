@@ -4,8 +4,6 @@
 #include <unordered_map>
 #include <functional>
 #include <memory>
-#include "../Log.hpp"
-
 #include "../Core.hpp"
 #include <SDL.h>
 #include <glm/glm.hpp>

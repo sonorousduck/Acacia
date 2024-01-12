@@ -128,10 +128,9 @@ namespace Ebony
 				InputManager::controllerInstances[event.cdevice.which]->isXboxController = SDL_JoystickHasRumbleTriggers(SDL_GameControllerGetJoystick(InputManager::controllers[InputManager::sdlJoystickToJoystickConversion[event.cdevice.which]]));
 				
 				//std::cout << (SDL_JoystickGetVendor(SDL_GameControllerGetJoystick(InputManager::controllers[event.cdevice.which]))) << std::endl;
-				//EB_INFO(SDL_JoystickName(SDL_GameControllerGetJoystick(InputManager::controllers[event.cdevice.which])));
 
 				InputManager::controllersConnected++;
-				EB_TRACE("ADDING NEW CONTROLLER (inputManager.cpp)");
+				std::cout << "ADDING NEW CONTROLLER (inputManager.cpp)" << std::endl;;
 				break;
 
 			case SDL_CONTROLLERDEVICEREMOVED:
@@ -140,7 +139,7 @@ namespace Ebony
 				InputManager::sdlJoystickToJoystickConversion.erase(SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(InputManager::controllers[event.cdevice.which])));
 
 				InputManager::controllersConnected--;
-				EB_TRACE("REMOVING CONTROLLER (inputManager.cpp)");
+				std::cout << "REMOVING CONTROLLER (inputManager.cpp)" << std::endl;
 				break;
 
 			case SDL_MOUSEBUTTONDOWN:

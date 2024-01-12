@@ -22,7 +22,6 @@
 #include <algorithm>
 
 #include "screenEnums.hpp"
-#include <Log.hpp>
 #include <systems/animationRenderer.hpp>
 #include <systems/animation2d.hpp>
 #include "../systems/playerSystem.hpp"

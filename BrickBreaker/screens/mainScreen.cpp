@@ -52,7 +52,6 @@ namespace BrickBreaker
 		AddEntity(button);
 		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 250.0f + buttonHeight, "start_text"));
 		AddEntity(BrickBreaker::Button::Create(40.0f, 360.0f, "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::MAIN_MENU, [=](std::uint16_t nextScreen) {
-			EB_TRACE("OPTIONS WAS PRESSED!");
 			SetNextScreen(nextScreen); }));
 		AddEntity(BrickBreaker::ButtonText::Create(buttonWidth, 360.0f + buttonHeight, "options_text"));
 		AddEntity(BrickBreaker::Button::Create(40.0f, 470.0f, "button_unpressed", "button_hovered", "button_pressed", BrickBreaker::ScreenEnum::QUIT, [=](std::uint16_t nextScreen) {SetNextScreen(nextScreen); }));

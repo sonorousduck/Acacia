@@ -205,7 +205,6 @@ namespace BrickBreaker
 		AddEntity(bottomWall);
 
 		AddNewEntities();
-		EB_TRACE("Added all entities");
 	}
 		
 	void GameScreen::AddNewEntities()

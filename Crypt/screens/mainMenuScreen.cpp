@@ -74,6 +74,8 @@ namespace Crypt
 
 	std::uint64_t MainMenuScreen::Update(std::chrono::microseconds elapsedTime)
 	{
+		std::cout << "Updating!" << std::endl;
+
 		auto firstTime = std::chrono::system_clock::now();
 
 		std::latch graphDone{ 1 };
@@ -85,14 +87,6 @@ namespace Crypt
 			});
 
 		// UI will need physics layer, input system, music, sprite
-
-		auto physicsTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				physicsSystem.Update(elapsedTime);
-			}
-		);
 
 		auto audioTask = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
@@ -113,6 +107,9 @@ namespace Crypt
 
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
 		graphDone.wait();
+
+		physicsSystem.Update(elapsedTime);
+
 
 		return nextScreen;
 

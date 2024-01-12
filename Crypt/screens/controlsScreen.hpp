@@ -19,7 +19,6 @@
 #include <algorithm>
 
 #include "screenEnums.hpp"
-#include <Log.hpp>
 
 
 namespace Crypt

@@ -61,13 +61,6 @@ namespace Crypt
 
 		// UI will need physics layer, input system, music, sprite
 
-		auto physicsTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				physicsSystem.Update(elapsedTime);
-			}
-		);
 
 		auto audioTask = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
@@ -88,6 +81,7 @@ namespace Crypt
 
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
 		graphDone.wait();
+		physicsSystem.Update(elapsedTime);
 
 		return nextScreen;
 

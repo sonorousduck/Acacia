@@ -4,6 +4,12 @@
 #include "../components/rigidbodyComponent.hpp"
 #include "../misc/Quadtree.hpp"
 #include "../components/transform.hpp"
+#include "../misc/ThreadPool.hpp"
+#include "../components/cppScriptComponent.hpp"
+#include <latch>
+#include <algorithm>
+#include <iostream>
+
 
 namespace systems
 {
@@ -35,6 +41,8 @@ namespace systems
 		Ebony::Quadtree staticQuadtree = Ebony::Quadtree(QUADTREE_SIZE, QUADTREE_SIZE, true);
 
 		
+		void updateObject(std::chrono::microseconds elapsedTime, entities::EntityPtr entity);
+
 
 		bool HasCollision(const entities::EntityPtr entity, const entities::EntityPtr otherEntity);
 		bool HasAABBCollision(const entities::EntityPtr& entity, const entities::EntityPtr& otherEntity);

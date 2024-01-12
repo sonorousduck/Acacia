@@ -1,8 +1,6 @@
 #include "physicsSystem.hpp"
-#include <algorithm>
-#include <iostream>
-#include "../../../BrickBreaker/misc/collisionLayers.hpp"
-#include "../components/cppScriptComponent.hpp"
+
+
 
 namespace systems
 {
@@ -27,6 +25,132 @@ namespace systems
 		m_Entities.erase(entityId);
 	}
 
+	void PhysicsSystem::updateObject(std::chrono::microseconds elapsedTime, entities::EntityPtr entity)
+	{
+		auto rigidBody = entity->getComponent<components::RigidBody>();
+		auto transform = entity->getComponent<components::Transform>();
+		transform->previousPosition = transform->position;
+		auto time_ms = elapsedTime.count() / 1000000.0f;
+
+		// Update physics
+		// TODO: Update gravity, and other things
+		if (rigidBody->usesGravity)
+		{
+			rigidBody->setAcceleration(rigidBody->getAcceleration() + (glm::vec2(0.0f, GRAVITY_CONSTANT) * time_ms * time_ms));
+		}
+
+		transform->SetPosition(transform->position + rigidBody->getVelocity() * time_ms + rigidBody->getAcceleration() * time_ms * time_ms);
+
+
+		// Apply forces
+		while (rigidBody->getForceLength() > 0)
+		{
+			// Apply Forces
+		}
+
+
+
+		// Apply velocity and acceleration to object position
+
+		// Update velocity as well
+		rigidBody->setVelocity(rigidBody->getVelocity() + rigidBody->getAcceleration() * time_ms);
+
+
+		while (rigidBody->getNextScriptedMovementLength() > 0)
+		{
+			// Apply scripted movements
+			auto scriptedMovement = rigidBody->getNextScriptedMovement();
+			transform->position += scriptedMovement;
+		}
+
+
+
+		components::Collider* collider;
+		// Collision Detection, if a collider exists
+		if (entity->tryGetComponent<components::Collider>(collider))
+		{
+			// Check for AABB collisions
+			std::vector<entities::EntityPtr> possibleCollisions = quadtree.GetPossibleCollisions(entity);
+			std::vector<entities::EntityPtr> staticPossibleCollisions = staticQuadtree.GetPossibleCollisions(entity);
+			possibleCollisions.insert(possibleCollisions.end(), staticPossibleCollisions.begin(), staticPossibleCollisions.end());
+
+
+			for (std::uint16_t i = 0; i < possibleCollisions.size(); i++)
+			{
+				if (entity->getId() != possibleCollisions[i]->getId() && (collider->layersToCollideWith & possibleCollisions[i]->getComponent<components::Collider>()->layer))
+				{
+					components::CppScript* script;
+					bool hasScript = entity->tryGetComponent<components::CppScript>(script);
+
+					if (HasAABBCollision(entity, possibleCollisions[i]))
+					{
+						if (!collider->preciseSubcolliderDetection)
+						{
+							// On Collision Start
+							if (!collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
+							{
+								collider->aabbCollider.isCollidingLastFrame = true;
+
+								if (collider->aabbCollider.onCollisionStart.has_value())
+								{
+									collider->aabbCollider.onCollisionStart.value()(possibleCollisions[i], elapsedTime);
+								}
+								if (hasScript)
+								{
+									script->OnCollisionStart(possibleCollisions[i], elapsedTime);
+								}
+
+								collider->currentlyCollidingWith.insert(possibleCollisions[i]->getId());
+
+							}
+
+							// On Collision
+							else if (collider->aabbCollider.isCollidingLastFrame && collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
+							{
+								if (collider->aabbCollider.onCollision.has_value())
+								{
+									collider->aabbCollider.onCollision.value()(possibleCollisions[i], elapsedTime);
+								}
+								if (hasScript)
+								{
+									script->OnCollision(possibleCollisions[i], elapsedTime);
+								}
+							}
+						}
+						// If AABB collision, and preciseCollisions is enabled, check those as well for complete collision
+						else
+						{
+							// Has collision will handle the Collision callbacks, since there will be specific callbacks for each subcollider
+							HasCollision(entity, possibleCollisions[i]);
+						}
+					}
+					else
+					{
+						if (collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
+						{
+							collider->aabbCollider.isCollidingLastFrame = false;
+
+							if (collider->aabbCollider.onCollisionEnd.has_value())
+							{
+								collider->aabbCollider.onCollisionEnd.value()(possibleCollisions[i], elapsedTime);
+							}
+							if (hasScript)
+							{
+								script->OnCollisionEnd(possibleCollisions[i], elapsedTime);
+
+							}
+
+							collider->currentlyCollidingWith.erase(possibleCollisions[i]->getId());
+						}
+					}
+				}
+			}
+
+			possibleCollisions.clear();
+			// TODO: Check collisions between the place it was and where it is now
+		}
+	}
+
 
 	void PhysicsSystem::updateImpl(std::chrono::microseconds elapsedTime)
 	{
@@ -48,137 +172,29 @@ namespace systems
 
 		staticQuadtree.shouldRebuild = false;
 
+		std::latch graphDone{ 1 };
+
+		auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(
+			[&graphDone]()
+			{
+				graphDone.count_down();
+			});
+
 
 		for (auto& [id, entity] : m_Entities)
 		{
-			auto rigidBody = entity->getComponent<components::RigidBody>();
-			auto transform = entity->getComponent<components::Transform>();
-			transform->previousPosition = transform->position;
-			auto time_ms = elapsedTime.count() / 1000000.0f;
-
-			// Update physics
-			// TODO: Update gravity, and other things
-			if (rigidBody->usesGravity)
-			{
-				rigidBody->setAcceleration(rigidBody->getAcceleration() + (glm::vec2(0.0f, GRAVITY_CONSTANT) * time_ms * time_ms));
-			}
-
-			transform->SetPosition(transform->position + rigidBody->getVelocity() * time_ms + rigidBody->getAcceleration() * time_ms * time_ms);
-			
-
-			// Apply forces
-			while (rigidBody->getForceLength() > 0)
-			{
-				// Apply Forces
-			}
-
-
-
-			// Apply velocity and acceleration to object position
-
-			// Update velocity as well
-			rigidBody->setVelocity(rigidBody->getVelocity() + rigidBody->getAcceleration() * time_ms);
-
-
-			while (rigidBody->getNextScriptedMovementLength() > 0)
-			{
-				// Apply scripted movements
-				auto scriptedMovement = rigidBody->getNextScriptedMovement();
-				transform->position += scriptedMovement;
-			}
-			
-
-
-
-			// Collision Detection, if a collider exists
-			if (entity->hasComponent<components::Collider>())
-			{
-				auto collider = entity->getComponent<components::Collider>();
-
-				// Check for AABB collisions
-				std::vector<entities::EntityPtr> possibleCollisions = quadtree.GetPossibleCollisions(entity);
-				std::vector<entities::EntityPtr> staticPossibleCollisions = staticQuadtree.GetPossibleCollisions(entity);
-				possibleCollisions.insert(possibleCollisions.end(), staticPossibleCollisions.begin(), staticPossibleCollisions.end());
-
-
-				for (std::uint16_t i = 0; i < possibleCollisions.size(); i++)
+			auto task = Ebony::ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime, entity]()
 				{
-					auto test = possibleCollisions[i]->getComponent<components::Collider>();
-
-					if (entity->getId() != possibleCollisions[i]->getId() && (collider->layersToCollideWith & possibleCollisions[i]->getComponent<components::Collider>()->layer))
-					{
-						components::CppScript* script;
-						bool hasScript = entity->tryGetComponent<components::CppScript>(script);
-
-						if (HasAABBCollision(entity, possibleCollisions[i]))
-						{
-							if (!collider->preciseSubcolliderDetection)
-							{
-								// On Collision Start
-								if (!collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
-								{
-									collider->aabbCollider.isCollidingLastFrame = true;
-
-									if (collider->aabbCollider.onCollisionStart.has_value())
-									{
-										collider->aabbCollider.onCollisionStart.value()(possibleCollisions[i], elapsedTime);
-									}
-									if (hasScript)
-									{
-										script->OnCollisionStart(possibleCollisions[i], elapsedTime);
-									}
-
-									collider->currentlyCollidingWith.insert(possibleCollisions[i]->getId());
-
-								}
-
-								// On Collision
-								else if (collider->aabbCollider.isCollidingLastFrame && collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
-								{
-									if (collider->aabbCollider.onCollision.has_value())
-									{
-										collider->aabbCollider.onCollision.value()(possibleCollisions[i], elapsedTime);
-									}
-									if (hasScript)
-									{
-										script->OnCollision(possibleCollisions[i], elapsedTime);
-									}
-								}
-							}
-							// If AABB collision, and preciseCollisions is enabled, check those as well for complete collision
-							else
-							{
-								// Has collision will handle the Collision callbacks, since there will be specific callbacks for each subcollider
-								HasCollision(entity, possibleCollisions[i]);
-							}
-						}
-						else
-						{
-							if (collider->currentlyCollidingWith.contains(possibleCollisions[i]->getId()))
-							{
-								collider->aabbCollider.isCollidingLastFrame = false;
-								
-								if (collider->aabbCollider.onCollisionEnd.has_value())
-								{
-									collider->aabbCollider.onCollisionEnd.value()(possibleCollisions[i], elapsedTime);
-								}
-								if (hasScript)
-								{
-									script->OnCollisionEnd(possibleCollisions[i], elapsedTime);
-
-								}
-
-								collider->currentlyCollidingWith.erase(possibleCollisions[i]->getId());
-							}
-						}	
-					}
+					//std::cout << "Updated!" << std::endl;
+					updateObject(elapsedTime, entity);
 				}
-
-				possibleCollisions.clear();
-				// TODO: Check collisions between the place it was and where it is now
-
-			}
+			);
 		}
+
+		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
+		graphDone.wait();
 	}
 
 	bool PhysicsSystem::HasCollision(const entities::EntityPtr entity, const entities::EntityPtr otherEntity)

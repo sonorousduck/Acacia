@@ -15,7 +15,7 @@ namespace Ebony {
 
 	void Application::Init()
 	{
-		EB_TRACE("Initializing Python");
+		std::cout << "Initializing Python" << std::endl;;
 		/*Py_Initialize();
 		PyRun_SimpleString("import os");
 		PyRun_SimpleString("import sys");

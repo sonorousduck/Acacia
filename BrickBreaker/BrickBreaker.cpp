@@ -174,7 +174,6 @@ namespace Ebony {
 
 				Ebony::InputManager::ResetInput();
 
-				//EB_TRACE(frame);
 				ProcessInput(elapsedTime);
 				Update(elapsedTime);
 				Draw(elapsedTime);

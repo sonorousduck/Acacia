@@ -11,7 +11,6 @@
 #include "../components/brickComponent.hpp"
 #include "../prefabs/powerupPrefab.hpp"
 #include "../singletons/GameManager.hpp"
-#include <Log.hpp>
 #include <components/soundEffectComponent.hpp>
 
 namespace BrickBreaker

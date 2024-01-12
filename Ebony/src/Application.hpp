@@ -3,7 +3,6 @@
 //#include "Core.hpp"
 //#include "events/Event.hpp"
 //#include "events/ApplicationEvent.hpp"
-#include "Log.hpp"
 #include <chrono>
 //#include <iostream>
 //#include <graphics2d.hpp>
