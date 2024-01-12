@@ -636,7 +636,7 @@ namespace Ebony
 	}
 
 	// Transform modification is used for outlining the text
-	void Graphics2d::DrawString(entities::EntityPtr entity, glm::vec2 transformModification)
+	void Graphics2d::DrawString(entities::EntityPtr entity, glm::vec2 transformModification, bool isOutline)
 	{
 		auto transform = entity->getComponent<components::Transform>();
 		auto text = entity->getComponent<components::Text>();
@@ -655,41 +655,41 @@ namespace Ebony
 		{
 		case (Ebony::RenderLayer::BACKGROUND):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, Graphics2d::BACKGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::BACKGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::backgroundQueue.push_back(drawableObject);
 			return;
 		}
 		case (Ebony::RenderLayer::NEAR_BACKGROUND):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, Graphics2d::NEAR_BACKGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::NEAR_BACKGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::nearBackgroundQueue.push_back(drawableObject);
 			return;
 		}
 
 		case (Ebony::RenderLayer::FOREGROUND):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, Graphics2d::FOREGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::FOREGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::foregroundQueue.push_back(drawableObject);
 			return;
 		}
 
 		case (Ebony::RenderLayer::UI_RENDER):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, Graphics2d::UI_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::UI_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::uiQueue.push_back(drawableObject);
 			return;
 		}
 
 		case (Ebony::RenderLayer::ALWAYS_FRONT):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, Graphics2d::ALWAYS_FRONT_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::ALWAYS_FRONT_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::alwaysFrontQueue.push_back(drawableObject);
 			return;
 		}
 
 		case (Ebony::RenderLayer::DYNAMIC_PLACING):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, text->color, text->layerDepth, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, text->layerDepth, text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::renderPriorityQueue.push(drawableObject);
 			return;
 		}

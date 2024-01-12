@@ -1,4 +1,11 @@
 #include "gameOverScreen.hpp"
+#include "../prefabs/UI/cryptPrefab.hpp"
+#include "../prefabs/UI/gameOverPrefab.hpp"
+#include "../prefabs/UI/victoryPrefab.hpp"
+#include "../prefabs/UI/cryptTitlePrefab.hpp"
+#include "../prefabs/gameOverControlsPrefab.hpp"
+#include "../prefabs/UI/playAgainPrefab.hpp"
+#include "../prefabs/UI/quitInformationPrefab.hpp"
 
 
 namespace Crypt
@@ -6,6 +13,8 @@ namespace Crypt
 
 	void GameOverScreen::LoadContent()
 	{
+		Ebony::ResourceManager::LoadTexture("Crypt.tx", "crypt", "Crypt");
+		Ebony::ResourceManager::LoadTexture("title.tx", "crypt_title", "Crypt");
 	}
 
 	void GameOverScreen::Start()
@@ -27,8 +36,15 @@ namespace Crypt
 
 		inputSystem = systems::InputSystem();
 		audioSystem = systems::AudioSystem();
+		fontRenderer = systems::FontRenderer();
 
 		// Create prefabs
+		AddEntity(Crypt::CryptPrefab::Create());
+		AddEntity(Crypt::GameOverPrefab::Create(windowWidth));
+		AddEntity(Crypt::CryptTitle::Create(windowWidth));
+		AddEntity(Crypt::GameOverControlsPrefab::Create());
+		AddEntity(Crypt::PlayAgainPrefab::Create(windowWidth));
+		AddEntity(Crypt::QuitInformationPrefab::Create(windowWidth));
 
 		AddNewEntities();
 	}
@@ -40,7 +56,7 @@ namespace Crypt
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;
 		mainRenderTarget = Ebony::RenderTarget2D::Create(windowWidth, windowHeight, GL_LINEAR, GL_NEAREST);
-		clearColor = Ebony::Colors::Black;
+		clearColor = Ebony::Color::Color(0.2313f, 0.0901f, 0.1450f);
 
 		Ebony::Graphics2d::SetMainCamera(camera);
 
@@ -95,6 +111,7 @@ namespace Crypt
 
 		// Draw things!
 		spriteRenderer.Update();
+		fontRenderer.Update();
 
 		Ebony::Graphics2d::UnbindRenderTarget(clearColor);
 
@@ -129,9 +146,9 @@ namespace Crypt
 
 	void GameOverScreen::OnScreenFocus(std::uint64_t lastScreenEnum)
 	{
+
 		Start();
-
-
+		Ebony::Graphics2d::SetMainCamera(camera);
 	}
 
 
@@ -143,6 +160,7 @@ namespace Crypt
 			physicsSystem.AddEntity(entity);
 			audioSystem.AddEntity(entity);
 			inputSystem.AddEntity(entity);
+			fontRenderer.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -157,6 +175,7 @@ namespace Crypt
 			spriteRenderer.RemoveEntity(entityId);
 			physicsSystem.RemoveEntity(entityId);
 			audioSystem.RemoveEntity(entityId);
+			fontRenderer.RemoveEntity(entityId);
 			inputSystem.RemoveEntity(entityId);
 
 		}

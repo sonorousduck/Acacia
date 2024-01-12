@@ -49,8 +49,7 @@ namespace Ebony {
 
 
 			// Add screens here as well
-			//screens[BrickBreaker::ScreenEnum::GAME] = std::make_shared<BrickBreaker::GameScreen>();
-			//screens[BrickBreaker::ScreenEnum::MAIN_MENU] = std::make_shared<BrickBreaker::MainScreen>();
+
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU] = std::make_shared<Crypt::MainMenuScreen>();
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME] = std::make_shared<Crypt::MainGameScreen>();
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::CONTROLS] = std::make_shared<Crypt::ControlsScreen>();
@@ -60,8 +59,8 @@ namespace Ebony {
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME_OVER] = std::make_shared<Crypt::GameOverScreen>();
 
 
-			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU];
-			Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::MAIN_MENU;
+			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME_OVER];
+			Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::GAME_OVER;
 			// TODO: Get ResourceManager to register fonts in a good way, but for now, use the graphics.LoadFont way
 			// Also, register any default fonts that I want to include throughout all the project
 

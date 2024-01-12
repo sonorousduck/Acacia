@@ -14,7 +14,9 @@ namespace Ebony
 		Color(glm::vec3 color);
 		Color(glm::vec4 color);
 		Color(float r, float b, float g);
+		Color(int r, int b, int g);
 		Color(float r, float b, float g, float a);
+		Color(int r, int b, int g, int a);
 
 		bool operator==(Color& rhs)
 		{

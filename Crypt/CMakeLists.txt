@@ -51,6 +51,7 @@ set(Prefabs
   prefabs/suicideBirdPrefab.hpp
   prefabs/explosionDeathPrefab.hpp
   prefabs/mainMusicPrefab.hpp
+  prefabs/gameOverControlsPrefab.hpp
 )
 
 set(UIPrefabs
@@ -60,6 +61,12 @@ set(UIPrefabs
   prefabs/UI/playerSpellSelection.hpp
   prefabs/UI/spellPrefab.hpp
   prefabs/UI/heartPrefab.hpp
+  prefabs/UI/cryptPrefab.hpp
+  prefabs/UI/gameOverPrefab.hpp
+  prefabs/UI/victoryPrefab.hpp
+  prefabs/UI/cryptTitlePrefab.hpp
+  prefabs/UI/playAgainPrefab.hpp
+  prefabs/UI/quitInformationPrefab.hpp
 )
 
 set(SingletonHeaders

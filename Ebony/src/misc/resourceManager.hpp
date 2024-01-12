@@ -48,7 +48,7 @@ namespace Ebony
 		static Mix_Music* GetMusic(const char* name);
 
 
-		static void LoadFont(const std::string& file, const std::string& name, const std::string& nameOfGame = "Crypt", bool currentFolder = true, const std::string& otherFolder = "");
+		static void LoadFont(const std::string& file, const std::string& name, const std::string& nameOfGame = "Crypt", int spriteWidth = 24, int spriteHeight = 24, bool currentFolder = true, const std::string& otherFolder = "");
 		static void UnloadFont(const char* name);
 		static std::shared_ptr<Ebony::SpriteFont> GetFont(const char* name);
 

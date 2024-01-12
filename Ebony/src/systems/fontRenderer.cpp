@@ -17,10 +17,10 @@ namespace systems
 			// If outline border, we are going to draw 1 up, left, right and down.
 			if (text->renderOutline)
 			{
-				Ebony::Graphics2d::DrawString(entity, glm::vec2(1.0f, 0.0f)); // Right
-				Ebony::Graphics2d::DrawString(entity, glm::vec2(-1.0f, 0.0f)); // Left
-				Ebony::Graphics2d::DrawString(entity, glm::vec2(0.0f, -1.0f)); // Up
-				Ebony::Graphics2d::DrawString(entity, glm::vec2(0.0f, 1.0f)); // Down
+				Ebony::Graphics2d::DrawString(entity, glm::vec2(1.0f, 0.0f), true); // Right
+				Ebony::Graphics2d::DrawString(entity, glm::vec2(-1.0f, 0.0f), true); // Left
+				Ebony::Graphics2d::DrawString(entity, glm::vec2(0.0f, -1.0f), true); // Up
+				Ebony::Graphics2d::DrawString(entity, glm::vec2(0.0f, 1.0f), true); // Down
 			}
 
 			Ebony::Graphics2d::DrawString(entity, glm::vec2(0.0f, 0.0f));

@@ -39,6 +39,7 @@ namespace Crypt
 		systems::PhysicsSystem physicsSystem;
 		systems::InputSystem inputSystem;
 		systems::AudioSystem audioSystem;
+		systems::FontRenderer fontRenderer;
 
 		void OnScreenDefocus(std::uint64_t nextScreenEnum) override;
 		void OnScreenFocus(std::uint64_t lastScreenEnum) override;

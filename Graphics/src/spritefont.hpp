@@ -23,7 +23,7 @@ namespace Ebony
         std::unordered_map<char, Character> characters{};
 
 
-        void LoadFont(const std::string& fontLocation);
+        void LoadFont(const std::string& fontLocation, int spriteWidth, int spriteHeight);
 
 	    // glyph bounds
 	    // cropping

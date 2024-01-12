@@ -124,7 +124,7 @@ namespace Ebony
 
 		//// Need to load fonts as well
 
-		static void DrawString(entities::EntityPtr entity, glm::vec2 transformModification);
+		static void DrawString(entities::EntityPtr entity, glm::vec2 transformModification, bool isOutline=false);
 		//void DrawString(SpriteFont& spriteFont, std::string text, float x, float y, float scale, glm::vec3 color);
 
 		static void SetMainCamera(std::shared_ptr<Camera> camera);

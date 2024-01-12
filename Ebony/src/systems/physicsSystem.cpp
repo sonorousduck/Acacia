@@ -154,6 +154,8 @@ namespace systems
 
 	void PhysicsSystem::updateImpl(std::chrono::microseconds elapsedTime)
 	{
+		if (m_Entities.size() == 0) return;
+
 		quadtree.Clear();
 
 		for (auto& [id, entity] : m_Entities)

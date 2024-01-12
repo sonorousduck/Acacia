@@ -285,17 +285,17 @@ namespace Ebony
 		return MusicSources[name];
 	}
 
-	void ResourceManager::LoadFont(const std::string& file, const std::string& name, const std::string& nameOfGame, bool currentFolder, const std::string& otherFolder)
+	void ResourceManager::LoadFont(const std::string& file, const std::string& name, const std::string& nameOfGame, int spriteWidth, int spriteHeight, bool currentFolder, const std::string& otherFolder)
 	{
 		std::shared_ptr<Ebony::SpriteFont> spriteFont = std::make_shared<Ebony::SpriteFont>();
 		if (currentFolder)
 		{
-			spriteFont->LoadFont("../" + nameOfGame + "/fonts/" + file);
+			spriteFont->LoadFont("../" + nameOfGame + "/fonts/" + file, spriteWidth, spriteHeight);
 
 			Fonts[name] = std::move(spriteFont);
 			return;
 		}
-		spriteFont->LoadFont("../Graphics/" + file);
+		spriteFont->LoadFont("../Graphics/" + file, spriteWidth, spriteHeight);
 		Fonts[name] = std::move(spriteFont);
 
 	}
