@@ -227,6 +227,7 @@ namespace Crypt
 					if (layer & Crypt::CollisionLayers::GROUND)
 					{
 						player->getComponent<components::Player>()->isOnGround = true;
+						player->getComponent<components::Transform>()->position.y = player->getComponent<components::Collider>()->aabbCollider.lastCollisionLocation.y;
 					}
 					else if (layer & Crypt::CollisionLayers::ENEMY_BULLET)
 					{

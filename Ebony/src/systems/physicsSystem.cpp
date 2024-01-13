@@ -206,11 +206,16 @@ namespace systems
 
 	bool PhysicsSystem::HasAABBCollision(const entities::EntityPtr& entity, const entities::EntityPtr& otherEntity)
 	{
-		components::Subcollider aabbCollider = entity->getComponent<components::Collider>()->aabbCollider;
+		components::Collider* collider = entity->getComponent<components::Collider>();
+		components::Subcollider aabbCollider = collider->aabbCollider;
 		components::Subcollider otherAabbCollider = otherEntity->getComponent<components::Collider>()->aabbCollider;
 
 		components::Transform* transform = entity->getComponent<components::Transform>();
 		components::Transform* otherTransform = otherEntity->getComponent<components::Transform>();
+
+
+		//auto betweenFrameAABBSizeCheck = transform->position - transform->previousPosition;
+
 
 		//auto check = aabbCollider.getSize();
 
@@ -219,14 +224,45 @@ namespace systems
 		//auto test2 = transform->position.y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + otherAabbCollider.getSize().y / 2.0f;
 		//auto test3 = transform->position.y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - otherAabbCollider.getSize().y / 2.0f;
 
-
-
-		return !(
+		if (!(
 			transform->position.x + aabbCollider.getCenter().x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + otherAabbCollider.getCenter().x + otherAabbCollider.getSize().x / 2.0f || // aabb left is greater than otherAbb right
-			transform->position.x + aabbCollider.getCenter().x +  aabbCollider.getSize().x / 2.0f < otherTransform->position.x + otherAabbCollider.getCenter().x - otherAabbCollider.getSize().x / 2.0f || // aabb right is less than otherAbb left
+			transform->position.x + aabbCollider.getCenter().x + aabbCollider.getSize().x / 2.0f < otherTransform->position.x + otherAabbCollider.getCenter().x - otherAabbCollider.getSize().x / 2.0f || // aabb right is less than otherAbb left
 			transform->position.y + aabbCollider.getCenter().y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + otherAabbCollider.getCenter().y + otherAabbCollider.getSize().y / 2.0f || // aabb top is below otherAbb bottom
 			transform->position.y + aabbCollider.getCenter().y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y + otherAabbCollider.getCenter().y - otherAabbCollider.getSize().y / 2.0f    // aabb bottom is above otherAbb top
-			);
+			))
+		{
+			// Collided on other object left side
+			if (transform->previousPosition.x < otherTransform->previousPosition.x)
+			{
+				collider->aabbCollider.lastCollisionLocation.x = otherTransform->previousPosition.x;
+
+			}
+			// Collided on other object right side
+			else
+			{
+				collider->aabbCollider.lastCollisionLocation.x = otherTransform->previousPosition.x + otherTransform->scale.x;
+
+			}
+			// Collided on other object top side
+			if (transform->previousPosition.y < otherTransform->previousPosition.y)
+			{
+				collider->aabbCollider.lastCollisionLocation.y = otherTransform->previousPosition.y - otherTransform->scale.y;
+			}
+			// Collided on other object bottom side
+			else
+			{
+				collider->aabbCollider.lastCollisionLocation.y = otherTransform->previousPosition.y ;
+			}
+
+
+
+			return true;
+		}
+
+
+
+
+		return false;
 	}
 
 	bool PhysicsSystem::isInterested(const entities::EntityPtr& entity)

@@ -99,8 +99,8 @@ namespace Crypt
 		auto crosshair = Crypt::Crosshair::Create(glm::vec2(25.0f, 0.0f), player);
 		// Create prefabs
 		AddEntity(player);
-		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, static_cast<float>(windowHeight) - 48.0f), static_cast<float>(windowWidth) * 30.0f));
-		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 40.0f), static_cast<float>(windowWidth) * 30.0f));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, static_cast<float>(windowHeight) - 64.0f), static_cast<float>(windowWidth) * 30.0f));
+		AddEntity(Crypt::Ground::Create(glm::vec2(0.0f, 48.0f), static_cast<float>(windowWidth) * 30.0f));
 		AddEntity(crosshair);
 
 

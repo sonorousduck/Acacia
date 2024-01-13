@@ -74,8 +74,6 @@ namespace Crypt
 
 	std::uint64_t MainMenuScreen::Update(std::chrono::microseconds elapsedTime)
 	{
-		std::cout << "Updating!" << std::endl;
-
 		auto firstTime = std::chrono::system_clock::now();
 
 		std::latch graphDone{ 1 };

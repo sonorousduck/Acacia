@@ -14,7 +14,8 @@ namespace components
 			position(position),
 			rotation(rotation),
 			scale(scale),
-			rotationAxis(rotationAxis)
+			rotationAxis(rotationAxis),
+			previousPosition(position)
 		{}
 
 		void SetPosition(glm::vec2 newPosition)
@@ -24,7 +25,7 @@ namespace components
 		}
 
 		glm::vec2 position;
-		glm::vec2 previousPosition{};
+		glm::vec2 previousPosition;
 		float rotation;
 		glm::vec3 rotationAxis;
 		glm::vec2 scale;
