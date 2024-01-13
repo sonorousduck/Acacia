@@ -20,9 +20,6 @@ namespace systems
 			
 
 			player->score += transform->position.x - transform->previousPosition.x;
-
-			std::cout << static_cast<int>((player->score) / 10.0f) << std::endl;
-
 			/*if (player->isSlow)
 			{
 				if (player->switchedSpeeds)
