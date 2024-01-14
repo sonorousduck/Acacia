@@ -8,12 +8,7 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
-			auto script = entity->getComponent<components::PythonScript>();
-			//auto pyModule = pybind11::module_::import(script->filename.c_str());
-
-
-			//pyModule.attr("Start")();
-			
+			auto script = entity->getComponent<components::PythonScript>();			
 		}
 	}
 

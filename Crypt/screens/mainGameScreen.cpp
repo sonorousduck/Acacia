@@ -216,14 +216,13 @@ namespace Crypt
 		);
 
 
-
-
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
 		graphDone.wait();
 
 
 		// Put this outside the update loop so in the future, I can use all the threads to then do multi-threaded physics updates
 		physicsSystem.Update(elapsedTime);
+		Ebony::PythonManager::Update(elapsedTime);
 
 		return nextScreen;
 	}

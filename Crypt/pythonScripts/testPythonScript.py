@@ -1,13 +1,12 @@
 import os
-# import torch
-# import numpy
+import torch
+import numpy
 
 def Start():
     print(testString)
-    # print(torch.cuda.is_available())
     
 def Update():
-    print("UPDATING!")
+    print(torch.cuda.is_available())
 
 def Reset():
     pass

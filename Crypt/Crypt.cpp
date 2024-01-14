@@ -7,6 +7,7 @@
 #include <singletons/inputManager.hpp>
 #include <singletons/audioManager.hpp>
 #include <singletons/systemManager.hpp>
+#include <singletons/pythonManager.hpp>
 #include <misc/resourceManager.hpp>
 #include "misc/ThreadPool.hpp"
 #include "screens/screenEnums.hpp"
@@ -44,8 +45,8 @@ namespace Ebony {
 
 			Ebony::Graphics2d::Initialize("Crypt", windowWidth, windowHeight, renderWidth, renderHeight);
 			Ebony::AudioManager::Init();
-
 			InputManager::Initialize();
+			Ebony::PythonManager::Init("pythonScripts.testPythonScript");
 
 
 			// Add screens here as well
@@ -59,8 +60,8 @@ namespace Ebony {
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME_OVER] = std::make_shared<Crypt::GameOverScreen>();
 
 
-			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME];
-			Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::GAME;
+			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU];
+			Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::MAIN_MENU;
 			// TODO: Get ResourceManager to register fonts in a good way, but for now, use the graphics.LoadFont way
 			// Also, register any default fonts that I want to include throughout all the project
 
@@ -207,8 +208,9 @@ namespace Ebony {
 			}
 			
 			ThreadPool::terminate();
-			//EbonyAudio::AudioManager::StopAll();
+			Ebony::AudioManager::StopAll();
 			Ebony::ResourceManager::Clear();
+			Ebony::PythonManager::Destroy();
 		}
 
 	public:
