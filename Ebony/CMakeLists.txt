@@ -111,6 +111,7 @@ set(MiscHeaders
 	src/misc/Quadtree.hpp
 	src/misc/tiledProcessor.hpp
 	src/misc/renderLayers.hpp
+	src/misc/actionSpaces.hpp
 )
 
 set(MiscSources

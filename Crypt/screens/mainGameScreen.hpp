@@ -29,7 +29,7 @@
 #include "../systems/shootingSystem.hpp"
 #include "../systems/enemyDetectionSystem.hpp"
 #include "../misc/cryptTiledProcessor.hpp"
-#include <singletons/pythonManager.hpp>
+#include "../singletons/CryptPythonManager.hpp"
 
 
 namespace Crypt

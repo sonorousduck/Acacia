@@ -222,7 +222,7 @@ namespace Crypt
 
 		// Put this outside the update loop so in the future, I can use all the threads to then do multi-threaded physics updates
 		physicsSystem.Update(elapsedTime);
-		Ebony::PythonManager::Update(elapsedTime);
+		Crypt::CryptPythonManager::Update(elapsedTime);
 
 		return nextScreen;
 	}

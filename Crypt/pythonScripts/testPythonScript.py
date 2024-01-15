@@ -1,43 +1,30 @@
 import os
 import torch
-import numpy
+import numpy as np
+import os, sys
+
+import example
+import cpp_module
 
 def Start():
     print(testString)
     
-def Update():
+def Update(state):
+    testList = state.getPlayerPosition()
+    
+    # testList = state.testPlayerPosition()
+    print(testList)
+    
+    # print(state)
+    p = example.Pet("Test")
+    print(p.getName())    
+    p.setName("Charly")
+    print(p.getName())
     print(torch.cuda.is_available())
+    
+    return 1
 
 def Reset():
     pass
-
-def OnDestroy():
-    pass
-
-def OnCollision():
-    pass
-
-def OnCollisionEnd():
-    pass
-
-def OnCollisionStart():
-    pass
-
-def OnMouseDown():
-    pass
-
-def OnMouseUp():
-    pass
-
-def OnMouseEnter():
-    pass
-
-def OnMouseOver():
-    pass
-
-# class TestPythonScript:
-#     def __init__():
-#         pass
-
 
 testString = "Hello there!"

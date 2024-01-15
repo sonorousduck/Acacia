@@ -72,13 +72,13 @@ set(UIPrefabs
 
 set(SingletonHeaders
   singletons/GameManager.hpp
-  
+  singletons/CryptPythonManager.hpp
 )
 
 
 set(SingletonSources
   singletons/GameManager.cpp
-  
+  singletons/CryptPythonManager.cpp 
 )
 
 set(ScreenHeaders

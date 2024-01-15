@@ -3,14 +3,18 @@
 
 namespace Ebony
 {
-	std::vector<std::vector<std::string>> PythonManager::actions{};
+	//std::vector<std::vector<std::string>> PythonManager::actions{};
+	//std::vector<std::vector<std::string>> PythonManager::states{};
+
 	bool PythonManager::initialized{ false };
 	pybind11::module PythonManager::pyModule;
 
 
 	void PythonManager::Update(std::chrono::microseconds elapsedTime)
 	{
-		PythonManager::pyModule.attr("Update")();
+		pybind11::object result = PythonManager::pyModule.attr("Update")(Ebony::Time::GetDeltaTimeFloat());
+		pybind11::print(pybind11::int_(result));
+		std::cout << "Result" << std::endl;
 	}
 	void PythonManager::ProcessInput()
 	{

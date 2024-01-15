@@ -7,7 +7,7 @@
 #include <singletons/inputManager.hpp>
 #include <singletons/audioManager.hpp>
 #include <singletons/systemManager.hpp>
-#include <singletons/pythonManager.hpp>
+#include "singletons/CryptPythonManager.hpp"
 #include <misc/resourceManager.hpp>
 #include "misc/ThreadPool.hpp"
 #include "screens/screenEnums.hpp"
@@ -46,7 +46,7 @@ namespace Ebony {
 			Ebony::Graphics2d::Initialize("Crypt", windowWidth, windowHeight, renderWidth, renderHeight);
 			Ebony::AudioManager::Init();
 			InputManager::Initialize();
-			Ebony::PythonManager::Init("pythonScripts.testPythonScript");
+			Crypt::CryptPythonManager::Init("pythonScripts.testPythonScript");
 
 
 			// Add screens here as well
@@ -210,7 +210,7 @@ namespace Ebony {
 			ThreadPool::terminate();
 			Ebony::AudioManager::StopAll();
 			Ebony::ResourceManager::Clear();
-			Ebony::PythonManager::Destroy();
+			Crypt::CryptPythonManager::Destroy();
 		}
 
 	public:
