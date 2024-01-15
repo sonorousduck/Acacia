@@ -21,16 +21,13 @@ namespace Crypt
 			.def("getPlayerPosition", &State::getPlayerPosition)
 			.def("testPlayerPosition", &State::testPlayerPosition)
 			.def("__repr__", [](const State& state) { return "<cpp_module.state position " + std::to_string(state.playerPosition.box.at(0)) + ">"; });
+
+		pybind11::class_<Ebony::Box>(m, "Action")
+			.def(pybind11::init())
+			.def("setBox", &Ebony::Box::setBox);
 	}
 
 
-
-	PYBIND11_EMBEDDED_MODULE(example, m) {
-		pybind11::class_<Pet>(m, "Pet")
-			.def(pybind11::init<const std::string&>())
-			.def("setName", &Pet::setName)
-			.def("getName", &Pet::getName);
-	}
 
 	void CryptPythonManager::Update(std::chrono::microseconds elapsedTime)
 	{
@@ -39,7 +36,9 @@ namespace Crypt
 
 
 		pybind11::object result = CryptPythonManager::pyModule.attr("Update")(test);
-		pybind11::print(pybind11::int_(result));
+		auto test1 = result.cast<Ebony::Box>();
+
+
 		std::cout << "Result" << std::endl;
 	}
 	void CryptPythonManager::ProcessInput()

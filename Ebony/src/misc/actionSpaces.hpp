@@ -15,6 +15,11 @@ namespace Ebony
 		{
 		}
 
+		void setBox(float x, float y, float z, float w)
+		{
+			box = std::vector<float>{ x, y, z, w };
+		}
+
 		std::vector<float> box{};
 	};
 
