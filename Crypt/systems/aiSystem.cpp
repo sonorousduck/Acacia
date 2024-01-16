@@ -38,7 +38,7 @@ namespace systems
 
 					auto player = entity->getComponent<components::Player>();
 					auto health = player->health;
-					auto score = player->score;
+					auto score = player->score / 100;
 
 					reward.n += health * 3 + score;
 				}
