@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 import os
+from .agent import Agent
 
 import cpp_module
 
@@ -52,6 +53,7 @@ def Update(state, reward):
     return action
 
 def Reset():
+    # This will be called when the game terminates. 
     pass
 
 
