@@ -4,6 +4,12 @@ import os
 
 import cpp_module
 
+class Reward:
+    def __init__(self):
+        reward = 0
+        last_reward = 0
+
+
 def randomAction(state: list):
     action = cpp_module.Action()
     
@@ -19,11 +25,21 @@ def randomAction(state: list):
 
 def Start():
     print(testString)
-    
+
+# State will act as previous state of the last frame (since we just got the reward to go along with it, as well as the state for the current frame
 def Update(state, reward):
     playerPosition = state.getPlayerPosition()
+    score = reward.getReward()
     
-    print(reward.getReward())    
+    # Look at the differences between the frames, not the cumulative. This is easier to track in the python.
+    reward_structure.last_reward = reward_structure.reward
+    reward_structure.reward = score - reward_structure.last_reward
+    
+    # Get monster positions, up to 10 monsters probably (This will be limited on the python side)
+    
+    
+    
+    
     # testList = state.testPlayerPosition()
     
     # element 0: flipGravity (0.0 for don't, 1.0 for do)
@@ -36,4 +52,6 @@ def Update(state, reward):
 def Reset():
     pass
 
+
+reward_structure = Reward()
 testString = "Hello there!"

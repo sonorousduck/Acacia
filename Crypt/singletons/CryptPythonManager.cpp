@@ -49,7 +49,6 @@ namespace Crypt
 				CryptPythonManager::states[i].clear();
 				CryptPythonManager::rewards[i].clear();
 			}
-			//std::cout << "[" << cppResult.box[0] << ", " << cppResult.box[1] << ", " << cppResult.box[2] << ", " << cppResult.box[3] << "]" << std::endl;
 		}
 
 
