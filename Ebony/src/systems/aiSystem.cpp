@@ -1,13 +1,16 @@
 #include "aiSystem.hpp"
 
+// NOTE: THESE ARE PLACEHOLDERS TO USE IN INDIVIDUAL GAMES! SINCE STATE IS DEPENDENT ON THE GAME
+// YOU CAN'T HAVE A GENERALIZED AI SYSTEM
+
 namespace systems
 {
-	void AISystem::Update(std::chrono::microseconds elapsedTime)
+	void BaseAISystem::Update(std::chrono::microseconds elapsedTime)
 	{
 		this->updateImpl(elapsedTime);
 	}
 
-	void AISystem::updateImpl(std::chrono::microseconds elapsedTime)
+	void BaseAISystem::updateImpl(std::chrono::microseconds elapsedTime)
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
@@ -17,6 +20,7 @@ namespace systems
 			if (aiComponent->aiType & Ebony::AIType::STATE)
 			{
 				// Then the information will go here
+
 			}
 			else if (aiComponent->aiType & Ebony::AIType::REWARD)
 			{

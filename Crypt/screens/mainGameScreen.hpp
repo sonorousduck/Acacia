@@ -25,7 +25,9 @@
 #include <systems/animationRenderer.hpp>
 #include <systems/animation2d.hpp>
 #include "../systems/playerSystem.hpp"
+#include "../systems/aiSystem.hpp"
 #include <systems/cppScriptingSystem.hpp>
+#include <systems/aiInputSystem.hpp>
 #include "../systems/shootingSystem.hpp"
 #include "../systems/enemyDetectionSystem.hpp"
 #include "../misc/cryptTiledProcessor.hpp"
@@ -66,6 +68,8 @@ namespace Crypt
 		systems::TimingSystem timingSystem;
 		systems::EnemyDetectionSystem enemyDetectionSystem;
 		systems::PythonScriptingSystem pythonScriptingSystem;
+		systems::AIInputSystem aiInputSystem;
+		systems::AISystem aiSystem;
 		
 
 

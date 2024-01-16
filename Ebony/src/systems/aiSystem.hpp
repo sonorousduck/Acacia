@@ -1,16 +1,17 @@
 #pragma once
 
 #include "system.hpp"
-
 #include "../components/aiComponent.hpp"
 
+// NOTE: THESE ARE PLACEHOLDERS TO USE IN INDIVIDUAL GAMES! SINCE STATE IS DEPENDENT ON THE GAME
+// YOU CAN'T HAVE A GENERALIZED AI SYSTEM
 
 namespace systems
 {
-	class AISystem : public System
+	class BaseAISystem : public System
 	{
 	public:
-		AISystem() : System({ ctti::unnamed_type_id<components::AIComponent>() })
+		BaseAISystem() : System({ ctti::unnamed_type_id<components::AIComponent>() })
 		{}
 
 		void Update(std::chrono::microseconds elapsedTime) override;

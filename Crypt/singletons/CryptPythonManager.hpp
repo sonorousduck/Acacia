@@ -51,6 +51,8 @@ namespace Crypt
 
 		static std::vector<std::vector<Ebony::Box>> actions;
 		static std::vector<std::vector<State>> states;
+		static std::vector<std::vector<Ebony::Discrete>> rewards;
+
 
 	private:
 		static pybind11::module pyModule;

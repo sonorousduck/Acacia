@@ -19,10 +19,11 @@ namespace components
 	class AIComponent : public PolymorphicComparable<Component, AIComponent>
 	{
 	public:
-		AIComponent(Ebony::AIType aiType) : aiType(aiType)
+		AIComponent(std::uint8_t aiType, std::uint64_t information) : aiType(aiType), information(information)
 		{
 		}
 
-		Ebony::AIType aiType;
+		std::uint8_t aiType;
+		std::uint64_t information;
 	};
 }

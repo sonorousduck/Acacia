@@ -83,7 +83,7 @@ namespace components
 
         virtual bool operator==([[maybe_unused]] Component& rhs) = 0;
 
-        entities::Entity* entity;
+        entities::Entity* entity{};
     };
 
 

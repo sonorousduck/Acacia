@@ -5,6 +5,8 @@ namespace Crypt
 {
 	std::vector<std::vector<Ebony::Box>> CryptPythonManager::actions{};
 	std::vector<std::vector<State>> CryptPythonManager::states{};
+	std::vector<std::vector<Ebony::Discrete>> CryptPythonManager::rewards{};
+
 	bool CryptPythonManager::initialized{ false };
 	pybind11::module CryptPythonManager::pyModule;
 	//pybind11::module CryptPythonManager::stateModule;
@@ -25,21 +27,32 @@ namespace Crypt
 		pybind11::class_<Ebony::Box>(m, "Action")
 			.def(pybind11::init())
 			.def("setBox", &Ebony::Box::setBox);
+
+		pybind11::class_<Ebony::Discrete>(m, "Reward")
+			.def(pybind11::init())
+			.def("getReward", &Ebony::Discrete::getValue);
 	}
 
 
 
 	void CryptPythonManager::Update(std::chrono::microseconds elapsedTime)
 	{
-		auto test = State();
-		test.playerPosition = Ebony::Box(1.0f, 2.0f, 3.0f, 4.0f);
+		for (auto i = 0; i < CryptPythonManager::states.size(); i++)
+		{
+			if (CryptPythonManager::states[i].size() != 0)
+			{
+				CryptPythonManager::actions[i].clear();
+				auto& state = CryptPythonManager::states[i].front();
+				auto& reward = CryptPythonManager::rewards[i].front();
+				pybind11::object result = CryptPythonManager::pyModule.attr("Update")(state, reward);
+				CryptPythonManager::actions[i].push_back(result.cast<Ebony::Box>());
+				CryptPythonManager::states[i].clear();
+				CryptPythonManager::rewards[i].clear();
+			}
+			//std::cout << "[" << cppResult.box[0] << ", " << cppResult.box[1] << ", " << cppResult.box[2] << ", " << cppResult.box[3] << "]" << std::endl;
+		}
 
 
-		pybind11::object result = CryptPythonManager::pyModule.attr("Update")(test);
-		auto test1 = result.cast<Ebony::Box>();
-
-
-		std::cout << "Result" << std::endl;
 	}
 	void CryptPythonManager::ProcessInput()
 	{
@@ -56,6 +69,8 @@ namespace Crypt
 
 		CryptPythonManager::states.resize(environmentCount);
 		CryptPythonManager::actions.resize(environmentCount);
+		CryptPythonManager::rewards.resize(environmentCount);
+
 
 
 		CryptPythonManager::pyModule.attr("Start")();

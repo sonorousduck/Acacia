@@ -30,6 +30,10 @@ namespace Ebony
 		Discrete(int n) : n(n)
 		{}
 
+		int getValue() const
+		{
+			return n;
+		}
 
 		int n{};
 	};

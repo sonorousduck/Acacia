@@ -11,6 +11,7 @@ set(SystemHeaders
   systems/bulletSystem.hpp
   systems/shootingSystem.hpp
   systems/enemyDetectionSystem.hpp
+  systems/aiSystem.hpp
 )
 
 set(SystemSources
@@ -18,6 +19,7 @@ set(SystemSources
   systems/bulletSystem.cpp
   systems/shootingSystem.cpp
   systems/enemyDetectionSystem.cpp
+  systems/aiSystem.cpp
 )
 
 set(ComponentHeaders
@@ -33,6 +35,7 @@ set(ComponentHeaders
 set(MiscHeaders
   misc/collisionLayers.hpp
   misc/cryptTiledProcessor.hpp
+  misc/aiInformationTypes.hpp
 )
 
 set(MiscSources

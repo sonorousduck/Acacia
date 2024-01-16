@@ -14,12 +14,15 @@
 #include <singletons/time.hpp>
 #include <components/mouseInputComponent.hpp>
 #include <components/animationControllerComponent.hpp>
+#include <components/aiInputComponent.hpp>
 #include "../components/playerComponent.hpp"
 #include "../screens/screenEnums.hpp"
 #include "../components/bulletComponent.hpp"
 #include <misc/renderLayers.hpp>
 #include "UI/playerScorePrefab.hpp"
-
+#include "singletons/pythonManager.hpp"
+#include <misc/actionSpaces.hpp>
+#include "../misc/aiInformationTypes.hpp"
 
 namespace Crypt
 {
@@ -35,6 +38,10 @@ namespace Crypt
 
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
+			std::unique_ptr<components::AiInput> aiInputComponent = std::make_unique<components::AiInput>();
+
+
+
 
 			controllerInputComponent->joystickBindings.insert({ SDL_CONTROLLER_AXIS_LEFTY, "flipGravity" });
 			controllerInputComponent->joystickActions.insert({ "flipGravity", [=](float value) {
@@ -58,6 +65,111 @@ namespace Crypt
 					}
 				}
 			} });
+
+			aiInputComponent->actions.insert({"flipGravity", [=]()
+				{
+				auto rigidBody = player->getComponent<components::RigidBody>();
+				auto transform = player->getComponent<components::Transform>();
+				auto collider = player->getComponent<components::Collider>();
+				auto playerComponent = player->getComponent<components::Player>();
+
+				if (playerComponent->gravityCooldown <= 0.0f)
+				{
+					playerComponent->gravityCooldown = playerComponent->gravityUsageCooldownResetTime;
+					playerComponent->gravityDown = !playerComponent->gravityDown;
+
+					transform->rotation = fmod(transform->rotation + 180.0f, 360.0f);
+					//std::cout << (playerComponent->gravityDown ? "-1" : "1") << std::endl;
+					rigidBody->setVelocity(glm::vec2(rigidBody->getVelocity().x, originalVelocity.y * (playerComponent->gravityDown ? 1 : -1)));
+					rigidBody->setAcceleration(glm::vec2(rigidBody->getAcceleration().x, 200.0f * (playerComponent->gravityDown ? 1 : -1)));
+
+					playerComponent->isOnGround = false;
+				}
+				}
+			});
+			
+
+			aiInputComponent->actions.insert({ "playerLeft", [=]()
+			{
+				auto playerComponent = player->getComponent<components::Player>();
+				auto rigidBody = player->getComponent<components::RigidBody>();
+
+				if (playerComponent->isSlow)
+				{
+					playerComponent->isSlow = false;
+					rigidBody->setVelocity(rigidBody->getVelocity() + glm::vec2(60.0f, 0.0f));
+				}
+			}
+				});
+
+			aiInputComponent->actions.insert({ "playerRight", [=]()
+			{
+				auto playerComponent = player->getComponent<components::Player>();
+				auto rigidBody = player->getComponent<components::RigidBody>();
+
+				if (playerComponent->isFast)
+				{
+					playerComponent->isFast = false;
+					rigidBody->setVelocity(rigidBody->getVelocity() - glm::vec2(150.0f, 0.0f));
+				}
+			}
+				});
+
+			aiInputComponent->actions.insert({ "speedRelease", [=]()
+			{
+				auto playerComponent = player->getComponent<components::Player>();
+				auto rigidBody = player->getComponent<components::RigidBody>();
+
+				if (playerComponent->isSlow)
+				{
+					playerComponent->isSlow = false;
+					rigidBody->setVelocity(rigidBody->getVelocity() + glm::vec2(60.0f, 0.0f));
+				}
+
+				if (playerComponent->isFast)
+				{
+					playerComponent->isFast = false;
+					rigidBody->setVelocity(rigidBody->getVelocity() - glm::vec2(150.0f, 0.0f));
+				}
+
+			}
+			});
+
+
+
+			aiInputComponent->translationFunction = [=]()
+				{
+					// TODO: Update this so it can figure out its instance ID. But for now, just assume it is the first one
+					auto& actionList = Crypt::CryptPythonManager::actions[0];
+
+					if (actionList.size() == 0)
+					{
+						return;
+					}
+
+					auto& action = actionList[0];
+
+					if (action.box[0] == 1.0f)
+					{
+						player->getComponent<components::AiInput>()->actions["flipGravity"]();
+					}
+
+					if (action.box[2] == -1.0f)
+					{
+						player->getComponent<components::AiInput>()->actions["playerLeft"]();
+					}
+					else if (action.box[2] == 1.0f)
+					{
+						player->getComponent<components::AiInput>()->actions["playerRight"]();
+					}
+					else
+					{
+						player->getComponent<components::AiInput>()->actions["speedRelease"]();
+					}
+
+
+				};
+
 
 
 
@@ -247,6 +359,7 @@ namespace Crypt
 
 			Ebony::SystemManager::AddEntity(Crypt::PlayerScore::Create(480, player));
 
+			player->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE | Ebony::AIType::REWARD, Crypt::AiInformationTypes::PLAYER_INFORMATION));
 
 			player->addComponent(std::move(collider));
 			player->addComponent(std::move(animationController));
@@ -254,6 +367,7 @@ namespace Crypt
 			player->addComponent(std::move(keyboardInputComponent));
 			player->addComponent(std::move(controllerInputComponent));
 			player->addComponent(std::move(rigidbody));
+			player->addComponent(std::move(aiInputComponent));
 
 			return player;
 		}

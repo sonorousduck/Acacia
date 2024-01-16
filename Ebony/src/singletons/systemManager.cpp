@@ -4,7 +4,7 @@ namespace Ebony
 {
 	bool SystemManager::newScreenFocused{ false };
 	bool SystemManager::quit{ false };
-
+	bool SystemManager::aiEnabled{ false };
 
 	std::shared_ptr<Screen> SystemManager::currentScreen{};
 	std::unordered_map<std::uint64_t, std::shared_ptr<Screen>> SystemManager::screens{};

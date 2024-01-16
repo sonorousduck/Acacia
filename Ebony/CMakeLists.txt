@@ -39,6 +39,7 @@ set(ComponentHeaders
 	src/components/destructionComponent.hpp
 	src/components/timedComponent.hpp
 	src/components/pythonScriptComponent.hpp
+	src/components/aiInputComponent.hpp
 )
 
 set(SystemHeaders
@@ -58,7 +59,7 @@ set(SystemHeaders
 	src/systems/destructionSystem.hpp
 	src/systems/timingSystem.hpp
 	src/systems/pythonScriptingSystem.hpp
-
+	src/systems/aiInputSystem.hpp
 )
 
 set(SystemSources
@@ -78,6 +79,7 @@ set(SystemSources
 	src/systems/destructionSystem.cpp
 	src/systems/timingSystem.cpp
 	src/systems/pythonScriptingSystem.cpp
+	src/systems/aiInputSystem.cpp
 
 )
 

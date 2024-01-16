@@ -60,6 +60,8 @@ namespace Ebony {
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME_OVER] = std::make_shared<Crypt::GameOverScreen>();
 
 
+			Ebony::SystemManager::aiEnabled = true;
+
 			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU];
 			Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::MAIN_MENU;
 			// TODO: Get ResourceManager to register fonts in a good way, but for now, use the graphics.LoadFont way
@@ -175,12 +177,10 @@ namespace Ebony {
 			s2->setMat4("projection", Ebony::Graphics2d::projection);
 
 
-
+			Ebony::SystemManager::currentScreen->Start();
 			auto firstTime = std::chrono::system_clock::now();
 			auto previousTime = std::chrono::system_clock::now();
 			int frame = 0;
-
-			Ebony::SystemManager::currentScreen->Start();
 
 			while (!Ebony::SystemManager::quit)
 			{
@@ -202,6 +202,11 @@ namespace Ebony {
 				if (Ebony::SystemManager::newScreenFocused)
 				{
 					ChangeScreens();
+					// Need to reset elapsed time after changing screens so the elapsed time isn't counted when loading information and so forth
+					auto currentTime = std::chrono::system_clock::now();
+					auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
+					Ebony::Time::SetDeltaTime(elapsedTime);
+					previousTime = currentTime;
 				}
 
 				frame++;
@@ -219,6 +224,8 @@ namespace Ebony {
 		int windowHeight = 1080;
 		int renderWidth = 480;
 		int renderHeight = 320;
+
+		bool isAI = false;
 		//bool quit = false;
 
 		//bool newScreenFocused = false;

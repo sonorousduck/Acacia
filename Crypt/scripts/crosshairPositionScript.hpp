@@ -1,6 +1,7 @@
 #pragma once
 #include <components/controllerComponent.hpp>
 #include <components/mouseInputComponent.hpp>
+#include <components/aiInputComponent.hpp>
 
 #include <iostream>
 #include "../Ebony/src/components/cppScriptComponent.hpp"
@@ -50,13 +51,33 @@ namespace scripts
 
 				aimLastDirection = currentDirection;
 			}
+		}
 
+		void MoveCrosshairAI()
+		{
+			auto& action = Crypt::CryptPythonManager::actions[0];
+
+			if (action.size() == 0)
+			{
+				return;
+			}
+
+			if (action[0].box.size() == 0) return;
+
+			auto& angle = action[0].box[1];
+			glm::vec2 fireFromPosition = entity->getComponent<components::Transform>()->position;
+
+			glm::vec3 cameraPosition = Ebony::Graphics2d::mainCamera->Position;
+			glm::vec2 currentDirection = glm::vec2(glm::cos(angle), glm::sin(angle)) * glm::vec2(100, 100);
+
+			aimLastDirection = currentDirection;
 		}
 
 		void Update(std::chrono::microseconds elapsedTime) override
 		{
 			components::MouseInput* mouseInput;
 			components::ControllerInput* controllerInput;
+			components::AiInput* aiComponent;
 
 			if (entity->tryGetComponent(mouseInput))
 			{
@@ -77,6 +98,14 @@ namespace scripts
 					MoveCrosshairController(controllerInput->rightJoystickXPosition, controllerInput->rightJoystickYPosition);
 				}
 			}
+
+			std::cout << Ebony::SystemManager::aiEnabled << std::endl;
+
+			if (Ebony::SystemManager::aiEnabled && entity->tryGetComponent(aiComponent))
+			{
+				MoveCrosshairAI();
+			}
+
 			auto playerTransform = player->getComponent<components::Transform>();
 			entity->getComponent<components::Transform>()->position = aimLastDirection + playerTransform->position;
 

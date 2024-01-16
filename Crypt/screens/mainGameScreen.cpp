@@ -82,6 +82,8 @@ namespace Crypt
 		destructionSystem = systems::DestructionSystem();
 		enemyDetectionSystem = systems::EnemyDetectionSystem();
 		pythonScriptingSystem = systems::PythonScriptingSystem();
+		aiInputSystem = systems::AIInputSystem();
+		aiSystem = systems::AISystem();
 
 		spriteRenderer.debug = false;
 
@@ -215,6 +217,17 @@ namespace Crypt
 			}
 		);
 
+		if (Ebony::SystemManager::aiEnabled)
+		{
+			auto aiSystemTask = Ebony::ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					aiSystem.Update(elapsedTime);
+				}
+			);
+		}
+		
 
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
 		graphDone.wait();
@@ -244,7 +257,7 @@ namespace Crypt
 
 	void MainGameScreen::ProcessInput(std::chrono::microseconds elapsedTime)
 	{
-
+		aiInputSystem.Update(elapsedTime);
 	}
 
 	void MainGameScreen::AddEntity(entities::EntityPtr entity)
@@ -316,6 +329,8 @@ namespace Crypt
 			enemyDetectionSystem.AddEntity(entity);
 			fontRenderer.AddEntity(entity);
 			pythonScriptingSystem.AddEntity(entity);
+			aiInputSystem.AddEntity(entity);
+			aiSystem.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -341,6 +356,8 @@ namespace Crypt
 			enemyDetectionSystem.RemoveEntity(entityId);
 			fontRenderer.RemoveEntity(entityId);
 			pythonScriptingSystem.RemoveEntity(entityId);
+			aiInputSystem.RemoveEntity(entityId);
+			aiSystem.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();
