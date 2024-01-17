@@ -9,7 +9,7 @@
 
 #include <singletons/time.hpp>
 #include <iostream>
-
+#include <singletons/systemManager.hpp>
 
 namespace Crypt
 {
@@ -21,12 +21,16 @@ namespace Crypt
 
 		State(Ebony::Box playerPosition) : playerPosition(playerPosition) {}
 
-		Ebony::Box playerPosition;
+		Ebony::Box playerPosition{};
 		std::vector<float> getPlayerPosition() const { return playerPosition.box; }
+		std::vector<Ebony::Box> getEnemyPositions() const { return enemyPositions; }
+		std::vector<Ebony::Box> getBulletInformation() const { return bulletInformation; }
+
 		float testPlayerPosition() const { return playerPosition.box[0]; }
 
 		//Ebony::Box crosshairPosition;
-		//std::vector<Ebony::Box> enemyPositions;
+		std::vector<Ebony::Box> enemyPositions;
+		std::vector<Ebony::Box> bulletInformation;
 	};
 
 	//struct Pet {
@@ -44,6 +48,7 @@ namespace Crypt
 	public:
 		static void Update(std::chrono::microseconds elapsedTime);
 		static void ProcessInput();
+		static void Reset();
 
 		static void Init(const char* filename, std::uint64_t environmentCount = 1);
 		static void Destroy();

@@ -9,7 +9,7 @@ namespace Ebony
 	class Box
 	{
 	public:
-		Box() {}
+		Box() : box{0.0f, 0.0f, 0.0f, 0.0f} {}
 
 		Box(float x, float y, float z, float w) : box({x, y, z, w})
 		{
@@ -18,6 +18,11 @@ namespace Ebony
 		void setBox(float x, float y, float z, float w)
 		{
 			box = std::vector<float>{ x, y, z, w };
+		}
+
+		std::vector<float> getBox() const
+		{
+			return box;
 		}
 
 		std::vector<float> box{};

@@ -24,6 +24,9 @@
 #include <singletons/audioManager.hpp>
 #include <misc/renderLayers.hpp>
 
+#include <components/aiComponent.hpp>
+#include "../misc/aiInformationTypes.hpp"
+
 
 namespace Crypt
 {
@@ -61,7 +64,7 @@ namespace Crypt
 
 			auto soundeffects = std::make_unique<components::SoundEffect>(Ebony::AudioType::ENTITY);
 
-			soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("spell"), 127));
+			soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("spell"), 2));
 
 			rigidbody->setVelocity(direction * speed);
 
@@ -76,6 +79,8 @@ namespace Crypt
 					entity->getComponent<components::DestructionComponent>()->shouldRemove = true;
 				}));
 
+
+			entity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, Crypt::AiInformationTypes::BULLET_INFORMATION));
 
 			entity->addComponent(std::make_unique<components::Bullet>(bulletType, strength));
 			entity->addComponent(std::move(collider));

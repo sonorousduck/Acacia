@@ -6,7 +6,7 @@
 #include <components/transform.hpp>
 #include "../misc/aiInformationTypes.hpp"
 #include "../components/playerComponent.hpp"
-
+#include <graphics2d.hpp>
 
 namespace systems
 {

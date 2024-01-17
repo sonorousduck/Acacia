@@ -8,6 +8,8 @@ namespace Crypt
 	enum AiInformationTypes : std::uint64_t
 	{
 		PLAYER_INFORMATION = BIT(0),
-		ENEMY_INFORMATION = BIT(1)
+		CROSSHAIR_INFORMATION = BIT(1),
+		ENEMY_INFORMATION = BIT(2),
+		BULLET_INFORMATION = BIT(3)
 	};
 }

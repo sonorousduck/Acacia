@@ -57,12 +57,12 @@ namespace scripts
 		{
 			auto& action = Crypt::CryptPythonManager::actions[0];
 
-			if (action.size() == 0)
+			if (action.size() < 1)
 			{
 				return;
 			}
 
-			if (action[0].box.size() == 0) return;
+			if (action[0].box.size() < 1) return;
 
 			auto& angle = action[0].box[1];
 			glm::vec2 fireFromPosition = entity->getComponent<components::Transform>()->position;
@@ -99,7 +99,6 @@ namespace scripts
 				}
 			}
 
-			std::cout << Ebony::SystemManager::aiEnabled << std::endl;
 
 			if (Ebony::SystemManager::aiEnabled && entity->tryGetComponent(aiComponent))
 			{

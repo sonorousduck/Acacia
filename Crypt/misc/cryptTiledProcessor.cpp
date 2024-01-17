@@ -60,10 +60,10 @@ namespace Crypt
 			{
 				switch (entityId)
 				{
-				case 33:
+				case 577:
 					Ebony::SystemManager::AddEntity(Crypt::Bat::Create(position, glm::vec2(1.0f), player));
 					break;
-				case 34:
+				case 578:
 					Ebony::SystemManager::AddEntity(Crypt::SuicideBird::Create(position, glm::vec2(1.0f), player));
 					break;
 				default:

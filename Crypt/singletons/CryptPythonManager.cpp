@@ -21,12 +21,15 @@ namespace Crypt
 		pybind11::class_<State>(m, "State")
 			.def(pybind11::init<Ebony::Box>())
 			.def("getPlayerPosition", &State::getPlayerPosition)
-			.def("testPlayerPosition", &State::testPlayerPosition)
-			.def("__repr__", [](const State& state) { return "<cpp_module.state position " + std::to_string(state.playerPosition.box.at(0)) + ">"; });
+			.def("getEnemyPositions", &State::getEnemyPositions)
+			.def("getBulletInformation", &State::getBulletInformation)
+			.def("__repr__", [](const State& state) { return "<State player x position " + std::to_string(state.playerPosition.box.at(0)) + ">"; });
 
-		pybind11::class_<Ebony::Box>(m, "Action")
+		pybind11::class_<Ebony::Box>(m, "Box")
 			.def(pybind11::init())
-			.def("setBox", &Ebony::Box::setBox);
+			.def("setBox", &Ebony::Box::setBox)
+			.def("getBox", &Ebony::Box::getBox)
+			;
 
 		pybind11::class_<Ebony::Discrete>(m, "Reward")
 			.def(pybind11::init())
@@ -42,17 +45,36 @@ namespace Crypt
 			if (CryptPythonManager::states[i].size() != 0)
 			{
 				CryptPythonManager::actions[i].clear();
-				auto& state = CryptPythonManager::states[i].front();
-				auto& reward = CryptPythonManager::rewards[i].front();
+				auto& state = CryptPythonManager::states[i].back();
+				auto& reward = CryptPythonManager::rewards[i].back();
 				pybind11::object result = CryptPythonManager::pyModule.attr("Update")(state, reward);
 				CryptPythonManager::actions[i].push_back(result.cast<Ebony::Box>());
+				if (!Ebony::SystemManager::shouldResetForAi)
+				{
+					CryptPythonManager::states[i].clear();
+					CryptPythonManager::rewards[i].clear();
+				}
+			}
+		}
+	}
+
+	void CryptPythonManager::Reset()
+	{
+		for (auto i = 0; i < CryptPythonManager::states.size(); i++)
+		{
+			if (CryptPythonManager::states[i].size() != 0)
+			{
+				CryptPythonManager::actions[i].clear();
+				auto& state = CryptPythonManager::states[i].back();
+				auto& reward = CryptPythonManager::rewards[i].back();
+				CryptPythonManager::pyModule.attr("Reset")(state, reward);
 				CryptPythonManager::states[i].clear();
 				CryptPythonManager::rewards[i].clear();
 			}
 		}
-
-
 	}
+
+
 	void CryptPythonManager::ProcessInput()
 	{
 	}

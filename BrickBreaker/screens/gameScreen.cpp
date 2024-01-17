@@ -412,7 +412,6 @@ namespace BrickBreaker
 		allEntities.clear();
 	}
 
-
 	void GameScreen::OnScreenDefocus(std::uint64_t nextScreenEnum)
 	{
 		nextScreen = screen;

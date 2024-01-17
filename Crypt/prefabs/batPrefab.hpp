@@ -19,6 +19,8 @@
 #include <singletons/systemManager.hpp>
 #include "../prefabs/explosionDeathPrefab.hpp"
 #include <misc/renderLayers.hpp>
+#include <components/aiComponent.hpp>
+#include "../misc/aiInformationTypes.hpp"
 
 namespace Crypt
 {
@@ -101,6 +103,7 @@ namespace Crypt
 			bat->addComponent(std::move(transform));
 			bat->addComponent(std::move(sprite));
 			bat->addComponent(std::move(rigidbody));
+			bat->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, Crypt::AiInformationTypes::ENEMY_INFORMATION));
 
 
 			entities::EntityPtr healthBar = HealthBar::Create(startTransform + glm::vec2(0.0f, -20.0f), glm::vec2(scale.x, 7.0f), bat);

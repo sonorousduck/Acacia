@@ -31,21 +31,41 @@ namespace scripts
 				{
 				case 0:
 					heart1->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
-					Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::GAME_OVER;
+					heart2->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
+					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
+					if (Ebony::SystemManager::aiEnabled)
+					{
+						Ebony::SystemManager::shouldResetForAi = true;
+					}
+					else
+					{
+						Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::GAME_OVER;
+					}
 					break;
 				case 1:
 					heart1->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("damaged_heart");
+					heart2->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
+					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
 					break;
 				case 2:
+					heart1->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("full_heart");
 					heart2->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
+					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
 					break;
 				case 3:
+					heart1->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("full_heart");
 					heart2->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("damaged_heart");
+					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
+
 					break;
 				case 4:
+					heart1->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("full_heart");
+					heart2->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("full_heart");
 					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("broken_heart");
 					break;
 				case 5:
+					heart1->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("full_heart");
+					heart2->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("full_heart");
 					heart3->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture("damaged_heart");
 					break;
 				case 6:
@@ -57,6 +77,18 @@ namespace scripts
 
 
 				lastHealth = playerHealth;
+			}
+
+			if (playerHealth < 0)
+			{
+				if (Ebony::SystemManager::aiEnabled)
+				{
+					Ebony::SystemManager::shouldResetForAi = true;
+				}
+				else
+				{
+					Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::GAME_OVER;
+				}
 			}
 		}
 

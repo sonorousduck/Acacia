@@ -134,6 +134,8 @@ namespace Crypt
 
 			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::CrosshairScript>(player);
 
+			entity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, Crypt::AiInformationTypes::CROSSHAIR_INFORMATION));
+
 			entity->addComponent(std::move(mouseComponent));
 			entity->addComponent(std::move(script));
 			entity->addComponent(std::move(transform));
@@ -141,7 +143,7 @@ namespace Crypt
 			entity->addComponent(std::move(controllerComponent));
 			entity->addComponent(std::move(aiInputComponent));
 			entity->addComponent(std::make_unique<components::Crosshair>());
-			entity->addComponent(std::make_unique<components::Shooting>());
+			entity->addComponent(std::make_unique<components::Shooting>(0.1f));
 
 			return entity;
 		}

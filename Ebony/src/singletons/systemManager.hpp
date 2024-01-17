@@ -25,6 +25,7 @@ namespace Ebony
 		static std::uint64_t lastScreenEnum;
 
 		static bool aiEnabled;
+		static bool shouldResetForAi;
 
 	private:
 		SystemManager() {}

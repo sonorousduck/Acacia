@@ -46,7 +46,7 @@ namespace Ebony {
 			Ebony::Graphics2d::Initialize("Crypt", windowWidth, windowHeight, renderWidth, renderHeight);
 			Ebony::AudioManager::Init();
 			InputManager::Initialize();
-			Crypt::CryptPythonManager::Init("pythonScripts.testPythonScript");
+			Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
 
 
 			// Add screens here as well

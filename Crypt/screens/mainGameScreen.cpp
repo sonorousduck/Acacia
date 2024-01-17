@@ -106,7 +106,7 @@ namespace Crypt
 		AddEntity(crosshair);
 
 
-		AddEntity(Crypt::Bat::Create(glm::vec2(200.0f, 80.0f), glm::vec2(1.0f, 1.0f), player));
+		//AddEntity(Crypt::Bat::Create(glm::vec2(200.0f, 80.0f), glm::vec2(1.0f, 1.0f), player));
 
 		AddEntity(Crypt::MainMusicPrefab::Create("base_music", 5));
 
@@ -136,6 +136,7 @@ namespace Crypt
 
 		auto firstTime = std::chrono::system_clock::now();
 		//Ebony::Graphics2d::mainCamera->Position = glm::vec3(Ebony::Graphics2d::mainCamera->Position.x + 0.01f, Ebony::Graphics2d::mainCamera->Position.y, Ebony::Graphics2d::mainCamera->Position.z);
+
 
 		std::latch graphDone{ 1 };
 
@@ -233,9 +234,23 @@ namespace Crypt
 		graphDone.wait();
 
 
+		if (Ebony::SystemManager::shouldResetForAi)
+		{
+			Crypt::CryptPythonManager::Reset();
+			RemoveAllEntities();
+			RemoveOldEntities();
+			Start();
+			Ebony::SystemManager::shouldResetForAi = false;
+			return nextScreen;
+		}
+
+
 		// Put this outside the update loop so in the future, I can use all the threads to then do multi-threaded physics updates
 		physicsSystem.Update(elapsedTime);
 		Crypt::CryptPythonManager::Update(elapsedTime);
+
+		
+
 
 		return nextScreen;
 	}
@@ -361,6 +376,16 @@ namespace Crypt
 		}
 
 		removeEntities.clear();
+	}
+
+	void MainGameScreen::RemoveAllEntities()
+	{
+		for (auto&& [entity, entityId] : allEntities)
+		{
+			RemoveEntity(entity);
+		}
+
+
 	}
 
 }
