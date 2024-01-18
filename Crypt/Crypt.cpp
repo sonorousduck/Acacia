@@ -74,6 +74,8 @@ namespace Ebony {
 
 		void LoadContent() override
 		{
+			std::cout << "LoadContent from C++" << std::endl;
+
 			Ebony::SystemManager::currentScreen->LoadContent();
 
 			Application::LoadContent();
@@ -82,6 +84,7 @@ namespace Ebony {
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
 		{
 			// Update the SDL information here
+			std::cout << "Process input from C++" << std::endl;
 			Ebony::SystemManager::quit = InputManager::HandleInput();
 
 			Ebony::SystemManager::currentScreen->ProcessInput(elapsedTime);
@@ -159,14 +162,14 @@ namespace Ebony {
 
 			if (isAIStartUp)
 			{
-				Crypt::CryptPythonManager::Init("pythonScripts.main");
+				Crypt::CryptPythonManager::Init("pythonScripts.main", 1, true);
 				return;
 			}
 
 
 			Init();
 			LoadContent();
-			Crypt::CryptPythonManager::Init("pythonScripts.main");
+			Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
 
 			std::shared_ptr<Shader> s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
 
@@ -259,7 +262,7 @@ namespace Ebony {
 
 	Ebony::Application* Ebony::CreateApplication()
 	{
-		return new CryptGame(false, false);
+		return new CryptGame(true, true);
 	}
 
 

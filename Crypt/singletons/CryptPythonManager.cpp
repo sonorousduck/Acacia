@@ -78,7 +78,7 @@ namespace Crypt
 	void CryptPythonManager::ProcessInput()
 	{
 	}
-	void CryptPythonManager::Init(const char* filename, std::uint64_t environmentCount)
+	void CryptPythonManager::Init(const char* filename, std::uint64_t environmentCount, bool isAiStartup)
 	{
 		pybind11::initialize_interpreter();
 
@@ -92,6 +92,12 @@ namespace Crypt
 		CryptPythonManager::actions.resize(environmentCount);
 		CryptPythonManager::rewards.resize(environmentCount);
 
+
+		if (isAiStartup)
+		{
+			CryptPythonManager::pyModule.attr("StartGames")();
+
+		}
 
 
 		CryptPythonManager::pyModule.attr("Start")();

@@ -50,7 +50,7 @@ namespace Crypt
 		static void ProcessInput();
 		static void Reset();
 
-		static void Init(const char* filename, std::uint64_t environmentCount = 1);
+		static void Init(const char* filename, std::uint64_t environmentCount = 1, bool isAiStartup = false);
 		static void Destroy();
 
 
