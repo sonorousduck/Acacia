@@ -27,10 +27,10 @@ namespace Ebony {
 	class CryptGame : public Application
 	{
 	public:
-		CryptGame()
+		CryptGame(bool isAiControlled = false, bool isAiStartUp = false)
 		{
-			//pybind11::scoped_interpreter guard{};
-
+			isAI = isAiControlled;
+			isAIStartUp = isAiStartUp;
 		}
 
 		~CryptGame()
@@ -46,7 +46,6 @@ namespace Ebony {
 			Ebony::Graphics2d::Initialize("Crypt", windowWidth, windowHeight, renderWidth, renderHeight);
 			Ebony::AudioManager::Init();
 			InputManager::Initialize();
-			Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
 
 
 			// Add screens here as well
@@ -60,7 +59,7 @@ namespace Ebony {
 			Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME_OVER] = std::make_shared<Crypt::GameOverScreen>();
 
 
-			Ebony::SystemManager::aiEnabled = true;
+			Ebony::SystemManager::aiEnabled = isAI;
 
 			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU];
 			Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::MAIN_MENU;
@@ -155,8 +154,19 @@ namespace Ebony {
 
 		void Run() override
 		{
+			// If is AI startup, we will actually skip all of these steps. This will just make it so we start the C++ and it starts up the Python script that will generate
+			// more instances of the engine. 
+
+			if (isAIStartUp)
+			{
+				Crypt::CryptPythonManager::Init("pythonScripts.main");
+				return;
+			}
+
+
 			Init();
 			LoadContent();
+			Crypt::CryptPythonManager::Init("pythonScripts.main");
 
 			std::shared_ptr<Shader> s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
 
@@ -176,7 +186,7 @@ namespace Ebony {
 			s2->setInt("particleTexture", 0);
 			s2->setMat4("projection", Ebony::Graphics2d::projection);
 
-
+			
 			Ebony::SystemManager::currentScreen->Start();
 			auto firstTime = std::chrono::system_clock::now();
 			auto previousTime = std::chrono::system_clock::now();
@@ -212,10 +222,14 @@ namespace Ebony {
 				frame++;
 			}
 			
-			ThreadPool::terminate();
+			Ebony::ThreadPool::terminate();
 			Ebony::AudioManager::StopAll();
 			Ebony::ResourceManager::Clear();
-			Crypt::CryptPythonManager::Destroy();
+
+			if (isAIStartUp)
+			{
+				Crypt::CryptPythonManager::Destroy();
+			}
 		}
 
 	public:
@@ -225,7 +239,8 @@ namespace Ebony {
 		int renderWidth = 480;
 		int renderHeight = 320;
 
-		bool isAI = false;
+		bool isAI;
+		bool isAIStartUp;
 		//bool quit = false;
 
 		//bool newScreenFocused = false;
@@ -244,7 +259,20 @@ namespace Ebony {
 
 	Ebony::Application* Ebony::CreateApplication()
 	{
-		return new CryptGame();
+		return new CryptGame(false, false);
+	}
+
+
+	PYBIND11_EMBEDDED_MODULE(crypt, m)
+	{
+		pybind11::class_<CryptGame>(m, "Crypt")
+			.def(pybind11::init<bool, bool>())
+			.def("Init", &CryptGame::Init)
+			.def("LoadContent", &CryptGame::LoadContent)
+			.def("ProcessInput", &CryptGame::ProcessInput)
+			.def("Update", &CryptGame::Update)
+			.def("Draw", &CryptGame::Draw)
+			.def("ChangeScreens", &CryptGame::ChangeScreens);
 	}
 
 

@@ -75,7 +75,7 @@ namespace Ebony
 		window.createWindow(windowName, versionMajor, versionMinor, screenWidth, screenHeight);
 		Initialize();
 		SetupCallback();
-		InitializeImgui();
+		//InitializeImgui();
 
 		projection = glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f, -1.0f, 1.0f);
 		initRenderData();
@@ -723,12 +723,15 @@ namespace Ebony
 	void Graphics2d::Cleanup()
 	{
 		// This probably won't be where IMGUI ends up, since we will want to be able to disable it when it is running a game
-		ImGui_ImplOpenGL3_Shutdown();
+		//ImGui_ImplOpenGL3_Shutdown();
 		//ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
+		//ImGui::DestroyContext();
 
+		if (quadVAO != 0)
+		{
+			glDeleteVertexArrays(1, &quadVAO);
+		}
 
-		glDeleteVertexArrays(1, &quadVAO);
 	}
 
 	void Graphics2d::SetMainCamera(std::shared_ptr<Camera> camera)
