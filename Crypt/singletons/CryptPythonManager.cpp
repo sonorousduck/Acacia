@@ -40,7 +40,7 @@ namespace Crypt
 
 	void CryptPythonManager::Update(std::chrono::microseconds elapsedTime)
 	{
-		for (auto i = 0; i < CryptPythonManager::states.size(); i++)
+		/*for (auto i = 0; i < CryptPythonManager::states.size(); i++)
 		{
 			if (CryptPythonManager::states[i].size() != 0)
 			{
@@ -55,7 +55,7 @@ namespace Crypt
 					CryptPythonManager::rewards[i].clear();
 				}
 			}
-		}
+		}*/
 	}
 
 	void CryptPythonManager::Reset()
@@ -99,8 +99,6 @@ namespace Crypt
 
 		}
 
-
-		CryptPythonManager::pyModule.attr("Start")();
 	}
 
 

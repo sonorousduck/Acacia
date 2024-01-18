@@ -22,6 +22,8 @@
 
 #include <pybind11/pybind11.h>
 
+#include "singletons/CryptPythonManager.hpp"
+
 namespace Ebony {
 
 	class CryptGame : public Application
@@ -61,8 +63,19 @@ namespace Ebony {
 
 			Ebony::SystemManager::aiEnabled = isAI;
 
-			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU];
-			Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::MAIN_MENU;
+			if (isAI)
+			{
+
+				Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::GAME];
+				Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::GAME;
+			}
+			else
+			{
+				Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[Crypt::ScreenEnum::MAIN_MENU];
+				Ebony::SystemManager::nextScreenEnum = Crypt::ScreenEnum::MAIN_MENU;
+			}
+
+
 			// TODO: Get ResourceManager to register fonts in a good way, but for now, use the graphics.LoadFont way
 			// Also, register any default fonts that I want to include throughout all the project
 
@@ -165,73 +178,74 @@ namespace Ebony {
 				Crypt::CryptPythonManager::Init("pythonScripts.main", 1, true);
 				return;
 			}
-
-
-			Init();
-			LoadContent();
-			Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
-
-			std::shared_ptr<Shader> s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
-
-			s1->use();
-			s1->setInt("screenTexture", 0);
-
-
-			std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/spritesheet3d.vert", "shaders/spritesheet3d.frag", "spritesheet");
-
-			s->use();
-			s->setInt("spritesheet", 0);
-			s->setMat4("projection", Ebony::Graphics2d::projection);
-
-			std::shared_ptr<Shader> s2 = Ebony::ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
-
-			s2->use();
-			s2->setInt("particleTexture", 0);
-			s2->setMat4("projection", Ebony::Graphics2d::projection);
-
-			
-			Ebony::SystemManager::currentScreen->Start();
-			auto firstTime = std::chrono::system_clock::now();
-			auto previousTime = std::chrono::system_clock::now();
-			int frame = 0;
-
-			while (!Ebony::SystemManager::quit)
+			else
 			{
-				auto currentTime = std::chrono::system_clock::now();
-				auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
-				Ebony::Time::SetDeltaTime(elapsedTime);
-				previousTime = currentTime;
+				Init();
+				LoadContent();
+				Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
 
-				Ebony::InputManager::ResetInput();
+				std::shared_ptr<Shader> s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
 
-				//EB_TRACE(frame);
-				ProcessInput(elapsedTime);
-				Update(elapsedTime);
-				Draw(elapsedTime);
+				s1->use();
+				s1->setInt("screenTexture", 0);
 
-				RemoveOldEntities();
-				AddNewEntities();
 
-				if (Ebony::SystemManager::newScreenFocused)
+				std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/spritesheet3d.vert", "shaders/spritesheet3d.frag", "spritesheet");
+
+				s->use();
+				s->setInt("spritesheet", 0);
+				s->setMat4("projection", Ebony::Graphics2d::projection);
+
+				std::shared_ptr<Shader> s2 = Ebony::ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
+
+				s2->use();
+				s2->setInt("particleTexture", 0);
+				s2->setMat4("projection", Ebony::Graphics2d::projection);
+
+
+				Ebony::SystemManager::currentScreen->Start();
+				auto firstTime = std::chrono::system_clock::now();
+				auto previousTime = std::chrono::system_clock::now();
+				int frame = 0;
+
+				while (!Ebony::SystemManager::quit)
 				{
-					ChangeScreens();
-					// Need to reset elapsed time after changing screens so the elapsed time isn't counted when loading information and so forth
 					auto currentTime = std::chrono::system_clock::now();
 					auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
 					Ebony::Time::SetDeltaTime(elapsedTime);
 					previousTime = currentTime;
+
+					Ebony::InputManager::ResetInput();
+
+					//EB_TRACE(frame);
+					ProcessInput(elapsedTime);
+					Update(elapsedTime);
+					Draw(elapsedTime);
+
+					RemoveOldEntities();
+					AddNewEntities();
+
+					if (Ebony::SystemManager::newScreenFocused)
+					{
+						ChangeScreens();
+						// Need to reset elapsed time after changing screens so the elapsed time isn't counted when loading information and so forth
+						auto currentTime = std::chrono::system_clock::now();
+						auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
+						Ebony::Time::SetDeltaTime(elapsedTime);
+						previousTime = currentTime;
+					}
+
+					frame++;
 				}
 
-				frame++;
-			}
-			
-			Ebony::ThreadPool::terminate();
-			Ebony::AudioManager::StopAll();
-			Ebony::ResourceManager::Clear();
+				Ebony::ThreadPool::terminate();
+				Ebony::AudioManager::StopAll();
+				Ebony::ResourceManager::Clear();
 
-			if (isAIStartUp)
-			{
-				Crypt::CryptPythonManager::Destroy();
+				if (isAIStartUp)
+				{
+					Crypt::CryptPythonManager::Destroy();
+				}
 			}
 		}
 
@@ -247,6 +261,45 @@ namespace Ebony {
 		//bool quit = false;
 
 		//bool newScreenFocused = false;
+
+
+	public:
+		// Gymnasium compliant functions that are passed to the python script
+
+		void Step(pybind11::object action, int timestep)
+		{
+			Ebony::Box aiAction = action.cast<Ebony::Box>();
+			Crypt::CryptPythonManager::actions[0].push_back(aiAction);
+			std::cout << "Got here!" << std::endl;
+
+			Update(std::chrono::microseconds(timestep));
+		}
+
+		Crypt::State GetState()
+		{
+			return Crypt::CryptPythonManager::states[0].back();
+		}
+
+		Ebony::Discrete GetReward()
+		{
+			return Crypt::CryptPythonManager::rewards[0].back();
+		}
+
+		void Reset()
+		{
+
+		}
+
+		void Render()
+		{
+
+		}
+
+		void Close()
+		{
+
+		}
+
 
 	private:
 		//std::shared_ptr<Screen> currentScreen;
@@ -275,7 +328,13 @@ namespace Ebony {
 			.def("ProcessInput", &CryptGame::ProcessInput)
 			.def("Update", &CryptGame::Update)
 			.def("Draw", &CryptGame::Draw)
-			.def("ChangeScreens", &CryptGame::ChangeScreens);
+			.def("ChangeScreens", &CryptGame::ChangeScreens)
+			.def("step", &CryptGame::Step)
+			.def("reset", &CryptGame::Reset)
+			.def("render", &CryptGame::Render)
+			.def("close", &CryptGame::Close)
+			.def("getObservation", &CryptGame::GetState, pybind11::return_value_policy::move)
+			.def("getReward", &CryptGame::GetReward, pybind11::return_value_policy::move);
 	}
 
 
