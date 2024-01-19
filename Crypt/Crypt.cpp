@@ -301,9 +301,10 @@ namespace Ebony {
 		void Step(pybind11::object action, int timestep)
 		{
 			Ebony::Box aiAction = action.cast<Ebony::Box>();
-			Crypt::CryptPythonManager::actions.push_back(aiAction);
+			Crypt::CryptPythonManager::action = aiAction;
 
 			Ebony::Time::SetDeltaTime(std::chrono::microseconds(timestep));
+			ProcessInput(std::chrono::microseconds(timestep));
 			Update(std::chrono::microseconds(timestep));
 			RemoveOldEntities();
 			AddNewEntities();
@@ -311,12 +312,12 @@ namespace Ebony {
 
 		Crypt::State GetState()
 		{
-			return Crypt::CryptPythonManager::states.back();
+			return Crypt::CryptPythonManager::state;
 		}
 
 		Ebony::Discrete GetReward()
 		{
-			return Crypt::CryptPythonManager::rewards.back();
+			return Crypt::CryptPythonManager::reward;
 		}
 
 		bool GetTerminated()

@@ -56,14 +56,8 @@ namespace Crypt
 			aiInputComponent->translationFunction = [=]()
 				{
 					// TODO: Update this so it can figure out its instance ID. But for now, just assume it is the first one
-					auto& actionList = Crypt::CryptPythonManager::actions;
-
-					if (actionList.size() == 0)
-					{
-						return;
-					}
-
-					auto& action = actionList[0];
+					
+					auto& action = Crypt::CryptPythonManager::action;
 
 					if (action.box[3] == 1.0f)
 					{

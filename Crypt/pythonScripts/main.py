@@ -1,13 +1,16 @@
 import torch
 import datetime
+import argparse
 
 import gymnasium as gym
 from gymnasium import spaces
-
+import pickle
+import random
 import numpy as np
 
 import crypt
 import cpp_module
+from .agent import SAC
 
 
 def randomAction(state):
@@ -93,7 +96,7 @@ class CryptEnv(gym.Env):
     def step(self, action):
         # print("Stepping")
         # 100 microseconds have passed
-        self.game.step(action, 100000)
+        self.game.step(action, 50000)
         # print("Finished step")
         # Advance the game a single frame
         observation = self.handle_received_observation(self.game.getObservation())
@@ -114,13 +117,13 @@ class CryptEnv(gym.Env):
         
         
         
-        self.game.step(randomActionNoState(), 100000)
+        self.game.step(randomActionNoState(), 50000)
         observation = self.handle_received_observation(self.game.getObservation())
         # Returns observation and information
         return observation, {}
     
     def render(self):
-        self.game.render(100000)
+        self.game.render(50000)
     
     def close(self):
         pass
@@ -133,10 +136,12 @@ def StartGames():
     
     
     env = CryptEnv("human")
+
     
     
     
     Run(env)
+
     # test_time = datetime.timedelta(microseconds=100)
     
     # game.ProcessInput(test_time)
@@ -146,7 +151,6 @@ def Run(env: CryptEnv):
     print("Running game")
     done = False
     rendering = True
-    time_step = 5000
     env.game.python_init(rendering, False)
     
     state, _ = env.reset()
@@ -161,10 +165,8 @@ def Run(env: CryptEnv):
             env.render()
         
         if done:
-            print("Restarting!")
             env.game.python_init(rendering, True)
             state, _ = env.reset()
-            done = False
         
     env.close()
 

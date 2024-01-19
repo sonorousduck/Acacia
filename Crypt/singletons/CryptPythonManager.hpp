@@ -54,9 +54,9 @@ namespace Crypt
 		static void Destroy();
 
 
-		static std::vector<Ebony::Box> actions;
-		static std::vector<State> states;
-		static std::vector<Ebony::Discrete> rewards;
+		static Ebony::Box action;
+		static State state;
+		static Ebony::Discrete reward;
 
 
 	private:

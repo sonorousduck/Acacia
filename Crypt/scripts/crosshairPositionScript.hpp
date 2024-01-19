@@ -55,16 +55,9 @@ namespace scripts
 
 		void MoveCrosshairAI()
 		{
-			auto& action = Crypt::CryptPythonManager::actions;
+			auto& action = Crypt::CryptPythonManager::action;
 
-			if (action.size() < 1)
-			{
-				return;
-			}
-
-			if (action[0].box.size() < 1) return;
-
-			auto& angle = action[0].box[1];
+			auto& angle = action.box[1];
 			glm::vec2 fireFromPosition = entity->getComponent<components::Transform>()->position;
 
 			glm::vec3 cameraPosition = Ebony::Graphics2d::mainCamera->Position;

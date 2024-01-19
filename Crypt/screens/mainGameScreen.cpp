@@ -146,6 +146,7 @@ namespace Crypt
 				graphDone.count_down();
 			});
 
+
 		auto audioTask = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
 			[this, elapsedTime]()

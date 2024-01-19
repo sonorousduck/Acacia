@@ -3,9 +3,9 @@
 
 namespace Crypt
 {
-	std::vector<Ebony::Box> CryptPythonManager::actions{};
-	std::vector<State> CryptPythonManager::states{};
-	std::vector<Ebony::Discrete> CryptPythonManager::rewards{};
+	Ebony::Box CryptPythonManager::action{};
+	State CryptPythonManager::state{};
+	Ebony::Discrete CryptPythonManager::reward{};
 
 	bool CryptPythonManager::initialized{ false };
 	pybind11::module CryptPythonManager::pyModule;
@@ -60,16 +60,10 @@ namespace Crypt
 
 	void CryptPythonManager::Reset()
 	{
-
-		if (CryptPythonManager::states.size() != 0)
-		{
-			CryptPythonManager::actions.clear();
-			auto& state = CryptPythonManager::states.back();
-			auto& reward = CryptPythonManager::rewards.back();
-			CryptPythonManager::pyModule.attr("Reset")(state, reward);
-			CryptPythonManager::states.clear();
-			CryptPythonManager::rewards.clear();
-		}
+			//CryptPythonManager::actions.clear();
+		auto& state = CryptPythonManager::state;;
+		auto& reward = CryptPythonManager::reward;
+		CryptPythonManager::pyModule.attr("Reset")(state, reward);		
 	}
 
 
