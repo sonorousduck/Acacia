@@ -146,14 +146,17 @@ namespace Crypt
 				graphDone.count_down();
 			});
 
-
-		auto audioTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				audioSystem.Update(elapsedTime);
-			}
-		);
+		if (!Ebony::SystemManager::aiEnabled)
+		{
+			auto audioTask = Ebony::ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					audioSystem.Update(elapsedTime);
+				}
+			);
+		}
+		
 
 		auto inputTask = Ebony::ThreadPool::instance().createTask(
 			taskGraph,

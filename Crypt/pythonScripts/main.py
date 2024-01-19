@@ -10,7 +10,8 @@ import numpy as np
 
 import crypt
 import cpp_module
-from .agent import SAC
+
+from stable_baselines3 import SAC
 
 
 def randomAction(state):
@@ -96,18 +97,20 @@ class CryptEnv(gym.Env):
     def step(self, action):
         # print("Stepping")
         # 100 microseconds have passed
-        self.game.step(action, 50000)
+        print("Testing new step function")
+        state, reward, done, _, _ = self.game.step(action, 50000)
+        print("Worked")
         # print("Finished step")
         # Advance the game a single frame
-        observation = self.handle_received_observation(self.game.getObservation())
-        # print("Might have failed getting an observation..?")
-        reward = self.game.getReward()
-        # print("Might have failed getting a reward..?")
-        done = self.game.getTerminated()
+        # observation = self.handle_received_observation(self.game.getObservation())
+        # # print("Might have failed getting an observation..?")
+        # reward = self.game.getReward()
+        # # print("Might have failed getting a reward..?")
+        # done = self.game.getTerminated()
         
                 
         # observation, reward, terminated, truncated, info
-        return observation, reward, done, False, {}
+        return state, reward, done, False, {}
         
         
     
@@ -133,10 +136,13 @@ class CryptEnv(gym.Env):
 def StartGames():
     # print("Starting up")
     
-    
+    rendering = True
     
     env = CryptEnv("human")
 
+    # model = SAC("MlpPolicy", env)
+    # model.learn(total_timesteps=10000, log_interval=4)
+    # model.save("sac_pendulum")
     
     
     

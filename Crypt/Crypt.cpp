@@ -298,7 +298,7 @@ namespace Ebony {
 			Ebony::SystemManager::currentScreen->Start();
 		}
 
-		void Step(pybind11::object action, int timestep)
+		std::tuple<Crypt::State, Ebony::Discrete, bool, bool, std::unordered_map<std::string, std::string>> Step(pybind11::object action, int timestep)
 		{
 			Ebony::Box aiAction = action.cast<Ebony::Box>();
 			Crypt::CryptPythonManager::action = aiAction;
@@ -308,6 +308,10 @@ namespace Ebony {
 			Update(std::chrono::microseconds(timestep));
 			RemoveOldEntities();
 			AddNewEntities();
+			std::unordered_map<std::string, std::string> info = {};
+
+
+			return std::make_tuple(Crypt::CryptPythonManager::state, Crypt::CryptPythonManager::reward, Ebony::SystemManager::shouldResetForAi, Ebony::SystemManager::shouldResetForAi, info);
 		}
 
 		Crypt::State GetState()
@@ -369,7 +373,7 @@ namespace Ebony {
 			.def("Update", &CryptGame::Update)
 			.def("Draw", &CryptGame::Draw)
 			.def("ChangeScreens", &CryptGame::ChangeScreens)
-			.def("step", &CryptGame::Step)
+			.def("step", &CryptGame::Step, pybind11::return_value_policy::move)
 			.def("reset", &CryptGame::Reset)
 			.def("render", &CryptGame::Render)
 			.def("close", &CryptGame::Close)
