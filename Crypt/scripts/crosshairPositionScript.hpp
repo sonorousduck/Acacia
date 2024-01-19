@@ -55,7 +55,7 @@ namespace scripts
 
 		void MoveCrosshairAI()
 		{
-			auto& action = Crypt::CryptPythonManager::actions[0];
+			auto& action = Crypt::CryptPythonManager::actions;
 
 			if (action.size() < 1)
 			{

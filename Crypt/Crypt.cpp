@@ -97,7 +97,6 @@ namespace Ebony {
 		void ProcessInput(std::chrono::microseconds elapsedTime) override
 		{
 			// Update the SDL information here
-			std::cout << "Process input from C++" << std::endl;
 			Ebony::SystemManager::quit = InputManager::HandleInput();
 
 			Ebony::SystemManager::currentScreen->ProcessInput(elapsedTime);
@@ -175,7 +174,7 @@ namespace Ebony {
 
 			if (isAIStartUp)
 			{
-				Crypt::CryptPythonManager::Init("pythonScripts.main", 1, true);
+				Crypt::CryptPythonManager::Init("pythonScripts.main", true);
 				return;
 			}
 			else
@@ -185,19 +184,16 @@ namespace Ebony {
 				Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
 
 				std::shared_ptr<Shader> s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
-
 				s1->use();
 				s1->setInt("screenTexture", 0);
 
 
 				std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/spritesheet3d.vert", "shaders/spritesheet3d.frag", "spritesheet");
-
 				s->use();
 				s->setInt("spritesheet", 0);
 				s->setMat4("projection", Ebony::Graphics2d::projection);
 
 				std::shared_ptr<Shader> s2 = Ebony::ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
-
 				s2->use();
 				s2->setInt("particleTexture", 0);
 				s2->setMat4("projection", Ebony::Graphics2d::projection);
@@ -266,23 +262,66 @@ namespace Ebony {
 	public:
 		// Gymnasium compliant functions that are passed to the python script
 
+		void PythonInit(bool renderingEnabled, bool restarting)
+		{
+			if (restarting)
+			{
+				Ebony::SystemManager::currentScreen->Start();
+				Ebony::SystemManager::shouldResetForAi = false;
+
+
+				return;
+			}
+
+			if (renderingEnabled)
+			{
+				Init();
+
+				std::shared_ptr<Shader> s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
+				s1->use();
+				s1->setInt("screenTexture", 0);
+
+
+				std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/spritesheet3d.vert", "shaders/spritesheet3d.frag", "spritesheet");
+				s->use();
+				s->setInt("spritesheet", 0);
+				s->setMat4("projection", Ebony::Graphics2d::projection);
+
+				std::shared_ptr<Shader> s2 = Ebony::ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
+				s2->use();
+				s2->setInt("particleTexture", 0);
+				s2->setMat4("projection", Ebony::Graphics2d::projection);
+			}
+			LoadContent();
+			//Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
+
+			Ebony::SystemManager::currentScreen->Start();
+		}
+
 		void Step(pybind11::object action, int timestep)
 		{
 			Ebony::Box aiAction = action.cast<Ebony::Box>();
-			Crypt::CryptPythonManager::actions[0].push_back(aiAction);
-			std::cout << "Got here!" << std::endl;
+			Crypt::CryptPythonManager::actions.push_back(aiAction);
 
+			Ebony::Time::SetDeltaTime(std::chrono::microseconds(timestep));
 			Update(std::chrono::microseconds(timestep));
+			RemoveOldEntities();
+			AddNewEntities();
 		}
 
 		Crypt::State GetState()
 		{
-			return Crypt::CryptPythonManager::states[0].back();
+			return Crypt::CryptPythonManager::states.back();
 		}
 
 		Ebony::Discrete GetReward()
 		{
-			return Crypt::CryptPythonManager::rewards[0].back();
+			return Crypt::CryptPythonManager::rewards.back();
+		}
+
+		bool GetTerminated()
+		{
+			return Ebony::SystemManager::shouldResetForAi;
 		}
 
 		void Reset()
@@ -290,9 +329,9 @@ namespace Ebony {
 
 		}
 
-		void Render()
+		void Render(int timestep)
 		{
-
+			Draw(std::chrono::microseconds(timestep));
 		}
 
 		void Close()
@@ -334,7 +373,9 @@ namespace Ebony {
 			.def("render", &CryptGame::Render)
 			.def("close", &CryptGame::Close)
 			.def("getObservation", &CryptGame::GetState, pybind11::return_value_policy::move)
-			.def("getReward", &CryptGame::GetReward, pybind11::return_value_policy::move);
+			.def("getReward", &CryptGame::GetReward, pybind11::return_value_policy::move)
+			.def("python_init", &CryptGame::PythonInit)
+			.def("getTerminated", &CryptGame::GetTerminated);
 	}
 
 

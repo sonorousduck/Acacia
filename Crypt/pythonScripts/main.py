@@ -91,29 +91,36 @@ class CryptEnv(gym.Env):
         # rewardAmount = reward_structure.reward
         
     def step(self, action):
-        print("Stepping")
+        # print("Stepping")
         # 100 microseconds have passed
-        self.game.step(action, 100)
-        
+        self.game.step(action, 100000)
+        # print("Finished step")
         # Advance the game a single frame
         observation = self.handle_received_observation(self.game.getObservation())
+        # print("Might have failed getting an observation..?")
         reward = self.game.getReward()
+        # print("Might have failed getting a reward..?")
+        done = self.game.getTerminated()
+        
                 
         # observation, reward, terminated, truncated, info
-        return observation, reward, False, False, {}
+        return observation, reward, done, False, {}
         
         
     
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
         
-        self.game.step(randomActionNoState(), 100)
+        
+        
+        
+        self.game.step(randomActionNoState(), 100000)
         observation = self.handle_received_observation(self.game.getObservation())
         # Returns observation and information
         return observation, {}
     
     def render(self):
-        pass
+        self.game.render(100000)
     
     def close(self):
         pass
@@ -121,7 +128,7 @@ class CryptEnv(gym.Env):
 
 
 def StartGames():
-    print("Starting up")
+    # print("Starting up")
     
     
     
@@ -138,17 +145,26 @@ def StartGames():
 def Run(env: CryptEnv):
     print("Running game")
     done = False
+    rendering = True
+    time_step = 5000
+    env.game.python_init(rendering, False)
     
     state, _ = env.reset()
-    while not done:
-        print("Attempting a step")
+    while not False:
+        # print("Attempting a step")
         # Or agent step
         action = randomAction(state)
         
         state, reward, done, _, _ = env.step(action)
         
+        if rendering:
+            env.render()
+        
         if done:
+            print("Restarting!")
+            env.game.python_init(rendering, True)
             state, _ = env.reset()
+            done = False
         
     env.close()
 

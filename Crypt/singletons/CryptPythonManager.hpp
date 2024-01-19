@@ -50,13 +50,13 @@ namespace Crypt
 		static void ProcessInput();
 		static void Reset();
 
-		static void Init(const char* filename, std::uint64_t environmentCount = 1, bool isAiStartup = false);
+		static void Init(const char* filename, bool isAiStartup = false);
 		static void Destroy();
 
 
-		static std::vector<std::vector<Ebony::Box>> actions;
-		static std::vector<std::vector<State>> states;
-		static std::vector<std::vector<Ebony::Discrete>> rewards;
+		static std::vector<Ebony::Box> actions;
+		static std::vector<State> states;
+		static std::vector<Ebony::Discrete> rewards;
 
 
 	private:

@@ -3,9 +3,9 @@
 
 namespace Crypt
 {
-	std::vector<std::vector<Ebony::Box>> CryptPythonManager::actions{};
-	std::vector<std::vector<State>> CryptPythonManager::states{};
-	std::vector<std::vector<Ebony::Discrete>> CryptPythonManager::rewards{};
+	std::vector<Ebony::Box> CryptPythonManager::actions{};
+	std::vector<State> CryptPythonManager::states{};
+	std::vector<Ebony::Discrete> CryptPythonManager::rewards{};
 
 	bool CryptPythonManager::initialized{ false };
 	pybind11::module CryptPythonManager::pyModule;
@@ -60,17 +60,15 @@ namespace Crypt
 
 	void CryptPythonManager::Reset()
 	{
-		for (auto i = 0; i < CryptPythonManager::states.size(); i++)
+
+		if (CryptPythonManager::states.size() != 0)
 		{
-			if (CryptPythonManager::states[i].size() != 0)
-			{
-				CryptPythonManager::actions[i].clear();
-				auto& state = CryptPythonManager::states[i].back();
-				auto& reward = CryptPythonManager::rewards[i].back();
-				CryptPythonManager::pyModule.attr("Reset")(state, reward);
-				CryptPythonManager::states[i].clear();
-				CryptPythonManager::rewards[i].clear();
-			}
+			CryptPythonManager::actions.clear();
+			auto& state = CryptPythonManager::states.back();
+			auto& reward = CryptPythonManager::rewards.back();
+			CryptPythonManager::pyModule.attr("Reset")(state, reward);
+			CryptPythonManager::states.clear();
+			CryptPythonManager::rewards.clear();
 		}
 	}
 
@@ -78,7 +76,7 @@ namespace Crypt
 	void CryptPythonManager::ProcessInput()
 	{
 	}
-	void CryptPythonManager::Init(const char* filename, std::uint64_t environmentCount, bool isAiStartup)
+	void CryptPythonManager::Init(const char* filename, bool isAiStartup)
 	{
 		pybind11::initialize_interpreter();
 
@@ -88,15 +86,9 @@ namespace Crypt
 		//CryptPythonManager::stateModule = pybind11::module_::import("cpp_module");
 		CryptPythonManager::initialized = true;
 
-		CryptPythonManager::states.resize(environmentCount);
-		CryptPythonManager::actions.resize(environmentCount);
-		CryptPythonManager::rewards.resize(environmentCount);
-
-
 		if (isAiStartup)
 		{
 			CryptPythonManager::pyModule.attr("StartGames")();
-
 		}
 
 	}

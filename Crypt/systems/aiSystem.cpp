@@ -99,8 +99,8 @@ namespace systems
 
 		}
 
-		Crypt::CryptPythonManager::states[0].push_back(state);
-		Crypt::CryptPythonManager::rewards[0].push_back(reward);
+		Crypt::CryptPythonManager::states.push_back(state);
+		Crypt::CryptPythonManager::rewards.push_back(reward);
 
 	}
 

@@ -236,11 +236,11 @@ namespace Crypt
 
 		if (Ebony::SystemManager::shouldResetForAi)
 		{
-			Crypt::CryptPythonManager::Reset();
+			//Crypt::CryptPythonManager::Reset();
 			RemoveAllEntities();
 			RemoveOldEntities();
-			Start();
-			Ebony::SystemManager::shouldResetForAi = false;
+			//Start();
+			//Ebony::SystemManager::shouldResetForAi = false;
 			return nextScreen;
 		}
 
