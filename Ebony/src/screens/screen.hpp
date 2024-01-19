@@ -26,6 +26,7 @@ namespace Ebony
 		virtual void Init(int windowWidth, int windowHeight) {}
 		virtual void AddNewEntities() {}
 		virtual void RemoveOldEntities() {}
+		virtual void RemoveAllEntities() {};
 
 
 		// This way, you can control if they are coming from the pause menu to not restart your game, but if they are

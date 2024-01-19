@@ -87,8 +87,6 @@ namespace Ebony {
 
 		void LoadContent() override
 		{
-			std::cout << "LoadContent from C++" << std::endl;
-
 			Ebony::SystemManager::currentScreen->LoadContent();
 
 			Application::LoadContent();
@@ -331,7 +329,7 @@ namespace Ebony {
 
 		void Reset()
 		{
-
+			Ebony::SystemManager::currentScreen->RemoveAllEntities();
 		}
 
 		void Render(int timestep)

@@ -384,10 +384,14 @@ namespace Crypt
 
 	void MainGameScreen::RemoveAllEntities()
 	{
+		std::cout << "Removing all entities" << std::endl;
 		for (auto&& [entity, entityId] : allEntities)
 		{
 			RemoveEntity(entity);
 		}
+
+		RemoveOldEntities();
+
 
 
 	}

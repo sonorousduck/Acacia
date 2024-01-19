@@ -97,9 +97,7 @@ class CryptEnv(gym.Env):
     def step(self, action):
         # print("Stepping")
         # 100 microseconds have passed
-        print("Testing new step function")
         state, reward, done, _, _ = self.game.step(action, 50000)
-        print("Worked")
         # print("Finished step")
         # Advance the game a single frame
         # observation = self.handle_received_observation(self.game.getObservation())
@@ -116,7 +114,6 @@ class CryptEnv(gym.Env):
     
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
-        
         
         
         
@@ -166,13 +163,17 @@ def Run(env: CryptEnv):
         action = randomAction(state)
         
         state, reward, done, _, _ = env.step(action)
-        
+                
         if rendering:
             env.render()
         
         if done:
+            print("RESETTING!")
+            env.game.reset()
             env.game.python_init(rendering, True)
+            
             state, _ = env.reset()
+            
         
     env.close()
 

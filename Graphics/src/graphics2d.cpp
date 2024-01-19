@@ -23,6 +23,8 @@ namespace Ebony
 	bool Graphics2d::cursorDisabled{ true };
 	bool Graphics2d::hasCamera{ false };
 	bool Graphics2d::resized{ false };
+	bool Graphics2d::textInitialized{ false };
+
 	const char* Graphics2d::windowName;
 	int Graphics2d::screenWidth;
 	int Graphics2d::screenHeight;
@@ -698,25 +700,30 @@ namespace Ebony
 
 	void Graphics2d::InitializeTextDrawing(std::shared_ptr<Shader> textShader)
 	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		if (!Graphics2d::textInitialized)
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		// TODO: This should change to use the actual window sizes
-		//glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(screenWidth), 0.0f, static_cast<float>(screenHeight));
-		textShader->use();
-		textShader->setMat4("projection", glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f));
+			// TODO: This should change to use the actual window sizes
+			//glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(screenWidth), 0.0f, static_cast<float>(screenHeight));
+			textShader->use();
+			textShader->setMat4("projection", glm::ortho(0.0f, static_cast<float>(renderWidth), static_cast<float>(renderHeight), 0.0f));
 
-		glGenVertexArrays(1, &textVAO);
-		glGenBuffers(1, &textVBO);
-		glBindVertexArray(textVAO);
-		glBindBuffer(GL_ARRAY_BUFFER, textVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW); // It needs 6 vertices of 4 floats each, so 6 * 4 floats of memory (x, y, u, v)
+			glGenVertexArrays(1, &textVAO);
+			glGenBuffers(1, &textVBO);
+			glBindVertexArray(textVAO);
+			glBindBuffer(GL_ARRAY_BUFFER, textVBO);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW); // It needs 6 vertices of 4 floats each, so 6 * 4 floats of memory (x, y, u, v)
 
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-		glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+			glEnableVertexAttribArray(0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
+
+			Graphics2d::textInitialized = true;
+		}
 	}
 	
 
