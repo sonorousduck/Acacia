@@ -671,7 +671,7 @@ int main(int argc, char* argv[])
 	//	return -1;
 	//}
 	//std::filesystem::path directoryTextures = "../../../Graphics/textures";
-	std::filesystem::path directoryTextures = "../../../Crypt/assets/textures";
+	std::filesystem::path directoryTextures = "../../../EcologyRTS/assets/textures";
 	//std::filesystem::path directoryTextures = "../../../BrickBreaker/assets/textures";
 
 	std::filesystem::path directoryModels = "../../../Graphics/models";

@@ -1,5 +1,4 @@
 #include "cppScriptingSystem.hpp"
-#include <iostream>
 
 
 namespace systems

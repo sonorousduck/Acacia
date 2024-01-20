@@ -43,11 +43,13 @@ namespace Ebony {
 			// Set up graphics here
 			Application::Init();
 
+
+
 			Ebony::Graphics2d::Initialize("EcologyRTS", windowWidth, windowHeight, renderWidth, renderHeight);
 			Ebony::AudioManager::Init();
 			InputManager::Initialize();
 			//EcologyRTS::EcologyRTSPythonManager::Init("pythonScripts.EcologyRTS_main");
-
+			//SDL_SetWindowMouseGrab(Ebony::Graphics2d::window.getWindow(), SDL_TRUE);
 
 			// Add screens here as well
 
@@ -220,8 +222,8 @@ namespace Ebony {
 
 	public:
 
-		int windowWidth = 1920;
-		int windowHeight = 1080;
+		int windowWidth = 800;
+		int windowHeight = 600;
 		int renderWidth = 480;
 		int renderHeight = 320;
 

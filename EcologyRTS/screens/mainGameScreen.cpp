@@ -2,6 +2,7 @@
 
 
 #include "../prefabs/mainMusicPrefab.hpp"
+#include "../prefabs/mainGameCursor.hpp"
 
 namespace EcologyRTS
 {
@@ -17,6 +18,8 @@ namespace EcologyRTS
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_24", "EcologyRTS", 24, 24);
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_12", "EcologyRTS", 12, 12);
 
+
+		Ebony::ResourceManager::LoadTexture("Cursor.tx", "cursor", "EcologyRTS");
 
 
 		Ebony::ResourceManager::LoadMusic("commonFight.ogg", "base_music", "EcologyRTS");
@@ -64,8 +67,11 @@ namespace EcologyRTS
 
 		// Create prefabs
 
-		AddEntity(EcologyRTS::MainMusicPrefab::Create("base_music", 5));
+		//AddEntity(EcologyRTS::MainMusicPrefab::Create("base_music", 5));
 		
+		AddEntity(EcologyRTS::MainGameCursor::Create());
+
+
 		AddNewEntities();
 	}
 
@@ -220,6 +226,7 @@ namespace EcologyRTS
 
 	void MainGameScreen::OnScreenDefocus(std::uint64_t nextScreenEnum)
 	{
+		SDL_ShowCursor(SDL_ENABLE);
 		nextScreen = screen;
 		
 		if (Ebony::SystemManager::nextScreenEnum == EcologyRTS::ScreenEnum::PAUSE)
@@ -236,6 +243,9 @@ namespace EcologyRTS
 
 	void MainGameScreen::OnScreenFocus(std::uint64_t lastScreenEnum)
 	{
+		SDL_ShowCursor(SDL_DISABLE);
+
+
 		if (Ebony::SystemManager::lastScreenEnum == EcologyRTS::ScreenEnum::PAUSE)
 		{
 			Ebony::AudioManager::UnpauseAll();

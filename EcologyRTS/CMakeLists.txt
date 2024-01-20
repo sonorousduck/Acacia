@@ -32,11 +32,18 @@ set(MiscSources
 set(Prefabs
   prefabs/mainMusicPrefab.hpp
   prefabs/menuCursorPrefab.hpp
+  prefabs/player.hpp
+  prefabs/forestTile.hpp
+  prefabs/mountainTile.hpp
+  prefabs/plainsTile.hpp
+  prefabs/mainGameCursor.hpp
 )
 
 set(UIPrefabs
   prefabs/UI/buttonPrefab.hpp
   prefabs/UI/buttonTextPrefab.hpp
+  prefabs/UI/inventory.hpp
+  prefabs/UI/tileSelection.hpp
 )
 
 set(SingletonHeaders
