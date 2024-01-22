@@ -11,6 +11,9 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			auto destructionComponent = entity->getComponent<components::DestructionComponent>();
 
 			if (destructionComponent->shouldDestroy)

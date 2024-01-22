@@ -11,13 +11,22 @@
 #include <iostream>
 #include <components/activeUICollisionComponent.hpp>
 #include <components/buttonComponent.hpp>
+#include "../singletons/GameManager.hpp"
+#include "../prefabs/cursorFollowingTile.hpp"
+#include "../components/selectedTile.hpp"
+
+#include "../scripts/followCursorScript.hpp"
+#include <singletons/systemManager.hpp>
+
+
+#include "mountainTile.hpp"
 
 namespace EcologyRTS
 {
 	class MainGameCursor
 	{
 	public:
-		static entities::EntityPtr Create()
+		static entities::EntityPtr Create(entities::EntityPtr inventory)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
@@ -25,7 +34,10 @@ namespace EcologyRTS
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("cursor"), Ebony::Colors::White, Ebony::RenderLayer::ALWAYS_FRONT, true);
 			auto scale = sprite->GetDimensions();
 			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(0.0f, 0.0f), 0.0f, scale));
-			components::Subcollider subcollider = components::Subcollider(glm::vec2(0.5f, 0.5f), glm::vec2(1.0f, 1.0f), true, true);
+
+
+
+			components::Subcollider subcollider = components::Subcollider(scale / 2.0f, scale, true, true);
 			entity->addComponent(std::make_unique<components::RigidBody>());
 
 
@@ -43,16 +55,76 @@ namespace EcologyRTS
 
 			mouseInput->onPressActions.insert({ "pressButton", [=](Ebony::MousePress& mousePress)
 				{
+					/*if (inventory->isEnabled())
+					{*/
+						auto activeCollisionComponent = entity->getComponent<components::ActiveUICollision>();
+
+						if (activeCollisionComponent->collidingWith != nullptr)
+						{
+							// Selection of the tile based on what was clicked
+							auto tileInformation = activeCollisionComponent->collidingWith->getComponent<components::Tile>();
+							/*if (entities::EntityPtr cursorFollower = entity->GetChild(0).lock())
+							{
+								cursorFollower->getComponent<components::Sprite>()->texture = tileInformation->texture;
+								cursorFollower->getComponent<components::Tile>()->tileType = tileInformation->tileType;
+								cursorFollower->Enable();
+							}*/
+
+							auto selectedTile = entity->getComponent<components::SelectedTile>();
+
+							selectedTile->tileType = tileInformation->tileType;
+							selectedTile->isActive = true;
+
+
+							//Ebony::SystemManager::AddEntity(EcologyRTS::CursorFollowingTile::Create(entity, tileInformation->tileType));
+
+
+							// Spawn entity that will follow cursor until clicked. Then spawn another real entity at that position
+
+
+
+							// Close inventory after selecting
+							//inventory->Disable();
+
+
+							/*
+							activeCollisionComponent->collidingWith->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture(activeCollisionComponent->collidingWith->getComponent<components::ButtonComponent>()->spriteImagePressed);
+
+							if (activeCollisionComponent->collidingWith->getComponent<components::ButtonComponent>()->onPress.has_value())
+							{
+								activeCollisionComponent->collidingWith->getComponent<components::ButtonComponent>()->onPress.value()(activeCollisionComponent->collidingWith);
+							}*/
+						}
+
+						//return;
+					//}
 					
 
 
+					auto selectedTile = entity->getComponent<components::SelectedTile>();
+					if (selectedTile->tileType != TileType::NONE && selectedTile->isActive)
+					{
+						// If valid placement
+
+						//Ebony::SystemManager::AddEntity();
+						Ebony::SystemManager::AddEntity(EcologyRTS::MountainTile::Create(entity));
+						std::cout << "Placed" << std::endl;
+						selectedTile->isActive = false;
+
+					}
+
+
 				} });
+
 
 
 			entity->addComponent(std::move(mouseInput));
 			entity->addComponent(std::make_unique<components::Collider>(subcollider, CollisionLayers::UI | CollisionLayers::GROUND, false));
 			entity->addComponent(std::make_unique<components::RigidBody>());
 			entity->addComponent(std::move(sprite));
+			entity->addComponent(std::make_unique<components::ActiveUICollision>());
+			// RIGHT NOW, THIS IS DEFAULTING TO SOMETHING SINCE I DON"T HAVE THE ACTUAL SELECTION DONE
+			entity->addComponent(std::make_unique<components::SelectedTile>(EcologyRTS::MOUNTAINS));
 
 
 

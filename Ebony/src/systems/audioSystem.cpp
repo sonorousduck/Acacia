@@ -28,6 +28,9 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			// Handle Sound Effects
 			components::SoundEffect* soundEffect;
 			if (entity->tryGetComponent(soundEffect))

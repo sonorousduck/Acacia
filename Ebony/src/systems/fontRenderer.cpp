@@ -9,6 +9,9 @@ namespace systems
 
 		for (auto&& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			auto text = entity->getComponent<components::Text>();
 			auto transform = entity->getComponent<components::Transform>();
 

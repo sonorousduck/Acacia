@@ -15,13 +15,14 @@ set(SystemSources
 )
 
 set(ComponentHeaders
-
+  components/tile.hpp
+  components/selectedTile.hpp
 )
 
 set(MiscHeaders
   misc/collisionLayers.hpp
   misc/ecologyTiledProcessor.hpp
-
+  misc/tileType.hpp
 )
 
 set(MiscSources
@@ -34,6 +35,7 @@ set(Prefabs
   prefabs/menuCursorPrefab.hpp
   prefabs/player.hpp
   prefabs/forestTile.hpp
+  prefabs/cursorFollowingTile.hpp
   prefabs/mountainTile.hpp
   prefabs/plainsTile.hpp
   prefabs/mainGameCursor.hpp
@@ -43,7 +45,8 @@ set(UIPrefabs
   prefabs/UI/buttonPrefab.hpp
   prefabs/UI/buttonTextPrefab.hpp
   prefabs/UI/inventory.hpp
-  prefabs/UI/tileSelection.hpp
+  prefabs/UI/storeInventory.hpp
+  prefabs/UI/storeTile.hpp
 )
 
 set(SingletonHeaders
@@ -80,7 +83,7 @@ set(ScreenSources
 )
 
 set(ScriptHeaders
-
+  scripts/followCursorScript.hpp
 )
 
 set(PythonScripts

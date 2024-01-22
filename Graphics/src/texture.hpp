@@ -34,4 +34,6 @@ public:
 	void Generate3D(int width, int height, char* data, std::uint16_t tilesX, std::uint16_t tilesY);
 
 	void Bind() const;
+
+	glm::vec2 getDimensions() { return glm::vec2(Width, Height); }
 };

@@ -13,6 +13,9 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			auto timedComponent = entity->getComponent<components::TimedComponent>();
 
 			if (timedComponent->currentTime > 0.0f && timedComponent->running)

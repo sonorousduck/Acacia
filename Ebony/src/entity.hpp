@@ -78,9 +78,12 @@ namespace entities
 			Entity::nextId++;
 		}
 
-		virtual ~Entity() {};
+		virtual ~Entity() 
+		{
+			children.clear();
+		};
 
-		auto getId() { return m_Id; }
+		auto getId() const { return m_Id; }
 
 		template <typename T>
 		void addComponent(std::unique_ptr<T> component);
@@ -103,10 +106,117 @@ namespace entities
 		bool operator==(const Entity& rhs);
 		bool operator!=(const Entity& rhs);
 
+		bool isEnabled() const
+		{
+			return enabled;
+		}
+
+		void Disable()
+		{
+			enabled = false;
+
+			std::vector<std::weak_ptr<Entity>> toRemove{};
+			for (auto& child : children)
+			{
+				if (std::shared_ptr<Entity> sharedChild = child.lock())
+				{
+					sharedChild->Disable();
+				}
+				else
+				{
+					// The underlying child is now invalid
+					toRemove.push_back(child);
+				}
+			}
+
+			for (auto& child : toRemove)
+			{
+				RemoveChild(child);
+			}
+		}
+
+		void Enable()
+		{
+			enabled = true;
+
+			std::vector<std::weak_ptr<Entity>> toRemove{};
+			for (auto& child : children)
+			{
+				if (std::shared_ptr<Entity> sharedChild = child.lock())
+				{
+					sharedChild->Enable();
+				}
+				else
+				{
+					// The underlying child is now invalid
+					toRemove.push_back(child);
+				}
+			}
+
+			for (auto& child : toRemove)
+			{
+				RemoveChild(child);
+			}
+		}
+
+		void SetEnabledStatus(bool isEnabled)
+		{
+			enabled = isEnabled;
+
+			std::vector<std::weak_ptr<Entity>> toRemove{};
+			for (auto& child : children)
+			{
+				if (std::shared_ptr<Entity> sharedChild = child.lock())
+				{
+					if (isEnabled)
+					{
+						sharedChild->Enable();
+					}
+					else
+					{
+						sharedChild->Disable();
+					}
+				}
+				else
+				{
+					// The underlying child is now invalid
+					toRemove.push_back(child);
+				}
+			}
+
+			for (auto& child : toRemove)
+			{
+				RemoveChild(child);
+			}
+		}
+
+
+		void AddChild(std::weak_ptr<Entity> child)
+		{
+			children.push_back(child);
+		}
+
+		void RemoveChild(std::weak_ptr<Entity> child)
+		{
+			//children.erase(std::remove(children.begin(), children.end(), child), children.end());
+		}
+
+		std::vector<std::weak_ptr<Entity>> GetChildren() const
+		{
+			return children;
+		}
+
+		std::weak_ptr<Entity> GetChild(int index)
+		{
+			return children[index];
+		}
+
 
 	private:
 		IdType m_Id;
 		std::unordered_map<ctti::unnamed_type_id_t, std::unique_ptr<components::Component>> m_Components;
+		bool enabled = true;
+		std::vector<std::weak_ptr<Entity>> children{};
 		//std::weak_ptr<Entity> parent; // TODO: Add scene graph
 	};
 

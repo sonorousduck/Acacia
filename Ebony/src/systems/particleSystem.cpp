@@ -12,6 +12,9 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			auto particleGroup = entity->getComponent<components::ParticleGroup>();
 			auto transform = entity->getComponent<components::Transform>();
 			bool hasDelay = particleGroup->startDelay != std::chrono::microseconds::zero() && particleGroup->duration < particleGroup->startDelay;

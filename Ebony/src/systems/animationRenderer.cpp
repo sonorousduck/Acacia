@@ -8,6 +8,9 @@ namespace systems
 
 		for (auto&& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			auto animationController = entity->getComponent<components::AnimationController>();
 			auto transform = entity->getComponent<components::Transform>();
 			auto animationsToDraw = animationController->GetSprite();

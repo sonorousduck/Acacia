@@ -66,8 +66,6 @@ namespace Ebony {
 
 			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[EcologyRTS::ScreenEnum::MAIN_MENU];
 			Ebony::SystemManager::nextScreenEnum = EcologyRTS::ScreenEnum::MAIN_MENU;
-			// TODO: Get ResourceManager to register fonts in a good way, but for now, use the graphics.LoadFont way
-			// Also, register any default fonts that I want to include throughout all the project
 
 			for (auto& screen : Ebony::SystemManager::screens)
 			{
@@ -125,7 +123,6 @@ namespace Ebony {
 			Ebony::Graphics2d::DrawFromQueue();
 
 			Application::Draw(elapsedTime);
-			//Ebony::Graphics2d::EndImgui();
 			Ebony::Graphics2d::EndDraw();
 		}
 		
@@ -222,24 +219,14 @@ namespace Ebony {
 
 	public:
 
-		int windowWidth = 800;
-		int windowHeight = 600;
+		int windowWidth = 960;
+		int windowHeight = 640;
 		int renderWidth = 480;
 		int renderHeight = 320;
 
 		bool isAI = false;
-		//bool quit = false;
-
-		//bool newScreenFocused = false;
 
 	private:
-		//std::shared_ptr<Screen> currentScreen;
-		//std::unordered_map<std::uint64_t, std::shared_ptr<Screen>> screens{};
-
-		//std::uint64_t nextScreenEnum = Ebony::ScreenEnum::DEFAULT;
-		//std::uint64_t currentScreenEnum = Ebony::ScreenEnum::DEFAULT;
-		//std::uint64_t lastScreenEnum = Ebony::ScreenEnum::DEFAULT;
-
 		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
 
 	};

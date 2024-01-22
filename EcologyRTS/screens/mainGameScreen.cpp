@@ -3,6 +3,12 @@
 
 #include "../prefabs/mainMusicPrefab.hpp"
 #include "../prefabs/mainGameCursor.hpp"
+#include "../prefabs/UI/inventory.hpp"
+#include "../prefabs/UI/storeInventory.hpp"
+#include "../prefabs/UI/storeTile.hpp"
+#include "../prefabs/mountainTile.hpp"
+#include "../prefabs/cursorFollowingTile.hpp"
+#include "../prefabs/player.hpp"
 
 namespace EcologyRTS
 {
@@ -18,8 +24,18 @@ namespace EcologyRTS
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_24", "EcologyRTS", 24, 24);
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_12", "EcologyRTS", 12, 12);
 
-
+		// Inventory
 		Ebony::ResourceManager::LoadTexture("Cursor.tx", "cursor", "EcologyRTS");
+		Ebony::ResourceManager::LoadTexture("ForestStoreTile.tx", "forest_store_tile", "EcologyRTS");
+		Ebony::ResourceManager::LoadTexture("PlainsStoreTile.tx", "plains_store_tile", "EcologyRTS");
+		Ebony::ResourceManager::LoadTexture("MountainsStoreTile.tx", "mountains_store_tile", "EcologyRTS");
+		Ebony::ResourceManager::LoadTexture("StoreFrame.tx", "store_frame", "EcologyRTS");
+		Ebony::ResourceManager::LoadTexture("MainInventoryBackground.tx", "main_inventory_background", "EcologyRTS");
+
+		// Tiles
+		Ebony::ResourceManager::LoadTexture("ForestTile.tx", "forest_tile", "EcologyRTS");
+		Ebony::ResourceManager::LoadTexture("PlainsTemp.tx", "plains_tile", "EcologyRTS");
+		Ebony::ResourceManager::LoadTexture("MountainTile.tx", "mountains_tile", "EcologyRTS");
 
 
 		Ebony::ResourceManager::LoadMusic("commonFight.ogg", "base_music", "EcologyRTS");
@@ -69,7 +85,41 @@ namespace EcologyRTS
 
 		//AddEntity(EcologyRTS::MainMusicPrefab::Create("base_music", 5));
 		
-		AddEntity(EcologyRTS::MainGameCursor::Create());
+		auto inventory = EcologyRTS::Inventory::Create();
+
+		auto cursor = EcologyRTS::MainGameCursor::Create(inventory);
+		auto cursorFollowing = EcologyRTS::CursorFollowingTile::Create(cursor, TileType::MOUNTAINS);
+
+		//cursor->AddChild(cursorFollowing);
+
+		auto storeInventory = EcologyRTS::StoreInventory::Create();
+		auto mountainTile = EcologyRTS::StoreTile::Create(glm::vec2(272.0f, 112.0f), "mountains_store_tile", "mountains_tile", TileType::MOUNTAINS);
+		auto forestTile = EcologyRTS::StoreTile::Create(glm::vec2(272.0f, 32.0f), "forest_store_tile", "forest_tile", TileType::FOREST);
+		auto plainsTile = EcologyRTS::StoreTile::Create(glm::vec2(363.0f, 32.0f), "plains_store_tile", "plains_tile", TileType::PLAINS);
+
+		inventory->AddChild(storeInventory);
+		storeInventory->AddChild(mountainTile);
+		storeInventory->AddChild(forestTile);
+		storeInventory->AddChild(plainsTile);
+
+		AddEntity(cursor);
+		AddEntity(EcologyRTS::Player::Create(inventory));
+		// For now, pretend we clicked on the mountains store tile (until I find a good way to render conditionally) (Maybe just outright removing and replacing, but that might be a lot of unnecessary work)
+
+
+
+		AddEntity(inventory);
+
+		//inventory->Disable();
+		AddEntity(storeInventory);
+
+		AddEntity(mountainTile);
+		AddEntity(forestTile);
+		AddEntity(plainsTile);
+		AddEntity(cursorFollowing);
+
+
+		inventory->Disable();
 
 
 		AddNewEntities();

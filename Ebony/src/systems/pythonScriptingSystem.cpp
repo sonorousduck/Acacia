@@ -28,6 +28,9 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			//auto test = 
 
 			auto script = entity->getComponent<components::PythonScript>();

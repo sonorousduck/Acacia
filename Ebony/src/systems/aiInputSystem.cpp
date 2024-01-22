@@ -11,6 +11,8 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
 			auto aiInput = entity->getComponent<components::AiInput>();
 			aiInput->translationFunction();
 		}

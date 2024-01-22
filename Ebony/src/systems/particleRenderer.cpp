@@ -9,6 +9,9 @@ namespace systems
 		glDepthMask(GL_FALSE);
 		for (auto&& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			auto particleEffect = entity->getComponent<components::ParticleGroup>();
 
 			if (particleEffect->particleCount > 0)

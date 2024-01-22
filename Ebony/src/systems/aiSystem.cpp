@@ -14,6 +14,9 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			auto& test = entity->getComponents();
 			auto aiComponent = entity->getComponent<components::AIComponent>();
 

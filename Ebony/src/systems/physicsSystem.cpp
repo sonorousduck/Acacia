@@ -27,6 +27,9 @@ namespace systems
 
 	void PhysicsSystem::updateObject(std::chrono::microseconds elapsedTime, entities::EntityPtr entity)
 	{
+		if (!entity->isEnabled()) return;
+
+
 		auto rigidBody = entity->getComponent<components::RigidBody>();
 		auto transform = entity->getComponent<components::Transform>();
 		transform->previousPosition = transform->position;
@@ -174,29 +177,29 @@ namespace systems
 
 		staticQuadtree.shouldRebuild = false;
 
-		std::latch graphDone{ 1 };
+		//std::latch graphDone{ 1 };
 
-		auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(
-			[&graphDone]()
-			{
-				graphDone.count_down();
-			});
+		//auto taskGraph = Ebony::ThreadPool::instance().createTaskGraph(
+		//	[&graphDone]()
+		//	{
+		//		graphDone.count_down();
+		//	});
 
 
 		for (auto& [id, entity] : m_Entities)
 		{
-			auto task = Ebony::ThreadPool::instance().createTask(
-				taskGraph,
-				[this, elapsedTime, entity]()
-				{
+			//auto task = Ebony::ThreadPool::instance().createTask(
+			//	taskGraph,
+			//	[this, elapsedTime, entity]()
+			//	{
 					//std::cout << "Updated!" << std::endl;
 					updateObject(elapsedTime, entity);
-				}
-			);
+			//	}
+			//);
 		}
 
-		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
-		graphDone.wait();
+		//Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
+		//graphDone.wait();
 	}
 
 	bool PhysicsSystem::HasCollision(const entities::EntityPtr entity, const entities::EntityPtr otherEntity)

@@ -20,6 +20,9 @@ namespace systems
 	{
 		for (auto& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			// Handle Keyboard first
 			components::KeyboardInput* keyInputComponent{};
 			if (entity->tryGetComponent<components::KeyboardInput>(keyInputComponent))

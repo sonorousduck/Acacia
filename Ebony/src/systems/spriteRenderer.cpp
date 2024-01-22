@@ -8,6 +8,9 @@ namespace systems
 	{
 		for (auto&& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			Ebony::Graphics2d::Draw(entity);
 
 

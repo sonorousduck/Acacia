@@ -8,9 +8,9 @@
 #include <components/subcolliderClass.hpp>
 #include <components/rigidbodyComponent.hpp>
 #include "../misc/collisionLayers.hpp"
-#include <iostream>
 #include <components/activeUICollisionComponent.hpp>
 #include <components/buttonComponent.hpp>
+
 
 namespace EcologyRTS
 {
@@ -62,7 +62,6 @@ namespace EcologyRTS
 			entity->addComponent(std::move(mouseInput));
 			entity->addComponent(std::make_unique<components::Collider>(subcollider, EcologyRTS::CollisionLayers::UI, false));
 			entity->addComponent(std::make_unique<components::RigidBody>());
-
 
 
 			return entity;

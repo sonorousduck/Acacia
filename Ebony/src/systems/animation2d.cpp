@@ -11,6 +11,9 @@ namespace systems
 	{
 		for (auto&& [id, entity] : m_Entities)
 		{
+			if (!entity->isEnabled()) return;
+
+
 			auto sprite = entity->getComponent<components::AnimationController>();
 
 			// This updates the current node's animations. Also will call any callbacks registered to the sprite frames for the animations
