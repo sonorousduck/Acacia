@@ -2,15 +2,9 @@
 
 
 #include "../prefabs/mainMusicPrefab.hpp"
-#include "../prefabs/mainGameCursor.hpp"
-#include "../prefabs/UI/inventory.hpp"
-#include "../prefabs/UI/storeInventory.hpp"
-#include "../prefabs/UI/storeTile.hpp"
-#include "../prefabs/mountainTile.hpp"
-#include "../prefabs/cursorFollowingTile.hpp"
 #include "../prefabs/player.hpp"
 
-namespace EcologyRTS
+namespace SpaceGuy
 {
 
 	void MainGameScreen::LoadContent()
@@ -19,26 +13,32 @@ namespace EcologyRTS
 
 
 
-		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "EcologyRTS");
-		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_36", "EcologyRTS", 36, 36);
-		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_24", "EcologyRTS", 24, 24);
-		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_12", "EcologyRTS", 12, 12);
-
-		// Inventory
-		Ebony::ResourceManager::LoadTexture("Cursor.tx", "cursor", "EcologyRTS");
-		Ebony::ResourceManager::LoadTexture("ForestStoreTile.tx", "forest_store_tile", "EcologyRTS");
-		Ebony::ResourceManager::LoadTexture("PlainsStoreTile.tx", "plains_store_tile", "EcologyRTS");
-		Ebony::ResourceManager::LoadTexture("MountainsStoreTile.tx", "mountains_store_tile", "EcologyRTS");
-		Ebony::ResourceManager::LoadTexture("StoreFrame.tx", "store_frame", "EcologyRTS");
-		Ebony::ResourceManager::LoadTexture("MainInventoryBackground.tx", "main_inventory_background", "EcologyRTS");
+		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "SpaceGuy");
+		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_36", "SpaceGuy", 36, 36);
+		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_24", "SpaceGuy", 24, 24);
+		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_12", "SpaceGuy", 12, 12);
 
 		// Tiles
-		Ebony::ResourceManager::LoadTexture("ForestTile.tx", "forest_tile", "EcologyRTS");
-		Ebony::ResourceManager::LoadTexture("PlainsTemp.tx", "plains_tile", "EcologyRTS");
-		Ebony::ResourceManager::LoadTexture("MountainTile.tx", "mountains_tile", "EcologyRTS");
+		Ebony::ResourceManager::LoadTexture("PlayerSpaceship.tx", "player", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("Enemy1.tx", "basic_enemy", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("Enemy2.tx", "advanced_enemy", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("EnemyBullet.tx", "enemy_bullet", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("EnemyRadar.tx", "enemy_radar", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("ExplosiveBarrel.tx", "explosive_barrel", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("FastShooting.tx", "fast_shooting_powerup", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("Key.tx", "key", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("Missile.tx", "missle", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("PlayerBullet.tx", "player_bullet", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("PlayerLife.tx", "player_life", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("PlayerRadar.tx", "player_radar", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("Potion.tx", "potion", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("RadarBackground.tx", "radar_background", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("ShotSpread.tx", "shot_spread_powerup", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("Spawner.tx", "spawner", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("SpeedBoost.tx", "speed_boost", "SpaceGuy");
 
 
-		Ebony::ResourceManager::LoadMusic("commonFight.ogg", "base_music", "EcologyRTS");
+		Ebony::ResourceManager::LoadMusic("commonFight.ogg", "base_music", "SpaceGuy");
 
 	}
 
@@ -76,50 +76,19 @@ namespace EcologyRTS
 
 
 		// Load Tiled map
-		//EcologyRTSTiledProcessor tiledProcessor = EcologyRTSTiledProcessor(player);
+		//SpaceGuyTiledProcessor tiledProcessor = SpaceGuyTiledProcessor(player);
 		//tiledProcessor.CreateTranslationFunction();
-		//tiledProcessor.ParseMap("../EcologyRTS/maps/EcologyRTS/EcologyRTS.json");
+		//tiledProcessor.ParseMap("../SpaceGuy/maps/SpaceGuy/SpaceGuy.json");
 
 
 		// Create prefabs
 
-		//AddEntity(EcologyRTS::MainMusicPrefab::Create("base_music", 5));
+		//AddEntity(SpaceGuy::MainMusicPrefab::Create("base_music", 5));
 		
-		auto inventory = EcologyRTS::Inventory::Create();
 
-		auto cursor = EcologyRTS::MainGameCursor::Create(inventory);
-		auto cursorFollowing = EcologyRTS::CursorFollowingTile::Create(cursor, TileType::MOUNTAINS);
 
-		cursor->AddChild(cursorFollowing);
-
-		auto storeInventory = EcologyRTS::StoreInventory::Create();
-		auto mountainTile = EcologyRTS::StoreTile::Create(glm::vec2(272.0f, 112.0f), "mountains_store_tile", "mountains_tile", TileType::MOUNTAINS);
-		auto forestTile = EcologyRTS::StoreTile::Create(glm::vec2(272.0f, 32.0f), "forest_store_tile", "forest_tile", TileType::FOREST);
-		auto plainsTile = EcologyRTS::StoreTile::Create(glm::vec2(363.0f, 32.0f), "plains_store_tile", "plains_tile", TileType::PLAINS);
-
-		inventory->AddChild(storeInventory);
-		storeInventory->AddChild(mountainTile);
-		storeInventory->AddChild(forestTile);
-		storeInventory->AddChild(plainsTile);
-
-		AddEntity(cursor);
-		AddEntity(EcologyRTS::Player::Create(inventory));
+		AddEntity(SpaceGuy::Player::Create());
 		// For now, pretend we clicked on the mountains store tile (until I find a good way to render conditionally) (Maybe just outright removing and replacing, but that might be a lot of unnecessary work)
-
-
-
-		AddEntity(inventory);
-
-		//inventory->Disable();
-		AddEntity(storeInventory);
-
-		AddEntity(mountainTile);
-		AddEntity(forestTile);
-		AddEntity(plainsTile);
-		AddEntity(cursorFollowing);
-
-
-		inventory->Disable();
 
 
 		AddNewEntities();
@@ -221,7 +190,7 @@ namespace EcologyRTS
 
 		/*if (Ebony::SystemManager::shouldResetForAi)
 		{
-			EcologyRTS::EcologyPythonManager::Reset();
+			SpaceGuy::EcologyPythonManager::Reset();
 			RemoveAllEntities();
 			RemoveOldEntities();
 			Start();
@@ -232,7 +201,7 @@ namespace EcologyRTS
 
 		// Put this outside the update loop so in the future, I can use all the threads to then do multi-threaded physics updates
 		physicsSystem.Update(elapsedTime);
-		//EcologyRTS::EcologyRTSPythonManager::Update(elapsedTime);
+		//SpaceGuy::SpaceGuyPythonManager::Update(elapsedTime);
 
 		
 
@@ -279,7 +248,7 @@ namespace EcologyRTS
 		SDL_ShowCursor(SDL_ENABLE);
 		nextScreen = screen;
 		
-		if (Ebony::SystemManager::nextScreenEnum == EcologyRTS::ScreenEnum::PAUSE)
+		if (Ebony::SystemManager::nextScreenEnum == SpaceGuy::ScreenEnum::PAUSE)
 		{
 			Ebony::AudioManager::PauseAll();
 		}
@@ -296,7 +265,7 @@ namespace EcologyRTS
 		SDL_ShowCursor(SDL_DISABLE);
 
 
-		if (Ebony::SystemManager::lastScreenEnum == EcologyRTS::ScreenEnum::PAUSE)
+		if (Ebony::SystemManager::lastScreenEnum == SpaceGuy::ScreenEnum::PAUSE)
 		{
 			Ebony::AudioManager::UnpauseAll();
 		}

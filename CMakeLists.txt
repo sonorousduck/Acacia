@@ -55,7 +55,8 @@ add_subdirectory ("Graphics")
 add_subdirectory ("AssetLib")
 add_subdirectory ("AssetConverter")
 add_subdirectory ("ThirdParty")
-add_subdirectory ("EcologyRTS")
+# add_subdirectory ("EcologyRTS")
+add_subdirectory ("SpaceGuy")
 # add_subdirectory ("Audio")
 
 add_custom_target(copy_assets_dll

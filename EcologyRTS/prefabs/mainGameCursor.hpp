@@ -63,57 +63,37 @@ namespace EcologyRTS
 						{
 							// Selection of the tile based on what was clicked
 							auto tileInformation = activeCollisionComponent->collidingWith->getComponent<components::Tile>();
-							/*if (entities::EntityPtr cursorFollower = entity->GetChild(0).lock())
-							{
-								cursorFollower->getComponent<components::Sprite>()->texture = tileInformation->texture;
-								cursorFollower->getComponent<components::Tile>()->tileType = tileInformation->tileType;
-								cursorFollower->Enable();
-							}*/
+
+							entities::EntityPtr cursorFollower = entity->GetChild(0);
+							cursorFollower->getComponent<components::Sprite>()->texture = tileInformation->texture;
+							cursorFollower->getComponent<components::Tile>()->tileType = tileInformation->tileType;
+							cursorFollower->Enable();
+							
 
 							auto selectedTile = entity->getComponent<components::SelectedTile>();
 
 							selectedTile->tileType = tileInformation->tileType;
 							selectedTile->isActive = true;
 
+							return;
+						}
 
-							//Ebony::SystemManager::AddEntity(EcologyRTS::CursorFollowingTile::Create(entity, tileInformation->tileType));
+						auto selectedTile = entity->getComponent<components::SelectedTile>();
+						if (selectedTile->tileType != TileType::NONE && selectedTile->isActive)
+						{
+							// If valid placement
+							Ebony::SystemManager::AddEntity(EcologyRTS::MountainTile::Create(entity));
+							std::cout << "Placed" << std::endl;
+							selectedTile->isActive = false;
 
 
-							// Spawn entity that will follow cursor until clicked. Then spawn another real entity at that position
-
-
-
-							// Close inventory after selecting
-							//inventory->Disable();
-
-
-							/*
-							activeCollisionComponent->collidingWith->getComponent<components::Sprite>()->texture = Ebony::ResourceManager::GetTexture(activeCollisionComponent->collidingWith->getComponent<components::ButtonComponent>()->spriteImagePressed);
-
-							if (activeCollisionComponent->collidingWith->getComponent<components::ButtonComponent>()->onPress.has_value())
-							{
-								activeCollisionComponent->collidingWith->getComponent<components::ButtonComponent>()->onPress.value()(activeCollisionComponent->collidingWith);
-							}*/
+							entity->GetChild(0)->Disable();
+							
+							return;
 						}
 
 						//return;
 					//}
-					
-
-
-					auto selectedTile = entity->getComponent<components::SelectedTile>();
-					if (selectedTile->tileType != TileType::NONE && selectedTile->isActive)
-					{
-						// If valid placement
-
-						//Ebony::SystemManager::AddEntity();
-						Ebony::SystemManager::AddEntity(EcologyRTS::MountainTile::Create(entity));
-						std::cout << "Placed" << std::endl;
-						selectedTile->isActive = false;
-
-					}
-
-
 				} });
 
 
