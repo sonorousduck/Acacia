@@ -17,6 +17,8 @@ set(SystemSources
 set(ComponentHeaders
   components/tile.hpp
   components/selectedTile.hpp
+  components/playerInformation.hpp
+  components/playerShootingInformation.hpp
 )
 
 set(MiscHeaders
@@ -34,6 +36,8 @@ set(Prefabs
   prefabs/mainMusicPrefab.hpp
   prefabs/menuCursorPrefab.hpp
   prefabs/player.hpp
+  prefabs/playerBullet.hpp
+  prefabs/enemyBullet.hpp
 )
 
 set(UIPrefabs
@@ -75,7 +79,7 @@ set(ScreenSources
 )
 
 set(ScriptHeaders
-  scripts/followCursorScript.hpp
+  scripts/followPlayerCamera.hpp
 )
 
 set(PythonScripts

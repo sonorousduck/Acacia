@@ -27,7 +27,7 @@ namespace SpaceGuy
 		Ebony::ResourceManager::LoadTexture("ExplosiveBarrel.tx", "explosive_barrel", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("FastShooting.tx", "fast_shooting_powerup", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("Key.tx", "key", "SpaceGuy");
-		Ebony::ResourceManager::LoadTexture("Missile.tx", "missle", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("Missile.tx", "missile", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("PlayerBullet.tx", "player_bullet", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("PlayerLife.tx", "player_life", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("PlayerRadar.tx", "player_radar", "SpaceGuy");
@@ -245,7 +245,7 @@ namespace SpaceGuy
 
 	void MainGameScreen::OnScreenDefocus(std::uint64_t nextScreenEnum)
 	{
-		SDL_ShowCursor(SDL_ENABLE);
+		//SDL_ShowCursor(SDL_ENABLE);
 		nextScreen = screen;
 		
 		if (Ebony::SystemManager::nextScreenEnum == SpaceGuy::ScreenEnum::PAUSE)
@@ -262,7 +262,7 @@ namespace SpaceGuy
 
 	void MainGameScreen::OnScreenFocus(std::uint64_t lastScreenEnum)
 	{
-		SDL_ShowCursor(SDL_DISABLE);
+		//SDL_ShowCursor(SDL_DISABLE);
 
 
 		if (Ebony::SystemManager::lastScreenEnum == SpaceGuy::ScreenEnum::PAUSE)

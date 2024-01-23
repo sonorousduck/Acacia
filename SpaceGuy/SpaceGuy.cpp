@@ -62,7 +62,7 @@ namespace Ebony {
 			Ebony::SystemManager::screens[SpaceGuy::ScreenEnum::GAME_OVER] = std::make_shared<SpaceGuy::GameOverScreen>();
 
 
-			Ebony::SystemManager::aiEnabled = true;
+			Ebony::SystemManager::aiEnabled = false;
 
 			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[SpaceGuy::ScreenEnum::MAIN_MENU];
 			Ebony::SystemManager::nextScreenEnum = SpaceGuy::ScreenEnum::MAIN_MENU;
