@@ -8,10 +8,12 @@ set(SOURCE_FILES
 
 set(SystemHeaders
   systems/aiSystem.hpp
+  systems/enemyDetectionSystem.hpp
 )
 
 set(SystemSources
   systems/aiSystem.cpp
+  systems/enemyDetectionSystem.cpp
 )
 
 set(ComponentHeaders
@@ -19,6 +21,8 @@ set(ComponentHeaders
   components/selectedTile.hpp
   components/playerInformation.hpp
   components/playerShootingInformation.hpp
+  components/enemyInformation.hpp
+  components/bulletComponent.hpp
 )
 
 set(MiscHeaders
@@ -38,11 +42,20 @@ set(Prefabs
   prefabs/player.hpp
   prefabs/playerBullet.hpp
   prefabs/enemyBullet.hpp
+  prefabs/smallEnemyPrefab.hpp
+  prefabs/largerEnemyPrefab.hpp
+  prefabs/healthBarPrefab.hpp
+  prefabs/explosionDeathPrefab.hpp
 )
 
 set(UIPrefabs
   prefabs/UI/buttonPrefab.hpp
   prefabs/UI/buttonTextPrefab.hpp
+  prefabs/UI/playerHealthPrefab.hpp
+  prefabs/UI/playerLivesPrefab.hpp
+  prefabs/UI/playerMissilePrefab.hpp
+  prefabs/UI/playerRadarPrefab.hpp
+  prefabs/UI/playerScorePrefab.hpp
 )
 
 set(SingletonHeaders
@@ -80,6 +93,10 @@ set(ScreenSources
 
 set(ScriptHeaders
   scripts/followPlayerCamera.hpp
+  scripts/healthBarUpdateScript.hpp
+  scripts/enemyMovementShootingScript.hpp
+  scripts/playerHealthUpdateScript.hpp
+  scripts.playerScoreUpdateScript.hpp
 )
 
 set(PythonScripts

@@ -3,6 +3,9 @@
 
 #include "../prefabs/mainMusicPrefab.hpp"
 #include "../prefabs/player.hpp"
+#include "../prefabs/smallEnemyPrefab.hpp"
+#include "../prefabs/largerEnemyPrefab.hpp"
+
 
 namespace SpaceGuy
 {
@@ -17,6 +20,7 @@ namespace SpaceGuy
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_36", "SpaceGuy", 36, 36);
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_24", "SpaceGuy", 24, 24);
 		Ebony::ResourceManager::LoadFont("evil-empire-font/EvilEmpire-4BBVK.ttf", "evil_empire_12", "SpaceGuy", 12, 12);
+		Ebony::ResourceManager::LoadTexture("Default.tx", "default", "Crypt");
 
 		// Tiles
 		Ebony::ResourceManager::LoadTexture("PlayerSpaceship.tx", "player", "SpaceGuy");
@@ -38,7 +42,22 @@ namespace SpaceGuy
 		Ebony::ResourceManager::LoadTexture("SpeedBoost.tx", "speed_boost", "SpaceGuy");
 
 
-		Ebony::ResourceManager::LoadMusic("commonFight.ogg", "base_music", "SpaceGuy");
+		Ebony::ResourceManager::LoadAtlas("Exploding Red Oil Barrel.tx", "explosion", "SpaceGuy", 12, 1);
+
+
+		Ebony::ResourceManager::LoadSoundEffect("EnemyShoot.wav", "enemy_shoot", "SpaceGuy");
+		Ebony::ResourceManager::LoadSoundEffect("explosion.wav", "explosion", "SpaceGuy");
+		Ebony::ResourceManager::LoadSoundEffect("hurtSoundVariation.wav", "hurt_sound_variation", "SpaceGuy");
+		Ebony::ResourceManager::LoadSoundEffect("hurtSound.wav", "hurt_sound", "SpaceGuy");
+		Ebony::ResourceManager::LoadSoundEffect("laserShoot.wav", "laser_shoot", "SpaceGuy");
+		Ebony::ResourceManager::LoadSoundEffect("powerUp.wav", "powerup", "SpaceGuy");
+		Ebony::ResourceManager::LoadSoundEffect("RegEnemyDeath.wav", "enemy_death", "SpaceGuy");
+		Ebony::ResourceManager::LoadSoundEffect("SpawnerDeath.wav", "spawner_death", "SpaceGuy");
+		Ebony::ResourceManager::LoadSoundEffect("missileShoot.wav", "missile_shoot", "SpaceGuy");
+		Ebony::ResourceManager::LoadSoundEffect("laserShootVariation.wav", "laser_shoot_variation", "SpaceGuy");
+
+
+		Ebony::ResourceManager::LoadMusic("Level1Music.mp3", "base_music", "SpaceGuy");
 
 	}
 
@@ -68,6 +87,7 @@ namespace SpaceGuy
 		pythonScriptingSystem = systems::PythonScriptingSystem();
 		aiInputSystem = systems::AIInputSystem();
 		aiSystem = systems::AISystem();
+		enemyDetectionSystem = systems::EnemyDetectionSystem();
 
 		spriteRenderer.debug = false;
 
@@ -83,11 +103,13 @@ namespace SpaceGuy
 
 		// Create prefabs
 
-		//AddEntity(SpaceGuy::MainMusicPrefab::Create("base_music", 5));
+		AddEntity(SpaceGuy::MainMusicPrefab::Create("base_music", 5));
 		
 
+		auto player = SpaceGuy::Player::Create();
 
-		AddEntity(SpaceGuy::Player::Create());
+		AddEntity(player);
+		AddEntity(SpaceGuy::SmallEnemy::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player));
 		// For now, pretend we clicked on the mountains store tile (until I find a good way to render conditionally) (Maybe just outright removing and replacing, but that might be a lot of unnecessary work)
 
 
@@ -169,6 +191,14 @@ namespace SpaceGuy
 			[this, elapsedTime]()
 			{
 				destructionSystem.Update(elapsedTime);
+			}
+		);
+
+		auto enemyDetectionTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				enemyDetectionSystem.Update(elapsedTime);
 			}
 		);
 
@@ -301,6 +331,7 @@ namespace SpaceGuy
 			pythonScriptingSystem.AddEntity(entity);
 			aiInputSystem.AddEntity(entity);
 			aiSystem.AddEntity(entity);
+			enemyDetectionSystem.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -325,6 +356,7 @@ namespace SpaceGuy
 			pythonScriptingSystem.RemoveEntity(entityId);
 			aiInputSystem.RemoveEntity(entityId);
 			aiSystem.RemoveEntity(entityId);
+			enemyDetectionSystem.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();

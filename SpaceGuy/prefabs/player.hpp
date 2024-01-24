@@ -115,8 +115,7 @@ namespace SpaceGuy
 					if (playerShootingInformation->canShoot)
 					{
 						auto transform = entity->getComponent<components::Transform>();
-						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 1.0f, "player_bullet"));
-
+						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 1.0f, "player_bullet", "laser_shoot"));
 						entity->getComponent<components::TimedComponent>()->ResetTimer();
 					}
 
@@ -131,7 +130,7 @@ namespace SpaceGuy
 					if (playerShootingInformation->canShoot)
 					{
 						auto transform = entity->getComponent<components::Transform>();
-						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 3.0f, "missile"));
+						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 3.0f, "missile", "missile_shoot"));
 
 						entity->getComponent<components::TimedComponent>()->ResetTimer();
 					}

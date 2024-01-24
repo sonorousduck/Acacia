@@ -25,7 +25,7 @@ namespace systems
 			if (detectionComponent->target->tryGetComponent(playerComponent))
 			{
 				float distance = glm::distance(transform->position, targetTransform->position);
-				float distanceToTarget = glm::distance(transform->position, targetTransform->position + detectionComponent->offset * glm::vec2(1.0f, playerComponent->gravityDown ? -1 : 1));
+				float distanceToTarget = glm::distance(transform->position, targetTransform->position + detectionComponent->offset);
 				detectionComponent->canMoveTowardsTarget = distance < detectionComponent->movementRange;
 				detectionComponent->canDetectTarget = distance < detectionComponent->detectionRange;
 				detectionComponent->distanceAway = distanceToTarget;
@@ -36,7 +36,7 @@ namespace systems
 				{
 
 					// If it is targetting the player, you want to check if it has gravity
-					glm::vec2 towardsTargetVector = glm::normalize(transform->position - (targetTransform->position + detectionComponent->offset * glm::vec2(1.0f, playerComponent->gravityDown ? -1 : 1)));
+					glm::vec2 towardsTargetVector = glm::normalize(transform->position - (targetTransform->position + detectionComponent->offset));
 					glm::vec2 towardsRealTarget = glm::normalize(transform->position - targetTransform->position);
 
 					if (glm::isnan(towardsTargetVector.x) || glm::isnan(towardsTargetVector.y))

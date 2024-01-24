@@ -27,6 +27,7 @@
 #include "../systems/aiSystem.hpp"
 #include <systems/cppScriptingSystem.hpp>
 #include <systems/aiInputSystem.hpp>
+#include "../systems/enemyDetectionSystem.hpp"
 
 
 namespace SpaceGuy
@@ -63,7 +64,7 @@ namespace SpaceGuy
 		systems::PythonScriptingSystem pythonScriptingSystem;
 		systems::AIInputSystem aiInputSystem;
 		systems::AISystem aiSystem;
-		
+		systems::EnemyDetectionSystem enemyDetectionSystem;
 
 
 		void OnScreenDefocus(std::uint64_t nextScreenEnum) override;

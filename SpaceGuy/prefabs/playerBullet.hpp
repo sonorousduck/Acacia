@@ -11,7 +11,7 @@
 #include <singletons/time.hpp>
 #include <misc/resourceManager.hpp>
 #include <components/aiComponent.hpp>
-
+#include "../components/bulletComponent.hpp"
 
 
 namespace SpaceGuy
@@ -19,7 +19,7 @@ namespace SpaceGuy
 	class PlayerBullet
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, float angle, float bulletStrength, const char* spriteImage)
+		static entities::EntityPtr Create(glm::vec2 startTransform, float angle, float bulletStrength, const char* spriteImage, const char* audioFile)
 		{
 			auto bulletSpeed = 200.0f;
 			auto timeUntilDestruction = 5.0f;
@@ -31,14 +31,20 @@ namespace SpaceGuy
 
 			components::Subcollider aabbCollider = components::Subcollider(scale / 2.0f, scale, true, true);
 
+			aabbCollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+				{
+					entity->getComponent<components::DestructionComponent>()->shouldDestroy = true;				
+				};
+
+
 
 			auto collider = std::make_unique<components::Collider>(aabbCollider, SpaceGuy::CollisionLayers::PLAYER_BULLET, SpaceGuy::CollisionLayers::ENEMY | SpaceGuy::CollisionLayers::WALL, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, angle, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
-			//auto soundeffects = std::make_unique<components::SoundEffect>(Ebony::AudioType::ENTITY);
+			auto soundeffects = std::make_unique<components::SoundEffect>(Ebony::AudioType::ENTITY);
 
-			//soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("spell"), 2));
+			soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect(audioFile), 127));
 
 			rigidbody->setVelocity(bulletSpeed * glm::vec2(glm::sin(glm::radians(angle)), -glm::cos(glm::radians(angle))));
 
@@ -54,10 +60,12 @@ namespace SpaceGuy
 
 			//entity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, Crypt::AiInformationTypes::BULLET_INFORMATION));
 
+			entity->addComponent(std::make_unique<components::Bullet>(bulletStrength));
 			entity->addComponent(std::move(transform));
 			entity->addComponent(std::move(sprite));
 			entity->addComponent(std::move(collider));
 			entity->addComponent(std::move(rigidbody));
+			entity->addComponent(std::move(soundeffects));
 
 			return entity;
 
