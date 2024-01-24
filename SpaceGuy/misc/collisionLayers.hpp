@@ -12,7 +12,8 @@ namespace SpaceGuy
 		WALL = BIT(2),
 		ENEMY = BIT(3),
 		PLAYER = BIT(4),
-		PLAYER_BULLET = BIT(5)
+		PLAYER_BULLET = BIT(5),
+		SPAWNER = BIT(6),
 
 
 	};

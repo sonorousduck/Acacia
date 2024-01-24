@@ -21,6 +21,7 @@
 #include "../components/playerShootingInformation.hpp"
 #include "../prefabs/playerBullet.hpp"
 #include "../prefabs/UI/playerScorePrefab.hpp"
+#include "../prefabs/UI/playerHealthPrefab.hpp"
 
 
 namespace SpaceGuy
@@ -52,6 +53,24 @@ namespace SpaceGuy
 				});
 
 			components::Subcollider aabbcollider = components::Subcollider(scale / 2.0f, scale, true, true);
+
+
+			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+				{
+					SpaceGuy::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
+
+					if (layer & SpaceGuy::CollisionLayers::WALL)
+					{
+						entity->getComponent<components::Transform>()->position.y = entity->getComponent<components::Collider>()->aabbCollider.lastCollisionLocation.y;
+					}
+					else if (layer & SpaceGuy::CollisionLayers::ENEMY_BULLET)
+					{
+						entity->getComponent<components::PlayerInformation>()->health -= other->getComponent<components::Bullet>()->strength;
+					}
+				};
+
+
+
 			auto collider = std::make_unique<components::Collider>(aabbcollider, SpaceGuy::CollisionLayers::PLAYER, SpaceGuy::CollisionLayers::ENEMY | SpaceGuy::CollisionLayers::WALL | SpaceGuy::CollisionLayers::ENEMY_BULLET, false);
 
 			auto keyboardComponent = std::make_unique<components::KeyboardInput>();
@@ -160,6 +179,7 @@ namespace SpaceGuy
 
 
 			Ebony::SystemManager::AddEntity(SpaceGuy::PlayerScore::Create(480, entity));
+			Ebony::SystemManager::AddEntity(SpaceGuy::PlayerHealth::Create(320, entity));
 
 
 

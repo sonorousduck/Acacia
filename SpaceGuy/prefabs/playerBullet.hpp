@@ -38,7 +38,7 @@ namespace SpaceGuy
 
 
 
-			auto collider = std::make_unique<components::Collider>(aabbCollider, SpaceGuy::CollisionLayers::PLAYER_BULLET, SpaceGuy::CollisionLayers::ENEMY | SpaceGuy::CollisionLayers::WALL, false);
+			auto collider = std::make_unique<components::Collider>(aabbCollider, SpaceGuy::CollisionLayers::PLAYER_BULLET, SpaceGuy::CollisionLayers::ENEMY | SpaceGuy::CollisionLayers::WALL | SpaceGuy::CollisionLayers::SPAWNER, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, angle, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 

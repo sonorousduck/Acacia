@@ -31,14 +31,18 @@ namespace SpaceGuy
 
 			components::Subcollider aabbCollider = components::Subcollider(scale / 2.0f, scale, true, true);
 
+			aabbCollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+				{
+					entity->getComponent<components::DestructionComponent>()->shouldDestroy = true;
+				};
 
 			auto collider = std::make_unique<components::Collider>(aabbCollider, SpaceGuy::CollisionLayers::ENEMY_BULLET, SpaceGuy::CollisionLayers::PLAYER | SpaceGuy::CollisionLayers::WALL, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, angle, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
-			//auto soundeffects = std::make_unique<components::SoundEffect>(Ebony::AudioType::ENTITY);
+			auto soundeffects = std::make_unique<components::SoundEffect>(Ebony::AudioType::ENTITY);
 
-			//soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("spell"), 2));
+			soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("enemy_shoot"), 90));
 
 			rigidbody->setVelocity(bulletSpeed * glm::vec2(glm::sin(glm::radians(angle)), -glm::cos(glm::radians(angle))));
 
@@ -58,6 +62,8 @@ namespace SpaceGuy
 			entity->addComponent(std::move(sprite));
 			entity->addComponent(std::move(collider));
 			entity->addComponent(std::move(rigidbody));
+			entity->addComponent(std::make_unique<components::Bullet>(bulletStrength));
+			entity->addComponent(std::move(soundeffects));
 
 			return entity;
 

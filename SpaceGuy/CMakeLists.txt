@@ -46,6 +46,8 @@ set(Prefabs
   prefabs/largerEnemyPrefab.hpp
   prefabs/healthBarPrefab.hpp
   prefabs/explosionDeathPrefab.hpp
+  prefabs/spawnerPrefab.hpp
+
 )
 
 set(UIPrefabs
@@ -97,6 +99,8 @@ set(ScriptHeaders
   scripts/enemyMovementShootingScript.hpp
   scripts/playerHealthUpdateScript.hpp
   scripts/playerScoreUpdateScript.hpp
+  scripts/spawnerScript.hpp
+
 )
 
 set(PythonScripts

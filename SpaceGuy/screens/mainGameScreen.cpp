@@ -5,6 +5,7 @@
 #include "../prefabs/player.hpp"
 #include "../prefabs/smallEnemyPrefab.hpp"
 #include "../prefabs/largerEnemyPrefab.hpp"
+#include "../prefabs/spawnerPrefab.hpp"
 
 namespace SpaceGuy
 {
@@ -109,6 +110,7 @@ namespace SpaceGuy
 
 		AddEntity(player);
 		AddEntity(SpaceGuy::SmallEnemy::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player));
+		AddEntity(SpaceGuy::Spawner::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, 100.0f));
 
 
 		AddNewEntities();

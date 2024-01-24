@@ -24,7 +24,7 @@ namespace scripts
 			auto text = entity->getComponent<components::Text>();
 
 
-			text->text = std::to_string(player->score);
+			text->text = "Score: " + std::to_string(static_cast<int>(player->score));
 
 		}
 

@@ -8,8 +8,6 @@
 #include <components/collider.hpp>
 #include <components/rigidbodyComponent.hpp>
 #include <singletons/time.hpp>
-#include <components/mouseInputComponent.hpp>
-#include <components/animationControllerComponent.hpp>
 #include "../components/enemyDetectionComponent.hpp"
 #include <components/cppScriptComponent.hpp>
 #include "../components/enemyInformation.hpp"
@@ -19,12 +17,13 @@
 #include <misc/renderLayers.hpp>
 #include <components/aiComponent.hpp>
 #include "../misc/aiInformationTypes.hpp"
-#include "../scripts/enemyMovementShootingScript.hpp"
+#include "../components/playerInformation.hpp"
 #include "../components/bulletComponent.hpp"
+#include "../scripts/spawnerScript.hpp"
 
 namespace SpaceGuy
 {
-	class SmallEnemy
+	class Spawner
 	{
 	public:
 		// Give a score value so spawned enemies aren't just worth farming forever
@@ -34,11 +33,11 @@ namespace SpaceGuy
 
 
 			float detectionRange = 200.0f;
-			float movementRange = 200.0f;
-			float movementSpeed = 75.0f;
-			glm::vec2 offset = { 0.0f, -50.0f };
+			float movementRange = 0.0f;
+			float movementSpeed = 0.0f;
+			glm::vec2 offset = { 0.0f, 0.0f };
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("basic_enemy"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("spawner"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
 			scale *= glm::vec2(sprite->texture->Width, sprite->texture->Height);
 
 
@@ -78,17 +77,17 @@ namespace SpaceGuy
 					}
 				};
 
-			auto collider = std::make_unique<components::Collider>(aabbcollider, SpaceGuy::CollisionLayers::ENEMY, SpaceGuy::CollisionLayers::PLAYER_BULLET | SpaceGuy::CollisionLayers::WALL | SpaceGuy::CollisionLayers::ENEMY, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, SpaceGuy::CollisionLayers::SPAWNER, SpaceGuy::CollisionLayers::PLAYER_BULLET | SpaceGuy::CollisionLayers::ENEMY, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
-			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::EnemyMovementShootingScript>();
+			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::SpawnerScript>();
 
 
-			auto timedComponent = std::make_unique<components::TimedComponent>(1.0f, [=]() {});
+			auto timedComponent = std::make_unique<components::TimedComponent>(0.75f, [=]() {});
 
 
-			entity->addComponent(std::make_unique<components::EnemyInformation>(3.0f));
+			entity->addComponent(std::make_unique<components::EnemyInformation>(10.0f));
 			entity->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "enemy_bullet", player, 5.0f));
 
 			entity->addComponent(std::make_unique<components::DestructionComponent>([=]()

@@ -13,12 +13,12 @@ namespace components
 	class Bullet : public PolymorphicComparable<Component, Bullet>
 	{
 	public:
-		Bullet(std::uint8_t strength = 1) : strength(strength)
+		Bullet(float strength = 1.0f) : strength(strength)
 		{}
 
 
 		glm::vec2 velocity{};
-		std::uint8_t strength;
+		float strength;
 
 	};
 }
