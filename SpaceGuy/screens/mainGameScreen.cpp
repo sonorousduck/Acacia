@@ -10,6 +10,7 @@
 #include "../prefabs/turretPrefab.hpp"
 #include "../prefabs/keyPrefab.hpp"
 #include "../prefabs/lockedDoorPrefab.hpp"
+#include "../prefabs/UI/playerMissilePrefab.hpp"
 
 namespace SpaceGuy
 {
@@ -46,6 +47,7 @@ namespace SpaceGuy
 		Ebony::ResourceManager::LoadTexture("SpeedBoost.tx", "speed_boost", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("Turret.tx", "turret", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("LockedDoor.tx", "locked_door", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("MissileUI.tx", "missile_ui", "SpaceGuy");
 
 
 		Ebony::ResourceManager::LoadAtlas("Exploding Red Oil Barrel.tx", "explosion", "SpaceGuy", 12, 1);
@@ -110,7 +112,7 @@ namespace SpaceGuy
 
 		// Create prefabs
 
-		AddEntity(SpaceGuy::MainMusicPrefab::Create("base_music", 5));
+		AddEntity(SpaceGuy::MainMusicPrefab::Create("base_music", 127));
 		
 
 		auto player = SpaceGuy::Player::Create();
@@ -122,6 +124,8 @@ namespace SpaceGuy
 		AddEntity(SpaceGuy::Turret::Create(glm::vec2(200.0f, 300.0f), glm::vec2(1.0f), player, 130.0f));
 		AddEntity(SpaceGuy::Key::Create(glm::vec2(500.0f, 100.0f)));
 		AddEntity(SpaceGuy::LockedDoor::Create(glm::vec2(800.0f, 100.0f)));
+		AddEntity(SpaceGuy::PlayerMissilePrefab::Create(glm::vec2(windowWidth - ((2 * windowHeight) / 3), windowHeight - 16.0f), player));
+		
 		AddNewEntities();
 	}
 

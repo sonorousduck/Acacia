@@ -64,7 +64,7 @@ namespace scripts
 					{
 						auto transform = entity->getComponent<components::Transform>();
 
-						Ebony::SystemManager::AddEntity(SpaceGuy::EnemyBullet::Create(transform->position, transform->rotation, bulletDamage, "enemy_bullet", soundEffect, scale));
+						Ebony::SystemManager::AddEntity(SpaceGuy::EnemyBullet::Create(transform->position + glm::vec2(transform->scale.x / 2.0f, 0.0f), transform->rotation, bulletDamage, "enemy_bullet", soundEffect, scale));
 						shootingCooldown->ResetTimer();
 					}
 				}

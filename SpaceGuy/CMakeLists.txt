@@ -51,6 +51,12 @@ set(Prefabs
   prefabs/keyPrefab.hpp
   prefabs/lockedDoorPrefab.hpp
   prefabs/proximityLockedDoorPrefab.hpp
+  prefabs/missileRefillPrefab.hpp
+  prefabs/potionPrefab.hpp
+  prefabs/rapidFirePrefab.hpp
+  prefabs/shotgunPrefab.hpp
+  prefabs/speedBoostPrefab.hpp
+
 )
 
 set(UIPrefabs
@@ -61,6 +67,8 @@ set(UIPrefabs
   prefabs/UI/playerMissilePrefab.hpp
   prefabs/UI/playerRadarPrefab.hpp
   prefabs/UI/playerScorePrefab.hpp
+  prefabs/UI/playerLivesTextPrefab.hpp
+  prefabs/UI/playerMissileTextPrefab.hpp
 )
 
 set(SingletonHeaders
@@ -103,7 +111,9 @@ set(ScriptHeaders
   scripts/playerHealthUpdateScript.hpp
   scripts/playerScoreUpdateScript.hpp
   scripts/spawnerScript.hpp
-
+  scripts/playerKeyUpdateScript.hpp
+  scripts/playerLifeUpdateScript.hpp
+  scripts/playerMissileUpdateScript.hpp
 )
 
 set(PythonScripts

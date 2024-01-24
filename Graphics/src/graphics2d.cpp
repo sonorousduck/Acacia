@@ -657,41 +657,41 @@ namespace Ebony
 		{
 		case (Ebony::RenderLayer::BACKGROUND):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::BACKGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::BACKGROUND_DEPTH - (isOutline ? 0.1f : 0.0f), text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::backgroundQueue.push_back(drawableObject);
 			return;
 		}
 		case (Ebony::RenderLayer::NEAR_BACKGROUND):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::NEAR_BACKGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::NEAR_BACKGROUND_DEPTH - (isOutline ? 0.1f : 0.0f), text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::nearBackgroundQueue.push_back(drawableObject);
 			return;
 		}
 
 		case (Ebony::RenderLayer::FOREGROUND):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::FOREGROUND_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::FOREGROUND_DEPTH - (isOutline ? 0.1f : 0.0f), text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::foregroundQueue.push_back(drawableObject);
 			return;
 		}
 
 		case (Ebony::RenderLayer::UI_RENDER):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::UI_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::UI_DEPTH - (isOutline ? 0.1f : 0.0f), text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::uiQueue.push_back(drawableObject);
 			return;
 		}
 
 		case (Ebony::RenderLayer::ALWAYS_FRONT):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::ALWAYS_FRONT_DEPTH, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, Graphics2d::ALWAYS_FRONT_DEPTH - (isOutline ? 0.1f : 0.0f), text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::alwaysFrontQueue.push_back(drawableObject);
 			return;
 		}
 
 		case (Ebony::RenderLayer::DYNAMIC_PLACING):
 		{
-			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, text->layerDepth, text->isUI, true, 0, true, text->text, text->spriteFont, false);
+			DrawableObject drawableObject = DrawableObject(text->shader, nullptr, transform->position + transformModification, transform->scale, transform->rotation, transform->rotationAxis, isOutline ? text->color : text->outlineColor, text->layerDepth - (isOutline ? 0.1f : 0.0f), text->isUI, true, 0, true, text->text, text->spriteFont, false);
 			Graphics2d::renderPriorityQueue.push(drawableObject);
 			return;
 		}

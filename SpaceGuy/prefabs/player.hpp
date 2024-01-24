@@ -22,6 +22,9 @@
 #include "../prefabs/playerBullet.hpp"
 #include "../prefabs/UI/playerScorePrefab.hpp"
 #include "../prefabs/UI/playerHealthPrefab.hpp"
+#include <singletons/inputManager.hpp>
+#include <singletons/systemManager.hpp>
+#include <components/mouseInputComponent.hpp>
 
 
 namespace SpaceGuy
@@ -141,25 +144,38 @@ namespace SpaceGuy
 						auto transform = entity->getComponent<components::Transform>();
 						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 1.0f, "player_bullet", "laser_shoot"));
 						entity->getComponent<components::TimedComponent>()->ResetTimer();
+						playerShootingInformation->canShoot = false;
+
 					}
-
-
 				} 
 			});
 
-			mouseComponent->onPressActions.insert({ "shootMissile",[=](Ebony::MousePress& mousePress)
+			mouseComponent->onHeldActions.insert({ "shootLaser",[=](Ebony::MousePress& mousePress)
 				{
 					auto playerShootingInformation = entity->getComponent<components::PlayerShootingInformation>();
 
 					if (playerShootingInformation->canShoot)
 					{
 						auto transform = entity->getComponent<components::Transform>();
+						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 1.0f, "player_bullet", "laser_shoot"));
+						playerShootingInformation->canShoot = false;
+						entity->getComponent<components::TimedComponent>()->ResetTimer();
+					}
+				}
+				});
+
+			mouseComponent->onPressActions.insert({ "shootMissile",[=](Ebony::MousePress& mousePress)
+				{
+					auto playerShootingInformation = entity->getComponent<components::PlayerShootingInformation>();
+
+					if (playerShootingInformation->missileCount > 0)
+					{
+						auto transform = entity->getComponent<components::Transform>();
 						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 3.0f, "missile", "missile_shoot"));
 
 						entity->getComponent<components::TimedComponent>()->ResetTimer();
+						playerShootingInformation->missileCount -= 1;
 					}
-
-
 				}
 			});
 

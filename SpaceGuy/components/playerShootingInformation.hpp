@@ -12,7 +12,7 @@ namespace components
 
 		std::uint8_t missileCount = 4;
 		bool hasShotgun = false;
-		bool hasRapidFire = false;
+		bool hasRapidFire = true;
 		bool canShoot = true;
 
 
