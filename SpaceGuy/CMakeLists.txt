@@ -96,7 +96,7 @@ set(ScriptHeaders
   scripts/healthBarUpdateScript.hpp
   scripts/enemyMovementShootingScript.hpp
   scripts/playerHealthUpdateScript.hpp
-  scripts.playerScoreUpdateScript.hpp
+  scripts/playerScoreUpdateScript.hpp
 )
 
 set(PythonScripts
