@@ -4,7 +4,10 @@
 #include <components/transform.hpp>
 #include <singletons/time.hpp>
 
+#include "../components/playerInformation.hpp"
+#include <singletons/time.hpp>
 #include <graphics2d.hpp>
+#include <iostream>
 
 namespace scripts
 {
@@ -21,6 +24,19 @@ namespace scripts
 			auto transform = entity->getComponent<components::Transform>();
 
 			Ebony::Graphics2d::mainCamera->SetCameraPosition(glm::vec2(Ebony::Graphics2d::mainCamera->Position) + transform->position - transform->previousPosition);
+
+
+			auto playerInformation = entity->getComponent<components::PlayerInformation>();
+			if (playerInformation->hasSpeedBoost && playerInformation->speedBoostTime > 0.0f)
+			{
+				playerInformation->speedBoostTime -= Ebony::Time::GetDeltaTimeFloat();
+
+				if (playerInformation->speedBoostTime <= 0.0f)
+				{
+					playerInformation->hasSpeedBoost = false;
+				}
+			}
+
 
 		}
 	};

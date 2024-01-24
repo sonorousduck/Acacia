@@ -11,6 +11,12 @@
 #include "../prefabs/keyPrefab.hpp"
 #include "../prefabs/lockedDoorPrefab.hpp"
 #include "../prefabs/UI/playerMissilePrefab.hpp"
+#include "../prefabs/speedBoostPrefab.hpp"
+#include "../prefabs/potionPrefab.hpp"
+#include "../prefabs/missileRefillPrefab.hpp"
+#include "../prefabs/shotgunPrefab.hpp"
+#include "../prefabs/rapidFirePrefab.hpp"
+
 
 namespace SpaceGuy
 {
@@ -48,6 +54,7 @@ namespace SpaceGuy
 		Ebony::ResourceManager::LoadTexture("Turret.tx", "turret", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("LockedDoor.tx", "locked_door", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("MissileUI.tx", "missile_ui", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("MissileRefill.tx", "missile_refill", "SpaceGuy");
 
 
 		Ebony::ResourceManager::LoadAtlas("Exploding Red Oil Barrel.tx", "explosion", "SpaceGuy", 12, 1);
@@ -125,7 +132,14 @@ namespace SpaceGuy
 		AddEntity(SpaceGuy::Key::Create(glm::vec2(500.0f, 100.0f)));
 		AddEntity(SpaceGuy::LockedDoor::Create(glm::vec2(800.0f, 100.0f)));
 		AddEntity(SpaceGuy::PlayerMissilePrefab::Create(glm::vec2(windowWidth - ((2 * windowHeight) / 3), windowHeight - 16.0f), player));
+		AddEntity(SpaceGuy::SpeedBoost::Create(glm::vec2(0.0f, 0.0f)));
 		
+		AddEntity(SpaceGuy::MissileRefill::Create(glm::vec2(10.0f, 200.0f)));
+		AddEntity(SpaceGuy::Potion::Create(glm::vec2(100.0f, 200.0f)));
+		AddEntity(SpaceGuy::RapidFire::Create(glm::vec2(300.0f, 200.0f)));
+		AddEntity(SpaceGuy::Shotgun::Create(glm::vec2(400.0f, 200.0f)));
+
+
 		AddNewEntities();
 	}
 

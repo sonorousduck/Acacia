@@ -15,6 +15,7 @@ namespace components
 		float maxHealth = 10.0f;
 		float score = 0.0f;
 		bool hasSpeedBoost = false;
+		float speedBoostTime = 0.0f;
 		bool hasKey = false;
 
 

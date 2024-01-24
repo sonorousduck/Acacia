@@ -143,6 +143,14 @@ namespace SpaceGuy
 					{
 						auto transform = entity->getComponent<components::Transform>();
 						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 1.0f, "player_bullet", "laser_shoot"));
+						if (playerShootingInformation->hasShotgun)
+						{
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation + 15, 1.0f, "player_bullet", "laser_shoot", false));
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation + 7.5f, 1.0f, "player_bullet", "laser_shoot", false));
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation - 15, 1.0f, "player_bullet", "laser_shoot", false));
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation - 7.5f, 1.0f, "player_bullet", "laser_shoot", false));
+						}
+
 						entity->getComponent<components::TimedComponent>()->ResetTimer();
 						playerShootingInformation->canShoot = false;
 
@@ -158,6 +166,15 @@ namespace SpaceGuy
 					{
 						auto transform = entity->getComponent<components::Transform>();
 						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 1.0f, "player_bullet", "laser_shoot"));
+
+						if (playerShootingInformation->hasShotgun)
+						{
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation + 15, 1.0f, "player_bullet", "laser_shoot", false));
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation + 7.5f, 1.0f, "player_bullet", "laser_shoot", false));
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation - 15, 1.0f, "player_bullet", "laser_shoot", false));
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation - 7.5f, 1.0f, "player_bullet", "laser_shoot", false));
+
+						}
 						playerShootingInformation->canShoot = false;
 						entity->getComponent<components::TimedComponent>()->ResetTimer();
 					}

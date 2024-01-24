@@ -10,10 +10,12 @@ namespace components
 		PlayerShootingInformation()
 		{}
 
-		std::uint8_t missileCount = 4;
+		std::uint8_t missileCount = 6;
 		bool hasShotgun = false;
 		bool hasRapidFire = true;
 		bool canShoot = true;
+
+		std::uint8_t missilesToGain = 6;
 
 
 
