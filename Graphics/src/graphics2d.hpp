@@ -214,7 +214,7 @@ namespace Ebony
 		static ImGuiIO io;
 
 		static bool resized;
-		static bool textInitialized;
+		//static bool textInitialized;
 
 
 	private:

@@ -23,7 +23,7 @@ namespace Ebony
 	bool Graphics2d::cursorDisabled{ true };
 	bool Graphics2d::hasCamera{ false };
 	bool Graphics2d::resized{ false };
-	bool Graphics2d::textInitialized{ false };
+	//bool Graphics2d::textInitialized{ false };
 
 	const char* Graphics2d::windowName;
 	int Graphics2d::screenWidth;
@@ -700,8 +700,8 @@ namespace Ebony
 
 	void Graphics2d::InitializeTextDrawing(std::shared_ptr<Shader> textShader)
 	{
-		if (!Graphics2d::textInitialized)
-		{
+		//if (!Graphics2d::textInitialized)
+		//{
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -722,8 +722,8 @@ namespace Ebony
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			glBindVertexArray(0);
 
-			Graphics2d::textInitialized = true;
-		}
+		//	Graphics2d::textInitialized = true;
+		//}
 	}
 	
 
