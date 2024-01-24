@@ -14,6 +14,8 @@ namespace SpaceGuy
 		PLAYER = BIT(4),
 		PLAYER_BULLET = BIT(5),
 		SPAWNER = BIT(6),
+		KEY = BIT(7),
+		SENSOR_REGION = BIT(8),
 
 
 	};

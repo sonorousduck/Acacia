@@ -8,6 +8,8 @@
 #include "../prefabs/spawnerPrefab.hpp"
 #include "../prefabs/largerEnemyPrefab.hpp"
 #include "../prefabs/turretPrefab.hpp"
+#include "../prefabs/keyPrefab.hpp"
+#include "../prefabs/lockedDoorPrefab.hpp"
 
 namespace SpaceGuy
 {
@@ -43,6 +45,7 @@ namespace SpaceGuy
 		Ebony::ResourceManager::LoadTexture("Spawner.tx", "spawner", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("SpeedBoost.tx", "speed_boost", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("Turret.tx", "turret", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("LockedDoor.tx", "locked_door", "SpaceGuy");
 
 
 		Ebony::ResourceManager::LoadAtlas("Exploding Red Oil Barrel.tx", "explosion", "SpaceGuy", 12, 1);
@@ -117,7 +120,8 @@ namespace SpaceGuy
 		AddEntity(SpaceGuy::Spawner::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, 100.0f));
 		AddEntity(SpaceGuy::LargerEnemy::Create(glm::vec2(300.0f, 100.0f), glm::vec2(1.0f, 1.0f), player, 80.0f));
 		AddEntity(SpaceGuy::Turret::Create(glm::vec2(200.0f, 300.0f), glm::vec2(1.0f), player, 130.0f));
-
+		AddEntity(SpaceGuy::Key::Create(glm::vec2(500.0f, 100.0f)));
+		AddEntity(SpaceGuy::LockedDoor::Create(glm::vec2(800.0f, 100.0f)));
 		AddNewEntities();
 	}
 

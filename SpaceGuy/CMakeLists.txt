@@ -48,6 +48,9 @@ set(Prefabs
   prefabs/explosionDeathPrefab.hpp
   prefabs/spawnerPrefab.hpp
   prefabs/turretPrefab.hpp
+  prefabs/keyPrefab.hpp
+  prefabs/lockedDoorPrefab.hpp
+  prefabs/proximityLockedDoorPrefab.hpp
 )
 
 set(UIPrefabs

@@ -61,7 +61,7 @@ namespace SpaceGuy
 
 					if (layer & SpaceGuy::CollisionLayers::WALL)
 					{
-						entity->getComponent<components::Transform>()->position.y = entity->getComponent<components::Collider>()->aabbCollider.lastCollisionLocation.y;
+						//entity->getComponent<components::Transform>()->position = entity->getComponent<components::Collider>()->aabbCollider.lastCollisionLocation.y;
 					}
 					else if (layer & SpaceGuy::CollisionLayers::ENEMY_BULLET)
 					{
@@ -71,7 +71,10 @@ namespace SpaceGuy
 
 
 
-			auto collider = std::make_unique<components::Collider>(aabbcollider, SpaceGuy::CollisionLayers::PLAYER, SpaceGuy::CollisionLayers::ENEMY | SpaceGuy::CollisionLayers::WALL | SpaceGuy::CollisionLayers::ENEMY_BULLET, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, 
+				SpaceGuy::CollisionLayers::PLAYER, 
+				SpaceGuy::CollisionLayers::ENEMY | SpaceGuy::CollisionLayers::WALL | SpaceGuy::CollisionLayers::ENEMY_BULLET | SpaceGuy::CollisionLayers::KEY | SpaceGuy::CollisionLayers::SENSOR_REGION, 
+				false);
 
 			auto keyboardComponent = std::make_unique<components::KeyboardInput>();
 			auto controllerComponent = std::make_unique<components::ControllerInput>(0);

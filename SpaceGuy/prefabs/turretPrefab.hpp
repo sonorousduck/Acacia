@@ -30,7 +30,8 @@ namespace SpaceGuy
 		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, entities::EntityPtr player, float scoreValue = 130.0f)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
-
+			bool isShooting = true;
+			float cooldownTimer = 10.0f;
 
 			float detectionRange = 250.0f;
 			float movementRange = 0.0f;
