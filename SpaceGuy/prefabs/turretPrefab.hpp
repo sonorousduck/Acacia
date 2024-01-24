@@ -8,8 +8,6 @@
 #include <components/collider.hpp>
 #include <components/rigidbodyComponent.hpp>
 #include <singletons/time.hpp>
-#include <components/mouseInputComponent.hpp>
-#include <components/animationControllerComponent.hpp>
 #include "../components/enemyDetectionComponent.hpp"
 #include <components/cppScriptComponent.hpp>
 #include "../components/enemyInformation.hpp"
@@ -19,26 +17,27 @@
 #include <misc/renderLayers.hpp>
 #include <components/aiComponent.hpp>
 #include "../misc/aiInformationTypes.hpp"
-#include "../scripts/enemyMovementShootingScript.hpp"
+#include "../components/playerInformation.hpp"
 #include "../components/bulletComponent.hpp"
+#include "../scripts/enemyMovementShootingScript.hpp"
 
 namespace SpaceGuy
 {
-	class LargerEnemy
+	class Turret
 	{
 	public:
 		// Give a score value so spawned enemies aren't just worth farming forever
-		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, entities::EntityPtr player, float scoreValue = 80.0f)
+		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, entities::EntityPtr player, float scoreValue = 130.0f)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
 
-			float detectionRange = 400.0f;
-			float movementRange = 400.0f;
-			float movementSpeed = 30.0f;
-			glm::vec2 offset = { 0.0f, -100.0f };
+			float detectionRange = 250.0f;
+			float movementRange = 0.0f;
+			float movementSpeed = 0.0f;
+			glm::vec2 offset = { 0.0f, 0.0f };
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("advanced_enemy"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("turret"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
 			scale *= glm::vec2(sprite->texture->Width, sprite->texture->Height);
 
 
@@ -78,17 +77,17 @@ namespace SpaceGuy
 					}
 				};
 
-			auto collider = std::make_unique<components::Collider>(aabbcollider, SpaceGuy::CollisionLayers::ENEMY, SpaceGuy::CollisionLayers::PLAYER_BULLET | SpaceGuy::CollisionLayers::WALL | SpaceGuy::CollisionLayers::ENEMY, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, SpaceGuy::CollisionLayers::SPAWNER, SpaceGuy::CollisionLayers::PLAYER_BULLET | SpaceGuy::CollisionLayers::ENEMY, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
-			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::EnemyMovementShootingScript>(5.0f, "larger_enemy_shoot", glm::vec2(1.5f, 3.0f));
+			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::EnemyMovementShootingScript>();
 
 
-			auto timedComponent = std::make_unique<components::TimedComponent>(1.5f, [=]() {});
+			auto timedComponent = std::make_unique<components::TimedComponent>(0.1f, [=]() {});
 
 
-			entity->addComponent(std::make_unique<components::EnemyInformation>(20.0f));
+			entity->addComponent(std::make_unique<components::EnemyInformation>(15.0f));
 			entity->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "enemy_bullet", player, 5.0f));
 
 			entity->addComponent(std::make_unique<components::DestructionComponent>([=]()

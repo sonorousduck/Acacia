@@ -6,6 +6,8 @@
 #include "../prefabs/smallEnemyPrefab.hpp"
 #include "../prefabs/largerEnemyPrefab.hpp"
 #include "../prefabs/spawnerPrefab.hpp"
+#include "../prefabs/largerEnemyPrefab.hpp"
+#include "../prefabs/turretPrefab.hpp"
 
 namespace SpaceGuy
 {
@@ -40,11 +42,12 @@ namespace SpaceGuy
 		Ebony::ResourceManager::LoadTexture("ShotSpread.tx", "shot_spread_powerup", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("Spawner.tx", "spawner", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("SpeedBoost.tx", "speed_boost", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("Turret.tx", "turret", "SpaceGuy");
 
 
 		Ebony::ResourceManager::LoadAtlas("Exploding Red Oil Barrel.tx", "explosion", "SpaceGuy", 12, 1);
 
-
+		
 		Ebony::ResourceManager::LoadSoundEffect("EnemyShoot.wav", "enemy_shoot", "SpaceGuy");
 		Ebony::ResourceManager::LoadSoundEffect("explosion.wav", "explosion", "SpaceGuy");
 		Ebony::ResourceManager::LoadSoundEffect("hurtSoundVariation.wav", "hurt_sound_variation", "SpaceGuy");
@@ -55,6 +58,7 @@ namespace SpaceGuy
 		Ebony::ResourceManager::LoadSoundEffect("SpawnerDeath.wav", "spawner_death", "SpaceGuy");
 		Ebony::ResourceManager::LoadSoundEffect("missileShoot.wav", "missile_shoot", "SpaceGuy");
 		Ebony::ResourceManager::LoadSoundEffect("laserShootVariation.wav", "laser_shoot_variation", "SpaceGuy");
+		Ebony::ResourceManager::LoadSoundEffect("largerEnemyShoot.wav", "larger_enemy_shoot", "SpaceGuy");
 
 
 		Ebony::ResourceManager::LoadMusic("Level1Music.mp3", "base_music", "SpaceGuy");
@@ -111,7 +115,8 @@ namespace SpaceGuy
 		AddEntity(player);
 		AddEntity(SpaceGuy::SmallEnemy::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player));
 		AddEntity(SpaceGuy::Spawner::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, 100.0f));
-
+		AddEntity(SpaceGuy::LargerEnemy::Create(glm::vec2(300.0f, 100.0f), glm::vec2(1.0f, 1.0f), player, 80.0f));
+		AddEntity(SpaceGuy::Turret::Create(glm::vec2(200.0f, 300.0f), glm::vec2(1.0f), player, 130.0f));
 
 		AddNewEntities();
 	}

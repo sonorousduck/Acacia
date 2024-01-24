@@ -22,7 +22,7 @@ namespace SpaceGuy
 		static entities::EntityPtr Create(glm::vec2 startTransform, float angle, float bulletStrength, const char* spriteImage, const char* audioFile)
 		{
 			auto bulletSpeed = 200.0f;
-			auto timeUntilDestruction = 5.0f;
+			auto timeUntilDestruction = 1.5f;
 
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
@@ -44,7 +44,7 @@ namespace SpaceGuy
 
 			auto soundeffects = std::make_unique<components::SoundEffect>(Ebony::AudioType::ENTITY);
 
-			soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect(audioFile), 127));
+			soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect(audioFile), 100));
 
 			rigidbody->setVelocity(bulletSpeed * glm::vec2(glm::sin(glm::radians(angle)), -glm::cos(glm::radians(angle))));
 

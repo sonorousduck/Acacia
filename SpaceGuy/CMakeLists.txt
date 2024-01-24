@@ -47,7 +47,7 @@ set(Prefabs
   prefabs/healthBarPrefab.hpp
   prefabs/explosionDeathPrefab.hpp
   prefabs/spawnerPrefab.hpp
-
+  prefabs/turretPrefab.hpp
 )
 
 set(UIPrefabs

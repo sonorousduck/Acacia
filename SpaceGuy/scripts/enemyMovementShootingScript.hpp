@@ -8,17 +8,19 @@
 #include <singletons/time.hpp>
 #include "../prefabs/enemyBullet.hpp"
 #include <components/timedComponent.hpp>
-#include "../prefabs/enemyBullet.hpp"
 
 namespace scripts
 {
 	struct EnemyMovementShootingScript : components::CppScript
 	{
 	public:
-		EnemyMovementShootingScript()
+		EnemyMovementShootingScript(float bulletDamage = 1.0f, const char* soundEffect = "enemy_shoot", glm::vec2 scale = glm::vec2(1.0f, 1.0f)) : bulletDamage(bulletDamage), soundEffect(soundEffect), scale(scale)
 		{
 		}
 
+		float bulletDamage;
+		const char* soundEffect;
+		glm::vec2 scale;
 
 		void Update(std::chrono::microseconds elapsedTime) override
 		{
@@ -46,8 +48,12 @@ namespace scripts
 						entity->getComponent<components::Transform>()->rotation = glm::degrees(glm::atan(-detectionComponent->towardsRealTargetVector.x, detectionComponent->towardsRealTargetVector.y));
 
 					}
+				}
 
 
+				else if (detectionComponent->movementRange == 0.0f)
+				{
+					entity->getComponent<components::Transform>()->rotation = glm::degrees(glm::atan(-detectionComponent->towardsRealTargetVector.x, detectionComponent->towardsRealTargetVector.y));
 				}
 
 				if (detectionComponent->canDetectTarget)
@@ -58,7 +64,7 @@ namespace scripts
 					{
 						auto transform = entity->getComponent<components::Transform>();
 
-						Ebony::SystemManager::AddEntity(SpaceGuy::EnemyBullet::Create(transform->position, transform->rotation, 1.0f, "enemy_bullet"));
+						Ebony::SystemManager::AddEntity(SpaceGuy::EnemyBullet::Create(transform->position, transform->rotation, bulletDamage, "enemy_bullet", soundEffect, scale));
 						shootingCooldown->ResetTimer();
 					}
 				}

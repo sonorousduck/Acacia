@@ -19,7 +19,7 @@ namespace SpaceGuy
 	class EnemyBullet
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, float angle, float bulletStrength, const char* spriteImage)
+		static entities::EntityPtr Create(glm::vec2 startTransform, float angle, float bulletStrength, const char* spriteImage, const char* soundeffect, glm::vec2 bulletScale)
 		{
 			auto bulletSpeed = 200.0f;
 			auto timeUntilDestruction = 5.0f;
@@ -27,7 +27,7 @@ namespace SpaceGuy
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(spriteImage), Ebony::Colors::White, Ebony::FOREGROUND);
-			auto scale = sprite->GetDimensions();
+			auto scale = sprite->GetDimensions() * bulletScale;
 
 			components::Subcollider aabbCollider = components::Subcollider(scale / 2.0f, scale, true, true);
 
@@ -42,7 +42,7 @@ namespace SpaceGuy
 
 			auto soundeffects = std::make_unique<components::SoundEffect>(Ebony::AudioType::ENTITY);
 
-			soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("enemy_shoot"), 90));
+			soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect(soundeffect), 90));
 
 			rigidbody->setVelocity(bulletSpeed * glm::vec2(glm::sin(glm::radians(angle)), -glm::cos(glm::radians(angle))));
 
