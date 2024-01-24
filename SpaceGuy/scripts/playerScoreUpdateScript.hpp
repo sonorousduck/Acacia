@@ -4,7 +4,7 @@
 #include "../Ebony/src/components/cppScriptComponent.hpp"
 #include <components/transform.hpp>
 #include <singletons/time.hpp>
-#include "../components/playerComponent.hpp"
+#include "../components/playerInformation.hpp"
 #include <components/text.hpp>
 
 namespace scripts
@@ -20,11 +20,11 @@ namespace scripts
 		void Update(std::chrono::microseconds elapsedTime) override
 		{
 			// Get if we can move, then if we can shoot
-			auto player = parent->getComponent<components::Player>();
+			auto player = parent->getComponent<components::PlayerInformation>();
 			auto text = entity->getComponent<components::Text>();
 
 
-			text->text = std::to_string(static_cast<int>(((player->score / 10.0f)) / 10.0f) * 10);
+			text->text = std::to_string(player->score);
 
 		}
 

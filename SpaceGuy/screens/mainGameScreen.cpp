@@ -6,7 +6,6 @@
 #include "../prefabs/smallEnemyPrefab.hpp"
 #include "../prefabs/largerEnemyPrefab.hpp"
 
-
 namespace SpaceGuy
 {
 
@@ -110,7 +109,6 @@ namespace SpaceGuy
 
 		AddEntity(player);
 		AddEntity(SpaceGuy::SmallEnemy::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player));
-		// For now, pretend we clicked on the mountains store tile (until I find a good way to render conditionally) (Maybe just outright removing and replacing, but that might be a lot of unnecessary work)
 
 
 		AddNewEntities();

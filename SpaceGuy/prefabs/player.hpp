@@ -20,6 +20,8 @@
 #include "../components/playerInformation.hpp"
 #include "../components/playerShootingInformation.hpp"
 #include "../prefabs/playerBullet.hpp"
+#include "../prefabs/UI/playerScorePrefab.hpp"
+
 
 namespace SpaceGuy
 {
@@ -155,6 +157,10 @@ namespace SpaceGuy
 			entity->addComponent(std::move(playerInformation));
 			entity->addComponent(std::move(playerShootingInformation));
 			entity->addComponent(std::move(shootingDelay));
+
+
+			Ebony::SystemManager::AddEntity(SpaceGuy::PlayerScore::Create(480, entity));
+
 
 
 			return entity;

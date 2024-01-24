@@ -357,7 +357,7 @@ namespace Ebony {
 
 	Ebony::Application* Ebony::CreateApplication()
 	{
-		return new CryptGame(true, true);
+		return new CryptGame(false, false);
 	}
 
 
