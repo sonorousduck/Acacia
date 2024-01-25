@@ -83,7 +83,7 @@ namespace SpaceGuy
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
 
 		Ebony::Graphics2d::InitializeTextDrawing(Ebony::ResourceManager::GetShader("text"));
-		this->clearColor = Ebony::Colors::CornflowerBlue;
+		this->clearColor = Ebony::Colors::Black;
 
 
 		s->use();

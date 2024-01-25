@@ -227,7 +227,7 @@ namespace Ebony {
 		bool isAI = false;
 
 	private:
-		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
+		Ebony::Color clearColor = Ebony::Colors::Black;
 
 	};
 
