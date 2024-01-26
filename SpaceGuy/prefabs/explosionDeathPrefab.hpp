@@ -15,6 +15,7 @@
 #include <components/cppScriptComponent.hpp>
 #include "healthBarPrefab.hpp"
 #include <misc/renderLayers.hpp>
+#include <components/soundEffectComponent.hpp>
 
 namespace Crypt
 {

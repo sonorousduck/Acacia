@@ -21,6 +21,7 @@
 #include "../misc/aiInformationTypes.hpp"
 #include "../scripts/enemyMovementShootingScript.hpp"
 #include "../components/bulletComponent.hpp"
+#include "../components/playerInformation.hpp"
 
 namespace SpaceGuy
 {
@@ -33,8 +34,8 @@ namespace SpaceGuy
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
 
-			float detectionRange = 200.0f;
-			float movementRange = 200.0f;
+			float detectionRange = 150.0f;
+			float movementRange = 150.0f;
 			float movementSpeed = 75.0f;
 			glm::vec2 offset = { 0.0f, -50.0f };
 
@@ -88,7 +89,7 @@ namespace SpaceGuy
 			auto timedComponent = std::make_unique<components::TimedComponent>(1.0f, [=]() {});
 
 
-			entity->addComponent(std::make_unique<components::EnemyInformation>(3.0f));
+			entity->addComponent(std::make_unique<components::EnemyInformation>(1.0f));
 			entity->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "enemy_bullet", player, 5.0f));
 
 			entity->addComponent(std::make_unique<components::DestructionComponent>([=]()

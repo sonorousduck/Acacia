@@ -32,7 +32,7 @@ namespace SpaceGuy
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 			auto parentTransform = lockedDoor->getComponent<components::Transform>();
 
-			auto scale = parentTransform->scale * glm::vec2(100.0f, 10.0f);
+			auto scale = parentTransform->scale * glm::vec2(10.0f, 10.0f);
 
 
 			components::Subcollider aabbcollider = components::Subcollider(scale / 2.0f, scale, true, true);
@@ -48,10 +48,8 @@ namespace SpaceGuy
 				};
 
 
-
-
 			auto collider = std::make_unique<components::Collider>(aabbcollider, SpaceGuy::CollisionLayers::WALL, SpaceGuy::CollisionLayers::PLAYER, true);
-			auto transform = std::make_unique<components::Transform>(parentTransform->position, parentTransform->rotation, scale);
+			auto transform = std::make_unique<components::Transform>(parentTransform->position - glm::vec2(20.0f, 20.0f), parentTransform->rotation, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
 

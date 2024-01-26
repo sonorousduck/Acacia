@@ -21,24 +21,26 @@
 #include "../misc/aiInformationTypes.hpp"
 #include "../scripts/enemyMovementShootingScript.hpp"
 #include "../components/bulletComponent.hpp"
+#include "../components/playerInformation.hpp"
+#include "../scripts/bossShootingScript.hpp"
 
 namespace SpaceGuy
 {
-	class LargerEnemy
+	class Boss
 	{
 	public:
 		// Give a score value so spawned enemies aren't just worth farming forever
-		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, entities::EntityPtr player, float scoreValue = 80.0f)
+		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, entities::EntityPtr player, float scoreValue = 20.0f)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
 
-			float detectionRange = 200.0f;
-			float movementRange = 200.0f;
-			float movementSpeed = 30.0f;
-			glm::vec2 offset = { 0.0f, -100.0f };
+			float detectionRange = 400.0f;
+			float movementRange = 150.0f;
+			float movementSpeed = 75.0f;
+			glm::vec2 offset = { 0.0f, -50.0f };
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("advanced_enemy"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("boss"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
 			scale *= glm::vec2(sprite->texture->Width, sprite->texture->Height);
 
 
@@ -82,13 +84,13 @@ namespace SpaceGuy
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
-			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::EnemyMovementShootingScript>(5.0f, "larger_enemy_shoot", glm::vec2(1.5f, 3.0f));
+			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::BossShootingScript>();
 
 
-			auto timedComponent = std::make_unique<components::TimedComponent>(1.5f, [=]() {});
+			auto timedComponent = std::make_unique<components::TimedComponent>(1.0f, [=]() {});
 
 
-			entity->addComponent(std::make_unique<components::EnemyInformation>(10.0f));
+			entity->addComponent(std::make_unique<components::EnemyInformation>(50.0f));
 			entity->addComponent(std::make_unique<components::EnemyDetection>(detectionRange, movementRange, movementSpeed, offset, 400.0f, "enemy_bullet", player, 5.0f));
 
 			entity->addComponent(std::make_unique<components::DestructionComponent>([=]()

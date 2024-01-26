@@ -25,6 +25,8 @@
 #include <singletons/inputManager.hpp>
 #include <singletons/systemManager.hpp>
 #include <components/mouseInputComponent.hpp>
+#include "../prefabs/UI/playerMissilePrefab.hpp"
+#include "../prefabs/UI/playerLivesPrefab.hpp"
 
 
 namespace SpaceGuy
@@ -45,7 +47,7 @@ namespace SpaceGuy
 			auto scale = texture->getDimensions();
 
 
-			auto transform = std::make_unique<components::Transform>(glm::vec2(240.0f, 155.0f), 0.0f, scale);
+			auto transform = std::make_unique<components::Transform>(glm::vec2(560.0f, 1000.0f), 0.0f, scale);
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 			auto playerInformation = std::make_unique<components::PlayerInformation>();
@@ -58,19 +60,19 @@ namespace SpaceGuy
 			components::Subcollider aabbcollider = components::Subcollider(scale / 2.0f, scale, true, true);
 
 
-			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
-				{
-					SpaceGuy::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
+			//aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+			//	{
+			//		SpaceGuy::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
 
-					if (layer & SpaceGuy::CollisionLayers::WALL)
-					{
-						//entity->getComponent<components::Transform>()->position = entity->getComponent<components::Collider>()->aabbCollider.lastCollisionLocation.y;
-					}
-					else if (layer & SpaceGuy::CollisionLayers::ENEMY_BULLET)
-					{
-						entity->getComponent<components::PlayerInformation>()->health -= other->getComponent<components::Bullet>()->strength;
-					}
-				};
+			//		if (layer & SpaceGuy::CollisionLayers::WALL)
+			//		{
+			//			//entity->getComponent<components::Transform>()->position = entity->getComponent<components::Collider>()->aabbCollider.lastCollisionLocation.y;
+			//		}
+			//		else if (layer & SpaceGuy::CollisionLayers::ENEMY_BULLET)
+			//		{
+			//			//entity->getComponent<components::PlayerInformation>()->health -= other->getComponent<components::Bullet>()->strength;
+			//		}
+			//	};
 
 
 
@@ -216,8 +218,8 @@ namespace SpaceGuy
 
 			Ebony::SystemManager::AddEntity(SpaceGuy::PlayerScore::Create(480, entity));
 			Ebony::SystemManager::AddEntity(SpaceGuy::PlayerHealth::Create(320, entity));
-
-
+			Ebony::SystemManager::AddEntity(SpaceGuy::PlayerMissilePrefab::Create(glm::vec2(128.0f, 304.0f), entity));
+			Ebony::SystemManager::AddEntity(SpaceGuy::PlayerLifePrefab::Create(glm::vec2(164.0f, 304.0f), entity));
 
 			return entity;
 		}

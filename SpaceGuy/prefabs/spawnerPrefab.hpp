@@ -32,7 +32,7 @@ namespace SpaceGuy
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
 
-			float detectionRange = 200.0f;
+			float detectionRange = 135.0f;
 			float movementRange = 0.0f;
 			float movementSpeed = 0.0f;
 			glm::vec2 offset = { 0.0f, 0.0f };
@@ -84,7 +84,7 @@ namespace SpaceGuy
 			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::SpawnerScript>();
 
 
-			auto timedComponent = std::make_unique<components::TimedComponent>(0.75f, [=]() {});
+			auto timedComponent = std::make_unique<components::TimedComponent>(1.5f, [=]() {});
 
 
 			entity->addComponent(std::make_unique<components::EnemyInformation>(10.0f));

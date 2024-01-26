@@ -3,19 +3,8 @@
 
 #include "../prefabs/mainMusicPrefab.hpp"
 #include "../prefabs/player.hpp"
-#include "../prefabs/smallEnemyPrefab.hpp"
-#include "../prefabs/largerEnemyPrefab.hpp"
-#include "../prefabs/spawnerPrefab.hpp"
-#include "../prefabs/largerEnemyPrefab.hpp"
-#include "../prefabs/turretPrefab.hpp"
-#include "../prefabs/keyPrefab.hpp"
-#include "../prefabs/lockedDoorPrefab.hpp"
-#include "../prefabs/UI/playerMissilePrefab.hpp"
-#include "../prefabs/speedBoostPrefab.hpp"
-#include "../prefabs/potionPrefab.hpp"
-#include "../prefabs/missileRefillPrefab.hpp"
-#include "../prefabs/shotgunPrefab.hpp"
-#include "../prefabs/rapidFirePrefab.hpp"
+#include "../prefabs/bossPrefab.hpp"
+#include "../misc/spaceGuyTiledProcessor.hpp"
 
 
 namespace SpaceGuy
@@ -55,9 +44,11 @@ namespace SpaceGuy
 		Ebony::ResourceManager::LoadTexture("LockedDoor.tx", "locked_door", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("MissileUI.tx", "missile_ui", "SpaceGuy");
 		Ebony::ResourceManager::LoadTexture("MissileRefill.tx", "missile_refill", "SpaceGuy");
+		Ebony::ResourceManager::LoadTexture("Boss.tx", "boss", "SpaceGuy");
 
 
 		Ebony::ResourceManager::LoadAtlas("Exploding Red Oil Barrel.tx", "explosion", "SpaceGuy", 12, 1);
+		Ebony::ResourceManager::LoadAtlas("MainSpriteSheet.tx", "main_spritesheet", "SpaceGuy", 5, 5);
 
 		
 		Ebony::ResourceManager::LoadSoundEffect("EnemyShoot.wav", "enemy_shoot", "SpaceGuy");
@@ -108,36 +99,40 @@ namespace SpaceGuy
 		spriteRenderer.debug = false;
 
 
+		auto player = SpaceGuy::Player::Create();
 
+		AddEntity(player);
+		player->getComponent<components::PlayerInformation>()->health = 1000.0;
+		//Ebony::Graphics2d::mainCamera->Position = glm::vec3(0.0f, 0.0f, 1.0f);
 
 
 		// Load Tiled map
-		//SpaceGuyTiledProcessor tiledProcessor = SpaceGuyTiledProcessor(player);
-		//tiledProcessor.CreateTranslationFunction();
-		//tiledProcessor.ParseMap("../SpaceGuy/maps/SpaceGuy/SpaceGuy.json");
+		SpaceGuyTiledProcessor tiledProcessor = SpaceGuyTiledProcessor(player);
+		tiledProcessor.CreateTranslationFunction();
+		tiledProcessor.ParseMap("../SpaceGuy/maps/SpaceGuy.json");
 
 
 		// Create prefabs
 
-		AddEntity(SpaceGuy::MainMusicPrefab::Create("base_music", 127));
+		AddEntity(SpaceGuy::MainMusicPrefab::Create("base_music", 100));
 		
+		AddEntity(SpaceGuy::Boss::Create(glm::vec2(2768.0f, 448.0f), glm::vec2(1.0f), player, 500.0f));
 
-		auto player = SpaceGuy::Player::Create();
 
-		AddEntity(player);
-		AddEntity(SpaceGuy::SmallEnemy::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player));
-		AddEntity(SpaceGuy::Spawner::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, 100.0f));
-		AddEntity(SpaceGuy::LargerEnemy::Create(glm::vec2(300.0f, 100.0f), glm::vec2(1.0f, 1.0f), player, 80.0f));
-		AddEntity(SpaceGuy::Turret::Create(glm::vec2(200.0f, 300.0f), glm::vec2(1.0f), player, 130.0f));
-		AddEntity(SpaceGuy::Key::Create(glm::vec2(500.0f, 100.0f)));
-		AddEntity(SpaceGuy::LockedDoor::Create(glm::vec2(800.0f, 100.0f)));
-		AddEntity(SpaceGuy::PlayerMissilePrefab::Create(glm::vec2(windowWidth - ((2 * windowHeight) / 3), windowHeight - 16.0f), player));
-		AddEntity(SpaceGuy::SpeedBoost::Create(glm::vec2(0.0f, 0.0f)));
-		
-		AddEntity(SpaceGuy::MissileRefill::Create(glm::vec2(10.0f, 200.0f)));
-		AddEntity(SpaceGuy::Potion::Create(glm::vec2(100.0f, 200.0f)));
-		AddEntity(SpaceGuy::RapidFire::Create(glm::vec2(300.0f, 200.0f)));
-		AddEntity(SpaceGuy::Shotgun::Create(glm::vec2(400.0f, 200.0f)));
+
+		//AddEntity(SpaceGuy::SmallEnemy::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player));
+		//AddEntity(SpaceGuy::Spawner::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, 100.0f));
+		//AddEntity(SpaceGuy::LargerEnemy::Create(glm::vec2(300.0f, 100.0f), glm::vec2(1.0f, 1.0f), player, 80.0f));
+		//AddEntity(SpaceGuy::Turret::Create(glm::vec2(200.0f, 300.0f), glm::vec2(1.0f), player, 130.0f));
+		//AddEntity(SpaceGuy::Key::Create(glm::vec2(500.0f, 100.0f)));
+		//AddEntity(SpaceGuy::LockedDoor::Create(glm::vec2(800.0f, 100.0f)));
+		//AddEntity(SpaceGuy::PlayerMissilePrefab::Create(glm::vec2(windowWidth - ((2 * windowHeight) / 3), windowHeight - 16.0f), player));
+		//AddEntity(SpaceGuy::SpeedBoost::Create(glm::vec2(0.0f, 0.0f)));
+		//
+		//AddEntity(SpaceGuy::MissileRefill::Create(glm::vec2(10.0f, 200.0f)));
+		//AddEntity(SpaceGuy::Potion::Create(glm::vec2(100.0f, 200.0f)));
+		//AddEntity(SpaceGuy::RapidFire::Create(glm::vec2(300.0f, 200.0f)));
+		//AddEntity(SpaceGuy::Shotgun::Create(glm::vec2(400.0f, 200.0f)));
 
 
 		AddNewEntities();
@@ -145,7 +140,7 @@ namespace SpaceGuy
 
 	void MainGameScreen::Init(int windowWidth, int windowHeight)
 	{
-		camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 1.0f));
+		camera = std::make_shared<Camera>(glm::vec3(560.0f - windowWidth / 2, 1000.0f - windowHeight / 2, 1.0f));
 
 		this->windowHeight = windowHeight;
 		this->windowWidth = windowWidth;

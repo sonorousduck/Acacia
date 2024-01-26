@@ -63,6 +63,7 @@ namespace systems
 		{
 			// Apply scripted movements
 			auto scriptedMovement = rigidBody->getNextScriptedMovement();
+			transform->previousPosition = transform->position;
 			transform->position += scriptedMovement;
 		}
 
@@ -228,10 +229,10 @@ namespace systems
 		//auto test3 = transform->position.y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - otherAabbCollider.getSize().y / 2.0f;
 
 		if (!(
-			transform->position.x + betweenFrameAABBSizeCheck.x + aabbCollider.getCenter().x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + betweenFrameAABBOther.x + otherAabbCollider.getCenter().x + otherAabbCollider.getSize().x / 2.0f || // aabb left is greater than otherAbb right
-			transform->position.x + betweenFrameAABBSizeCheck.x + aabbCollider.getCenter().x + aabbCollider.getSize().x / 2.0f < otherTransform->position.x + betweenFrameAABBOther.x + otherAabbCollider.getCenter().x - otherAabbCollider.getSize().x / 2.0f || // aabb right is less than otherAbb left
-			transform->position.y + betweenFrameAABBSizeCheck.y + aabbCollider.getCenter().y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + betweenFrameAABBOther.y + otherAabbCollider.getCenter().y + otherAabbCollider.getSize().y / 2.0f || // aabb top is below otherAbb bottom
-			transform->position.y + betweenFrameAABBSizeCheck.y + aabbCollider.getCenter().y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y + betweenFrameAABBOther.y + otherAabbCollider.getCenter().y - otherAabbCollider.getSize().y / 2.0f    // aabb bottom is above otherAbb top
+			transform->position.x - betweenFrameAABBSizeCheck.x + aabbCollider.getCenter().x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + betweenFrameAABBOther.x + otherAabbCollider.getCenter().x + otherAabbCollider.getSize().x / 2.0f || // aabb left is greater than otherAbb right
+			transform->position.x + betweenFrameAABBSizeCheck.x + aabbCollider.getCenter().x + aabbCollider.getSize().x / 2.0f < otherTransform->position.x - betweenFrameAABBOther.x + otherAabbCollider.getCenter().x - otherAabbCollider.getSize().x / 2.0f || // aabb right is less than otherAbb left
+			transform->position.y - betweenFrameAABBSizeCheck.y + aabbCollider.getCenter().y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + betweenFrameAABBOther.x + otherAabbCollider.getCenter().y + otherAabbCollider.getSize().y / 2.0f || // aabb top is below otherAbb bottom
+			transform->position.y + betweenFrameAABBSizeCheck.y + aabbCollider.getCenter().y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - betweenFrameAABBOther.y + otherAabbCollider.getCenter().y - otherAabbCollider.getSize().y / 2.0f    // aabb bottom is above otherAbb top
 			))
 		{
 			// Collided on other object left side

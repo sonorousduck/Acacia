@@ -30,16 +30,16 @@ namespace Ebony
 
 
 		// Number of rigidbodies in each level. Once it exceeds this amount, it will split
-		std::uint16_t MAX_OBJECTS_IN_LEVEL = 20;
+		std::uint16_t MAX_OBJECTS_IN_LEVEL = 50;
 
 		// Max number of levels that are allowed in the Quadtree
 		// This is extremely important if the objects are completely overlapping
 		// since that would cause an infinite loop (if MAX_OBJECTS_IN_LEVEL were overlapping)
 		// If you set this value to 1, it is the same as if you just didn't have a quadtree
-		std::uint16_t MAX_LEVELS = 50;
+		std::uint16_t MAX_LEVELS = 100;
 
 		// This eventually needs to change how it works, as it could be more eloquent
-		std::uint16_t QUADTREE_SIZE = 5000; // This is the physics dimension height multiplied by 10
+		std::uint16_t QUADTREE_SIZE = 10000; // This is the physics dimension height multiplied by 10
 		std::uint16_t QUADTREE_MIDPOINT = QUADTREE_SIZE / 2;
 
 

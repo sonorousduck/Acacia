@@ -27,12 +27,12 @@ set(ComponentHeaders
 
 set(MiscHeaders
   misc/collisionLayers.hpp
-  misc/ecologyTiledProcessor.hpp
+  misc/spaceGuyTiledProcessor.hpp
   misc/tileType.hpp
 )
 
 set(MiscSources
-  misc/ecologyTiledProcessor.cpp
+  misc/spaceGuyTiledProcessor.cpp
 )
 
 
@@ -56,6 +56,7 @@ set(Prefabs
   prefabs/rapidFirePrefab.hpp
   prefabs/shotgunPrefab.hpp
   prefabs/speedBoostPrefab.hpp
+  prefabs/bossPrefab.hpp
 
 )
 
@@ -114,6 +115,8 @@ set(ScriptHeaders
   scripts/playerKeyUpdateScript.hpp
   scripts/playerLifeUpdateScript.hpp
   scripts/playerMissileUpdateScript.hpp
+  scripts/playerOverallLivesText.hpp
+  scripts/bossShootingScript.hpp
 )
 
 set(PythonScripts

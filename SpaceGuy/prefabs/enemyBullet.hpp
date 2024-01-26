@@ -11,15 +11,15 @@
 #include <singletons/time.hpp>
 #include <misc/resourceManager.hpp>
 #include <components/aiComponent.hpp>
-
-
+#include "../components/bulletComponent.hpp"
+#include "../components/playerInformation.hpp"
 
 namespace SpaceGuy
 {
 	class EnemyBullet
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, float angle, float bulletStrength, const char* spriteImage, const char* soundeffect, glm::vec2 bulletScale)
+		static entities::EntityPtr Create(glm::vec2 startTransform, float angle, float bulletStrength, const char* spriteImage, const char* soundeffect, glm::vec2 bulletScale, bool playSound = true)
 		{
 			auto bulletSpeed = 200.0f;
 			auto timeUntilDestruction = 5.0f;
@@ -34,15 +34,26 @@ namespace SpaceGuy
 			aabbCollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 					entity->getComponent<components::DestructionComponent>()->shouldDestroy = true;
+
+					components::PlayerInformation* playerInformation;
+					if (other->tryGetComponent(playerInformation))
+					{
+						playerInformation->health -= entity->getComponent<components::Bullet>()->strength;
+					}
+
 				};
 
 			auto collider = std::make_unique<components::Collider>(aabbCollider, SpaceGuy::CollisionLayers::ENEMY_BULLET, SpaceGuy::CollisionLayers::PLAYER | SpaceGuy::CollisionLayers::WALL, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, angle, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
-			auto soundeffects = std::make_unique<components::SoundEffect>(Ebony::AudioType::ENTITY);
 
-			soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect(soundeffect), 90));
+			if (playSound)
+			{
+				auto soundeffects = std::make_unique<components::SoundEffect>(Ebony::AudioType::ENTITY);
+				soundeffects->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect(soundeffect), 90));
+				entity->addComponent(std::move(soundeffects));
+			}
 
 			rigidbody->setVelocity(bulletSpeed * glm::vec2(glm::sin(glm::radians(angle)), -glm::cos(glm::radians(angle))));
 
@@ -63,7 +74,6 @@ namespace SpaceGuy
 			entity->addComponent(std::move(collider));
 			entity->addComponent(std::move(rigidbody));
 			entity->addComponent(std::make_unique<components::Bullet>(bulletStrength));
-			entity->addComponent(std::move(soundeffects));
 
 			return entity;
 
