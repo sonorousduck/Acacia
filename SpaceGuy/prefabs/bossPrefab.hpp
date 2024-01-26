@@ -98,6 +98,7 @@ namespace SpaceGuy
 					// Eventually, this is where the animations will be inserted and played probably (Maybe just spawn an entity or something)
 					Ebony::SystemManager::AddEntity(Crypt::ExplosionDeathPrefab::Create(entity->getComponent<components::Transform>()->position, glm::vec2(1.0f, 1.0f)));
 					entity->getComponent<components::DestructionComponent>()->shouldRemove = true;
+					Ebony::SystemManager::nextScreenEnum = SpaceGuy::ScreenEnum::GAME_OVER;
 				}));
 
 			entity->addComponent(std::move(script));
