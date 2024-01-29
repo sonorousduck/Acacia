@@ -114,7 +114,7 @@ namespace SpaceGuy
 
 		// Create prefabs
 
-		AddEntity(SpaceGuy::MainMusicPrefab::Create("base_music", 100));
+		AddEntity(SpaceGuy::MainMusicPrefab::Create("base_music", 0));
 		
 		AddEntity(SpaceGuy::Boss::Create(glm::vec2(2768.0f, 448.0f), glm::vec2(1.0f), player, 500.0f));
 

@@ -73,7 +73,44 @@ namespace SpaceGuy
 			//			//entity->getComponent<components::PlayerInformation>()->health -= other->getComponent<components::Bullet>()->strength;
 			//		}
 			//	};
+			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+				{
+					SpaceGuy::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
 
+
+					if (layer & SpaceGuy::CollisionLayers::WALL)
+					{
+						auto transform = entity->getComponent<components::Transform>();
+
+						std::cout << "Collided!" << std::endl;
+						std::cout << "Current: (" << transform->position.x << ", " << transform->position.y << ")" << std::endl;
+						std::cout << "Previous: (" << transform->previousPosition.x << ", " << transform->previousPosition.y << ")" << std::endl;
+
+						// Decide which direction they came from by subtracting the positions, then just take a little bit more so it moves them slightly more away from the wall
+
+						auto direction = transform->position - transform->previousPosition;
+
+
+
+						transform->position = transform->previousPosition - (2.0f * direction);
+						transform->previousPosition = transform->position;
+						
+					}
+					
+				};
+
+			
+			aabbcollider.onCollisionEnd = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+				{
+					SpaceGuy::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
+
+
+					if (layer & SpaceGuy::CollisionLayers::WALL)
+					{
+						std::cout << "Collided ended!" << std::endl;
+					}
+
+				};
 
 
 			auto collider = std::make_unique<components::Collider>(aabbcollider, 

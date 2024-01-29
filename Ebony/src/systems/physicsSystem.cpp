@@ -63,7 +63,6 @@ namespace systems
 		{
 			// Apply scripted movements
 			auto scriptedMovement = rigidBody->getNextScriptedMovement();
-			transform->previousPosition = transform->position;
 			transform->position += scriptedMovement;
 		}
 
@@ -79,7 +78,7 @@ namespace systems
 			possibleCollisions.insert(possibleCollisions.end(), staticPossibleCollisions.begin(), staticPossibleCollisions.end());
 
 
-			for (std::uint16_t i = 0; i < possibleCollisions.size(); i++)
+			for (std::uint32_t i = 0; i < possibleCollisions.size(); i++)
 			{
 				if (entity->getId() != possibleCollisions[i]->getId() && (collider->layersToCollideWith & possibleCollisions[i]->getComponent<components::Collider>()->layer))
 				{
