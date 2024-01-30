@@ -9,12 +9,13 @@ set(SOURCE_FILES
 set(SystemHeaders
   systems/ballSystem.hpp
   systems/lifePointSystem.hpp
-
+  systems/aiSystem.hpp
 )
 
 set(SystemSources
   systems/ballSystem.cpp
   systems/lifePointSystem.cpp
+  systems/aiSystem.cpp
 )
 
 set(ComponentHeaders
@@ -28,6 +29,7 @@ set(ComponentHeaders
 set(MiscHeaders
   misc/collisionLayers.hpp
   misc/screenEnums.hpp
+  misc/aiInformationTypes.hpp
 )
 
 set(MiscSources
@@ -52,13 +54,13 @@ set(Prefabs
 
 set(SingletonHeaders
   singletons/GameManager.hpp
-  
+  singletons/PythonManager.hpp
 )
 
 
 set(SingletonSources
   singletons/GameManager.cpp
-  
+  singletons/PythonManager.cpp
 )
 
 set(ScreenHeaders

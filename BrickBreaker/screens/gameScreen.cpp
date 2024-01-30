@@ -78,6 +78,9 @@ namespace BrickBreaker
 		cppScriptingSystem = systems::CppScriptingSystem();
 		destructionSystem = systems::DestructionSystem();
 		timingSystem = systems::TimingSystem();
+		pythonScriptingSystem = systems::PythonScriptingSystem();
+		aiInputSystem = systems::AIInputSystem();
+		aiSystem = systems::AISystem();
 
 		std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
@@ -119,6 +122,7 @@ namespace BrickBreaker
 		gameplayEntity->addComponent(std::move(gameplayControllerInputComponent));
 		gameplayEntity->addComponent(std::move(gameplayKeyboardInputComponent));
 
+		GameManager::ResetPoints();
 
 		//gameplayEntity->addComponent(std::make_unique<components::Music>(Ebony::IndividualMusicTrack(Ebony::ResourceManager::GetMusic("cyberpunk_moonlight_sonata_short"), 127)));
 
@@ -133,7 +137,7 @@ namespace BrickBreaker
 
 		auto ballCount = 0;
 
-		/*for (std::uint8_t i = 0; i < 27; i++)
+		for (std::uint8_t i = 0; i < 27; i++)
 		{
 			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 23.0f, "blue_tile", 4, 40);
 			AddEntity(brickEntity);
@@ -163,9 +167,9 @@ namespace BrickBreaker
 			AddEntity(brickEntity);
 			ballCount++;
 
-		}*/
+		}
 
-		for (std::uint8_t i = 0; i < 1; i++)
+		for (std::uint8_t i = 0; i < 27; i++)
 		{
 			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 55.0f, "purple_tile", 1, 10);
 			AddEntity(brickEntity);
@@ -219,6 +223,10 @@ namespace BrickBreaker
 			cppScriptingSystem.AddEntity(entity);
 			timingSystem.AddEntity(entity);
 			destructionSystem.AddEntity(entity);
+			pythonScriptingSystem.AddEntity(entity);
+			aiInputSystem.AddEntity(entity);
+			aiSystem.AddEntity(entity);
+
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -246,7 +254,9 @@ namespace BrickBreaker
 			cppScriptingSystem.RemoveEntity(entityId);
 			timingSystem.RemoveEntity(entityId);
 			destructionSystem.RemoveEntity(entityId);
-
+			pythonScriptingSystem.RemoveEntity(entityId);
+			aiInputSystem.RemoveEntity(entityId);
+			aiSystem.RemoveEntity(entityId);
 		}
 
 		removeEntities.clear();
@@ -281,14 +291,16 @@ namespace BrickBreaker
 			}
 		);
 
-
-		auto audioUpdate = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				audioSystem.Update(elapsedTime);
-			}
-		);
+		if (!Ebony::SystemManager::aiEnabled)
+		{
+			auto audioUpdate = Ebony::ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					audioSystem.Update(elapsedTime);
+				}
+			);
+		}
 
 		auto ballUpdate = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
@@ -331,6 +343,17 @@ namespace BrickBreaker
 			}
 		);
 
+		if (Ebony::SystemManager::aiEnabled)
+		{
+			auto aiSystemTask = Ebony::ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					aiSystem.Update(elapsedTime);
+				}
+			);
+		}
+
 
 		// Declare predecessors here
 		//taskGraph->declarePredecessor(task6->getId(), task4->getId());
@@ -346,6 +369,7 @@ namespace BrickBreaker
 		graphDone.wait();
 
 		physicsSystem.Update(elapsedTime);
+		BrickBreaker::PythonManager::Update(elapsedTime);
 
 		averageUpdateTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - firstTime);
 
@@ -375,6 +399,7 @@ namespace BrickBreaker
 	void GameScreen::ProcessInput(std::chrono::microseconds elapsedTime)
 	{
 		inputSystem.Update();
+		aiInputSystem.Update(elapsedTime);
 	}
 
 	void GameScreen::AddEntity(entities::EntityPtr entity)
@@ -395,6 +420,7 @@ namespace BrickBreaker
 	{
 		// Delete all entities in play
 		RemoveAllEntities();
+		GameManager::ResetPoints();
 		Start();
 	}
 

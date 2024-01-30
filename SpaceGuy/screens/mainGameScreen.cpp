@@ -176,14 +176,6 @@ namespace SpaceGuy
 			}
 		);
 
-		auto inputTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				inputSystem.Update();
-			}
-		);
-
 		auto animationTask = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
 			[this, elapsedTime]()
@@ -278,6 +270,7 @@ namespace SpaceGuy
 
 	void MainGameScreen::ProcessInput(std::chrono::microseconds elapsedTime)
 	{
+		inputSystem.Update();
 		aiInputSystem.Update(elapsedTime);
 	}
 

@@ -17,6 +17,11 @@
 #include <singletons/systemManager.hpp>
 #include "../screens/screenEnums.hpp"
 #include "../scripts/DeathScript.hpp"
+#include <components/aiComponent.hpp>
+#include "../misc/aiInformationTypes.hpp"
+#include <components/aiInputComponent.hpp>
+
+#include "../singletons/PythonManager.hpp"
 
 namespace BrickBreaker
 {
@@ -63,12 +68,31 @@ namespace BrickBreaker
 
 						}
 
+						if (glm::abs(directionVector.y) < 0.05)
+						{
+							if (directionVector.y < 0) directionVector.y -= 0.2;
+							else directionVector.y += 0.2;
+							if (directionVector.x > 0) directionVector.x -= 0.2;
+							else directionVector.x += 0.2;
+
+
+						}
+
+
 						ball->direction = directionVector;
 					}
 					
 					else if (layer & BrickBreaker::CollisionLayers::BOTTOM_WALL)
 					{
-						Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
+						if (Ebony::SystemManager::aiEnabled)
+						{
+							Ebony::SystemManager::shouldResetForAi = true;
+						}
+						else
+						{
+							Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
+						}
+
 					}
 					else if (layer & BrickBreaker::CollisionLayers::PADDLE)
 					{
@@ -161,6 +185,7 @@ namespace BrickBreaker
 
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponentBall = std::make_unique<components::KeyboardInput>();
 			std::unique_ptr<components::ControllerInput> controllerComponent = std::make_unique<components::ControllerInput>(0);
+			std::unique_ptr<components::AiInput> aiInput = std::make_unique<components::AiInput>();
 
 
 			keyboardInputComponentBall->bindings.insert({ SDLK_SPACE, "launchBall" });
@@ -189,6 +214,35 @@ namespace BrickBreaker
 			ballEntity->addComponent(std::move(keyboardInputComponentBall));
 			ballEntity->addComponent(std::move(controllerComponent));
 
+
+			aiInput->actions.insert({ "launchBall", [=]()
+			{
+					//TODO: Make this only happen when isAttachedToPaddle is true. Right now, it is nice for debugging though :)
+					auto ball = ballEntity->getComponent<components::Ball>();
+					
+					if (ball->isAttachedToPaddle)
+					{
+						ball->isAttachedToPaddle = false;
+						double random_x = ball->random_double(-0.8, 0.8);
+						double random_y = ball->random_double(-0.8, 0.8);
+						ball->direction = glm::normalize(glm::vec2(random_x, -abs(random_y)));
+					}
+
+				} });
+
+
+			aiInput->translationFunction = [=]()
+				{
+					auto& action = BrickBreaker::PythonManager::action;
+
+					if (action.n == 2)
+					{
+						ballEntity->getComponent<components::AiInput>()->actions["launchBall"]();
+					}
+				};
+
+
+
 			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::BALL, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::BRICK | BrickBreaker::CollisionLayers::WALL | BrickBreaker::CollisionLayers::BOTTOM_WALL, false);
 			auto ballComponent = std::make_unique<components::Ball>(400.0f, glm::vec2(0.5f, -0.5f), 1, ball, isStuckToPaddle);
 
@@ -196,11 +250,12 @@ namespace BrickBreaker
 			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::DeathScript>();
 
 			ballEntity->addComponent(std::move(script));
-
+			ballEntity->addComponent(std::move(aiInput));
 			ballEntity->addComponent(std::move(ballCollider));
 			ballEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));
 			ballEntity->addComponent(std::move(spriteBall));
 			ballEntity->addComponent(std::move(ballComponent));
+			ballEntity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, BrickBreaker::AiInformationTypes::BALL_INFORMATION));
 
 
 			return ballEntity;

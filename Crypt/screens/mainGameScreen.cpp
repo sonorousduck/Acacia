@@ -156,15 +156,6 @@ namespace Crypt
 				}
 			);
 		}
-		
-
-		auto inputTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				inputSystem.Update();
-			}
-		);
 
 		auto animationTask = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
@@ -276,6 +267,7 @@ namespace Crypt
 
 	void MainGameScreen::ProcessInput(std::chrono::microseconds elapsedTime)
 	{
+		inputSystem.Update();
 		aiInputSystem.Update(elapsedTime);
 	}
 

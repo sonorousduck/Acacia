@@ -43,6 +43,9 @@
 #include "../systems/lifePointSystem.hpp"
 #include "screenEnums.hpp"
 #include <systems/cppScriptingSystem.hpp>
+#include <systems/pythonScriptingSystem.hpp>
+#include <systems/aiInputSystem.hpp>
+#include "../systems/aiSystem.hpp"
 
 
 namespace BrickBreaker
@@ -83,9 +86,11 @@ namespace BrickBreaker
 		systems::CppScriptingSystem cppScriptingSystem;
 		systems::DestructionSystem destructionSystem;
 		systems::TimingSystem timingSystem;
+		systems::PythonScriptingSystem pythonScriptingSystem;
+		systems::AIInputSystem aiInputSystem;
+		systems::AISystem aiSystem;
 
 		Ebony::RenderTarget2D mainRenderTarget;
-
 
 		std::chrono::microseconds averageParticleRenderingTime = std::chrono::microseconds::zero();
 		std::chrono::microseconds averageParticleSystemTime = std::chrono::microseconds::zero();

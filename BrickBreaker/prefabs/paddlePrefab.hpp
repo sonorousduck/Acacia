@@ -17,6 +17,10 @@
 #include <misc/renderLayers.hpp>
 
 #include <components/timedComponent.hpp>
+#include <components/aiComponent.hpp>
+#include "../misc/aiInformationTypes.hpp"
+#include <components/aiInputComponent.hpp>
+#include "../singletons/PythonManager.hpp"
 
 namespace BrickBreaker
 {
@@ -31,6 +35,7 @@ namespace BrickBreaker
 
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
+			std::unique_ptr<components::AiInput> aiInput = std::make_unique<components::AiInput>();
 
 			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_B, "print" });
 			controllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_Y, "printRelease" });
@@ -138,6 +143,47 @@ namespace BrickBreaker
 				}});
 
 
+			aiInput->actions.insert({ "paddleLeft", [=]()
+			{
+				auto rigidBody = paddle->getComponent<components::RigidBody>();
+				auto transform = paddle->getComponent<components::Transform>();
+				auto collider = paddle->getComponent<components::Collider>();
+
+
+				if (transform->position.x > 0)
+				{
+					rigidBody->addScriptedMovement(glm::vec2{ -700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
+				}
+			} });
+
+			aiInput->actions.insert({ "paddleRight", [=]()
+			{
+				auto rigidBody = paddle->getComponent<components::RigidBody>();
+				auto transform = paddle->getComponent<components::Transform>();
+				auto collider = paddle->getComponent<components::Collider>();
+				if (transform->position.x + transform->scale.x < windowWidth)
+				{
+					rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
+				}
+			}
+				});
+
+
+			aiInput->translationFunction = [=]()
+				{
+					auto& action = BrickBreaker::PythonManager::action;
+
+					if (action.n == -1)
+					{
+						paddle->getComponent<components::AiInput>()->actions["paddleLeft"]();
+					}
+					if (action.n == 1)
+					{
+						paddle->getComponent<components::AiInput>()->actions["paddleRight"]();
+					}
+				};
+
+
 			paddle->addComponent(std::move(collider));
 			paddle->addComponent(std::move(largePaddleTime));
 			paddle->addComponent(std::move(transform));
@@ -145,6 +191,9 @@ namespace BrickBreaker
 			paddle->addComponent(std::move(keyboardInputComponent));
 			paddle->addComponent(std::move(controllerInputComponent));
 			paddle->addComponent(std::move(rigidbody));
+			paddle->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE | Ebony::AIType::REWARD, BrickBreaker::AiInformationTypes::PADDLE_INFORMATION));
+			paddle->addComponent(std::move(aiInput));
+
 		
 			return paddle;
 		}

@@ -10,6 +10,8 @@
 #include "../components/powerupComponent.hpp"
 #include <misc/renderLayers.hpp>
 #include <singletons/systemManager.hpp>
+#include <components/aiComponent.hpp>
+#include "../misc/aiInformationTypes.hpp"
 
 
 
@@ -75,10 +77,7 @@ namespace BrickBreaker
 			
 			auto collider = std::make_unique<components::Collider>(aabbCollider, BrickBreaker::CollisionLayers::POWERUP, BrickBreaker::CollisionLayers::PADDLE, false);
 
-			
-
-
-
+			powerup->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, BrickBreaker::AiInformationTypes::POWERUP_INFORMATION));
 			powerup->addComponent(std::move(collider));
 
 			return powerup;

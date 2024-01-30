@@ -16,7 +16,16 @@ namespace scripts
 
 		void Die()
 		{
-			Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
+
+			if (Ebony::SystemManager::aiEnabled)
+			{
+				Ebony::SystemManager::shouldResetForAi = true;
+			}
+			else
+			{
+				Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
+			}
+
 		}
 
 		void Update(std::chrono::microseconds elapsedTime) override

@@ -16,6 +16,11 @@
 #include <singletons/systemManager.hpp>
 #include "../singletons/GameManager.hpp"
 
+#include <components/aiComponent.hpp>
+#include "../misc/aiInformationTypes.hpp"
+
+
+
 namespace BrickBreaker
 {
 	class Brick
@@ -77,6 +82,7 @@ namespace BrickBreaker
 			brickEntity->addComponent(std::make_unique<components::RigidBody>());
 			brickEntity->addComponent(std::move(sprite));
 			brickEntity->addComponent(std::make_unique<components::Brick>(brickStrength, pointValue));
+			brickEntity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, BrickBreaker::AiInformationTypes::BRICK_INFORMATION));
 
 			return brickEntity;
 		}

@@ -40,6 +40,11 @@ namespace Ebony
 			return n;
 		}
 
+		void setValue(int newN)
+		{
+			n = newN;
+		}
+
 		int n{};
 	};
 
