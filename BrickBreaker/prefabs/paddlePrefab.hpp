@@ -173,7 +173,7 @@ namespace BrickBreaker
 				{
 					auto& action = BrickBreaker::PythonManager::action;
 
-					if (action.n == -1)
+					if (action.n == 0)
 					{
 						paddle->getComponent<components::AiInput>()->actions["paddleLeft"]();
 					}

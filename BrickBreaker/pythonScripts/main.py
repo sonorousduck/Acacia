@@ -11,18 +11,20 @@ import numpy as np
 import brickbreaker
 import cpp_module
 
-from stable_baselines3 import SAC
+from stable_baselines3 import A2C
+from stable_baselines3.common.env_util import make_vec_env
+from stable_baselines3.common.env_checker import check_env
 
 
 def randomAction(state):
     action = cpp_module.Discrete()
-    movement = np.random.randint(-1, 3)
+    movement = np.random.randint(0, 4)
     action.setValue(movement)
     return action
 
 def randomActionNoState():
     action = cpp_module.Discrete()  
-    movement = np.random.randint(-1, 3)
+    movement = np.random.randint(0, 4)
     
     action.setValue(movement)
     
@@ -32,11 +34,16 @@ class BrickBreakerEnv(gym.Env):
     metadata = {"render_modes": ["human"], "render_fps": 30}
     
     def __init__(self, render_mode=None):
+        super(BrickBreakerEnv, self).__init__()
         self.game = brickbreaker.BrickBreaker(True, False)
         self.game.Init()
         self.game.LoadContent()
         self.observation_space = spaces.Box(low=0.0, high=1.0, shape=(36, 1), dtype=np.float32)
-        self.action_space = spaces.Discrete(4, start=-1)
+        self.action_space = spaces.Discrete(4)
+        
+        done = False
+        rendering = True
+        self.game.python_init(rendering, False)
     
     def handle_received_observation(self, state):
         handled_state = []
@@ -111,7 +118,7 @@ class BrickBreakerEnv(gym.Env):
         # Returns observation and information
         return observation, {}
     
-    def render(self):
+    def render(self, mode="human"):
         self.game.render(10000)
     
     def close(self):
@@ -127,43 +134,69 @@ def StartGames():
     # model = SAC("MlpPolicy", env)
     # model.learn(total_timesteps=10000, log_interval=4)
     # model.save("sac_pendulum")
+    # print("Checking env")
+    # check_env(env)
+    # print("Checked!")
+    
+    vec_env = make_vec_env(env, n_envs=1)
+    model = A2C("MlpPolicy", vec_env, verbose=1)
+    model.learn(total_timesteps=25000)
+    model.save("a2c_brickbreaker")
+
+    
+    # state, _ = env.reset()
+    
+    # while not False:
+    #     # print("Attempting a step")
+    #     # Or agent step
+    #     action = randomAction(state)
+        
+    #     state, reward, done, _, _ = env.step(action)
+                
+    #     if rendering:
+    #         env.render()
+        
+    #     if done:
+    #         env.game.reset()
+    #         env.game.python_init(rendering, True)
+            
+    #         state, _ = env.reset()
+            
+        
+    # env.close()
     
     
-    
-    Run(env)
+    # Run(env)
 
     # test_time = datetime.timedelta(microseconds=100)
     
     # game.ProcessInput(test_time)
 
 
-def Run(env: BrickBreakerEnv):
-    print("Running game")
-    done = False
-    rendering = True
-    env.game.python_init(rendering, False)
+# def Run(env: BrickBreakerEnv):
+#     print("Running game")
+
     
-    state, _ = env.reset()
+#     state, _ = env.reset()
     
-    while not False:
-        # print("Attempting a step")
-        # Or agent step
-        action = randomAction(state)
+#     while not False:
+#         # print("Attempting a step")
+#         # Or agent step
+#         action = randomAction(state)
         
-        state, reward, done, _, _ = env.step(action)
+#         state, reward, done, _, _ = env.step(action)
                 
-        if rendering:
-            env.render()
+#         if rendering:
+#             env.render()
         
-        if done:
-            print("RESETTING!")
-            env.game.reset()
-            env.game.python_init(rendering, True)
+#         if done:
+#             env.game.reset()
+#             env.game.python_init(rendering, True)
             
-            state, _ = env.reset()
+#             state, _ = env.reset()
             
         
-    env.close()
+#     env.close()
 
 
 def Start():
