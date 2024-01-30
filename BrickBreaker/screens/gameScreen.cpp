@@ -125,27 +125,39 @@ namespace BrickBreaker
 
 		AddEntity(gameplayEntity);
 
-		entities::EntityPtr paddleEntity = BrickBreaker::Paddle::Create(glm::vec2(10.0f, 300.0f), windowWidth);
+		entities::EntityPtr paddleEntity = BrickBreaker::Paddle::Create(glm::vec2(20.0f, 300.0f), windowWidth);
 		AddEntity(paddleEntity);
 
-		entities::EntityPtr ballEntity = BrickBreaker::Ball::Create(glm::vec2(10.0f, 280.0f), paddleEntity, true);
+		entities::EntityPtr ballEntity = BrickBreaker::Ball::Create(glm::vec2(20.0f, 280.0f), paddleEntity, true);
 		AddEntity(ballEntity);
 
-		for (std::uint8_t i = 0; i < 19; i++)
+		for (std::uint8_t i = 0; i < 27; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 15.0f, "blue_tile", 3, 30);
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 23.0f, "blue_tile", 4, 40);
 			AddEntity(brickEntity);
 		}
 
-		for (std::uint8_t i = 0; i < 19; i++)
+		for (std::uint8_t i = 0; i < 27; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 40.0f, "green_tile", 2, 20);
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 31.0f, "green_tile", 3, 30);
 			AddEntity(brickEntity);
 		}
 
-		for (std::uint8_t i = 0; i < 19; i++)
+		for (std::uint8_t i = 0; i < 27; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 65.0f, "red_tile", 1, 10);
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 39.0f, "red_tile", 2, 20);
+			AddEntity(brickEntity);
+		}
+
+		for (std::uint8_t i = 0; i < 27; i++)
+		{
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 47.0f, "purple_tile", 1, 10);
+			AddEntity(brickEntity);
+		}
+
+		for (std::uint8_t i = 0; i < 27; i++)
+		{
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 55.0f, "purple_tile", 1, 10);
 			AddEntity(brickEntity);
 		}
 
@@ -164,12 +176,14 @@ namespace BrickBreaker
 
 		entities::EntityPtr rightWall = BrickBreaker::Wall::Create(static_cast<float>(windowWidth) - 5.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL);
 		entities::EntityPtr leftWall = BrickBreaker::Wall::Create(0.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL);
-		entities::EntityPtr topWall = BrickBreaker::Wall::Create(0.0f, 0.0f, static_cast<float>(windowWidth), 10.0f, BrickBreaker::CollisionLayers::TOP_WALL);
-		entities::EntityPtr bottomWall = BrickBreaker::Wall::Create(0.0f, static_cast<float>(windowHeight) - 10.0f, static_cast<float>(windowWidth), 5.0f, BrickBreaker::CollisionLayers::TOP_WALL, true);
-
+		entities::EntityPtr topWall = BrickBreaker::Wall::Create(0.0f, 0.0f, static_cast<float>(windowWidth), 10.0f, BrickBreaker::CollisionLayers::WALL);
+		entities::EntityPtr bottomWall = BrickBreaker::Wall::Create(0.0f, static_cast<float>(windowHeight) - 10.0f, static_cast<float>(windowWidth), 40.0f, BrickBreaker::CollisionLayers::BOTTOM_WALL);
+		
 		AddEntity(rightWall);
 		AddEntity(leftWall);
 		AddEntity(topWall);
+
+
 		AddEntity(bottomWall);
 
 		AddNewEntities();

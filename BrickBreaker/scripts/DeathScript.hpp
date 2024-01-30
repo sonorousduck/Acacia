@@ -19,11 +19,10 @@ namespace scripts
 			Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
 		}
 
-		void OnCollisionStart(entities::EntityPtr other, std::chrono::microseconds elapsedTime) override
+		void Update(std::chrono::microseconds elapsedTime) override
 		{
-			auto layer = other->getComponent<components::Collider>()->layer;
-
-			if (layer & BrickBreaker::CollisionLayers::BALL)
+			auto transform = entity->getComponent<components::Transform>();
+			if (transform->position.y > 320 || transform->position.y < 0 || transform->position.x > 480 || transform->position.x < 0)
 			{
 				Die();
 			}

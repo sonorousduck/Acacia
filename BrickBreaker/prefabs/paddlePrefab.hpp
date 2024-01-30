@@ -16,6 +16,8 @@
 #include <components/mouseInputComponent.hpp>
 #include <misc/renderLayers.hpp>
 
+#include <components/timedComponent.hpp>
+
 namespace BrickBreaker
 {
 	class Paddle
@@ -119,13 +121,25 @@ namespace BrickBreaker
 
 
 			components::Subcollider aabbcollider = components::Subcollider(scale / 2.0f, scale, true, true);
-			auto collider = std::make_unique<components::Collider>(aabbcollider, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::POWERUP, false);
+			auto collider = std::make_unique<components::Collider>(aabbcollider, BrickBreaker::CollisionLayers::PADDLE, BrickBreaker::CollisionLayers::POWERUP | BrickBreaker::CollisionLayers::BALL, false);
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
+			auto largePaddleTime = std::make_unique<components::TimedComponent>(10.0f, [=]() {
+				auto transform = paddle->getComponent<components::Transform>();
+				auto collider = paddle->getComponent<components::Collider>();
+				
+				if (transform->scale.x == 64.0f)
+				{
+					transform->scale.x -= 16.0f;
+
+					collider->aabbCollider.changeCenter(collider->aabbCollider.getCenter() - glm::vec2(8.0f, 0.0f));
+					collider->aabbCollider.changeSize(collider->aabbCollider.getSize() - glm::vec2(16.0f, 0.0f));
+				}});
+
 
 			paddle->addComponent(std::move(collider));
-
+			paddle->addComponent(std::move(largePaddleTime));
 			paddle->addComponent(std::move(transform));
 			paddle->addComponent(std::move(sprite));
 			paddle->addComponent(std::move(keyboardInputComponent));

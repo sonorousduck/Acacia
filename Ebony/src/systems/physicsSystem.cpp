@@ -222,10 +222,10 @@ namespace systems
 
 		//auto check = aabbCollider.getSize();
 
-		//auto test = transform->position.x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + otherAabbCollider.getSize().x / 2.0f;
-		//auto test1 = transform->position.x + aabbCollider.getSize().x / 2.0f < otherTransform->position.x - otherAabbCollider.getSize().x / 2.0f;
-		//auto test2 = transform->position.y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + otherAabbCollider.getSize().y / 2.0f;
-		//auto test3 = transform->position.y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - otherAabbCollider.getSize().y / 2.0f;
+		auto test = transform->position.x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + otherAabbCollider.getSize().x / 2.0f;
+		auto test1 = transform->position.x + aabbCollider.getSize().x / 2.0f < otherTransform->position.x - otherAabbCollider.getSize().x / 2.0f;
+		auto test2 = transform->position.y - aabbCollider.getSize().y / 2.0f > otherTransform->position.y + otherAabbCollider.getSize().y / 2.0f;
+		auto test3 = transform->position.y + aabbCollider.getSize().y / 2.0f < otherTransform->position.y - otherAabbCollider.getSize().y / 2.0f;
 
 		if (!(
 			transform->position.x - betweenFrameAABBSizeCheck.x + aabbCollider.getCenter().x - aabbCollider.getSize().x / 2.0f > otherTransform->position.x + betweenFrameAABBOther.x + otherAabbCollider.getCenter().x + otherAabbCollider.getSize().x / 2.0f || // aabb left is greater than otherAbb right
@@ -238,23 +238,29 @@ namespace systems
 			if (transform->previousPosition.x < otherTransform->previousPosition.x)
 			{
 				collider->aabbCollider.lastCollisionLocation.x = otherTransform->previousPosition.x;
+				collider->aabbCollider.lastCollisionOnOtherObjectLocation.x = transform->position.x;
 
 			}
 			// Collided on other object right side
 			else
 			{
 				collider->aabbCollider.lastCollisionLocation.x = otherTransform->previousPosition.x + otherTransform->scale.x;
+				collider->aabbCollider.lastCollisionOnOtherObjectLocation.x = transform->position.x + transform->scale.x;
 
 			}
 			// Collided on other object top side
 			if (transform->previousPosition.y < otherTransform->previousPosition.y)
 			{
 				collider->aabbCollider.lastCollisionLocation.y = otherTransform->previousPosition.y - otherTransform->scale.y;
+				collider->aabbCollider.lastCollisionOnOtherObjectLocation.y = transform->position.y;
+
 			}
 			// Collided on other object bottom side
 			else
 			{
-				collider->aabbCollider.lastCollisionLocation.y = otherTransform->previousPosition.y ;
+				collider->aabbCollider.lastCollisionLocation.y = otherTransform->previousPosition.y;
+				collider->aabbCollider.lastCollisionOnOtherObjectLocation.y = transform->position.y + transform->scale.y;
+
 			}
 
 

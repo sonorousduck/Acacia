@@ -59,6 +59,7 @@ namespace components
 		bool isCollidingLastFrame = false;
 
 		glm::vec2 lastCollisionLocation{0.0f, 0.0f};
+		glm::vec2 lastCollisionOnOtherObjectLocation{ 0.0f, 0.0f };
 
 		// Basically, the callback will take itself and the object with which it collided
 		std::optional<std::function<void(entities::EntityPtr, std::chrono::microseconds elapsedTime)>> onCollisionStart;

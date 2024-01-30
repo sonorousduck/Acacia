@@ -14,6 +14,10 @@
 #include <components/soundEffectComponent.hpp>
 #include <misc/renderLayers.hpp>
 
+#include <singletons/systemManager.hpp>
+#include "../screens/screenEnums.hpp"
+#include "../scripts/DeathScript.hpp"
+
 namespace BrickBreaker
 {
 	class Ball
@@ -37,15 +41,34 @@ namespace BrickBreaker
 
 					ballEntity->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("ball_bounce"), 50));
 
-					if (layer & BrickBreaker::CollisionLayers::WALL)
+					if (layer & BrickBreaker::CollisionLayers::WALL | layer & BrickBreaker::CollisionLayers::BRICK)
 					{
-						glm::vec2 direction = ballEntity->getComponent<components::Ball>()->direction;
-						ballEntity->getComponent<components::Ball>()->direction = glm::vec2(-direction.x, direction.y);
+						auto transform = ballEntity->getComponent<components::Transform>();
+						auto wallTransform = other->getComponent<components::Transform>();
+						glm::vec2 directionVector = glm::normalize(transform->position - transform->previousPosition);
+						auto ball = ballEntity->getComponent<components::Ball>();
+						auto collisionLocation = ballEntity->getComponent<components::Collider>()->aabbCollider.lastCollisionOnOtherObjectLocation;
+
+
+						// If hit the top/bottom
+						if (collisionLocation.y >= wallTransform->position.y + wallTransform->scale.y || collisionLocation.y <= wallTransform->position.y)
+						{
+							directionVector.y = -directionVector.y;
+						}
+
+						// If it hit the side
+						else if (collisionLocation.x >= wallTransform->position.x + wallTransform->scale.x || collisionLocation.x <= wallTransform->position.x)
+						{
+							directionVector.x = -directionVector.x;
+
+						}
+
+						ball->direction = directionVector;
 					}
-					else if (layer & BrickBreaker::CollisionLayers::TOP_WALL)
+					
+					else if (layer & BrickBreaker::CollisionLayers::BOTTOM_WALL)
 					{
-						glm::vec2 direction = ballEntity->getComponent<components::Ball>()->direction;
-						ballEntity->getComponent<components::Ball>()->direction = glm::vec2(direction.x, -direction.y);
+						Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
 					}
 					else if (layer & BrickBreaker::CollisionLayers::PADDLE)
 					{
@@ -112,58 +135,29 @@ namespace BrickBreaker
 						bounceDirection.y = -bounceDirection.y;
 
 						//glm::vec2 direction = self->getComponent<components::Ball>()->direction;
-						ballEntity->getComponent<components::Ball>()->direction = bounceDirection;
-					}
-					else if (layer & BrickBreaker::CollisionLayers::BRICK)
-					{
-						// Much more intricate collision system is needed.
-						// First, subtracting the one position from the other should give us everything we need
-						// If direction.y > 0 -> hit the bottom, else top
-						// If direction.x > 0 -> hit the right, else left
-						if (!ballEntity->getComponent<components::Ball>()->directionChangedThisFrame)
-						{
-
-
-
-							glm::vec2 direction = ballEntity->getComponent<components::Transform>()->position - other->getComponent<components::Transform>()->position;
-							glm::vec2 bounceDirection = ballEntity->getComponent<components::Ball>()->direction;
-							// We need to detect whether it hit the left or the right side
-							// Then detect whether it hit the top or the bottom side
-
-							// We hit "directly" the side, handle this specifically
-
-
-
-							if (direction.y <= 4 && direction.y >= -4)
-							{
-								bounceDirection.x = -bounceDirection.x;
-							}
-							else
-							{
-								bounceDirection.y = -bounceDirection.y;
-							}
-
-
-
-
-							// If it hit the right side, then the x velocity should negative
-							//if (direction.x > 0)
-							//{
-							//	bounceDirection.x = -bounceDirection.x;
-							//}
-							// If ball hit the bottom size, y velocity should be negative
-
-
-							//self->getComponent<components::Ball>()->SetNewDirection(bounceDirection);
-
-							ballEntity->getComponent<components::Ball>()->direction = bounceDirection;
-							ballEntity->getComponent<components::Ball>()->directionChangedThisFrame = true;
-						}
-
-
-						
-					}
+						ballEntity->getComponent<components::Ball>()->direction = glm::normalize(bounceDirection);
+					}	
 				};
+
+				ballAABBCollider.onCollision = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+					{
+						BrickBreaker::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
+						if (layer & BrickBreaker::CollisionLayers::BOTTOM_WALL)
+						{
+							Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
+						}
+					};
+				
+				ballAABBCollider.onCollisionEnd = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
+					{
+						BrickBreaker::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
+						if (layer & BrickBreaker::CollisionLayers::BOTTOM_WALL)
+						{
+							Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
+						}
+					};
+
+
 
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponentBall = std::make_unique<components::KeyboardInput>();
 			std::unique_ptr<components::ControllerInput> controllerComponent = std::make_unique<components::ControllerInput>(0);
@@ -178,7 +172,7 @@ namespace BrickBreaker
 				ball->isAttachedToPaddle = false;
 				double random_x = ball->random_double(-0.8, 0.8);
 				double random_y = ball->random_double(-0.8, 0.8);
-				ball->direction = glm::vec2(random_x, -abs(random_y));
+				ball->direction = glm::normalize(glm::vec2(random_x, -abs(random_y)));
 			} });
 
 			controllerComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_A, "launchBall" });
@@ -189,14 +183,19 @@ namespace BrickBreaker
 					ball->isAttachedToPaddle = false;
 					double random_x = ball->random_double(-0.8, 0.8);
 					double random_y = ball->random_double(-0.8, 0.8);
-					ball->direction = glm::vec2(random_x, -abs(random_y));
+					ball->direction = glm::normalize(glm::vec2(random_x, -abs(random_y)));
 				} });
 
 			ballEntity->addComponent(std::move(keyboardInputComponentBall));
 			ballEntity->addComponent(std::move(controllerComponent));
 
-			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::BALL, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::BRICK | BrickBreaker::CollisionLayers::WALL | BrickBreaker::CollisionLayers::TOP_WALL, false);
-			auto ballComponent = std::make_unique<components::Ball>(200.0f, glm::vec2(0.5f, -0.5f), 1, ball, isStuckToPaddle);
+			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::BALL, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::BRICK | BrickBreaker::CollisionLayers::WALL | BrickBreaker::CollisionLayers::BOTTOM_WALL, false);
+			auto ballComponent = std::make_unique<components::Ball>(400.0f, glm::vec2(0.5f, -0.5f), 1, ball, isStuckToPaddle);
+
+
+			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::DeathScript>();
+
+			ballEntity->addComponent(std::move(script));
 
 			ballEntity->addComponent(std::move(ballCollider));
 			ballEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));

@@ -51,6 +51,8 @@ namespace BrickBreaker
 
 								collider->aabbCollider.changeCenter(collider->aabbCollider.getCenter() + glm::vec2(8.0f, 0.0f));
 								collider->aabbCollider.changeSize(collider->aabbCollider.getSize() + glm::vec2(16.0f, 0.0f));
+
+								other->getComponent<components::TimedComponent>()->ResetTimer();
 							}
 
 						}
@@ -71,7 +73,7 @@ namespace BrickBreaker
 
 				};
 			
-			auto collider = std::make_unique<components::Collider>(aabbCollider, BrickBreaker::CollisionLayers::POWERUP, false);
+			auto collider = std::make_unique<components::Collider>(aabbCollider, BrickBreaker::CollisionLayers::POWERUP, BrickBreaker::CollisionLayers::PADDLE, false);
 
 			
 
