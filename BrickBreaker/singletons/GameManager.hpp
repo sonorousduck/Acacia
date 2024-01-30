@@ -8,18 +8,20 @@ namespace BrickBreaker
 	class GameManager
 	{
 	public:
-		static void addPoints(std::uint32_t additionalPoints);
-		static std::uint32_t getPoints();
+		static void addPoints(float additionalPoints);
+		static float getPoints();
+		static void ResetPoints();
 		static void heal(int healAmount);
 		static void takeDamage(int damageAmount);
 		static std::uint8_t getLives();
 
-		
+		static std::uint32_t brickCount;
+
 
 	private:
 		GameManager() {}
 
-		static std::uint32_t currentPoints;
+		static float currentPoints;
 		static std::uint8_t currentLives;
 
 

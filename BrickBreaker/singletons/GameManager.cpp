@@ -5,17 +5,23 @@
 namespace BrickBreaker
 {
 
-	std::uint32_t GameManager::currentPoints{ 0 };
+	float GameManager::currentPoints{ 0 };
 	std::uint8_t GameManager::currentLives{ 3 };
+	std::uint32_t GameManager::brickCount{ 0 };
 
-	void GameManager::addPoints(std::uint32_t additionalPoints)
+	void GameManager::addPoints(float additionalPoints)
 	{
 		currentPoints += additionalPoints;
 	}
 
-	std::uint32_t GameManager::getPoints()
+	float GameManager::getPoints()
 	{
 		return currentPoints;
+	}
+
+	void GameManager::ResetPoints()
+	{
+		currentPoints = 0.0f;
 	}
 
 	void GameManager::heal(int healAmount)

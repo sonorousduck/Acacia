@@ -14,7 +14,7 @@
 #include <components/soundEffectComponent.hpp>
 #include <misc/renderLayers.hpp>
 #include <singletons/systemManager.hpp>
-
+#include "../singletons/GameManager.hpp"
 
 namespace BrickBreaker
 {
@@ -48,11 +48,19 @@ namespace BrickBreaker
 
 							
 
-							GameManager::addPoints(brick->pointValue);
+							GameManager::addPoints(static_cast<float>(brick->pointValue));
 
 
 							brick->destroyed = true;
 							Ebony::SystemManager::RemoveEntity(brickEntity->getId());
+							GameManager::brickCount--;
+
+							if (GameManager::brickCount == 0)
+							{
+								GameManager::addPoints(1000.0f);
+								Ebony::SystemManager::shouldResetForAi = true;
+							}
+
 
 							auto randomChance = rand() % 100;
 

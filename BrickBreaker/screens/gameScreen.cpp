@@ -131,40 +131,51 @@ namespace BrickBreaker
 		entities::EntityPtr ballEntity = BrickBreaker::Ball::Create(glm::vec2(20.0f, 280.0f), paddleEntity, true);
 		AddEntity(ballEntity);
 
-		for (std::uint8_t i = 0; i < 27; i++)
+		auto ballCount = 0;
+
+		/*for (std::uint8_t i = 0; i < 27; i++)
 		{
 			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 23.0f, "blue_tile", 4, 40);
 			AddEntity(brickEntity);
+			ballCount++;
+
 		}
 
 		for (std::uint8_t i = 0; i < 27; i++)
 		{
 			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 31.0f, "green_tile", 3, 30);
 			AddEntity(brickEntity);
+			ballCount++;
+
 		}
 
 		for (std::uint8_t i = 0; i < 27; i++)
 		{
 			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 39.0f, "red_tile", 2, 20);
 			AddEntity(brickEntity);
+			ballCount++;
+
 		}
 
 		for (std::uint8_t i = 0; i < 27; i++)
 		{
 			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 47.0f, "purple_tile", 1, 10);
 			AddEntity(brickEntity);
-		}
+			ballCount++;
 
-		for (std::uint8_t i = 0; i < 27; i++)
+		}*/
+
+		for (std::uint8_t i = 0; i < 1; i++)
 		{
 			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 55.0f, "purple_tile", 1, 10);
 			AddEntity(brickEntity);
+			ballCount++;
 		}
 
 		entities::EntityPtr scoreDisplay = BrickBreaker::ScorePrefab::Create(glm::vec2(windowWidth - 150.0f, 25.0f), Ebony::ResourceManager::GetFont("default"));
 
 		AddEntity(scoreDisplay);
-
+		GameManager::brickCount = ballCount;
 
 		//keyboardInputComponent->loadKeyBindings("../keyBindings.json");
 
