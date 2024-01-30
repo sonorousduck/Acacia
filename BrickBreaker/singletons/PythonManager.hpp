@@ -42,7 +42,7 @@ namespace BrickBreaker
 		static void Destroy();
 
 
-		static Ebony::Discrete action; // -1 is left, 0 is nothing, 1 is right
+		static int action; // -1 is left, 0 is nothing, 1 is right
 		static State state;
 		static Ebony::Discrete reward;
 

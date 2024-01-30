@@ -1,4 +1,3 @@
-import torch
 import datetime
 import argparse
 
@@ -11,16 +10,39 @@ import numpy as np
 import brickbreaker
 import cpp_module
 
-from stable_baselines3 import A2C
-from stable_baselines3.common.env_util import make_vec_env
-from stable_baselines3.common.env_checker import check_env
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+import os
+import random
+import time
+from stable_baselines3.common.buffers import ReplayBuffer
 
+class QNetwork(nn.Module):
+    def __init__(self, env):
+        super().__init__()
+        self.network = nn.Sequential(
+            nn.Linear(np.array(env.single_observation_space.shape).prod(), 120),
+            nn.ReLU(),
+            nn.Linear(120, 84),
+            nn.ReLU(),
+            nn.Linear(84, env.single_action_space.n),
+        )
+
+    def forward(self, x):
+        return self.network(x)
+
+
+def linear_schedule(start_e: float, end_e: float, duration: int, t: int):
+    slope = (end_e - start_e) / duration
+    return max(slope * t + start_e, end_e)
 
 def randomAction(state):
     action = cpp_module.Discrete()
     movement = np.random.randint(0, 4)
     action.setValue(movement)
-    return action
+    return movement
 
 def randomActionNoState():
     action = cpp_module.Discrete()  
@@ -28,7 +50,7 @@ def randomActionNoState():
     
     action.setValue(movement)
     
-    return action
+    return movement
 
 class BrickBreakerEnv(gym.Env):
     metadata = {"render_modes": ["human"], "render_fps": 30}
@@ -39,7 +61,10 @@ class BrickBreakerEnv(gym.Env):
         self.game.Init()
         self.game.LoadContent()
         self.observation_space = spaces.Box(low=0.0, high=1.0, shape=(36, 1), dtype=np.float32)
+        self.single_observation_space = spaces.Box(low=0.0, high=1.0, shape=(36, 1), dtype=np.float32)
+        
         self.action_space = spaces.Discrete(4)
+        self.single_action_space = spaces.Discrete(4)
         
         done = False
         rendering = True
@@ -131,18 +156,90 @@ def StartGames():
     
     rendering = True
     env = BrickBreakerEnv("human")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    buffer_size = 10000
+    gamma = 0.99
+    tau = 1.0
+    target_network_frequency = 500
+    batch_size = 128
+    start_e = 1
+    end_e = 0.05
+    exploration_fraction = 0.5
+    learning_starts = 10000
+    train_frequency = 10
+    games_to_play = 100000
+
+
+    q_network = QNetwork(env).to(device)
+    optimizer = optim.Adam(q_network.parameters(), lr=2.5e-4)
+    target_network = QNetwork(env).to(device)
+    target_network.load_state_dict(q_network.state_dict())
+    rb = ReplayBuffer(
+        buffer_size,
+        env.single_observation_space,
+        env.single_action_space,
+        device,
+        handle_timeout_termination=False,
+    )
+    
+    state, _ = env.reset()
+    i = 0
+    global_steps = 0
+    while i != games_to_play:
+        global_steps += 1
+        epsilon = linear_schedule(start_e, end_e, exploration_fraction * games_to_play, i)
+        print("Going to take an action")
+        if random.random() < epsilon:
+            action = env.single_action_space.sample()
+            print(action)
+        else:
+            q_values = q_network(torch.Tensor(state).to(device))
+            action = torch.argmax(q_values, dim=1).cpu().numpy()
+        
+        print("Have my action")
+        next_state, reward, done, _, info = env.step(action) 
+        print("Acted")
+        rb.add([state], [next_state], [action], [reward], [done], [info])
+        print("Got here at least")
+        
+        state = next_state
+
+        if global_steps > learning_starts:
+            if global_steps % train_frequency == 0:
+                data = rb.sample(batch_size)
+                
+                with torch.no_grad():
+                    target_max, _ = target_network(data.next_observations).max(dim=1)
+                    td_target = data.rewards.flatten() + gamma * target_max * (1 - data.dones.flatten())
+                old_val = q_network(data.observations).gather(1, data.actions).squeeze()
+                loss = F.mse_loss(td_target, old_val)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                
+            if global_steps % target_network_frequency == 0:
+                for target_network_param, q_network_param in zip(target_network.parameters(), q_network.parameters()):
+                    target_network_param.data.copy_(
+                        tau * q_network_param.data + (1.0 - tau) * target_network_param.data
+                    )  
+        
+        model_path = f"runs/{global_steps}.pth"
+        torch.save(q_network.state_dict(), model_path)
+        print(f"model saved to {model_path}")  
+        
+        if done:
+            env.game.reset()
+            env.game.python_init(rendering, True)
+            i += 1
+            state, _ = env.reset()
+    
     # model = SAC("MlpPolicy", env)
     # model.learn(total_timesteps=10000, log_interval=4)
     # model.save("sac_pendulum")
     # print("Checking env")
     # check_env(env)
     # print("Checked!")
-    
-    vec_env = make_vec_env(env, n_envs=1)
-    model = A2C("MlpPolicy", vec_env, verbose=1)
-    model.learn(total_timesteps=25000)
-    model.save("a2c_brickbreaker")
-
     
     # state, _ = env.reset()
     

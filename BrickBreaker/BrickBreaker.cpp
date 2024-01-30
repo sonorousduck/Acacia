@@ -277,7 +277,7 @@ namespace Ebony {
 
 		std::tuple<BrickBreaker::State, Ebony::Discrete, bool, bool, std::unordered_map<std::string, std::string>> Step(pybind11::object action, int timestep)
 		{
-			BrickBreaker::PythonManager::action = action.cast<Ebony::Discrete>();;
+			BrickBreaker::PythonManager::action = action.cast<int>();;
 
 			Ebony::Time::SetDeltaTime(std::chrono::microseconds(timestep));
 			ProcessInput(std::chrono::microseconds(timestep));

@@ -235,7 +235,7 @@ namespace BrickBreaker
 				{
 					auto& action = BrickBreaker::PythonManager::action;
 
-					if (action.n == 2)
+					if (action == 2)
 					{
 						ballEntity->getComponent<components::AiInput>()->actions["launchBall"]();
 					}

@@ -3,7 +3,7 @@
 
 namespace BrickBreaker
 {
-	Ebony::Discrete PythonManager::action{};
+	int PythonManager::action{};
 	State PythonManager::state{};
 	Ebony::Discrete PythonManager::reward{};
 
