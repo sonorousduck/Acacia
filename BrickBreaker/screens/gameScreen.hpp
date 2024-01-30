@@ -10,6 +10,8 @@
 #include <systems/fontRenderer.hpp>
 #include <systems/physicsSystem.hpp>
 #include <systems/spriteRenderer.hpp>
+#include <systems/timingSystem.hpp>
+#include <systems/destructionSystem.hpp>
 #include "../systems/ballSystem.hpp"
 #include "../systems/lifePointSystem.hpp"
 
@@ -79,6 +81,8 @@ namespace BrickBreaker
 		systems::BallSystem ballSystem;
 		systems::LifePointSystem lifePointSystem;
 		systems::CppScriptingSystem cppScriptingSystem;
+		systems::DestructionSystem destructionSystem;
+		systems::TimingSystem timingSystem;
 
 		Ebony::RenderTarget2D mainRenderTarget;
 

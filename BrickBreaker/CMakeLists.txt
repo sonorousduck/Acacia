@@ -47,6 +47,7 @@ set(Prefabs
   prefabs/logoPrefab.hpp
   prefabs/buttonPrefab.hpp
   prefabs/menuCursorPrefab.hpp
+  prefabs/mainMusicPrefab.hpp
 )
 
 set(SingletonHeaders

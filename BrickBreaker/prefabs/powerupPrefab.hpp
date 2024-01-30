@@ -9,7 +9,7 @@
 #include "../misc/collisionLayers.hpp"
 #include "../components/powerupComponent.hpp"
 #include <misc/renderLayers.hpp>
-
+#include <singletons/systemManager.hpp>
 
 
 
@@ -18,15 +18,17 @@ namespace BrickBreaker
 	class Powerup
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, std::uint8_t powerupType, const char* sprite, std::function<void(entities::Entity::IdType)> RemoveEntity)
+		static entities::EntityPtr Create(glm::vec2 startTransform, std::uint8_t powerupType, const char* spriteName)
 		{
 			entities::EntityPtr powerup = std::make_shared<entities::Entity>();
-			powerup->addComponent(std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(25.0f, 25.0f)));
-			powerup->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(sprite), Ebony::Colors::White, Ebony::RenderLayer::NEAR_BACKGROUND));
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(spriteName), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
+			auto scale = sprite->GetDimensions();
+			powerup->addComponent(std::make_unique<components::Transform>(startTransform, 0.0f, scale));
+			powerup->addComponent(std::move(sprite));
 			powerup->addComponent(std::make_unique<components::Powerup>(Powerups::LARGER_PADDLE));
 			powerup->addComponent(std::make_unique<components::RigidBody>(glm::vec2(0.0f, 250.0f), glm::vec2(0.0f, 0.0f), false));
 
-			components::Subcollider aabbCollider = components::Subcollider(glm::vec2(13.5f, 13.5f), glm::vec2(25.0f, 25.0f), true, true);
+			components::Subcollider aabbCollider = components::Subcollider(scale / 2.0f, scale, true, true);
 			aabbCollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 					BrickBreaker::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
@@ -43,12 +45,14 @@ namespace BrickBreaker
 							auto transform = other->getComponent<components::Transform>();
 							auto collider = other->getComponent<components::Collider>();
 
-							//if (transform->scale.x == 150.0f)
-							//{
-								transform->scale.x += 50.0f;
-								collider->aabbCollider.changeCenter(collider->aabbCollider.getCenter() + glm::vec2(25.0f, 0.0f));
-								collider->aabbCollider.changeSize(collider->aabbCollider.getSize() + glm::vec2(50.0f, 0.0f));
-							//}
+							if (transform->scale.x == 48.0f)
+							{
+								transform->scale.x += 16.0f;
+
+								collider->aabbCollider.changeCenter(collider->aabbCollider.getCenter() + glm::vec2(8.0f, 0.0f));
+								collider->aabbCollider.changeSize(collider->aabbCollider.getSize() + glm::vec2(16.0f, 0.0f));
+							}
+
 						}
 						else if (powerupComponent->powerupType & Powerups::ADDITIONAL_BALL)
 						{
@@ -62,7 +66,7 @@ namespace BrickBreaker
 						}
 
 
-						RemoveEntity(powerup->getId());
+						Ebony::SystemManager::RemoveEntity(powerup->getId());
 					}
 
 				};

@@ -24,7 +24,8 @@ namespace BrickBreaker
 		static entities::EntityPtr Create(glm::vec2 startTransform, int windowWidth)
 		{
 			entities::EntityPtr paddle = std::make_shared<entities::Entity>();
-
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
+			auto scale = sprite->GetDimensions();
 
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
@@ -92,13 +93,13 @@ namespace BrickBreaker
 			{
 				auto transform = paddle->getComponent<components::Transform>();
 
-				if (transform->scale.x == 150.0f)
+				if (transform->scale.x == 48.0f)
 				{
-					transform->scale.x += 50.0f;
+					transform->scale.x += 16.0f;
 				}
 				else
 				{
-					transform->scale.x = 150.f;
+					transform->scale.x = 48.0f;
 				}
 			} });
 
@@ -117,10 +118,9 @@ namespace BrickBreaker
 			paddle->addComponent(std::make_unique<components::SoundEffect>(Ebony::ENTITY));
 
 
-			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
-			components::Subcollider aabbcollider = components::Subcollider(glm::vec2(75.0f, 25.0f), glm::vec2(150.0f, 50.0f), true, true);
+			components::Subcollider aabbcollider = components::Subcollider(scale / 2.0f, scale, true, true);
 			auto collider = std::make_unique<components::Collider>(aabbcollider, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::POWERUP, false);
-			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, glm::vec2(150.0f, 50.0f));
+			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
 

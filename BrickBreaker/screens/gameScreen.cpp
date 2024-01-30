@@ -1,62 +1,36 @@
 #include "gameScreen.hpp"
-
+#include "../prefabs/mainMusicPrefab.hpp"
 
 namespace BrickBreaker
 {
 
 	void GameScreen::LoadContent()
 	{
-		Ebony::ResourceManager::LoadSoundEffect("wall", "/SoundEffects/wall.wav", "", false);
-		Ebony::ResourceManager::LoadSoundEffect("click", "click.wav", "BrickBreaker");
-		Ebony::ResourceManager::LoadSoundEffect("ball_bounce", "ball_bounce.wav", "BrickBreaker");
-		Ebony::ResourceManager::LoadSoundEffect("menu_select", "Menu Selection Click.wav", "BrickBreaker");
-		Ebony::ResourceManager::LoadSoundEffect("negative", "negative.wav", "BrickBreaker");
-		Ebony::ResourceManager::LoadSoundEffect("positive", "positive.wav", "BrickBreaker");
-		Ebony::ResourceManager::LoadSoundEffect("powerup", "Powerup.wav", "BrickBreaker");
-		Ebony::ResourceManager::LoadSoundEffect("save", "save.wav", "BrickBreaker");
-		Ebony::ResourceManager::LoadSoundEffect("brick_break", "brick_break.wav", "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("/SoundEffects/wall.wav", "wall",  "", false);
+		Ebony::ResourceManager::LoadSoundEffect("click.wav", "click",  "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("ball_bounce.wav", "ball_bounce",  "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("Menu Selection Click.wav", "menu_select", "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("negative.wav", "negative",  "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("positive.wav", "positive",  "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("Powerup.wav", "powerup",  "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("save.wav", "save",  "BrickBreaker");
+		Ebony::ResourceManager::LoadSoundEffect("brick_break.wav", "brick_break",  "BrickBreaker");
 
-		Ebony::ResourceManager::LoadMusic("cyberpunk_moonlight_sonata", "Cyberpunk-Moonlight-Sonata.wav", "BrickBreaker");
-		Ebony::ResourceManager::LoadMusic("cyberpunk_moonlight_sonata_short", "Cyberpunk-Moonlight-Sonata-editted.wav", "BrickBreaker");
+		Ebony::ResourceManager::LoadMusic("Level1Music.mp3", "base_music", "SpaceGuy");
+		Ebony::ResourceManager::LoadMusic("Cyberpunk-Moonlight-Sonata.wav", "cyberpunk_moonlight_sonata",  "BrickBreaker");
+		Ebony::ResourceManager::LoadMusic("Cyberpunk-Moonlight-Sonata-editted.wav", "cyberpunk_moonlight_sonata_short", "BrickBreaker");
 			
 		Ebony::ResourceManager::LoadMusic("song18", "/Music/song18.wav", "", false);
-		Ebony::ResourceManager::LoadTexture("blue_tile.tx", "blue_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("blue_broken_tile.tx", "blue_broken_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("grey_tile.tx", "grey_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("broken_grey_tile.tx", "grey_broken_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("emerald_tile.tx", "emerald_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("emerald_broken_tile.tx", "emerald_broken_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("green_tile.tx", "green_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("green_broken_tile.tx", "green_broken_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("yellow_tile.tx", "yellow_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("yellow_broken_tile.tx", "yellow_broken_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("red_tile.tx", "red_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("red_broken_tile.tx", "red_broken_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("brown_tile.tx", "brown_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("broken_brown_tile.tx", "brown_broken_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("purple_tile.tx", "purple_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("purple_broken_tile.tx", "purple_broken_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("light_blue_tile.tx", "light_blue_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("Default.tx", "default", "Crypt");
+		Ebony::ResourceManager::LoadTexture("BlueBrick.tx", "blue_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("GreenBrick.tx", "green_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("RedBrick.tx", "red_tile", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("PurpleBrick.tx", "purple_tile", "BrickBreaker");
 		Ebony::ResourceManager::LoadTexture("light_blue_broken_tile.tx", "light_blue_broken_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("orange_tile.tx", "orange_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("orange_broken_tile.tx", "orange_broken_tile", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("ball.tx", "ball", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("paddle_00.tx", "paddle_0", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("paddle_01.tx", "paddle_1", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("paddle_02.tx", "paddle_2", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("heart.tx", "heart", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("50_extra.tx", "50_extra", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("100_extra.tx", "100_extra", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("250_extra.tx", "250_extra", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("500_extra.tx", "500_extra", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("big_paddle.tx", "big_paddle", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("small_paddle.tx", "small_paddle", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("bigger_paddle_powerup.tx", "bigger_paddle_powerup", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("breaks_through_powerup.tx", "breaks_through_powerup", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("extra_ball_powerup.tx", "extra_ball_powerup", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("fast_powerup.tx", "fast_powerup", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("slow_powerup.tx", "slow_powerup", "BrickBreaker");
-		Ebony::ResourceManager::LoadTexture("smaller_paddle_powerup.tx", "smaller_paddle_powerup", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("Ball.tx", "ball", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("Paddle.tx", "paddle_0", "BrickBreaker");
+		//Ebony::ResourceManager::LoadTexture("big_paddle.tx", "big_paddle", "BrickBreaker");
+		Ebony::ResourceManager::LoadTexture("WidePowerup.tx", "bigger_paddle_powerup", "BrickBreaker");
 		Ebony::ResourceManager::LoadTexture("box.tx", "collider", "BrickBreaker");
 		Ebony::ResourceManager::LoadTexture("empty.tx", "empty", "BrickBreaker");
 		Ebony::ResourceManager::LoadFont("super-indie-font/SuperIndie.ttf", "default", "Crypt");
@@ -102,6 +76,8 @@ namespace BrickBreaker
 		inputSystem = systems::InputSystem();
 		lifePointSystem = systems::LifePointSystem();
 		cppScriptingSystem = systems::CppScriptingSystem();
+		destructionSystem = systems::DestructionSystem();
+		timingSystem = systems::TimingSystem();
 
 		std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/sprite.vert", "shaders/sprite.frag", "default");
 		Ebony::ResourceManager::LoadShader("shaders/font.vert", "shaders/font.frag", "text");
@@ -144,7 +120,7 @@ namespace BrickBreaker
 		gameplayEntity->addComponent(std::move(gameplayKeyboardInputComponent));
 
 
-		gameplayEntity->addComponent(std::make_unique<components::Music>(Ebony::IndividualMusicTrack(Ebony::ResourceManager::GetMusic("cyberpunk_moonlight_sonata_short"), 60)));
+		//gameplayEntity->addComponent(std::make_unique<components::Music>(Ebony::IndividualMusicTrack(Ebony::ResourceManager::GetMusic("cyberpunk_moonlight_sonata_short"), 127)));
 
 
 		AddEntity(gameplayEntity);
@@ -157,19 +133,19 @@ namespace BrickBreaker
 
 		for (std::uint8_t i = 0; i < 19; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 15.0f, 35.0f, 20.0f, "blue_tile", 3, 30, [=](entities::Entity::IdType id) {RemoveEntity(id); }, [=](entities::EntityPtr entity) {AddEntity(entity); });
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 15.0f, "blue_tile", 3, 30);
 			AddEntity(brickEntity);
 		}
 
 		for (std::uint8_t i = 0; i < 19; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 40.0f, 35.0f, 20.0f, "green_tile", 2, 20, [=](entities::Entity::IdType id) {RemoveEntity(id); }, [=](entities::EntityPtr entity) {AddEntity(entity); });
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 40.0f, "green_tile", 2, 20);
 			AddEntity(brickEntity);
 		}
 
 		for (std::uint8_t i = 0; i < 19; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 40.0f * i, 65.0f, 35.0f, 20.0f, "red_tile", 1, 10, [=](entities::Entity::IdType id) {RemoveEntity(id); }, [=](entities::EntityPtr entity) {AddEntity(entity); });
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 65.0f, "red_tile", 1, 10);
 			AddEntity(brickEntity);
 		}
 
@@ -183,12 +159,13 @@ namespace BrickBreaker
 		//keyboardInput->getComponent<components::KeyboardInput>()->saveKeyBindings("../keyBindings.json");
 		//keyboardInput->getComponent<components::ControllerInput>()->saveControllerBindings("../controllerBindings.json", "../joystickBindings.json");
 
+		AddEntity(BrickBreaker::MainMusicPrefab::Create("cyberpunk_moonlight_sonata_short", 127));
 
 
-		entities::EntityPtr rightWall = BrickBreaker::Wall::Create(static_cast<float>(windowWidth) - 5.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL, nextScreen);
-		entities::EntityPtr leftWall = BrickBreaker::Wall::Create(0.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL, nextScreen);
-		entities::EntityPtr topWall = BrickBreaker::Wall::Create(0.0f, 0.0f, static_cast<float>(windowWidth), 10.0f, BrickBreaker::CollisionLayers::TOP_WALL, nextScreen);
-		entities::EntityPtr bottomWall = BrickBreaker::Wall::Create(0.0f, static_cast<float>(windowHeight) - 1.0f, static_cast<float>(windowWidth), 5.0f, BrickBreaker::CollisionLayers::TOP_WALL, nextScreen, true);
+		entities::EntityPtr rightWall = BrickBreaker::Wall::Create(static_cast<float>(windowWidth) - 5.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL);
+		entities::EntityPtr leftWall = BrickBreaker::Wall::Create(0.0f, 0.0f, 10.0f, static_cast<float>(windowHeight), BrickBreaker::CollisionLayers::WALL);
+		entities::EntityPtr topWall = BrickBreaker::Wall::Create(0.0f, 0.0f, static_cast<float>(windowWidth), 10.0f, BrickBreaker::CollisionLayers::TOP_WALL);
+		entities::EntityPtr bottomWall = BrickBreaker::Wall::Create(0.0f, static_cast<float>(windowHeight) - 10.0f, static_cast<float>(windowWidth), 5.0f, BrickBreaker::CollisionLayers::TOP_WALL, true);
 
 		AddEntity(rightWall);
 		AddEntity(leftWall);
@@ -215,6 +192,8 @@ namespace BrickBreaker
 			ballSystem.AddEntity(entity);
 			lifePointSystem.AddEntity(entity);
 			cppScriptingSystem.AddEntity(entity);
+			timingSystem.AddEntity(entity);
+			destructionSystem.AddEntity(entity);
 
 			allEntities[entity->getId()] = entity;
 		}
@@ -240,6 +219,9 @@ namespace BrickBreaker
 			ballSystem.RemoveEntity(entityId);
 			lifePointSystem.RemoveEntity(entityId);
 			cppScriptingSystem.RemoveEntity(entityId);
+			timingSystem.RemoveEntity(entityId);
+			destructionSystem.RemoveEntity(entityId);
+
 		}
 
 		removeEntities.clear();
@@ -258,7 +240,7 @@ namespace BrickBreaker
 				graphDone.count_down();
 			});
 
-		auto task1 = Ebony::ThreadPool::instance().createTask(
+		auto animationUpdate = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
 			[this, elapsedTime]()
 			{
@@ -266,7 +248,7 @@ namespace BrickBreaker
 			}
 		);
 
-		auto task2 = Ebony::ThreadPool::instance().createTask(
+		auto particleUpdate = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
 			[this, elapsedTime]()
 			{
@@ -274,15 +256,8 @@ namespace BrickBreaker
 			}
 		);
 
-		auto task3 = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				physicsSystem.Update(elapsedTime);
-			}
-		);
 
-		auto task6 = Ebony::ThreadPool::instance().createTask(
+		auto audioUpdate = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
 			[this, elapsedTime]()
 			{
@@ -290,15 +265,7 @@ namespace BrickBreaker
 			}
 		);
 
-		//auto task4 = Ebony::ThreadPool::instance().createTask(
-		//	taskGraph,
-		//	[this, elapsedTime]()
-		//	{
-		//		EbonyAudio::AudioManager::Update();
-		//	}
-		//);
-
-		auto task5 = Ebony::ThreadPool::instance().createTask(
+		auto ballUpdate = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
 			[this, elapsedTime]()
 			{
@@ -307,7 +274,7 @@ namespace BrickBreaker
 		);
 
 
-		auto task7 = Ebony::ThreadPool::instance().createTask(
+		auto lifeUpdate = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
 			[this, elapsedTime]()
 			{
@@ -323,9 +290,24 @@ namespace BrickBreaker
 			}
 		);
 
+		auto timerTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				timingSystem.Update(elapsedTime);
+			}
+		);
+
+		auto destructionTask = Ebony::ThreadPool::instance().createTask(
+			taskGraph,
+			[this, elapsedTime]()
+			{
+				destructionSystem.Update(elapsedTime);
+			}
+		);
+
 
 		// Declare predecessors here
-		taskGraph->declarePredecessor(task3->getId(), task5->getId());
 		//taskGraph->declarePredecessor(task6->getId(), task4->getId());
 		//taskGraph->declarePredecessor(task7->getId(), task4->getId());
 		//taskGraph->declarePredecessor(task5->getId(), task4->getId());
@@ -338,6 +320,7 @@ namespace BrickBreaker
 		Ebony::ThreadPool::instance().submitTaskGraph(taskGraph);
 		graphDone.wait();
 
+		physicsSystem.Update(elapsedTime);
 
 		averageUpdateTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - firstTime);
 
@@ -357,7 +340,6 @@ namespace BrickBreaker
 
 		auto previousTime = std::chrono::system_clock::now();
 		particleRenderer.Update();
-		averageParticleRenderingTime += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - previousTime);
 		fontRenderer.Update();
 
 
@@ -407,6 +389,8 @@ namespace BrickBreaker
 			ballSystem.RemoveEntity(entityId);
 			lifePointSystem.RemoveEntity(entityId);
 			cppScriptingSystem.RemoveEntity(entityId);
+			destructionSystem.RemoveEntity(entityId);
+			timingSystem.RemoveEntity(entityId);
 		}
 
 		allEntities.clear();

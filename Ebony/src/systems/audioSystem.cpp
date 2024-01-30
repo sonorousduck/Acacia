@@ -76,13 +76,10 @@ namespace systems
 					else
 					{
 						// TODO: Skip for now. This means there weren't enough sounds to play it. Should think about how to handle this in the future
+						soundEffect->soundEffectQueue.pop_front();
+
 					}
 				}
-
-
-
-				
-
 			}
 
 			if (entity->hasComponent<components::Music>())

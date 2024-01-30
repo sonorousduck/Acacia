@@ -182,6 +182,10 @@ namespace Ebony {
 				if (Ebony::SystemManager::newScreenFocused)
 				{
 					ChangeScreens();
+					auto currentTime = std::chrono::system_clock::now();
+					auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - previousTime);
+					Ebony::Time::SetDeltaTime(elapsedTime);
+					previousTime = currentTime;
 				}
 
 				frame++;
@@ -189,19 +193,23 @@ namespace Ebony {
 			
 			ThreadPool::terminate();
 			//EbonyAudio::AudioManager::StopAll();
+			Ebony::AudioManager::StopAll();
 			Ebony::ResourceManager::Clear();
 		}
 
 	public:
 
-		int windowWidth = 1920;
-		int windowHeight = 1080;
+		int windowWidth = 1920 / 2;
+		int windowHeight = 1080 / 2;
 		int renderWidth = 480;
 		int renderHeight = 320;
 
+		bool isAI = false;
+
+
 	private:
 
-		Ebony::Color clearColor = Ebony::Colors::CornflowerBlue;
+		Ebony::Color clearColor = Ebony::Colors::Black;
 
 	};
 

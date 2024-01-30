@@ -671,10 +671,10 @@ int main(int argc, char* argv[])
 	//	return -1;
 	//}
 	//std::filesystem::path directoryTextures = "../../../Graphics/textures";
-	std::filesystem::path directoryTextures = "../../../SpaceGuy/assets/textures";
-	//std::filesystem::path directoryTextures = "../../../BrickBreaker/assets/textures";
+	//std::filesystem::path directoryTextures = "../../../SpaceGuy/assets/textures";
+	std::filesystem::path directoryTextures = "../../../BrickBreaker/assets/textures";
 
-	std::filesystem::path directoryModels = "../../../Graphics/models";
+	//std::filesystem::path directoryModels = "../../../Graphics/models";
 
 	std::filesystem::path cwd = std::filesystem::current_path();
 	std::cout << cwd << std::endl;
@@ -695,21 +695,21 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	std::cout << "Loading asset directory at " << directoryModels << std::endl;
+	//std::cout << "Loading asset directory at " << directoryModels << std::endl;
 
-	for (auto& p : std::filesystem::recursive_directory_iterator(directoryModels))
-	{
-		std::cout << "File: " << p << std::endl;
+	//for (auto& p : std::filesystem::recursive_directory_iterator(directoryModels))
+	//{
+	//	std::cout << "File: " << p << std::endl;
 
-		if (p.path().extension() == ".obj")
-		{
-			std::cout << "Found a model" << std::endl;
+	//	if (p.path().extension() == ".obj")
+	//	{
+	//		std::cout << "Found a model" << std::endl;
 
-			//auto newpath = p.path();
-			//newpath.replace_extension(".mesh");
-			//convert_image(p.path(), newpath);
-		}
-	}
+	//		//auto newpath = p.path();
+	//		//newpath.replace_extension(".mesh");
+	//		//convert_image(p.path(), newpath);
+	//	}
+	//}
 
 
 	return 0;

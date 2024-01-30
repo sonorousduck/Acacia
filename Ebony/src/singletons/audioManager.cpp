@@ -128,7 +128,7 @@ namespace Ebony
 		}
 
 		std::cerr << "Not enough channels in the given audio type: " << audioType << std::endl;
-		return -2;
+		return -1;
 	}
 
 	void AudioManager::ReturnChannel(int channel, AudioType audioType)

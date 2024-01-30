@@ -13,51 +13,61 @@
 #include "../singletons/GameManager.hpp"
 #include <components/soundEffectComponent.hpp>
 #include <misc/renderLayers.hpp>
+#include <singletons/systemManager.hpp>
+
 
 namespace BrickBreaker
 {
 	class Brick
 	{
 	public:
-		static entities::EntityPtr Create(float transformWidth, float transformHeight, float scaleX, float scaleY, const char* tile_image, int brickStrength, std::uint32_t pointValue, std::function<void(entities::Entity::IdType)> RemoveEntity, std::function<void(entities::EntityPtr)> AddEntity)
+		static entities::EntityPtr Create(float transformWidth, float transformHeight, const char* tile_image, int brickStrength, std::uint32_t pointValue)
 		{
 			entities::EntityPtr brickEntity = std::make_shared<entities::Entity>();
-			brickEntity->addComponent(std::make_unique<components::Transform>(glm::vec2(transformWidth, transformHeight), 0.0f, glm::vec2(scaleX, scaleY)));
-			components::Subcollider subcollider = components::Subcollider(glm::vec2(scaleX / 2, scaleY / 2), glm::vec2(scaleX, scaleY), true, true);
+			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(tile_image), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
+			auto scale = sprite->GetDimensions();
+
+			brickEntity->addComponent(std::make_unique<components::Transform>(glm::vec2(transformWidth, transformHeight), 0.0f, scale));
+			components::Subcollider subcollider = components::Subcollider(scale / 2.0f, scale, true, true);
 			brickEntity->addComponent(std::make_unique<components::SoundEffect>(Ebony::ENTITY));
 
 			subcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 
-					if (other->hasComponent<components::Ball>())
+					components::Ball* ball;
+					if (other->tryGetComponent(ball))
 					{
-						auto ball = other->getComponent<components::Ball>();
 						auto brick = brickEntity->getComponent<components::Brick>();
 
 						brick->strength -= ball->strength;
 
 						if (brick->strength <= 0)
 						{
-							// The brick should explode
-							std::cout << "BOOOM!" << std::endl;
+							// The brick should explode						
+							other->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("brick_break"), 127));
+
 							
-							other->getComponent<components::SoundEffect>()->soundEffectQueue.push_back(Ebony::IndividualSound(Ebony::ResourceManager::GetSoundEffect("brick_break"), 30));
+
 							GameManager::addPoints(brick->pointValue);
 
 
 							brick->destroyed = true;
-							RemoveEntity(brickEntity->getId());
+							Ebony::SystemManager::RemoveEntity(brickEntity->getId());
 
+							auto randomChance = rand() % 100;
 
-							// Spawn powerup entity
-							AddEntity(Powerup::Create(glm::vec2(transformWidth, transformHeight), Powerups::LARGER_PADDLE, "bigger_paddle_powerup", RemoveEntity));
+							if (randomChance < 5)
+							{
+								// Spawn powerup entity
+								Ebony::SystemManager::AddEntity(Powerup::Create(glm::vec2(transformWidth, transformHeight), Powerups::LARGER_PADDLE, "bigger_paddle_powerup"));
+							}
 						}
 					}
 				};
 
-			brickEntity->addComponent(std::make_unique<components::Collider>(subcollider, BrickBreaker::CollisionLayers::BRICK, true, false));
+			brickEntity->addComponent(std::make_unique<components::Collider>(subcollider, BrickBreaker::CollisionLayers::BRICK, BrickBreaker::CollisionLayers::BALL, true));
 			brickEntity->addComponent(std::make_unique<components::RigidBody>());
-			brickEntity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture(tile_image), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND));
+			brickEntity->addComponent(std::move(sprite));
 			brickEntity->addComponent(std::make_unique<components::Brick>(brickStrength, pointValue));
 
 			return brickEntity;

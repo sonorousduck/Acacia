@@ -25,9 +25,11 @@ namespace BrickBreaker
 
 			ballEntity->addComponent(std::make_unique<components::SoundEffect>(Ebony::ENTITY));
 
-			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(beginningTransform, 0.0f, glm::vec2(20.0f, 20.0f))));
 			auto spriteBall = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("ball"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
-			components::Subcollider ballAABBCollider = components::Subcollider(glm::vec2(10.0f, 10.0f), glm::vec2(20.0f, 20.0f), true, true);
+			auto scale = spriteBall->GetDimensions();
+
+			ballEntity->addComponent(std::move(std::make_unique<components::Transform>(beginningTransform, 0.0f, scale)));
+			components::Subcollider ballAABBCollider = components::Subcollider(scale * 0.5f, scale, true, true);
 			
 			ballAABBCollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
@@ -132,7 +134,7 @@ namespace BrickBreaker
 
 
 
-							if (direction.y <= 7 && direction.y >= -7)
+							if (direction.y <= 4 && direction.y >= -4)
 							{
 								bounceDirection.x = -bounceDirection.x;
 							}
@@ -193,8 +195,8 @@ namespace BrickBreaker
 			ballEntity->addComponent(std::move(keyboardInputComponentBall));
 			ballEntity->addComponent(std::move(controllerComponent));
 
-			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::BRICK | BrickBreaker::CollisionLayers::WALL | BrickBreaker::CollisionLayers::TOP_WALL, false);
-			auto ballComponent = std::make_unique<components::Ball>(600.0f, glm::vec2(0.5f, -0.5f), 1, ball, isStuckToPaddle);
+			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::BALL, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::BRICK | BrickBreaker::CollisionLayers::WALL | BrickBreaker::CollisionLayers::TOP_WALL, false);
+			auto ballComponent = std::make_unique<components::Ball>(200.0f, glm::vec2(0.5f, -0.5f), 1, ball, isStuckToPaddle);
 
 			ballEntity->addComponent(std::move(ballCollider));
 			ballEntity->addComponent(std::move(std::make_unique<components::RigidBody>()));

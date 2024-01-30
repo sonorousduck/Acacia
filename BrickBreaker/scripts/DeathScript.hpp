@@ -3,29 +3,31 @@
 #include <iostream>
 #include "../Ebony/src/components/cppScriptComponent.hpp"
 #include "../BrickBreaker/screens/screenEnums.hpp"
+#include <singletons/systemManager.hpp>
 
 namespace scripts
 {
 	struct DeathScript : components::CppScript
 	{
 	public:
-		DeathScript(std::uint64_t& nextScreen) : nextScreen(nextScreen)
+		DeathScript()
 		{
 		}
 
 		void Die()
 		{
-			nextScreen = BrickBreaker::ScreenEnum::MAIN_MENU;
+			Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
 		}
 
 		void OnCollisionStart(entities::EntityPtr other, std::chrono::microseconds elapsedTime) override
 		{
-			Die();
+			auto layer = other->getComponent<components::Collider>()->layer;
+
+			if (layer & BrickBreaker::CollisionLayers::BALL)
+			{
+				Die();
+			}
+
 		}
-
-
-		std::uint64_t& nextScreen;
-
-
 	};
 }
