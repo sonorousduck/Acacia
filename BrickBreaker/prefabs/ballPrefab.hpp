@@ -80,6 +80,7 @@ namespace BrickBreaker
 
 
 						ball->direction = directionVector;
+
 					}
 					
 					else if (layer & BrickBreaker::CollisionLayers::BOTTOM_WALL)
@@ -168,16 +169,36 @@ namespace BrickBreaker
 						BrickBreaker::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
 						if (layer & BrickBreaker::CollisionLayers::BOTTOM_WALL)
 						{
-							Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
+							if (Ebony::SystemManager::aiEnabled)
+							{
+								Ebony::SystemManager::shouldResetForAi = true;
+							}
+							else
+							{
+								Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
+							}
 						}
 					};
 				
 				ballAABBCollider.onCollisionEnd = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 					{
 						BrickBreaker::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
+
 						if (layer & BrickBreaker::CollisionLayers::BOTTOM_WALL)
 						{
-							Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
+							if (Ebony::SystemManager::aiEnabled)
+							{
+								Ebony::SystemManager::shouldResetForAi = true;
+							}
+							else
+							{
+								Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
+							}
+						}
+						else if (layer & BrickBreaker::CollisionLayers::BRICK)
+						{
+							auto brick = other->getComponent<components::Brick>();
+							brick->hitAlready = false;
 						}
 					};
 
@@ -223,8 +244,8 @@ namespace BrickBreaker
 					if (ball->isAttachedToPaddle)
 					{
 						ball->isAttachedToPaddle = false;
-						double random_x = ball->random_double(-0.8, 0.8);
-						double random_y = ball->random_double(-0.8, 0.8);
+						double random_x = ball->random_double(-0.6, 0.6);
+						double random_y = ball->random_double(-0.6, 0.6);
 						ball->direction = glm::normalize(glm::vec2(random_x, -abs(random_y)));
 					}
 
@@ -244,7 +265,7 @@ namespace BrickBreaker
 
 
 			auto ballCollider = std::make_unique<components::Collider>(ballAABBCollider, BrickBreaker::CollisionLayers::BALL, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::BRICK | BrickBreaker::CollisionLayers::WALL | BrickBreaker::CollisionLayers::BOTTOM_WALL, false);
-			auto ballComponent = std::make_unique<components::Ball>(400.0f, glm::vec2(0.5f, -0.5f), 1, ball, isStuckToPaddle);
+			auto ballComponent = std::make_unique<components::Ball>(200.0f, glm::vec2(0.5f, -0.5f), 1, ball, isStuckToPaddle);
 
 
 			std::unique_ptr<components::CppScript> script = std::make_unique<scripts::DeathScript>();

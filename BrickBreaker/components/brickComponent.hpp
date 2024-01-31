@@ -13,7 +13,7 @@ namespace components
 			pointValue(pointValue)
 		{}
 
-
+		bool hitAlready = false;
 		int strength;
 		std::uint32_t pointValue;
 		bool destroyed = false;

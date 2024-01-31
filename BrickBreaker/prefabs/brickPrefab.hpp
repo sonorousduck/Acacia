@@ -44,7 +44,9 @@ namespace BrickBreaker
 					{
 						auto brick = brickEntity->getComponent<components::Brick>();
 
+						if (brick->hitAlready) return;
 						brick->strength -= ball->strength;
+						brick->hitAlready = true;
 
 						if (brick->strength <= 0)
 						{

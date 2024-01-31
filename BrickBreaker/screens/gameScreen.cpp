@@ -139,7 +139,7 @@ namespace BrickBreaker
 
 		for (std::uint8_t i = 0; i < 27; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 23.0f, "blue_tile", 4, 40);
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 23.0f, "blue_tile", 5, 50);
 			AddEntity(brickEntity);
 			ballCount++;
 
@@ -147,7 +147,7 @@ namespace BrickBreaker
 
 		for (std::uint8_t i = 0; i < 27; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 31.0f, "green_tile", 3, 30);
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 31.0f, "green_tile", 4, 40);
 			AddEntity(brickEntity);
 			ballCount++;
 
@@ -155,7 +155,7 @@ namespace BrickBreaker
 
 		for (std::uint8_t i = 0; i < 27; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 39.0f, "red_tile", 2, 20);
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 39.0f, "red_tile", 3, 30);
 			AddEntity(brickEntity);
 			ballCount++;
 
@@ -163,7 +163,7 @@ namespace BrickBreaker
 
 		for (std::uint8_t i = 0; i < 27; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 47.0f, "purple_tile", 1, 10);
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 47.0f, "purple_tile", 2, 20);
 			AddEntity(brickEntity);
 			ballCount++;
 
@@ -171,7 +171,7 @@ namespace BrickBreaker
 
 		for (std::uint8_t i = 0; i < 27; i++)
 		{
-			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 55.0f, "purple_tile", 1, 10);
+			entities::EntityPtr brickEntity = BrickBreaker::Brick::Create(30.0f + 16.0f * i, 55.0f, "purple_tile", 2, 20);
 			AddEntity(brickEntity);
 			ballCount++;
 		}

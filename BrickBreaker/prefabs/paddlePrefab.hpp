@@ -32,6 +32,7 @@ namespace BrickBreaker
 			entities::EntityPtr paddle = std::make_shared<entities::Entity>();
 			auto sprite = std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), Ebony::ResourceManager::GetTexture("paddle_0"), Ebony::Colors::White, Ebony::RenderLayer::FOREGROUND);
 			auto scale = sprite->GetDimensions();
+			auto paddleSpeed = 350.0f;
 
 			std::unique_ptr<components::ControllerInput> controllerInputComponent = std::make_unique<components::ControllerInput>(0);
 			std::unique_ptr<components::KeyboardInput> keyboardInputComponent = std::make_unique<components::KeyboardInput>();
@@ -55,11 +56,11 @@ namespace BrickBreaker
 					if (value < 0 && transform->position.x > 0)
 					{
 						std::cout << Ebony::Time::GetDeltaTimeFloat() << std::endl;
-						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat() * value, 0.0f });
+						rigidBody->addScriptedMovement(glm::vec2{ paddleSpeed * Ebony::Time::GetDeltaTimeFloat() * value, 0.0f });
 					}
 					else if (value > 0 && transform->position.x + transform->scale.x < windowWidth)
 					{
-						rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat() * value, 0.0f });
+						rigidBody->addScriptedMovement(glm::vec2{ paddleSpeed * Ebony::Time::GetDeltaTimeFloat() * value, 0.0f });
 					}
 				}
 			} });
@@ -79,7 +80,7 @@ namespace BrickBreaker
 
 				if (transform->position.x > 0)
 				{
-					rigidBody->addScriptedMovement(glm::vec2{ -700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
+					rigidBody->addScriptedMovement(glm::vec2{ -paddleSpeed * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
 				}
 			} });
 
@@ -90,7 +91,7 @@ namespace BrickBreaker
 				auto collider = paddle->getComponent<components::Collider>();
 				if (transform->position.x + transform->scale.x < windowWidth)
 				{
-					rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
+					rigidBody->addScriptedMovement(glm::vec2{ paddleSpeed * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
 				}
 			}
 				});
@@ -152,7 +153,7 @@ namespace BrickBreaker
 
 				if (transform->position.x > 0)
 				{
-					rigidBody->addScriptedMovement(glm::vec2{ -700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
+					rigidBody->addScriptedMovement(glm::vec2{ -paddleSpeed * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
 				}
 			} });
 
@@ -163,7 +164,7 @@ namespace BrickBreaker
 				auto collider = paddle->getComponent<components::Collider>();
 				if (transform->position.x + transform->scale.x < windowWidth)
 				{
-					rigidBody->addScriptedMovement(glm::vec2{ 700.0f * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
+					rigidBody->addScriptedMovement(glm::vec2{ paddleSpeed * Ebony::Time::GetDeltaTimeFloat(), 0.0f });
 				}
 			}
 				});

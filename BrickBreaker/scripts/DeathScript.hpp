@@ -31,7 +31,7 @@ namespace scripts
 		void Update(std::chrono::microseconds elapsedTime) override
 		{
 			auto transform = entity->getComponent<components::Transform>();
-			if (transform->position.y > 320 || transform->position.y < 0 || transform->position.x > 480 || transform->position.x < 0)
+			if (transform->position.y >= 320 || transform->position.y <= 0 || transform->position.x >= 480 || transform->position.x <= 0)
 			{
 				Die();
 			}
