@@ -86,6 +86,10 @@ set(ScriptHeaders
 
 )
 
+set (PythonScriptHeaders
+  pythonScripts/main.py
+)
+
 
 set(src_files_imgui
   ../Graphics/ThirdParty/imgui/imgui.cpp  
@@ -111,6 +115,7 @@ source_group("Singletons\\Source Files" FILES ${SingletonSources})
 source_group("Screens\\Header Files" FILES ${ScreenHeaders})
 source_group("Screens\\Source Files" FILES ${ScreenSources})
 source_group("Scripts\\Header Files" FILES ${ScriptHeaders})
+source_group("Python Scripts" FILES ${PythonScriptHeaders})
 
 set (CODE_FILES
   ${HEADER_FILES} 
@@ -126,6 +131,7 @@ set (CODE_FILES
   ${ScreenHeaders} 
   ${ScreenSources}
   ${ScriptHeaders}
+  ${PythonScriptHeaders}
 )
 
 
