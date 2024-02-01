@@ -36,10 +36,10 @@ namespace Ebony
 				// Adapted from Dr. Mathias' lecture slides
 
 				quadrants[i] = !(position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f > children[i].position.x + children[i].size.x ||
-					position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f < children[i].position.x ||
-					position.y + center.y + QUADTREE_MIDPOINT - colliderSize.y / 2.0f > children[i].position.y + children[i].size.y ||
-					position.y + center.y + QUADTREE_MIDPOINT + colliderSize.y / 2.0f < children[i].position.y);
-			}
+								 position.x + center.x + QUADTREE_MIDPOINT - colliderSize.x / 2.0f < children[i].position.x ||
+								 position.y + center.y + QUADTREE_MIDPOINT - colliderSize.y / 2.0f > children[i].position.y + children[i].size.y ||
+								 position.y + center.y + QUADTREE_MIDPOINT + colliderSize.y / 2.0f < children[i].position.y);
+				}
 		}
 
 		return quadrants;

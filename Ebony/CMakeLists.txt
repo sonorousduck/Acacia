@@ -114,6 +114,7 @@ set(MiscHeaders
 	src/misc/tiledProcessor.hpp
 	src/misc/renderLayers.hpp
 	src/misc/actionSpaces.hpp
+	src/misc/Grid.hpp
 )
 
 set(MiscSources
@@ -124,7 +125,7 @@ set(MiscSources
 	src/misc/resourceManager.cpp
 	src/misc/Quadtree.cpp
 	src/misc/tiledProcessor.cpp
-
+	src/misc/Grid.cpp
 )
 
 set (SingletonHeaders
