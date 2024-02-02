@@ -13,6 +13,7 @@ namespace BrickBreaker
 		PADDLE = BIT(3),
 		POWERUP = BIT(4),
 		UI = BIT(5),
-		BALL = BIT(6)
+		BALL = BIT(6),
+		MOUSE = BIT(7),
 	};
 }

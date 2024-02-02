@@ -72,10 +72,14 @@ namespace BrickBreaker
 
 						Ebony::SystemManager::RemoveEntity(powerup->getId());
 					}
+					else if (layer & BrickBreaker::BOTTOM_WALL)
+					{
+						Ebony::SystemManager::RemoveEntity(powerup->getId());
+					}
 
 				};
 			
-			auto collider = std::make_unique<components::Collider>(aabbCollider, BrickBreaker::CollisionLayers::POWERUP, BrickBreaker::CollisionLayers::PADDLE, false);
+			auto collider = std::make_unique<components::Collider>(aabbCollider, BrickBreaker::CollisionLayers::POWERUP, BrickBreaker::CollisionLayers::PADDLE | BrickBreaker::CollisionLayers::BOTTOM_WALL, false);
 
 			powerup->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, BrickBreaker::AiInformationTypes::POWERUP_INFORMATION));
 			powerup->addComponent(std::move(collider));

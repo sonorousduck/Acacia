@@ -72,7 +72,7 @@ namespace BrickBreaker
 					}
 				};
 
-			entity->addComponent(std::make_unique<components::Collider>(subcollider, CollisionLayers::UI, CollisionLayers::UI, true));
+			entity->addComponent(std::make_unique<components::Collider>(subcollider, CollisionLayers::UI, CollisionLayers::MOUSE, true));
 			entity->addComponent(std::make_unique<components::RigidBody>());
 
 

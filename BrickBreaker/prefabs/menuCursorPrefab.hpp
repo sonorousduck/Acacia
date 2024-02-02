@@ -24,10 +24,11 @@ namespace BrickBreaker
 
 			
 
-			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(0.0f, 0.0f), 0.0f, glm::vec2(1.0f, 1.0f)));
+			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(0.0f, 0.0f), 0.0f, glm::vec2(8.0f, 8.0f)));
 			entity->addComponent(std::make_unique<components::ActiveUICollision>());
-			components::Subcollider subcollider = components::Subcollider(glm::vec2(0.5f, 0.5f), glm::vec2(1.0f, 1.0f), true, true);
+			components::Subcollider subcollider = components::Subcollider(glm::vec2(4.0f, 4.0f), glm::vec2(8.0f, 8.0f), true, true);
 			entity->addComponent(std::make_unique<components::RigidBody>());
+
 
 
 			auto mouseInput = std::make_unique<components::MouseInput>();
@@ -61,7 +62,7 @@ namespace BrickBreaker
 
 
 			entity->addComponent(std::move(mouseInput));
-			entity->addComponent(std::make_unique<components::Collider>(subcollider, CollisionLayers::UI, true, false));
+			entity->addComponent(std::make_unique<components::Collider>(subcollider, CollisionLayers::MOUSE, CollisionLayers::UI, false));
 			entity->addComponent(std::make_unique<components::RigidBody>());
 
 

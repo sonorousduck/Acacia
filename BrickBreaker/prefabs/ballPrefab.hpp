@@ -68,12 +68,12 @@ namespace BrickBreaker
 
 						}
 
-						if (glm::abs(directionVector.y) < 0.05)
+						if (glm::abs(directionVector.y) < 0.05f)
 						{
-							if (directionVector.y < 0) directionVector.y -= 0.2;
-							else directionVector.y += 0.2;
-							if (directionVector.x > 0) directionVector.x -= 0.2;
-							else directionVector.x += 0.2;
+							if (directionVector.y < 0) directionVector.y -= 0.2f;
+							else directionVector.y += 0.2f;
+							if (directionVector.x > 0) directionVector.x -= 0.2f;
+							else directionVector.x += 0.2f;
 
 
 						}
@@ -178,6 +178,10 @@ namespace BrickBreaker
 								Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
 							}
 						}
+						else if (layer & BrickBreaker::CollisionLayers::PADDLE)
+						{
+							std::cout << "bouncy" << std::endl;
+						}
 					};
 				
 				ballAABBCollider.onCollisionEnd = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
@@ -199,6 +203,10 @@ namespace BrickBreaker
 						{
 							auto brick = other->getComponent<components::Brick>();
 							brick->hitAlready = false;
+						}
+						else if (layer & BrickBreaker::CollisionLayers::PADDLE)
+						{
+							std::cout << "Ended" << std::endl;
 						}
 					};
 

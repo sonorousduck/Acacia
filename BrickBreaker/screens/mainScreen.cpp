@@ -17,6 +17,8 @@ namespace BrickBreaker
 		Ebony::ResourceManager::LoadTexture("Start_Text.tx", "start_text");
 		Ebony::ResourceManager::LoadTexture("Options_Text.tx", "options_text");
 		Ebony::ResourceManager::LoadTexture("Quit_Text.tx", "quit_text");
+		Ebony::ResourceManager::LoadTexture("Default.tx", "default", "Crypt");
+
 	}
 
 	void MainScreen::Start()
@@ -31,7 +33,7 @@ namespace BrickBreaker
 		s->setInt("image", 0);
 		s->setMat4("projection", Ebony::Graphics2d::projection);
 
-		physicsSystem = systems::PhysicsSystem();
+		physicsSystem = systems::PhysicsSystem(glm::vec2{ 500, 500 }, glm::vec2{ 64, 64 });
 		spriteRenderer = systems::SpriteRenderer();
 
 		spriteRenderer.debug = false;
@@ -48,7 +50,7 @@ namespace BrickBreaker
 		AddEntity(BrickBreaker::MenuCursor::Create());
 
 
-		AddEntity(BrickBreaker::Logo::Create(0.0f, 0.0f, "logo_brickbreaker"));
+		AddEntity(BrickBreaker::Logo::Create(120.0f, 64.0f, "logo_brickbreaker"));
 		AddEntity(button);
 
 		AddEntity(BrickBreaker::ButtonText::Create(buttonPositioningX, 120.0f, actualButtonScale.x, actualButtonScale.y, "start_text"));

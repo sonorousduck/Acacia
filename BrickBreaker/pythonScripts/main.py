@@ -31,7 +31,7 @@ BATCH_SIZE = 128
 GAMMA = 0.99
 EPS_START = 0.9
 EPS_END = 0.05
-EPS_DECAY = 1000
+EPS_DECAY = 500000
 TAU = 0.005
 LR = 1e-4
 
@@ -80,7 +80,7 @@ class BrickBreakerEnv(gym.Env):
         rendering = True
         self.game.python_init(rendering, False)
         
-        self.update_time = 10000
+        self.update_time = 20000
     
     def handle_state(self, state):
         handled_state = np.zeros(shape=(1, 36), dtype=np.float32)
@@ -181,6 +181,7 @@ class Agent:
         sample = random.random()
         eps_threshold = EPS_END + (EPS_START - EPS_END) * \
             math.exp(-1. * self.steps_done / EPS_DECAY)
+        print(eps_threshold)
         self.steps_done += 1
         if sample > eps_threshold:
             with torch.no_grad():
@@ -281,7 +282,7 @@ def StartGames():
     
     agent = Agent(env, num_observations, num_actions)
     
-    epochs = 1000
+    epochs = 5000
     
     for i in range(epochs):
         state, _ = env.reset()

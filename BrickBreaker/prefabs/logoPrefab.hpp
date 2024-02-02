@@ -21,7 +21,7 @@ namespace BrickBreaker
 
 			std::shared_ptr<Texture2D> texture = Ebony::ResourceManager::GetTexture(logo);
 
-			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width, height), 0.0f, glm::vec2(texture->Width, texture->Height)));
+			entity->addComponent(std::make_unique<components::Transform>(glm::vec2(width, height), 0.0f, glm::vec2(texture->Width, texture->Height) * 0.25f));
 			entity->addComponent(std::make_unique<components::Sprite>(Ebony::ResourceManager::GetShader("default"), texture, Ebony::Colors::White));
 
 

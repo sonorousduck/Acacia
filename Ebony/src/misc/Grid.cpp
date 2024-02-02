@@ -1,6 +1,8 @@
 #include "Grid.hpp"
 #include "../components/collider.hpp"
 #include "../components/transform.hpp"
+#include <iostream>
+
 
 namespace Ebony
 {
@@ -21,11 +23,18 @@ namespace Ebony
 		auto startRow = static_cast<int>(position.y / sizeOfGridUnit.y);
 		auto endRow = static_cast<int>(endPosition.y / sizeOfGridUnit.y);
 
-		for (auto x = startColumn; x < endColumn; x++)
+		for (auto y = startRow; y <= endRow; y++)
 		{
-			for (auto y = startRow; y < endRow; y++)
+			for (auto x = startColumn; x <= endColumn; x++)
 			{
-				grid[amountPerRow * y + startColumn].push_back(entity);
+				if (amountPerRow * y + x < grid.size())
+				{
+					grid[amountPerRow * y + x].push_back(entity);
+				}
+				else
+				{
+					std::cout << "Caution! Out of the physics domain" << std::endl;
+				}
 			}
 		}
 	}
@@ -33,6 +42,8 @@ namespace Ebony
 	void Grid::Clear()
 	{
 		grid.clear();
+		grid.resize(static_cast<int>(gridAmount));
+
 	}
 
 	std::vector<entities::EntityPtr> Grid::GetPossibleCollisions(entities::EntityPtr entity)
@@ -73,13 +84,13 @@ namespace Ebony
 		auto entityLayer = entity->getComponent<components::Collider>()->layersToCollideWith;
 
 
-		for (auto x = startColumn; x < endColumn; x++)
+		for (auto y = startRow; y <= endRow; y++)
 		{
-			for (auto y = startRow; y < endRow; y++)
+			for (auto x = startColumn; x <= endColumn; x++)
 			{
-				for (auto i = 0; i < grid[amountPerRow * y + startColumn].size(); i++)
+				for (auto i = 0; i < grid[amountPerRow * y + x].size(); i++)
 				{
-					auto possibleCollision = grid[amountPerRow * y + startColumn][i];
+					auto& possibleCollision = grid[amountPerRow * y + x][i];
 
 					if (possibleCollision->getComponent<components::Collider>()->layer & entityLayer && possibleCollision != entity)
 					{

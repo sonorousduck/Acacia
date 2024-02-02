@@ -17,6 +17,12 @@ namespace systems
 	class PhysicsSystem : public System
 	{
 	public:
+		PhysicsSystem() : System({ ctti::unnamed_type_id<components::Collider>(), ctti::unnamed_type_id<components::RigidBody>(), ctti::unnamed_type_id<components::Transform>() }),
+			dimensions(glm::vec2(480, 320)),
+			gridSize(glm::vec2(16, 16))
+		{
+		}
+
 		PhysicsSystem(glm::vec2 dimensions, glm::vec2 gridSize) : System({ ctti::unnamed_type_id<components::Collider>(), ctti::unnamed_type_id<components::RigidBody>(), ctti::unnamed_type_id<components::Transform>()}), 
 			dimensions(dimensions), 
 			gridSize(gridSize)
@@ -27,14 +33,14 @@ namespace systems
 
 		void RemoveEntity(entities::Entity::IdType entityId) override;
 
-
+		glm::vec2 dimensions;
+		glm::vec2 gridSize;
 	protected:
 		virtual bool isInterested(const entities::EntityPtr& entity);
 
 		void updateImpl(std::chrono::microseconds elapsedTime);
 
-		glm::vec2 dimensions;
-		glm::vec2 gridSize;
+
 		
 	private:
 		/*std::uint16_t PHYSICS_DIMENSION_WIDTH = 1000;
@@ -46,8 +52,8 @@ namespace systems
 		/*Ebony::Quadtree quadtree = Ebony::Quadtree(QUADTREE_SIZE, QUADTREE_SIZE, false);
 		Ebony::Quadtree staticQuadtree = Ebony::Quadtree(QUADTREE_SIZE, QUADTREE_SIZE, true);*/
 
-		Ebony::Grid grid = Ebony::Grid(glm::vec2(0.0f), dimensions, gridSize, false);
-		Ebony::Grid staticGrid = Ebony::Grid(glm::vec2(0.0f), dimensions, gridSize, true);
+		Ebony::Grid grid = Ebony::Grid(glm::vec2(-10.0f, -10.0f), dimensions, gridSize, false);
+		Ebony::Grid staticGrid = Ebony::Grid(glm::vec2(-10.0f, -10.0f), dimensions, gridSize, true);
 
 
 		

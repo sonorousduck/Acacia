@@ -17,9 +17,9 @@ namespace Ebony
 
 		Grid(glm::vec2 position, glm::vec2 size, glm::vec2 sizeOfGridUnit, bool isStatic) : position(position), size(size), sizeOfGridUnit(sizeOfGridUnit), isStatic(isStatic), shouldRebuild(true)
 		{
-			auto gridAmount = (size.x / sizeOfGridUnit.x) * (size.y / sizeOfGridUnit.y);
+			gridAmount = static_cast<int>((size.x / sizeOfGridUnit.x) * (size.y / sizeOfGridUnit.y));
 			amountPerRow = static_cast<int>(size.x / sizeOfGridUnit.x);
-			grid.reserve(static_cast<int>(gridAmount));
+			grid.resize(gridAmount);
 		}
 
 		void Insert(entities::EntityPtr entity);
@@ -30,6 +30,7 @@ namespace Ebony
 
 		glm::vec2 position;
 		int amountPerRow;
+		int gridAmount;
 		glm::vec2 size;
 		glm::vec2 sizeOfGridUnit;
 

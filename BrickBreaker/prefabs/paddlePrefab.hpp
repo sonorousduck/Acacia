@@ -193,7 +193,11 @@ namespace BrickBreaker
 			paddle->addComponent(std::move(controllerInputComponent));
 			paddle->addComponent(std::move(rigidbody));
 			paddle->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE | Ebony::AIType::REWARD, BrickBreaker::AiInformationTypes::PADDLE_INFORMATION));
-			paddle->addComponent(std::move(aiInput));
+
+			if (Ebony::SystemManager::aiEnabled)
+			{
+				paddle->addComponent(std::move(aiInput));
+			}
 
 		
 			return paddle;
