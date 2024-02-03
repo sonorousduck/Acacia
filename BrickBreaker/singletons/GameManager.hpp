@@ -17,11 +17,14 @@ namespace BrickBreaker
 
 		static std::uint32_t brickCount;
 
+		static float currentPoints;
+		static bool isAttachedToPaddle;
 
 	private:
 		GameManager() {}
 
-		static float currentPoints;
+		static float previousPoints;
+
 		static std::uint8_t currentLives;
 
 

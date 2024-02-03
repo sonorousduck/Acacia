@@ -22,6 +22,7 @@
 #include <components/aiInputComponent.hpp>
 
 #include "../singletons/PythonManager.hpp"
+#include "../singletons/GameManager.hpp"
 
 namespace BrickBreaker
 {
@@ -178,10 +179,6 @@ namespace BrickBreaker
 								Ebony::SystemManager::nextScreenEnum = BrickBreaker::ScreenEnum::MAIN_MENU;
 							}
 						}
-						else if (layer & BrickBreaker::CollisionLayers::PADDLE)
-						{
-							std::cout << "bouncy" << std::endl;
-						}
 					};
 				
 				ballAABBCollider.onCollisionEnd = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
@@ -251,6 +248,7 @@ namespace BrickBreaker
 					
 					if (ball->isAttachedToPaddle)
 					{
+						GameManager::isAttachedToPaddle = false;
 						ball->isAttachedToPaddle = false;
 						double random_x = ball->random_double(-0.6, 0.6);
 						double random_y = ball->random_double(-0.6, 0.6);

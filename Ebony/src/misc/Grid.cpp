@@ -72,25 +72,33 @@ namespace Ebony
 
 		glm::vec2 colliderSize = collider->aabbCollider.getSize();
 		glm::vec2 centerOfCollider = collider->aabbCollider.getCenter();
-		glm::vec2 position = transform->position + centerOfCollider - (0.5f * colliderSize);
-		glm::vec2 endPosition = position + colliderSize;
+		glm::vec2 startPosition = transform->position + centerOfCollider - (0.5f * colliderSize);
+		glm::vec2 endPosition = startPosition + colliderSize;
 
 		// We know our grid size as well as our individual grid unit sizes
-		auto startColumn = static_cast<int>(position.x / sizeOfGridUnit.x);
+		auto startColumn = static_cast<int>(startPosition.x / sizeOfGridUnit.x);
 		auto endColumn = static_cast<int>(endPosition.x / sizeOfGridUnit.x);
-		auto startRow = static_cast<int>(position.y / sizeOfGridUnit.y);
+		auto startRow = static_cast<int>(startPosition.y / sizeOfGridUnit.y);
 		auto endRow = static_cast<int>(endPosition.y / sizeOfGridUnit.y);
 
 		auto entityLayer = entity->getComponent<components::Collider>()->layersToCollideWith;
+
 
 
 		for (auto y = startRow; y <= endRow; y++)
 		{
 			for (auto x = startColumn; x <= endColumn; x++)
 			{
-				for (auto i = 0; i < grid[amountPerRow * y + x].size(); i++)
+				if (amountPerRow * y + x < 0 || (amountPerRow * y + x) > grid.size())
 				{
-					auto& possibleCollision = grid[amountPerRow * y + x][i];
+					return;
+				}
+
+				auto indexPosition = amountPerRow * y + x;
+
+				for (auto i = 0; i < grid[indexPosition].size(); i++)
+				{
+					auto& possibleCollision = grid[indexPosition][i];
 
 					if (possibleCollision->getComponent<components::Collider>()->layer & entityLayer && possibleCollision != entity)
 					{

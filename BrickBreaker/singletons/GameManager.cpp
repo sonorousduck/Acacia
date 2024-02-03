@@ -6,6 +6,9 @@ namespace BrickBreaker
 {
 
 	float GameManager::currentPoints{ 0 };
+	float GameManager::previousPoints{ 0 };
+	bool GameManager::isAttachedToPaddle{ true };
+
 	std::uint8_t GameManager::currentLives{ 3 };
 	std::uint32_t GameManager::brickCount{ 0 };
 
@@ -16,12 +19,21 @@ namespace BrickBreaker
 
 	float GameManager::getPoints()
 	{
-		return currentPoints;
+		auto pointDifference = currentPoints - previousPoints;
+		previousPoints = currentPoints;
+
+		if (!isAttachedToPaddle) 
+		{
+			pointDifference++;
+		}
+
+		return pointDifference;
 	}
 
 	void GameManager::ResetPoints()
 	{
 		currentPoints = 0.0f;
+		isAttachedToPaddle = true;
 	}
 
 	void GameManager::heal(int healAmount)

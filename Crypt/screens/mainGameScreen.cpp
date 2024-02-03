@@ -69,7 +69,7 @@ namespace Crypt
 		s->setInt("image", 0);
 		s->setMat4("projection", Ebony::Graphics2d::projection);
 
-		physicsSystem = systems::PhysicsSystem();
+		physicsSystem = systems::PhysicsSystem(glm::vec2{ 10000, 1000 }, glm::vec2{ 50, 50 }, glm::vec2(-200, -100));
 		spriteRenderer = systems::SpriteRenderer();
 		animationSystem = systems::Animation2d();
 		fontRenderer = systems::FontRenderer();
@@ -268,7 +268,11 @@ namespace Crypt
 	void MainGameScreen::ProcessInput(std::chrono::microseconds elapsedTime)
 	{
 		inputSystem.Update();
-		aiInputSystem.Update(elapsedTime);
+
+		if (Ebony::SystemManager::aiEnabled)
+		{
+			aiInputSystem.Update(elapsedTime);
+		}
 	}
 
 	void MainGameScreen::AddEntity(entities::EntityPtr entity)

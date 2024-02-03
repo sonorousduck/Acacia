@@ -27,7 +27,7 @@ from itertools import count
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 Transition = namedtuple('Transition',
                         ('state', 'action', 'next_state', 'reward'))
-BATCH_SIZE = 128
+BATCH_SIZE = 512
 GAMMA = 0.99
 EPS_START = 0.9
 EPS_END = 0.05
@@ -56,14 +56,20 @@ class DQN(nn.Module):
 
     def __init__(self, n_observations, n_actions):
         super(DQN, self).__init__()
-        self.layer1 = nn.Linear(n_observations, 128)
-        self.layer2 = nn.Linear(128, 128)
-        self.layer3 = nn.Linear(128, n_actions)
+        self.fc1 = nn.Linear(n_observations, 128)
+        self.fc2 = nn.Linear(128, 256)
+        self.fc3 = nn.Linear(256, 512)
+        self.fc4 = nn.Linear(512, 128)
+        
+        self.fc5 = nn.Linear(128, n_actions)
 
     def forward(self, x):
-        x = F.relu(self.layer1(x))
-        x = F.relu(self.layer2(x))
-        return self.layer3(x)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
+        x = F.relu(self.fc4(x))
+        
+        return self.fc5(x)
 
 class BrickBreakerEnv(gym.Env):
     metadata = {"render_modes": ["human"], "render_fps": 30}
@@ -73,7 +79,7 @@ class BrickBreakerEnv(gym.Env):
         self.game = brickbreaker.BrickBreaker(True, False)
         self.game.Init()
         self.game.LoadContent()
-        self.observation_space = spaces.Box(low=0.0, high=1.0, shape=(1, 36), dtype=np.float32)        
+        self.observation_space = spaces.Box(low=0.0, high=1.0, shape=(1, 4), dtype=np.float32)        
         self.action_space = spaces.Discrete(4)
         
         done = False
@@ -83,7 +89,7 @@ class BrickBreakerEnv(gym.Env):
         self.update_time = 20000
     
     def handle_state(self, state):
-        handled_state = np.zeros(shape=(1, 36), dtype=np.float32)
+        handled_state = np.zeros(shape=(1, 4), dtype=np.float32)
         
         paddlePosition = state.getPaddlePosition().getBox()
         paddlePosition[0] /= 480
@@ -94,33 +100,33 @@ class BrickBreakerEnv(gym.Env):
         ballPosition[0] /= 480
         ballPosition[1] /= 320
         # score = reward.getReward()
-        brick_states = state.getBrickPositions()
-        powerup_states = state.getPowerupPositions()
+        # brick_states = state.getBrickPositions()
+        # powerup_states = state.getPowerupPositions()
         handled_state[0][0] = paddlePosition[0]
         handled_state[0][1] = paddlePosition[1]
-        handled_state[0][4] = ballPosition[0]
-        handled_state[0][5] = ballPosition[1]
+        handled_state[0][2] = ballPosition[0]
+        handled_state[0][3] = ballPosition[1]
     
         
-        for i, box in enumerate(brick_states):
-            normalized_box = box.getBox()
-            normalized_box[0] /= 480
-            normalized_box[1] /= 320
+        # for i, box in enumerate(brick_states):
+        #     normalized_box = box.getBox()
+        #     normalized_box[0] /= 480
+        #     normalized_box[1] /= 320
             
-            index = i * 4 + 7
+        #     index = i * 4 + 7
             
-            handled_state[0][index] = normalized_box[0]
-            handled_state[0][index + 1] = normalized_box[1]
+        #     handled_state[0][index] = normalized_box[0]
+        #     handled_state[0][index + 1] = normalized_box[1]
                     
-        for i, box in enumerate(powerup_states):
-            normalized_box = box.getBox()
-            normalized_box[0] /= 480
-            normalized_box[1] /= 320
+        # for i, box in enumerate(powerup_states):
+        #     normalized_box = box.getBox()
+        #     normalized_box[0] /= 480
+        #     normalized_box[1] /= 320
             
-            index = i * 4 + 27
+        #     index = i * 4 + 27
             
-            handled_state[0][index] = normalized_box[0]
-            handled_state[0][index + 1] = normalized_box[1]
+        #     handled_state[0][index] = normalized_box[0]
+        #     handled_state[0][index + 1] = normalized_box[1]
         
         return handled_state
         
@@ -139,7 +145,6 @@ class BrickBreakerEnv(gym.Env):
         # reward = self.game.getReward()
         # # print("Might have failed getting a reward..?")
         # done = self.game.getTerminated()
-        
                 
         # observation, reward, terminated, truncated, info
         return state, reward.getValue(), done, done, {}
@@ -151,6 +156,7 @@ class BrickBreakerEnv(gym.Env):
         
         
         state, reward, done, _, _ = self.game.step(self.action_space.sample(), self.update_time)
+        self.reward = reward.getValue()
         
         state = self.handle_state(state)
         return state, {}
@@ -256,19 +262,32 @@ class Agent:
         
         if show_result:
             plt.title('Result')
+            
+            plt.xlabel('Episode')
+            plt.ylabel('Reward')
+            plt.plot(durations_t.numpy())
+            # Take 100 episode averages and plot them too
+            if len(durations_t) >= 100:
+                means = durations_t.unfold(0, 100, 1).mean(1).view(-1)
+                means = torch.cat((torch.zeros(99), means))
+                plt.plot(means.numpy())
+
+            plt.pause(0.001)  # pause a bit so that plots are updated
+            
         else:
             plt.clf()
             plt.title('Training...')
-        plt.xlabel('Episode')
-        plt.ylabel('Duration')
-        plt.plot(durations_t.numpy())
-        # Take 100 episode averages and plot them too
-        if len(durations_t) >= 100:
-            means = durations_t.unfold(0, 100, 1).mean(1).view(-1)
-            means = torch.cat((torch.zeros(99), means))
-            plt.plot(means.numpy())
+       
+        # plt.xlabel('Episode')
+        # plt.ylabel('Reward')
+        # plt.plot(durations_t.numpy())
+        # # Take 100 episode averages and plot them too
+        # if len(durations_t) >= 100:
+        #     means = durations_t.unfold(0, 100, 1).mean(1).view(-1)
+        #     means = torch.cat((torch.zeros(99), means))
+        #     plt.plot(means.numpy())
 
-        plt.pause(0.001)  # pause a bit so that plots are updated
+        # plt.pause(0.001)  # pause a bit so that plots are updated
         
 def StartGames():
     # print("Starting up")
@@ -286,12 +305,15 @@ def StartGames():
     
     for i in range(epochs):
         state, _ = env.reset()
-        state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0)    
+        state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0)
+        rewardThisEpoch = 0
         for t in count():
             action = agent.select_action(state)
             observation, reward, terminated, truncated, _ = env.step(action.item())
+            rewardThisEpoch += reward
             
-            env.render()
+            if rendering:
+                env.render()
             reward = torch.tensor([reward], device=device)
             done = terminated or truncated
             if done:
@@ -314,7 +336,7 @@ def StartGames():
             agent.target_net.load_state_dict(target_net_state_dict)
             if done:
                 agent.episode_durations.append(t + 1)
-                agent.rewards.append(reward)
+                agent.rewards.append(rewardThisEpoch)
                 agent.plot_durations()
                 
                 env.game.reset()

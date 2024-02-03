@@ -31,7 +31,7 @@ namespace systems
 			// Update score text
 			if (entity->hasComponent<components::Score>())
 			{
-				entity->getComponent<components::Text>()->text = "Score: " + std::to_string(static_cast<int>(BrickBreaker::GameManager::getPoints()));
+				entity->getComponent<components::Text>()->text = "Score: " + std::to_string(static_cast<int>(BrickBreaker::GameManager::currentPoints));
 			}
 			else // Update lives
 			{

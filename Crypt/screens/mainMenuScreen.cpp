@@ -28,7 +28,7 @@ namespace Crypt
 		s->setInt("image", 0);
 		s->setMat4("projection", Ebony::Graphics2d::projection);
 
-		physicsSystem = systems::PhysicsSystem();
+		physicsSystem = systems::PhysicsSystem(glm::vec2{ 500, 500 }, glm::vec2{ 50, 50 });
 		spriteRenderer = systems::SpriteRenderer();
 
 		spriteRenderer.debug = false;
