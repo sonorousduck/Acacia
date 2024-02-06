@@ -19,15 +19,16 @@ namespace BrickBreaker
 
 	float GameManager::getPoints()
 	{
-		auto pointDifference = currentPoints - previousPoints;
-		previousPoints = currentPoints;
+		//auto pointDifference = currentPoints - previousPoints;
+		//previousPoints = currentPoints;
 
-		if (!isAttachedToPaddle) 
+		/*if (!isAttachedToPaddle) 
 		{
 			pointDifference++;
-		}
+		}*/
 
-		return pointDifference;
+		//return pointDifference;
+		return currentPoints;
 	}
 
 	void GameManager::ResetPoints()

@@ -221,9 +221,11 @@ namespace BrickBreaker
 				//TODO: Make this only happen when isAttachedToPaddle is true. Right now, it is nice for debugging though :)
 				auto ball = ballEntity->getComponent<components::Ball>();
 				ball->isAttachedToPaddle = false;
-				double random_x = ball->random_double(-0.8, 0.8);
+				ball->direction = glm::normalize(glm::vec2(0.0f, -1.0f));
+
+				/*double random_x = ball->random_double(-0.8, 0.8);
 				double random_y = ball->random_double(-0.8, 0.8);
-				ball->direction = glm::normalize(glm::vec2(random_x, -abs(random_y)));
+				ball->direction = glm::normalize(glm::vec2(random_x, -abs(random_y)));*/
 			} });
 
 			controllerComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_A, "launchBall" });
@@ -232,9 +234,11 @@ namespace BrickBreaker
 					//TODO: Make this only happen when isAttachedToPaddle is true. Right now, it is nice for debugging though :)
 					auto ball = ballEntity->getComponent<components::Ball>();
 					ball->isAttachedToPaddle = false;
-					double random_x = ball->random_double(-0.8, 0.8);
-					double random_y = ball->random_double(-0.8, 0.8);
-					ball->direction = glm::normalize(glm::vec2(random_x, -abs(random_y)));
+					//double random_x = ball->random_double(-0.8, 0.8);
+					//double random_y = ball->random_double(-0.8, 0.8);
+					//ball->direction = glm::normalize(glm::vec2(random_x, -abs(random_y)));
+					ball->direction = glm::normalize(glm::vec2(0.0f, -1.0f));
+
 				} });
 
 			ballEntity->addComponent(std::move(keyboardInputComponentBall));
@@ -250,9 +254,11 @@ namespace BrickBreaker
 					{
 						GameManager::isAttachedToPaddle = false;
 						ball->isAttachedToPaddle = false;
-						double random_x = ball->random_double(-0.6, 0.6);
-						double random_y = ball->random_double(-0.6, 0.6);
-						ball->direction = glm::normalize(glm::vec2(random_x, -abs(random_y)));
+						//double random_x = ball->random_double(-0.6, 0.6);
+						//double random_y = ball->random_double(-0.6, 0.6);
+						//ball->direction = glm::normalize(glm::vec2(random_x, -abs(random_y)));
+						ball->direction = glm::normalize(glm::vec2(0.0f, -1.0f));
+
 					}
 
 				} });
@@ -262,7 +268,7 @@ namespace BrickBreaker
 				{
 					auto& action = BrickBreaker::PythonManager::action;
 
-					if (action == 2)
+					if (action == 3)
 					{
 						ballEntity->getComponent<components::AiInput>()->actions["launchBall"]();
 					}

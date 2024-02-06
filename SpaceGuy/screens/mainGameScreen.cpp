@@ -81,7 +81,7 @@ namespace SpaceGuy
 		s->setInt("image", 0);
 		s->setMat4("projection", Ebony::Graphics2d::projection);
 
-		physicsSystem = systems::PhysicsSystem();
+		physicsSystem = systems::PhysicsSystem(glm::vec2(3500, 2000), glm::vec2(16, 16));
 		spriteRenderer = systems::SpriteRenderer();
 		animationSystem = systems::Animation2d();
 		fontRenderer = systems::FontRenderer();
@@ -102,7 +102,7 @@ namespace SpaceGuy
 		auto player = SpaceGuy::Player::Create();
 
 		AddEntity(player);
-		player->getComponent<components::PlayerInformation>()->health = 1000.0;
+		//player->getComponent<components::PlayerInformation>()->health = 1000.0;
 		//Ebony::Graphics2d::mainCamera->Position = glm::vec3(0.0f, 0.0f, 1.0f);
 
 

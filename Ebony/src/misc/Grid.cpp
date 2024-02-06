@@ -89,12 +89,14 @@ namespace Ebony
 		{
 			for (auto x = startColumn; x <= endColumn; x++)
 			{
-				if (amountPerRow * y + x < 0 || (amountPerRow * y + x) > grid.size())
+				auto indexPosition = amountPerRow * y + x;
+
+
+				if (indexPosition < 0 || indexPosition >= grid.size())
 				{
 					return;
 				}
 
-				auto indexPosition = amountPerRow * y + x;
 
 				for (auto i = 0; i < grid[indexPosition].size(); i++)
 				{

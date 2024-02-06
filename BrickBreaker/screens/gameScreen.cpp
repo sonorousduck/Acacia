@@ -129,10 +129,10 @@ namespace BrickBreaker
 
 		AddEntity(gameplayEntity);
 
-		entities::EntityPtr paddleEntity = BrickBreaker::Paddle::Create(glm::vec2(20.0f, 300.0f), windowWidth);
+		entities::EntityPtr paddleEntity = BrickBreaker::Paddle::Create(glm::vec2(120.0f, 300.0f), windowWidth);
 		AddEntity(paddleEntity);
 
-		entities::EntityPtr ballEntity = BrickBreaker::Ball::Create(glm::vec2(20.0f, 280.0f), paddleEntity, true);
+		entities::EntityPtr ballEntity = BrickBreaker::Ball::Create(glm::vec2(120.0f, 280.0f), paddleEntity, true);
 		AddEntity(ballEntity);
 
 		auto ballCount = 0;

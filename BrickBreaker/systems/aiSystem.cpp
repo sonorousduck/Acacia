@@ -1,6 +1,7 @@
 #include "aiSystem.hpp"
 #include <components/rigidbodyComponent.hpp>
 #include "../singletons/GameManager.hpp"
+#include "../components/ballComponent.hpp"
 
 namespace systems
 {
@@ -34,8 +35,8 @@ namespace systems
 				case (BrickBreaker::BALL_INFORMATION):
 			 	{
 			 		auto transform = entity->getComponent<components::Transform>()->position;
-
-			 		state.ballPosition.box = { transform.x, transform.y, 0.0f, 0.0f };
+					auto direction = entity->getComponent<components::Ball>()->direction;
+					state.ballPosition.box = { transform.x, transform.y, direction.x, direction.y };
 			 		break;
 			 	}
 			 	case (BrickBreaker::BRICK_INFORMATION):
