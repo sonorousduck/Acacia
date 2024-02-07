@@ -26,6 +26,7 @@ namespace Ebony
 
 		static bool aiEnabled;
 		static bool shouldResetForAi;
+		static bool goodEnding;
 
 	private:
 		SystemManager() {}

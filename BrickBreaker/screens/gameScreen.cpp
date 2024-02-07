@@ -99,24 +99,7 @@ namespace BrickBreaker
 		std::unique_ptr<components::KeyboardInput> gameplayKeyboardInputComponent = std::make_unique<components::KeyboardInput>();
 
 		entities::EntityPtr gameplayEntity = std::make_shared<entities::Entity>();
-		// ================================================================================================================================================================
-		// TODO:
-		// ================================================================================================================================================================
-		/*gameplayControllerInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr) {
-			glfwSetWindowShouldClose(Ebony::Graphics2d::window.getWindow(), true);
-			}
-		});*/
-
 		gameplayControllerInputComponent->bindings.insert({ SDL_CONTROLLER_BUTTON_START, "quit" });
-		// ================================================================================================================================================================
-		// TODO:
-		// ================================================================================================================================================================
-		/*gameplayKeyboardInputComponent->onPressActions.insert({ "quit", [=](entities::EntityPtr entity)
-			{
-				glfwSetWindowShouldClose(Ebony::Graphics2d::window.getWindow(), true);
-			}
-		});*/
-
 		gameplayKeyboardInputComponent->bindings.insert({ SDLK_ESCAPE, "quit" });
 
 		gameplayEntity->addComponent(std::move(gameplayControllerInputComponent));
@@ -399,7 +382,11 @@ namespace BrickBreaker
 	void GameScreen::ProcessInput(std::chrono::microseconds elapsedTime)
 	{
 		inputSystem.Update();
-		aiInputSystem.Update(elapsedTime);
+		
+		if (Ebony::SystemManager::aiEnabled)
+		{
+			aiInputSystem.Update(elapsedTime);
+		}
 	}
 
 	void GameScreen::AddEntity(entities::EntityPtr entity)

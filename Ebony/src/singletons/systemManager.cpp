@@ -6,6 +6,7 @@ namespace Ebony
 	bool SystemManager::quit{ false };
 	bool SystemManager::aiEnabled{ false };
 	bool SystemManager::shouldResetForAi{ false };
+	bool SystemManager::goodEnding{ false };
 
 
 	std::shared_ptr<Screen> SystemManager::currentScreen{};

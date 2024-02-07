@@ -54,6 +54,7 @@ namespace Crypt
 		void ProcessInput(std::chrono::microseconds elapsedTime) override;
 		void AddEntity(entities::EntityPtr entity);
 		void RemoveEntity(entities::Entity::IdType id);
+		void Reset();
 
 		systems::SpriteRenderer spriteRenderer;
 		systems::PhysicsSystem physicsSystem;

@@ -33,7 +33,7 @@ namespace Crypt
 	class BulletPrefab
 	{
 	public:
-		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, glm::vec2 direction, float speed, components::BULLET_TYPE bulletType, std::uint8_t strength, const char* texture, float timeUntilDestruction = 3.0f, std::uint16_t collisionLayer = Crypt::CollisionLayers::PLAYER_BULLET, std::uint16_t layersToCollideWith = Crypt::CollisionLayers::ENEMY | Crypt::CollisionLayers::GROUND, float transformModification = 0.0f)
+		static entities::EntityPtr Create(glm::vec2 startTransform, glm::vec2 scale, glm::vec2 direction, float speed, components::BULLET_TYPE bulletType, std::uint8_t strength, const char* texture, float timeUntilDestruction = 0.25f, std::uint16_t collisionLayer = Crypt::CollisionLayers::PLAYER_BULLET, std::uint16_t layersToCollideWith = Crypt::CollisionLayers::ENEMY | Crypt::CollisionLayers::GROUND, float transformModification = 0.0f)
 		{
 			entities::EntityPtr entity = std::make_shared<entities::Entity>();
 
@@ -44,10 +44,17 @@ namespace Crypt
 
 			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
-					//if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::GROUND)
-					//{					
-					//	entity->getComponent<components::DestructionComponent>()->shouldDestroy = true;
-					//}
+					auto currentLocation = entity->getComponent<components::Transform>();
+					if (startTransform.x + 10.0f >= currentLocation->position.x && startTransform.x - 10.0f <= currentLocation->position.x
+						&& startTransform.y + 10.0f >= currentLocation->position.y && startTransform.y - 10.0f <= currentLocation->position.y)
+					{
+						return;
+					}
+
+					if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::GROUND)
+					{					
+						entity->getComponent<components::DestructionComponent>()->shouldDestroy = true;
+					}
 
 					if (other->getComponent<components::Collider>()->layer & Crypt::CollisionLayers::PLAYER)
 					{

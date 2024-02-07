@@ -22,8 +22,6 @@
 
 #include <pybind11/pybind11.h>
 
-#include "singletons/CryptPythonManager.hpp"
-
 namespace Ebony {
 
 	class CryptGame : public Application
@@ -179,7 +177,7 @@ namespace Ebony {
 			{
 				Init();
 				LoadContent();
-				Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
+				//Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
 
 				std::shared_ptr<Shader> s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
 				s1->use();
@@ -245,8 +243,8 @@ namespace Ebony {
 
 	public:
 
-		int windowWidth = 1920;
-		int windowHeight = 1080;
+		int windowWidth = 640;
+		int windowHeight = 480;
 		int renderWidth = 480;
 		int renderHeight = 320;
 
@@ -291,15 +289,13 @@ namespace Ebony {
 				s2->setMat4("projection", Ebony::Graphics2d::projection);
 			}
 			LoadContent();
-			//Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
 
 			Ebony::SystemManager::currentScreen->Start();
 		}
 
 		std::tuple<Crypt::State, Ebony::Discrete, bool, bool, std::unordered_map<std::string, std::string>> Step(pybind11::object action, int timestep)
 		{
-			Ebony::Box aiAction = action.cast<Ebony::Box>();
-			Crypt::CryptPythonManager::action = aiAction;
+			Crypt::CryptPythonManager::action = action.cast<Ebony::Box>();
 
 			Ebony::Time::SetDeltaTime(std::chrono::microseconds(timestep));
 			ProcessInput(std::chrono::microseconds(timestep));
@@ -357,7 +353,7 @@ namespace Ebony {
 
 	Ebony::Application* Ebony::CreateApplication()
 	{
-		return new CryptGame(false, false);
+		return new CryptGame(true, true);
 	}
 
 

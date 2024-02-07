@@ -102,7 +102,7 @@ class BrickBreakerEnv(gym.Env):
             
         #     handled_state[0][index] = normalized_box[0]
         #     handled_state[0][index + 1] = normalized_box[1]
-        
+        print(handled_state[0])
         return handled_state[0]
         
         

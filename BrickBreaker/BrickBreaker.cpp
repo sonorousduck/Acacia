@@ -270,7 +270,6 @@ namespace Ebony {
 				s2->setMat4("projection", Ebony::Graphics2d::projection);
 			}
 			LoadContent();
-			//Crypt::CryptPythonManager::Init("pythonScripts.crypt_main");
 
 			Ebony::SystemManager::currentScreen->Start();
 		}

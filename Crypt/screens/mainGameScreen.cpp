@@ -9,6 +9,7 @@
 #include "../prefabs/UI/playerHealthPrefab.hpp"
 #include "../prefabs/UI/playerSpellSelection.hpp"
 #include "../prefabs/mainMusicPrefab.hpp"
+#include "../prefabs/gameCompletePrefab.hpp"
 
 namespace Crypt
 {
@@ -106,6 +107,8 @@ namespace Crypt
 		AddEntity(crosshair);
 
 
+		AddEntity(Crypt::GameComplete::Create(glm::vec2(3550.0f, 0.0f), static_cast<float>(windowHeight)));
+
 		//AddEntity(Crypt::Bat::Create(glm::vec2(200.0f, 80.0f), glm::vec2(1.0f, 1.0f), player));
 
 		AddEntity(Crypt::MainMusicPrefab::Create("base_music", 5));
@@ -132,7 +135,7 @@ namespace Crypt
 
 	std::uint64_t MainGameScreen::Update(std::chrono::microseconds elapsedTime)
 	{
-		pythonScriptingSystem.Update(elapsedTime);
+		//pythonScriptingSystem.Update(elapsedTime);
 
 		auto firstTime = std::chrono::system_clock::now();
 		//Ebony::Graphics2d::mainCamera->Position = glm::vec3(Ebony::Graphics2d::mainCamera->Position.x + 0.01f, Ebony::Graphics2d::mainCamera->Position.y, Ebony::Graphics2d::mainCamera->Position.z);
@@ -242,9 +245,6 @@ namespace Crypt
 
 		// Put this outside the update loop so in the future, I can use all the threads to then do multi-threaded physics updates
 		physicsSystem.Update(elapsedTime);
-		Crypt::CryptPythonManager::Update(elapsedTime);
-
-		
 
 
 		return nextScreen;
@@ -380,16 +380,33 @@ namespace Crypt
 
 	void MainGameScreen::RemoveAllEntities()
 	{
-		std::cout << "Removing all entities" << std::endl;
-		for (auto&& [entity, entityId] : allEntities)
+		for (auto&& [entityId, entity] : allEntities)
 		{
-			RemoveEntity(entity);
+			spriteRenderer.RemoveEntity(entityId);
+			physicsSystem.RemoveEntity(entityId);
+			audioSystem.RemoveEntity(entityId);
+			inputSystem.RemoveEntity(entityId);
+			animationSystem.RemoveEntity(entityId);
+			animationRenderer.RemoveEntity(entityId);
+			playerSystem.RemoveEntity(entityId);
+			cppScriptingSystem.RemoveEntity(entityId);
+			shootingSystem.RemoveEntity(entityId);
+			destructionSystem.RemoveEntity(entityId);
+			timingSystem.RemoveEntity(entityId);
+			enemyDetectionSystem.RemoveEntity(entityId);
+			fontRenderer.RemoveEntity(entityId);
+			pythonScriptingSystem.RemoveEntity(entityId);
+			aiInputSystem.RemoveEntity(entityId);
+			aiSystem.RemoveEntity(entityId);
 		}
 
-		RemoveOldEntities();
+		allEntities.clear();
+	}
 
-
-
+	void MainGameScreen::Reset()
+	{
+		RemoveAllEntities();
+		Start();
 	}
 
 }

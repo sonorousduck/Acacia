@@ -55,6 +55,7 @@ set(Prefabs
   prefabs/explosionDeathPrefab.hpp
   prefabs/mainMusicPrefab.hpp
   prefabs/gameOverControlsPrefab.hpp
+  prefabs/gameCompletePrefab.hpp
 )
 
 set(UIPrefabs

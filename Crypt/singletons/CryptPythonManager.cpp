@@ -31,9 +31,10 @@ namespace Crypt
 			.def("getBox", &Ebony::Box::getBox)
 			;
 
-		pybind11::class_<Ebony::Discrete>(m, "Reward")
+		pybind11::class_<Ebony::Discrete>(m, "Discrete")
 			.def(pybind11::init())
-			.def("getReward", &Ebony::Discrete::getValue);
+			.def("setValue", &Ebony::Discrete::setValue)
+			.def("getValue", &Ebony::Discrete::getValue);
 	}
 
 

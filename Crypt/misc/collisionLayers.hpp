@@ -12,7 +12,8 @@ namespace Crypt
 		PLAYER = BIT(2),
 		ENEMY = BIT(3),
 		PLAYER_BULLET = BIT(4),
-		ENEMY_BULLET = BIT(5)
+		ENEMY_BULLET = BIT(5),
+		ENDING_WALL = BIT(6)
 
 
 	};
