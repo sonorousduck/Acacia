@@ -58,6 +58,7 @@ namespace scripts
 			auto& action = Crypt::CryptPythonManager::action;
 
 			auto& angle = action.box[1];
+			angle *= 360.0f;
 			glm::vec2 fireFromPosition = entity->getComponent<components::Transform>()->position;
 
 			glm::vec3 cameraPosition = Ebony::Graphics2d::mainCamera->Position;

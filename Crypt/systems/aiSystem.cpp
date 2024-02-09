@@ -79,10 +79,11 @@ namespace systems
 					// Lives
 
 					auto player = entity->getComponent<components::Player>();
-					auto health = player->health;
+					//auto health = player->health;
 					auto score = player->score / 100;
+					//reward.n += health * 10 + static_cast<int>(score);
 
-					reward.n += health * 10 + static_cast<int>(score);
+					reward.n += static_cast<int>(score);
 				}
 
 

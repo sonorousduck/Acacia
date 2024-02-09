@@ -142,16 +142,16 @@ namespace Crypt
 					// TODO: Update this so it can figure out its instance ID. But for now, just assume it is the first one
 					auto& action = Crypt::CryptPythonManager::action;
 
-					if (action.box[0] == 1.0f)
+					if (action.box[0] >= 0.5f)
 					{
 						player->getComponent<components::AiInput>()->actions["flipGravity"]();
 					}
 
-					if (action.box[2] == -1.0f)
+					if (action.box[2] <= 0.3f)
 					{
 						player->getComponent<components::AiInput>()->actions["playerLeft"]();
 					}
-					else if (action.box[2] == 1.0f)
+					else if (action.box[2] >= 0.7f)
 					{
 						player->getComponent<components::AiInput>()->actions["playerRight"]();
 					}

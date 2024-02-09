@@ -45,8 +45,8 @@ namespace Crypt
 			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 					auto currentLocation = entity->getComponent<components::Transform>();
-					if (startTransform.x + 10.0f >= currentLocation->position.x && startTransform.x - 10.0f <= currentLocation->position.x
-						&& startTransform.y + 10.0f >= currentLocation->position.y && startTransform.y - 10.0f <= currentLocation->position.y)
+					if (startTransform.x + 20.0f >= currentLocation->position.x && startTransform.x - 20.0f <= currentLocation->position.x
+						&& startTransform.y + 20.0f >= currentLocation->position.y && startTransform.y - 20.0f <= currentLocation->position.y)
 					{
 						return;
 					}

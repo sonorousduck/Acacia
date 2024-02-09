@@ -33,7 +33,7 @@ namespace Ebony
 				}
 				else
 				{
-					std::cout << "Caution! Out of the physics domain" << std::endl;
+					//std::cout << "Caution! Out of the physics domain" << std::endl;
 				}
 			}
 		}

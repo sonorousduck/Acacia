@@ -59,7 +59,7 @@ namespace Crypt
 					
 					auto& action = Crypt::CryptPythonManager::action;
 
-					if (action.box[3] == 1.0f)
+					if (action.box[3] >= 0.5f)
 					{
 						entity->getComponent<components::AiInput>()->actions["shoot"]();
 					}

@@ -28,6 +28,6 @@ namespace components
 		float score = 0;
 
 		float gravityCooldown = 2.0f;
-		float gravityUsageCooldownResetTime = 1.0f; // This will be the reset time that the gravity cooldown gets set to when the player uses it 
+		float gravityUsageCooldownResetTime = 0.5f; // This will be the reset time that the gravity cooldown gets set to when the player uses it 
 	};
 }

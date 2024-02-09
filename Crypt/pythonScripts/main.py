@@ -120,7 +120,7 @@ class CryptEnv(gym.Env):
     
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
-        print("Resetting!")
+        # print("Resetting!")
         self.game.reset()
         self.game.python_init(True if self.render_mode == "human" else RENDERING, True)
                        
@@ -142,8 +142,13 @@ class CryptEnv(gym.Env):
     
     
 def StartGames():
-    # env = make_vec_env(CryptEnv, n_envs=4)
-
+    env = make_vec_env(CryptEnv, n_envs=4)
+    model = SAC("MlpPolicy", env, verbose=1)
+    model.learn(total_timesteps=1_000_000)
+    model.save("stable_baselines3_crypt_sac")
+    print("SAVED!")
+    
+    
     # env = CryptEnv(render_mode="human")
     # print(check_env(env))
     # print("CHECKED ENV!")
@@ -152,10 +157,7 @@ def StartGames():
     # env.step(env.action_space.sample())
     
     # env = DummyVecEnv([lambda: CryptEnv("human")])
-    # model = SAC("MlpPolicy", env, verbose=1)
-    # model.learn(total_timesteps=50000)
-    # model.save("stable_baselines3_crypt_sac")
-    # # print("SAVED!")
+
     
     
     
