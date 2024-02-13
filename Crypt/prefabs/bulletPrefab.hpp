@@ -87,7 +87,12 @@ namespace Crypt
 				}));
 
 
-			entity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, Crypt::AiInformationTypes::BULLET_INFORMATION));
+			// Only care about sending it to the AI if it is part of the enemies bullets, not your own
+			if (collisionLayer != Crypt::CollisionLayers::PLAYER_BULLET)
+			{
+				entity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, Crypt::AiInformationTypes::BULLET_INFORMATION));
+			}
+
 
 			entity->addComponent(std::make_unique<components::Bullet>(bulletType, strength));
 			entity->addComponent(std::move(collider));

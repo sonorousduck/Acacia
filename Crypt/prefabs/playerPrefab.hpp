@@ -91,26 +91,32 @@ namespace Crypt
 
 			aiInputComponent->actions.insert({ "playerLeft", [=]()
 			{
-				auto playerComponent = player->getComponent<components::Player>();
 				auto rigidBody = player->getComponent<components::RigidBody>();
+				auto transform = player->getComponent<components::Transform>();
+				auto collider = player->getComponent<components::Collider>();
+				auto playerComponent = player->getComponent<components::Player>();
 
-				if (playerComponent->isSlow)
+				if (!playerComponent->isSlow && !playerComponent->isFast)
 				{
-					playerComponent->isSlow = false;
-					rigidBody->setVelocity(rigidBody->getVelocity() + glm::vec2(60.0f, 0.0f));
+					playerComponent->isSlow = true;
+
+					rigidBody->setVelocity(rigidBody->getVelocity() - glm::vec2(60.0f, 0.0f));
 				}
 			}
 				});
 
 			aiInputComponent->actions.insert({ "playerRight", [=]()
 			{
-				auto playerComponent = player->getComponent<components::Player>();
 				auto rigidBody = player->getComponent<components::RigidBody>();
+				auto transform = player->getComponent<components::Transform>();
+				auto collider = player->getComponent<components::Collider>();
+				auto playerComponent = player->getComponent<components::Player>();
 
-				if (playerComponent->isFast)
+				if (!playerComponent->isFast && !playerComponent->isSlow)
 				{
-					playerComponent->isFast = false;
-					rigidBody->setVelocity(rigidBody->getVelocity() - glm::vec2(150.0f, 0.0f));
+					playerComponent->isFast = true;
+
+					rigidBody->setVelocity(rigidBody->getVelocity() + glm::vec2(150.0f, 0.0f));
 				}
 			}
 				});
@@ -141,7 +147,6 @@ namespace Crypt
 				{
 					// TODO: Update this so it can figure out its instance ID. But for now, just assume it is the first one
 					auto& action = Crypt::CryptPythonManager::action;
-
 					if (action.box[0] >= 0.5f)
 					{
 						player->getComponent<components::AiInput>()->actions["flipGravity"]();

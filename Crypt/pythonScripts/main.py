@@ -37,7 +37,7 @@ class CryptEnv(gym.Env):
             self.game.python_init(RENDERING, False)
                 
         
-        self.update_time = 16000
+        self.update_time = 20000
     
     def handle_state(self, state):
         handled_state = np.zeros(shape=(1, 44), dtype=np.float32)
@@ -69,8 +69,8 @@ class CryptEnv(gym.Env):
             normalized_bullet = i.getBox()
             normalized_bullet[0] /= 480
             normalized_bullet[1] /= 320
-            normalized_bullet[2] /= 30
-            normalized_bullet[3] /= 30
+            normalized_bullet[2] /= 10
+            normalized_bullet[3] /= 10
             
             bullet_states_array.extend(normalized_bullet)
         
@@ -142,11 +142,14 @@ class CryptEnv(gym.Env):
     
     
 def StartGames():
-    env = make_vec_env(CryptEnv, n_envs=4)
-    model = SAC("MlpPolicy", env, verbose=1)
-    model.learn(total_timesteps=1_000_000)
-    model.save("stable_baselines3_crypt_sac")
-    print("SAVED!")
+    # env = make_vec_env(CryptEnv, n_envs=10)
+    # model = PPO.load("stable_baselines3_crypt_ppo")
+    # model.set_env(env)
+    # model = SAC("MlpPolicy", env, verbose=1)
+    # model = PPO("MlpPolicy", env, verbose=1)
+    # model.learn(total_timesteps=1_000_000)
+    # model.save("stable_baselines3_crypt_ppo")
+    # print("SAVED!")
     
     
     # env = CryptEnv(render_mode="human")
@@ -165,10 +168,12 @@ def StartGames():
     # del model
     # print("DELETED!")
     env = CryptEnv(render_mode="human")
-    model = SAC.load("stable_baselines3_crypt_sac")
+    # model = SAC.load("stable_baselines3_crypt_sac")
+    model = PPO.load("stable_baselines3_crypt_ppo")
+    
     obs, _ = env.reset()
     while True:
-        action = env.action_space.sample()
+        action, _states = model.predict([obs])
         obs, rewards, dones, _, info = env.step(action)
         env.render()
         
