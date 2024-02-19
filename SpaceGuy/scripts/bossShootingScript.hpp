@@ -35,11 +35,11 @@ namespace scripts
 					if (shootingCooldown->currentTime <= 0.0f)
 					{
 						auto transform = entity->getComponent<components::Transform>();
-
+						auto randomOffset = rand() % 100;
 						// Shoot in a 360
 						for (int i = 0; i < 36; i++)
 						{
-							Ebony::SystemManager::AddEntity(SpaceGuy::EnemyBullet::Create(transform->position + transform->scale / 2.0f, static_cast<float>(i * 10), bulletDamage, "enemy_bullet", soundEffect, scale, i == 0));
+							Ebony::SystemManager::AddEntity(SpaceGuy::EnemyBullet::Create(transform->position + transform->scale / 2.0f, static_cast<float>(i * 10) + randomOffset, bulletDamage, "enemy_bullet", soundEffect, scale, i == 0));
 						}
 
 						shootingCooldown->ResetTimer();

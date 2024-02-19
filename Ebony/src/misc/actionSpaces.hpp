@@ -28,6 +28,28 @@ namespace Ebony
 		std::vector<float> box{};
 	};
 
+	class Action
+	{
+	public:
+		Action() : action{ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f } {}
+
+		Action(float x, float y, float z, float w, float a) : action({ x, y, z, w, a })
+		{
+		}
+
+		void setAction(float x, float y, float z, float w, float a)
+		{
+			action = std::vector<float>{ x, y, z, w, a };
+		}
+
+		std::vector<float> getAction() const
+		{
+			return action;
+		}
+
+		std::vector<float> action{};
+	};
+
 	class Discrete
 	{
 	public:

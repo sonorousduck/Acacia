@@ -1,5 +1,9 @@
 #include "gameOverScreen.hpp"
 
+#include "../prefabs/gameOverControlsPrefab.hpp"
+#include "../prefabs/playAgainPrefab.hpp"
+#include "../prefabs/quitInformationPrefab.hpp"
+
 
 
 namespace SpaceGuy
@@ -31,7 +35,9 @@ namespace SpaceGuy
 		fontRenderer = systems::FontRenderer();
 
 		// Create prefabs
-
+		AddEntity(SpaceGuy::QuitInformationPrefab::Create(windowWidth));
+		AddEntity(SpaceGuy::GameOverControlsPrefab::Create());
+		AddEntity(SpaceGuy::PlayAgainPrefab::Create(windowWidth));
 
 		AddNewEntities();
 	}

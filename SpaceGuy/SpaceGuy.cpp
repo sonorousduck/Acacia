@@ -27,10 +27,10 @@ namespace Ebony {
 	class SpaceGuyGame : public Application
 	{
 	public:
-		SpaceGuyGame()
+		SpaceGuyGame(bool isAiControlled = false, bool isAiStartUp = false)
 		{
-			//pybind11::scoped_interpreter guard{};
-
+			isAI = isAiControlled;
+			isAIStartUp = isAiStartUp;
 		}
 
 		~SpaceGuyGame()
@@ -62,10 +62,20 @@ namespace Ebony {
 			Ebony::SystemManager::screens[SpaceGuy::ScreenEnum::GAME_OVER] = std::make_shared<SpaceGuy::GameOverScreen>();
 
 
-			Ebony::SystemManager::aiEnabled = false;
+			Ebony::SystemManager::aiEnabled = isAI;
 
-			Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[SpaceGuy::ScreenEnum::MAIN_MENU];
-			Ebony::SystemManager::nextScreenEnum = SpaceGuy::ScreenEnum::MAIN_MENU;
+			if (isAI)
+			{
+				Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[SpaceGuy::ScreenEnum::GAME];
+				Ebony::SystemManager::nextScreenEnum = SpaceGuy::ScreenEnum::GAME;
+			}
+			else
+			{
+				Ebony::SystemManager::currentScreen = Ebony::SystemManager::screens[SpaceGuy::ScreenEnum::MAIN_MENU];
+				Ebony::SystemManager::nextScreenEnum = SpaceGuy::ScreenEnum::MAIN_MENU;
+			}
+
+
 
 			for (auto& screen : Ebony::SystemManager::screens)
 			{
@@ -154,6 +164,13 @@ namespace Ebony {
 
 		void Run() override
 		{
+			if (isAIStartUp)
+			{
+				SpaceGuy::SpaceGuyPythonManager::Init("pythonScripts.main", true);
+				return;
+			}
+
+
 			Init();
 			LoadContent();
 
@@ -214,17 +231,104 @@ namespace Ebony {
 			ThreadPool::terminate();
 			Ebony::AudioManager::StopAll();
 			Ebony::ResourceManager::Clear();
-			SpaceGuy::SpaceGuyPythonManager::Destroy();
+
+			if (isAIStartUp)
+			{
+				SpaceGuy::SpaceGuyPythonManager::Destroy();
+			}
+		}
+		
+		void PythonInit(bool renderingEnabled, bool restarting)
+		{
+			if (restarting)
+			{
+				Ebony::SystemManager::currentScreen->Start();
+				Ebony::SystemManager::shouldResetForAi = false;
+
+
+				return;
+			}
+
+			if (renderingEnabled)
+			{
+				Init();
+
+				std::shared_ptr<Shader> s1 = Ebony::ResourceManager::LoadShader("shaders/screenTexture.vert", "shaders/screenTexture.frag", "screenTexture");
+				s1->use();
+				s1->setInt("screenTexture", 0);
+
+
+				std::shared_ptr<Shader> s = Ebony::ResourceManager::LoadShader("shaders/spritesheet3d.vert", "shaders/spritesheet3d.frag", "spritesheet");
+				s->use();
+				s->setInt("spritesheet", 0);
+				s->setMat4("projection", Ebony::Graphics2d::projection);
+
+				std::shared_ptr<Shader> s2 = Ebony::ResourceManager::LoadShader("shaders/particle.vert", "shaders/particle.frag", "defaultParticle");
+				s2->use();
+				s2->setInt("particleTexture", 0);
+				s2->setMat4("projection", Ebony::Graphics2d::projection);
+			}
+			LoadContent();
+
+			Ebony::SystemManager::currentScreen->Start();
 		}
 
+
+		std::tuple<SpaceGuy::State, Ebony::Discrete, bool, bool, std::unordered_map<std::string, std::string>> Step(pybind11::object action, int timestep)
+		{
+			SpaceGuy::SpaceGuyPythonManager::action = action.cast<Ebony::Action>();
+
+			Ebony::Time::SetDeltaTime(std::chrono::microseconds(timestep));
+			ProcessInput(std::chrono::microseconds(timestep));
+			Update(std::chrono::microseconds(timestep));
+			RemoveOldEntities();
+			AddNewEntities();
+			std::unordered_map<std::string, std::string> info = {};
+
+
+			return std::make_tuple(SpaceGuy::SpaceGuyPythonManager::state, SpaceGuy::SpaceGuyPythonManager::reward, Ebony::SystemManager::shouldResetForAi, Ebony::SystemManager::shouldResetForAi, info);
+		}
+
+		SpaceGuy::State GetState()
+		{
+			return SpaceGuy::SpaceGuyPythonManager::state;
+		}
+
+		Ebony::Discrete GetReward()
+		{
+			return SpaceGuy::SpaceGuyPythonManager::reward;
+		}
+
+		bool GetTerminated()
+		{
+			return Ebony::SystemManager::shouldResetForAi;
+		}
+
+		void Reset()
+		{
+			Ebony::SystemManager::currentScreen->RemoveAllEntities();
+		}
+
+		void Render(int timestep)
+		{
+			Draw(std::chrono::microseconds(timestep));
+		}
+
+		void Close()
+		{
+
+		}
+
+	
 	public:
 
-		int windowWidth = 960;
-		int windowHeight = 640;
+		int windowWidth = 640;
+		int windowHeight = 480;
 		int renderWidth = 480;
 		int renderHeight = 320;
 
-		bool isAI = false;
+		bool isAI;
+		bool isAIStartUp;
 
 	private:
 		Ebony::Color clearColor = Ebony::Colors::Black;
@@ -233,8 +337,26 @@ namespace Ebony {
 
 	Ebony::Application* Ebony::CreateApplication()
 	{
-		return new SpaceGuyGame();
+		return new SpaceGuyGame(false, false);
 	}
 
-
+	PYBIND11_EMBEDDED_MODULE(spaceguy, m)
+	{
+		pybind11::class_<SpaceGuyGame>(m, "SpaceGuy")
+			.def(pybind11::init<bool, bool>())
+			.def("Init", &SpaceGuyGame::Init)
+			.def("LoadContent", &SpaceGuyGame::LoadContent)
+			.def("ProcessInput", &SpaceGuyGame::ProcessInput)
+			.def("Update", &SpaceGuyGame::Update)
+			.def("Draw", &SpaceGuyGame::Draw)
+			.def("ChangeScreens", &SpaceGuyGame::ChangeScreens)
+			.def("step", &SpaceGuyGame::Step, pybind11::return_value_policy::move)
+			.def("reset", &SpaceGuyGame::Reset)
+			.def("render", &SpaceGuyGame::Render)
+			.def("close", &SpaceGuyGame::Close)
+			.def("getObservation", &SpaceGuyGame::GetState, pybind11::return_value_policy::move)
+			.def("getReward", &SpaceGuyGame::GetReward, pybind11::return_value_policy::move)
+			.def("python_init", &SpaceGuyGame::PythonInit)
+			.def("getTerminated", &SpaceGuyGame::GetTerminated);
+	}
 }

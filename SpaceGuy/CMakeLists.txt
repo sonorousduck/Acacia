@@ -29,6 +29,7 @@ set(MiscHeaders
   misc/collisionLayers.hpp
   misc/spaceGuyTiledProcessor.hpp
   misc/tileType.hpp
+  misc/aiInformationTypes.hpp
 )
 
 set(MiscSources
@@ -57,7 +58,9 @@ set(Prefabs
   prefabs/shotgunPrefab.hpp
   prefabs/speedBoostPrefab.hpp
   prefabs/bossPrefab.hpp
-
+  prefabs/playAgainPrefab.hpp
+  prefabs/quitInformationPrefab.hpp
+  prefabs/gameOverControlsPrefab.hpp
 )
 
 set(UIPrefabs

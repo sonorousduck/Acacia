@@ -5,6 +5,7 @@
 #include <components/transform.hpp>
 #include "../misc/aiInformationTypes.hpp"
 #include <graphics2d.hpp>
+#include "../singletons/SpaceGuyPythonManager.hpp"
 
 namespace systems
 {

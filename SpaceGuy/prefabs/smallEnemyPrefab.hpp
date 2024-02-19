@@ -106,6 +106,7 @@ namespace SpaceGuy
 			entity->addComponent(std::move(sprite));
 			entity->addComponent(std::move(rigidbody));
 			//entity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, Crypt::AiInformationTypes::ENEMY_INFORMATION));
+			entity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, SpaceGuy::AiInformationTypes::ENEMY_INFORMATION));
 
 
 			entities::EntityPtr healthBar = SpaceGuy::HealthBar::Create(startTransform + glm::vec2(0.0f, -20.0f), glm::vec2(scale.x, 7.0f), entity);

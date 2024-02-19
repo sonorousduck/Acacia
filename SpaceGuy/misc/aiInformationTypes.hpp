@@ -8,8 +8,8 @@ namespace SpaceGuy
 	enum AiInformationTypes : std::uint64_t
 	{
 		PLAYER_INFORMATION = BIT(0),
-		CROSSHAIR_INFORMATION = BIT(1),
 		ENEMY_INFORMATION = BIT(2),
-		BULLET_INFORMATION = BIT(3)
+		KEY_INFORMATION = BIT(3),
+		ENEMY_BULLET_INFORMATION = BIT(4)
 	};
 }

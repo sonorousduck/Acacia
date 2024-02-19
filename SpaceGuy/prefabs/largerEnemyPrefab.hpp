@@ -98,6 +98,9 @@ namespace SpaceGuy
 					entity->getComponent<components::DestructionComponent>()->shouldRemove = true;
 				}));
 
+			entity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, SpaceGuy::AiInformationTypes::ENEMY_INFORMATION));
+
+
 			entity->addComponent(std::move(script));
 			entity->addComponent(std::move(timedComponent));
 			entity->addComponent(std::move(collider));

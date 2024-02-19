@@ -167,14 +167,17 @@ namespace SpaceGuy
 			{
 				graphDone.count_down();
 			});
-
-		auto audioTask = Ebony::ThreadPool::instance().createTask(
-			taskGraph,
-			[this, elapsedTime]()
-			{
-				audioSystem.Update(elapsedTime);
-			}
-		);
+		
+		if (!Ebony::SystemManager::aiEnabled)
+		{
+			auto audioTask = Ebony::ThreadPool::instance().createTask(
+				taskGraph,
+				[this, elapsedTime]()
+				{
+					audioSystem.Update(elapsedTime);
+				}
+			);
+		}
 
 		auto animationTask = Ebony::ThreadPool::instance().createTask(
 			taskGraph,
@@ -243,6 +246,16 @@ namespace SpaceGuy
 		}*/
 
 
+		if (Ebony::SystemManager::shouldResetForAi)
+		{
+			//Crypt::CryptPythonManager::Reset();
+			RemoveAllEntities();
+			RemoveOldEntities();
+			//Start();
+			//Ebony::SystemManager::shouldResetForAi = false;
+			return nextScreen;
+		}
+
 		// Put this outside the update loop so in the future, I can use all the threads to then do multi-threaded physics updates
 		physicsSystem.Update(elapsedTime);
 		//SpaceGuy::SpaceGuyPythonManager::Update(elapsedTime);
@@ -271,7 +284,11 @@ namespace SpaceGuy
 	void MainGameScreen::ProcessInput(std::chrono::microseconds elapsedTime)
 	{
 		inputSystem.Update();
-		aiInputSystem.Update(elapsedTime);
+
+		if (Ebony::SystemManager::aiEnabled)
+		{
+			aiInputSystem.Update(elapsedTime);
+		}
 	}
 
 	void MainGameScreen::AddEntity(entities::EntityPtr entity)
@@ -379,12 +396,25 @@ namespace SpaceGuy
 
 	void MainGameScreen::RemoveAllEntities()
 	{
-		for (auto&& [entity, entityId] : allEntities)
+		for (auto&& [entityId, entity] : allEntities)
 		{
-			RemoveEntity(entity);
+			spriteRenderer.RemoveEntity(entityId);
+			physicsSystem.RemoveEntity(entityId);
+			audioSystem.RemoveEntity(entityId);
+			inputSystem.RemoveEntity(entityId);
+			animationSystem.RemoveEntity(entityId);
+			animationRenderer.RemoveEntity(entityId);
+			cppScriptingSystem.RemoveEntity(entityId);
+			destructionSystem.RemoveEntity(entityId);
+			timingSystem.RemoveEntity(entityId);
+			fontRenderer.RemoveEntity(entityId);
+			pythonScriptingSystem.RemoveEntity(entityId);
+			aiInputSystem.RemoveEntity(entityId);
+			aiSystem.RemoveEntity(entityId);
+			enemyDetectionSystem.RemoveEntity(entityId);
 		}
 
-
+		allEntities.clear();
 	}
 
 }

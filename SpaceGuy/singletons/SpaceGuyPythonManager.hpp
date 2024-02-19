@@ -22,15 +22,18 @@ namespace SpaceGuy
 		State(Ebony::Box playerPosition) : playerPosition(playerPosition) {}
 
 		Ebony::Box playerPosition{};
+		Ebony::Box keyPosition{};
+		
 		std::vector<float> getPlayerPosition() const { return playerPosition.box; }
 		std::vector<Ebony::Box> getEnemyPositions() const { return enemyPositions; }
 		std::vector<Ebony::Box> getBulletInformation() const { return bulletInformation; }
+		std::vector<float> getKeyInformation() const { return keyPosition.box; }
 
-		float testPlayerPosition() const { return playerPosition.box[0]; }
 
 		//Ebony::Box crosshairPosition;
 		std::vector<Ebony::Box> enemyPositions;
 		std::vector<Ebony::Box> bulletInformation;
+		
 	};
 
 	//struct Pet {
@@ -50,18 +53,17 @@ namespace SpaceGuy
 		static void ProcessInput();
 		static void Reset();
 
-		static void Init(const char* filename, std::uint64_t environmentCount = 1);
+		static void Init(const char* filename, bool isAiStartup = false);
 		static void Destroy();
 
 
-		static std::vector<std::vector<Ebony::Box>> actions;
-		static std::vector<std::vector<State>> states;
-		static std::vector<std::vector<Ebony::Discrete>> rewards;
+		static Ebony::Action action;
+		static State state;
+		static Ebony::Discrete reward;
 
 
 	private:
 		static pybind11::module pyModule;
-		//static pybind11::module stateModule;
 		static bool initialized;
 
 

@@ -53,6 +53,7 @@ namespace SpaceGuy
 			auto transform = std::make_unique<components::Transform>(startTransform, 0.0f, scale);
 			auto rigidbody = std::make_unique<components::RigidBody>();
 
+			entity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, SpaceGuy::AiInformationTypes::KEY_INFORMATION));
 
 
 			entity->addComponent(std::make_unique<components::DestructionComponent>([=]()

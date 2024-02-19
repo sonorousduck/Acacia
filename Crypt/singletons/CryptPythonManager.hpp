@@ -61,7 +61,6 @@ namespace Crypt
 
 	private:
 		static pybind11::module pyModule;
-		//static pybind11::module stateModule;
 		static bool initialized;
 
 

@@ -74,6 +74,7 @@ namespace SpaceGuy
 			entity->addComponent(std::move(collider));
 			entity->addComponent(std::move(rigidbody));
 			entity->addComponent(std::make_unique<components::Bullet>(bulletStrength));
+			entity->addComponent(std::make_unique<components::AIComponent>(Ebony::AIType::STATE, SpaceGuy::AiInformationTypes::ENEMY_BULLET_INFORMATION));
 
 			return entity;
 

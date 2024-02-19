@@ -16,7 +16,6 @@ namespace systems
 
 		for (auto& [id, entity] : m_Entities)
 		{
-			auto& test = entity->getComponents();
 			auto aiComponent = entity->getComponent<components::AIComponent>();
 
 			if (aiComponent->aiType & Ebony::AIType::STATE)

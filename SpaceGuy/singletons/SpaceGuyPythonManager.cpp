@@ -3,9 +3,9 @@
 
 namespace SpaceGuy
 {
-	std::vector<std::vector<Ebony::Box>> SpaceGuyPythonManager::actions{};
-	std::vector<std::vector<State>> SpaceGuyPythonManager::states{};
-	std::vector<std::vector<Ebony::Discrete>> SpaceGuyPythonManager::rewards{};
+	Ebony::Action SpaceGuyPythonManager::action{};
+	State SpaceGuyPythonManager::state{};
+	Ebony::Discrete SpaceGuyPythonManager::reward{};
 
 	bool SpaceGuyPythonManager::initialized{ false };
 	pybind11::module SpaceGuyPythonManager::pyModule;
@@ -23,6 +23,7 @@ namespace SpaceGuy
 			.def("getPlayerPosition", &State::getPlayerPosition)
 			.def("getEnemyPositions", &State::getEnemyPositions)
 			.def("getBulletInformation", &State::getBulletInformation)
+			.def("getKeyInformation", &State::getKeyInformation)
 			.def("__repr__", [](const State& state) { return "<State player x position " + std::to_string(state.playerPosition.box.at(0)) + ">"; });
 
 		pybind11::class_<Ebony::Box>(m, "Box")
@@ -31,54 +32,37 @@ namespace SpaceGuy
 			.def("getBox", &Ebony::Box::getBox)
 			;
 
-		pybind11::class_<Ebony::Discrete>(m, "Reward")
+		pybind11::class_<Ebony::Action>(m, "Action")
 			.def(pybind11::init())
-			.def("getReward", &Ebony::Discrete::getValue);
+			.def("setAction", &Ebony::Action::setAction)
+			.def("getAction", &Ebony::Action::getAction)
+			;
+
+		pybind11::class_<Ebony::Discrete>(m, "Discrete")
+			.def(pybind11::init())
+			.def("setValue", &Ebony::Discrete::setValue)
+			.def("getValue", &Ebony::Discrete::getValue);
 	}
 
 
 
 	void SpaceGuyPythonManager::Update(std::chrono::microseconds elapsedTime)
 	{
-		for (auto i = 0; i < SpaceGuyPythonManager::states.size(); i++)
-		{
-			if (SpaceGuyPythonManager::states[i].size() != 0)
-			{
-				SpaceGuyPythonManager::actions[i].clear();
-				auto& state = SpaceGuyPythonManager::states[i].back();
-				auto& reward = SpaceGuyPythonManager::rewards[i].back();
-				pybind11::object result = SpaceGuyPythonManager::pyModule.attr("Update")(state, reward);
-				SpaceGuyPythonManager::actions[i].push_back(result.cast<Ebony::Box>());
-				if (!Ebony::SystemManager::shouldResetForAi)
-				{
-					SpaceGuyPythonManager::states[i].clear();
-					SpaceGuyPythonManager::rewards[i].clear();
-				}
-			}
-		}
+		
 	}
 
 	void SpaceGuyPythonManager::Reset()
 	{
-		for (auto i = 0; i < SpaceGuyPythonManager::states.size(); i++)
-		{
-			if (SpaceGuyPythonManager::states[i].size() != 0)
-			{
-				SpaceGuyPythonManager::actions[i].clear();
-				auto& state = SpaceGuyPythonManager::states[i].back();
-				auto& reward = SpaceGuyPythonManager::rewards[i].back();
-				SpaceGuyPythonManager::pyModule.attr("Reset")(state, reward);
-				SpaceGuyPythonManager::states[i].clear();
-				SpaceGuyPythonManager::rewards[i].clear();
-			}
-		}
+		auto& state = SpaceGuyPythonManager::state;;
+		auto& reward = SpaceGuyPythonManager::reward;
+		SpaceGuyPythonManager::pyModule.attr("Reset")(state, reward);
 	}
 
 
 	void SpaceGuyPythonManager::ProcessInput()
 	{
 	}
-	void SpaceGuyPythonManager::Init(const char* filename, std::uint64_t environmentCount)
+	void SpaceGuyPythonManager::Init(const char* filename, bool isAiStartup)
 	{
 		pybind11::initialize_interpreter();
 
@@ -88,13 +72,10 @@ namespace SpaceGuy
 		//SpaceGuyPythonManager::stateModule = pybind11::module_::import("cpp_module");
 		SpaceGuyPythonManager::initialized = true;
 
-		SpaceGuyPythonManager::states.resize(environmentCount);
-		SpaceGuyPythonManager::actions.resize(environmentCount);
-		SpaceGuyPythonManager::rewards.resize(environmentCount);
-
-
-
-		SpaceGuyPythonManager::pyModule.attr("Start")();
+		if (isAiStartup)
+		{
+			SpaceGuyPythonManager::pyModule.attr("StartGames")();
+		}
 	}
 
 

@@ -27,6 +27,8 @@
 #include <components/mouseInputComponent.hpp>
 #include "../prefabs/UI/playerMissilePrefab.hpp"
 #include "../prefabs/UI/playerLivesPrefab.hpp"
+#include <components/aiComponent.hpp>
+#include "../singletons/SpaceGuyPythonManager.hpp"
 
 
 namespace SpaceGuy
@@ -59,20 +61,6 @@ namespace SpaceGuy
 
 			components::Subcollider aabbcollider = components::Subcollider(scale / 2.0f, scale, true, true);
 
-
-			//aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
-			//	{
-			//		SpaceGuy::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
-
-			//		if (layer & SpaceGuy::CollisionLayers::WALL)
-			//		{
-			//			//entity->getComponent<components::Transform>()->position = entity->getComponent<components::Collider>()->aabbCollider.lastCollisionLocation.y;
-			//		}
-			//		else if (layer & SpaceGuy::CollisionLayers::ENEMY_BULLET)
-			//		{
-			//			//entity->getComponent<components::PlayerInformation>()->health -= other->getComponent<components::Bullet>()->strength;
-			//		}
-			//	};
 			aabbcollider.onCollisionStart = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
 				{
 					SpaceGuy::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
@@ -82,36 +70,19 @@ namespace SpaceGuy
 					{
 						auto transform = entity->getComponent<components::Transform>();
 
-						std::cout << "Collided!" << std::endl;
-						std::cout << "Current: (" << transform->position.x << ", " << transform->position.y << ")" << std::endl;
-						std::cout << "Previous: (" << transform->previousPosition.x << ", " << transform->previousPosition.y << ")" << std::endl;
-
 						// Decide which direction they came from by subtracting the positions, then just take a little bit more so it moves them slightly more away from the wall
-
 						auto direction = transform->position - transform->previousPosition;
 
 
 
-						transform->position = transform->previousPosition - (2.0f * direction);
+						transform->position = transform->previousPosition;
 						transform->previousPosition = transform->position;
 						
 					}
 					
 				};
 
-			
-			aabbcollider.onCollisionEnd = [=](entities::EntityPtr other, std::chrono::microseconds elapsedTime)
-				{
-					SpaceGuy::CollisionLayers layer = CollisionLayers(other->getComponent<components::Collider>()->layer);
-
-
-					if (layer & SpaceGuy::CollisionLayers::WALL)
-					{
-						std::cout << "Collided ended!" << std::endl;
-					}
-
-				};
-
+		
 
 			auto collider = std::make_unique<components::Collider>(aabbcollider, 
 				SpaceGuy::CollisionLayers::PLAYER, 
@@ -121,6 +92,7 @@ namespace SpaceGuy
 			auto keyboardComponent = std::make_unique<components::KeyboardInput>();
 			auto controllerComponent = std::make_unique<components::ControllerInput>(0);
 			auto mouseComponent = std::make_unique<components::MouseInput>();
+			auto aiInputComponent = std::make_unique<components::AiInput>();
 
 			keyboardComponent->bindings.insert({ SDLK_w, "moveUp" });
 			keyboardComponent->bindings.insert({ SDLK_a, "moveLeft" });
@@ -157,19 +129,22 @@ namespace SpaceGuy
 				}
 			});
 
+			if (!Ebony::SystemManager::aiEnabled)
+			{
+				mouseComponent->onMove = [=]()
+					{
+						auto mouseInput = entity->getComponent<components::MouseInput>();
+						auto playerTransform = entity->getComponent<components::Transform>();
+						glm::vec3 cameraPosition = Ebony::Graphics2d::mainCamera->Position;
 
-			mouseComponent->onMove = [=]()
-				{
-					auto mouseInput = entity->getComponent<components::MouseInput>();
-					auto playerTransform = entity->getComponent<components::Transform>();
-					glm::vec3 cameraPosition = Ebony::Graphics2d::mainCamera->Position;
+						glm::vec2 currentDirection = glm::normalize((glm::vec2(mouseInput->positionX, mouseInput->positionY) + glm::vec2(cameraPosition.x, cameraPosition.y) - playerTransform->position));
+						//std::cout << currentDirection.x << ", " << currentDirection.y << std::endl;
 
-					glm::vec2 currentDirection = glm::normalize((glm::vec2(mouseInput->positionX, mouseInput->positionY) + glm::vec2(cameraPosition.x, cameraPosition.y) - playerTransform->position));
-					//std::cout << currentDirection.x << ", " << currentDirection.y << std::endl;
-
-					auto angle = glm::atan(currentDirection.x, -currentDirection.y);
-					entity->getComponent<components::Transform>()->rotation = glm::degrees(angle);
-				};
+						auto angle = glm::atan(currentDirection.x, -currentDirection.y);
+						entity->getComponent<components::Transform>()->rotation = glm::degrees(angle);
+					};
+			}
+			
 			
 			mouseComponent->bindings.insert({ SDL_BUTTON_LEFT, "shootLaser" });
 			mouseComponent->bindings.insert({ SDL_BUTTON_RIGHT, "shootMissile" });
@@ -235,10 +210,104 @@ namespace SpaceGuy
 				}
 			});
 
+			aiInputComponent->actions.insert({ "shootLaser", [=]() {
+				auto playerShootingInformation = entity->getComponent<components::PlayerShootingInformation>();
+
+					if (playerShootingInformation->canShoot)
+					{
+						auto transform = entity->getComponent<components::Transform>();
+						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 1.0f, "player_bullet", "laser_shoot"));
+						if (playerShootingInformation->hasShotgun)
+						{
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation + 15, 1.0f, "player_bullet", "laser_shoot", false));
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation + 7.5f, 1.0f, "player_bullet", "laser_shoot", false));
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation - 15, 1.0f, "player_bullet", "laser_shoot", false));
+							Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation - 7.5f, 1.0f, "player_bullet", "laser_shoot", false));
+						}
+
+						entity->getComponent<components::TimedComponent>()->ResetTimer();
+						playerShootingInformation->canShoot = false;
+
+					}
+			} });
+
+			aiInputComponent->actions.insert({ "shootMissile", [=]() {
+				auto playerShootingInformation = entity->getComponent<components::PlayerShootingInformation>();
+
+					if (playerShootingInformation->missileCount > 0)
+					{
+						auto transform = entity->getComponent<components::Transform>();
+						Ebony::SystemManager::AddEntity(SpaceGuy::PlayerBullet::Create(transform->position, transform->rotation, 3.0f, "missile", "missile_shoot"));
+
+						entity->getComponent<components::TimedComponent>()->ResetTimer();
+						playerShootingInformation->missileCount -= 1;
+					}
+			} });
+
+			aiInputComponent->actions.insert({ "move", [=]() {
+				auto& action = SpaceGuy::SpaceGuyPythonManager::action;
+
+					if (action.action[0] > 0)
+					{
+						// Move up by amount * speed
+						auto playerInformation = entity->getComponent<components::PlayerInformation>();
+						entity->getComponent<components::RigidBody>()->addScriptedMovement(glm::vec2(0.0f, -playerBaseSpeed * Ebony::Time::GetDeltaTimeFloat() * (playerInformation->hasSpeedBoost ? playerBoostSpeed : 1.0f)));
+					}
+					else
+					{
+						// Move down by amount * speed
+						auto playerInformation = entity->getComponent<components::PlayerInformation>();
+						entity->getComponent<components::RigidBody>()->addScriptedMovement(glm::vec2{ 0.0f, playerBaseSpeed * Ebony::Time::GetDeltaTimeFloat() * (playerInformation->hasSpeedBoost ? playerBoostSpeed : 1.0f) });
+					}
+
+					if (action.action[1] > 0)
+					{
+						// Move right by amount * speed
+						auto playerInformation = entity->getComponent<components::PlayerInformation>();
+						entity->getComponent<components::RigidBody>()->addScriptedMovement(glm::vec2(playerBaseSpeed * Ebony::Time::GetDeltaTimeFloat() * (playerInformation->hasSpeedBoost ? playerBoostSpeed : 1.0f), 0.0f));
+					}
+					else
+					{
+						// Move left by amount * speed
+						auto playerInformation = entity->getComponent<components::PlayerInformation>();
+						entity->getComponent<components::RigidBody>()->addScriptedMovement(glm::vec2(-playerBaseSpeed * Ebony::Time::GetDeltaTimeFloat() * (playerInformation->hasSpeedBoost ? playerBoostSpeed : 1.0f), 0.0f));
+					}
+			} });
+
+			aiInputComponent->actions.insert({ "aimShip", [=]() {
+					auto playerTransform = entity->getComponent<components::Transform>();
+					auto& action = SpaceGuy::SpaceGuyPythonManager::action;
+
+					auto& angle = action.action[2];
+					angle *= 360;
+					entity->getComponent<components::Transform>()->rotation = angle;
+			} });
+
+
+			aiInputComponent->translationFunction = [=]() 
+				{
+					auto& action = SpaceGuy::SpaceGuyPythonManager::action;
+
+					if (action.action[3] >= 0.5)
+					{
+						entity->getComponent<components::AiInput>()->actions["shootLaser"]();
+					}
+					if (action.action[4] >= 0.5)
+					{
+						entity->getComponent<components::AiInput>()->actions["shootMissile"]();
+					}
+
+					entity->getComponent<components::AiInput>()->actions["aimShip"]();
+					entity->getComponent<components::AiInput>()->actions["move"]();
+
+				};
+
+
 
 			
 			std::unique_ptr<components::CppScript> cameraFollowing = std::make_unique<scripts::FollowPlayerCamera>();
 
+			auto aiComponent = std::make_unique<components::AIComponent>(Ebony::AIType::STATE | Ebony::AIType::REWARD, SpaceGuy::AiInformationTypes::PLAYER_INFORMATION);
 
 			entity->addComponent(std::move(keyboardComponent));
 			entity->addComponent(std::move(controllerComponent));
@@ -251,6 +320,8 @@ namespace SpaceGuy
 			entity->addComponent(std::move(playerInformation));
 			entity->addComponent(std::move(playerShootingInformation));
 			entity->addComponent(std::move(shootingDelay));
+			entity->addComponent(std::move(aiInputComponent));
+			entity->addComponent(std::move(aiComponent));
 
 
 			Ebony::SystemManager::AddEntity(SpaceGuy::PlayerScore::Create(480, entity));
