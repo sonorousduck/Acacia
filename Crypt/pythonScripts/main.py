@@ -5,6 +5,7 @@ from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.env_checker import check_env
 from stable_baselines3 import A2C, PPO, SAC
+from stable_baselines3.common.callbacks import CheckpointCallback
 
 import gymnasium as gym
 from gymnasium import spaces
@@ -142,13 +143,20 @@ class CryptEnv(gym.Env):
     
     
 def StartGames():
-    # env = make_vec_env(CryptEnv, n_envs=10)
+    # checkpoint_callback = CheckpointCallback(
+    #     save_freq=50000,
+    #     save_path="./logs/",
+    #     name_prefix="rl_model",
+    #     save_replay_buffer=True,
+    #     save_vecnormalize=True,
+    # )
+    # env = make_vec_env(CryptEnv, n_envs=8)
     # model = PPO.load("stable_baselines3_crypt_ppo")
     # model.set_env(env)
     # model = SAC("MlpPolicy", env, verbose=1)
-    # model = PPO("MlpPolicy", env, verbose=1)
-    # model.learn(total_timesteps=1_000_000)
-    # model.save("stable_baselines3_crypt_ppo")
+    # model = PPO("MlpPolicy", env, verbose=1, tensorboard_log="./ppo_crypt_tensorboard/")
+    # model.learn(total_timesteps=2_000_000, callback=checkpoint_callback)
+    # model.save("stable_baselines3_crypt_ppo_new")
     # print("SAVED!")
     
     
@@ -169,7 +177,7 @@ def StartGames():
     # print("DELETED!")
     env = CryptEnv(render_mode="human")
     # model = SAC.load("stable_baselines3_crypt_sac")
-    model = PPO.load("stable_baselines3_crypt_ppo")
+    model = PPO.load("stable_baselines3_crypt_ppo_new")
     
     obs, _ = env.reset()
     while True:

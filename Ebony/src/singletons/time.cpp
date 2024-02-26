@@ -4,6 +4,7 @@ namespace Ebony
 {
 
 	std::chrono::microseconds Time::elapsedTime{};
+	std::chrono::microseconds Time::totalElapsedTime{};
 
 	std::chrono::microseconds Time::GetDeltaTime()
 	{
@@ -22,7 +23,18 @@ namespace Ebony
 
 	void Time::SetDeltaTime(std::chrono::microseconds newElapsedTime)
 	{
+		totalElapsedTime += newElapsedTime;
 		elapsedTime = newElapsedTime;
+	}
+
+	void Time::ResetTotalElapsedTime()
+	{
+		totalElapsedTime = std::chrono::microseconds(0);
+	}
+
+	float Time::GetTotalElapsedTime()
+	{
+		return static_cast<float>(totalElapsedTime.count()) / 1000000.0f;
 	}
 
 }

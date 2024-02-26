@@ -31,6 +31,8 @@ class SpaceGuyEnv(gym.Env):
         self.render_mode = render_mode
         done = False
         
+        self.previous_reward = 0
+        
         if (render_mode == "human"):
             self.game.python_init(True, False)
         else:
@@ -43,13 +45,13 @@ class SpaceGuyEnv(gym.Env):
         playerPosition = state.getPlayerPosition()
         keyPosition = state.getKeyInformation()
         
-        playerPosition[0] /= 480
-        playerPosition[1] /= 320
+        playerPosition[0] /= 3000
+        playerPosition[1] /= 800
         playerPosition[2] /= 360
         
         
-        keyPosition[0] /= 480
-        keyPosition[1] /= 320
+        keyPosition[0] /= 3000
+        keyPosition[1] /= 800
         
         
         
@@ -66,15 +68,15 @@ class SpaceGuyEnv(gym.Env):
         
         for i in enemy_states:
             normalized_box = i.getBox()
-            normalized_box[0] /= 480
-            normalized_box[1] /= 320
+            normalized_box[0] /= 3000
+            normalized_box[1] /= 800
             
             enemy_states_array.extend(normalized_box)
         
         for i in bullet_states:
             normalized_bullet = i.getBox()
-            normalized_bullet[0] /= 480
-            normalized_bullet[1] /= 320
+            normalized_bullet[0] /= 3000
+            normalized_bullet[1] /= 800
             normalized_bullet[2] /= 200
             normalized_bullet[3] /= 200
             
@@ -108,6 +110,12 @@ class SpaceGuyEnv(gym.Env):
         state, reward, done, _, _ = self.game.step(action_for_engine, self.update_time)
         state = self.handle_state(state)
         
+        reward = reward.getValue()
+        
+        temp_reward = reward - self.previous_reward
+        self.previous_reward = reward
+        self.reward = temp_reward
+        
         # if RENDERING:
         #     self.render()
         # print("Finished step")
@@ -119,7 +127,7 @@ class SpaceGuyEnv(gym.Env):
         # done = self.game.getTerminated()
                 
         # observation, reward, terminated, truncated, info
-        return state, reward.getValue(), done, done, {}
+        return state, self.reward, done, done, {}
         
         
     
@@ -133,6 +141,7 @@ class SpaceGuyEnv(gym.Env):
         
         state, reward, done, _, _ = self.game.step(action_for_engine, self.update_time)
         self.reward = reward.getValue()
+        self.previous_reward = self.reward
         state = self.handle_state(state)
         return state, {}
     
@@ -145,26 +154,26 @@ class SpaceGuyEnv(gym.Env):
     
     
 def StartGames():
-    checkpoint_callback = CheckpointCallback(
-        save_freq=50000,
-        save_path="./logs/",
-        name_prefix="rl_model",
-        save_replay_buffer=True,
-        save_vecnormalize=True,
-    )
+    # checkpoint_callback = CheckpointCallback(
+    #     save_freq=50000,
+    #     save_path="./logs/",
+    #     name_prefix="rl_model",
+    #     save_replay_buffer=True,
+    #     save_vecnormalize=True,
+    # )
     
-    env = make_vec_env(SpaceGuyEnv, n_envs=4)
-    model = PPO.load("logs/rl_model_7400000_steps")
-    print("Loaded")
-    model.set_env(env)
-    # model = SAC("MlpPolicy", env, verbose=1)
-    # model = PPO("MlpPolicy", env, verbose=1)
+    # env = make_vec_env(SpaceGuyEnv, n_envs=6)
+    # model = PPO("MlpPolicy", env, verbose=1, tensorboard_log="./spaceguy_tensorboard/")
     
-    model.learn(total_timesteps=20000000, callback=checkpoint_callback)
-    model.save("stable_baselines3_spaceguy_ppo")
+    # model.learn(total_timesteps=10_000_000, callback=checkpoint_callback)
+    # model.save("stable_baselines3_spaceguy_ppo_new_frame_reward")
     # print("SAVED!")
     
     
+    # model = PPO.load("logs/rl_model_7400000_steps")
+    # print("Loaded")
+    # model.set_env(env)
+    # # model = SAC("MlpPolicy", env, verbose=1)
     # env = CryptEnv(render_mode="human")
     # print(check_env(env))
     # print("CHECKED ENV!")
@@ -181,8 +190,8 @@ def StartGames():
     # del model
     # print("DELETED!")
     env = SpaceGuyEnv(render_mode="human")
-    model = PPO.load("stable_baselines3_spaceguy_ppo")
-    # model = PPO.load("stable_baselines3_spaceguy_ppo")
+    # model = PPO.load("logs/rl_model_960000_steps")
+    model = PPO.load("logs/rl_model_1500000_steps")
     
     obs, _ = env.reset()
     while True:

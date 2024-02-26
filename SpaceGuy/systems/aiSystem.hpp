@@ -6,6 +6,7 @@
 #include "../misc/aiInformationTypes.hpp"
 #include <graphics2d.hpp>
 #include "../singletons/SpaceGuyPythonManager.hpp"
+#include <algorithm>
 
 namespace systems
 {

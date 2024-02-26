@@ -328,7 +328,7 @@ namespace Ebony {
 
 	Ebony::Application* Ebony::CreateApplication()
 	{
-		return new BrickBreakerGame(false, false);
+		return new BrickBreakerGame(true, true);
 	}
 
 

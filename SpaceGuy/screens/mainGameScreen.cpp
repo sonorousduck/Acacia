@@ -5,6 +5,7 @@
 #include "../prefabs/player.hpp"
 #include "../prefabs/bossPrefab.hpp"
 #include "../misc/spaceGuyTiledProcessor.hpp"
+#include "../prefabs/largerEnemyPrefab.hpp"
 
 
 namespace SpaceGuy
@@ -106,6 +107,9 @@ namespace SpaceGuy
 		//Ebony::Graphics2d::mainCamera->Position = glm::vec3(0.0f, 0.0f, 1.0f);
 
 
+		AddEntity(SpaceGuy::LargerEnemy::Create(glm::vec2(600.0f, 900.0f), glm::vec2(1.0f, 1.0f), player, 80.0f));
+		AddEntity(SpaceGuy::LargerEnemy::Create(glm::vec2(500.0f, 900.0f), glm::vec2(1.0f, 1.0f), player, 80.0f));
+
 		// Load Tiled map
 		SpaceGuyTiledProcessor tiledProcessor = SpaceGuyTiledProcessor(player);
 		tiledProcessor.CreateTranslationFunction();
@@ -122,7 +126,6 @@ namespace SpaceGuy
 
 		//AddEntity(SpaceGuy::SmallEnemy::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player));
 		//AddEntity(SpaceGuy::Spawner::Create(glm::vec2(100.0f, 50.0f), glm::vec2(1.0f, 1.0f), player, 100.0f));
-		//AddEntity(SpaceGuy::LargerEnemy::Create(glm::vec2(300.0f, 100.0f), glm::vec2(1.0f, 1.0f), player, 80.0f));
 		//AddEntity(SpaceGuy::Turret::Create(glm::vec2(200.0f, 300.0f), glm::vec2(1.0f), player, 130.0f));
 		//AddEntity(SpaceGuy::Key::Create(glm::vec2(500.0f, 100.0f)));
 		//AddEntity(SpaceGuy::LockedDoor::Create(glm::vec2(800.0f, 100.0f)));

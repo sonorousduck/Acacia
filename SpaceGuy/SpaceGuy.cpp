@@ -307,6 +307,7 @@ namespace Ebony {
 		void Reset()
 		{
 			Ebony::SystemManager::currentScreen->RemoveAllEntities();
+			Ebony::Time::ResetTotalElapsedTime();
 		}
 
 		void Render(int timestep)
@@ -337,7 +338,7 @@ namespace Ebony {
 
 	Ebony::Application* Ebony::CreateApplication()
 	{
-		return new SpaceGuyGame(false, false);
+		return new SpaceGuyGame(true, true);
 	}
 
 	PYBIND11_EMBEDDED_MODULE(spaceguy, m)

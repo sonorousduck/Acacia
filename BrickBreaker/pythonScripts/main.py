@@ -1,37 +1,13 @@
-
-import sys
-import torch  
 import gymnasium as gym
 import numpy as np  
-import torch.nn as nn
-import torch.optim as optim
-import torch.nn.functional as F
-from torch.autograd import Variable
-import matplotlib.pyplot as plt
-import pandas as pd
 from gymnasium import spaces
-from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3.common.env_util import make_vec_env
+from stable_baselines3.common.callbacks import CheckpointCallback
 
 from stable_baselines3 import A2C, PPO
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-import os
-import random
-import time
-import math
-import matplotlib.pyplot as plt
-from collections import namedtuple, deque
-from itertools import count
-import datetime
-import argparse
 
 import gymnasium as gym
 from gymnasium import spaces
-import pickle
-import random
 import numpy as np
 import brickbreaker
 import cpp_module
@@ -102,7 +78,6 @@ class BrickBreakerEnv(gym.Env):
             
         #     handled_state[0][index] = normalized_box[0]
         #     handled_state[0][index + 1] = normalized_box[1]
-        print(handled_state[0])
         return handled_state[0]
         
         
@@ -150,18 +125,30 @@ class BrickBreakerEnv(gym.Env):
     
     
 def StartGames():
+    # checkpoint_callback = CheckpointCallback(
+    #     save_freq=50000,
+    #     save_path="./logs/",
+    #     name_prefix="rl_model",
+    #     save_replay_buffer=True,
+    #     save_vecnormalize=True,
+    # )
+    
     # env = make_vec_env(BrickBreakerEnv, n_envs=4)
-    # # env = DummyVecEnv([lambda: BrickBreakerEnv()])
-    # model = PPO("MlpPolicy", env, verbose=1)
-    # model.learn(total_timesteps=5000000)
-    # model.save("stable_baselines3_brickbreaker")
+    # # # env = DummyVecEnv([lambda: BrickBreakerEnv()])
+    # print("Env created")
+    # model = PPO("MlpPolicy", env, verbose=1, tensorboard_log="./ppo_brickbreaker_tensorboard/")
+    # print("Model created")
+    # model.set_env(env)
+    # print("Env set")
+    # model.learn(total_timesteps=5000000, callback=checkpoint_callback)
+    # model.save("stable_baselines3_ppo_brickbreaker")
     # print("SAVED!")
     
     
     # del model
     # print("DELETED!")
     env = BrickBreakerEnv(render_mode="human")
-    model = PPO.load("stable_baselines3_brickbreaker")
+    model = PPO.load("stable_baselines3_ppo_brickbreaker")
     obs, _ = env.reset()
     while True:
         action, _states = model.predict([obs])
